@@ -1,7 +1,7 @@
 # ══════════════════════════════════════════════════════════════════════════════
 # ALCARAZ (ANNNI-type) MODEL
 #   H = -Σ_i [ Z_i Z_{i+1} + p λ X_i X_{i+1} + p Z_i Z_{i+2} + λ X_i ]
-#   self-dual; p=0 recovers the integrable TFIM. Field on sigma_x, coupling on sigma_z.
+#   self-dual; p=0 recovers the integrable TFIM. Field on sigma_x, coupling on sigma_z
 # ══════════════════════════════════════════════════════════════════════════════
 
 abstract type AbstractAlcarazRecipe <: ExpHRecipe end
@@ -38,13 +38,15 @@ function alcaraz_opsum(N::Int, lambda::Number, p::Number)
     return os
 end
 
-"""Direct U(dt)=exp(-i H dt) MPO for the Alcaraz model (Schrödinger pipeline). alg = {WI,WII,VD2}."""
+ 
+
+"""Direct U(dt)=exp(-i H dt) MPO for the Alcaraz model. alg = {WI,WII,VD2}"""
 function expH_alcaraz(sites::Vector{<:Index}, lambda::Number, p::Number; dt::Number, mpo_alg::String="VD2")
     os  = alcaraz_opsum(length(sites), lambda, p)
     return expmpo(os, sites, -im * dt; alg=Algorithm(mpo_alg))
 end
 
-# ITransverse hook: returns the spatial U(dt) MPO that ITransverse rotates into the tMPO.
+# ITransverse: returns the spatial U(dt) MPO that is later rotated into the tMPO
 function ITransverse.expH(sites::Vector{<:Index}, mp::AlcarazParams, recipe::AbstractAlcarazRecipe; dt::Number)
     os = alcaraz_opsum(length(sites), mp.lambda, mp.p)
     return expmpo(os, sites, -im * dt; alg=Algorithm(_alg_string(recipe)))
