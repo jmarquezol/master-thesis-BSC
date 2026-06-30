@@ -112,9 +112,9 @@ automatically from the OpSum (alcaraz_opsum), so the table is documentation, not
 
 ---
 
-## 3b. MODEL DEFINITIONS IN src/models.jl (two models, one shared pattern)
+## 3b. MODEL DEFINITIONS IN src/models.jl (four models, one shared pattern)
 
-src/models.jl (was main.jl) defines TWO models, each with the SAME boilerplate so they plug into
+src/models.jl (was main.jl) defines FOUR models, each with the SAME boilerplate so they plug into
 both the Schrodinger (TDVP / direct MPO) and the transverse (ITransverse) pipelines:
 
   (a) AlcarazParams      — the real target model. alcaraz_opsum(N, lambda, p):
@@ -122,6 +122,18 @@ both the Schrodinger (TDVP / direct MPO) and the transverse (ITransverse) pipeli
         Self-dual; the XX term is present (Section 2).
   (b) TricriticalParams  — tricritical Ising with 3-body ZZX / XZZ terms (an OPTIONAL variant kept
         for future exploration; no notebook in the current series). tricritical_opsum(N, lambda).
+  (c) XXZParams (from ITransverse) + AbstractXXZRecipe — our VD2 path for the XXZ chain.
+        xxz_opsum(N, J_XY, J_ZZ, hz): -(J_XY/2)(S+S-+S-S+) - J_XY*J_ZZ*SzSz - 2hz*Sz.
+        Supervisor's Eq.(2) ⇒ XXZParams(-1.0, Δ, 0.0). ITransverse also has a built-in SymSVD
+        builder, but it is NOT actually left-right symmetric (normdiff ~0.07-0.45) → cannot use
+        powermethod_sym. VD2 (asymmetric) is the only reliable route.
+  (d) XXZNeelParams + AbstractXXZNeelRecipe — the model we ACTUALLY time-evolve for XXZ.
+        xxz_neel_opsum(N, Delta): ½(S+S+ + S-S-) − Δ SzSz.
+        This is the sublattice-rotated frame: R=∏(even) exp(iπSx) maps |Néel⟩→|↑⟩ (uniform)
+        and H_Δ→H'_Δ with S+S-→S+S+ and Sz→−Sz on even sites. The −Δ in H' is forced by the
+        rotation (NOT a sign error). `Delta` field stores the PHYSICAL +Δ. Initial state: |Up⟩
+        (the uniform ↑ state, which IS the rotated Néel). Verified: |↑⟩-under-H'_Δ echo ==
+        direct Néel-under-H_Δ TDVP echo to 4 digits.
 
   DROPPED: the old BenchmarkParams (Alcaraz with the XX term off — a NNN TFIM) used only to probe
   the now-resolved transverse-vs-TDVP "discrepancy"/DQPT thread. It no longer exists in code; its
@@ -138,26 +150,28 @@ Shared pattern for each model XXX:
         It just returns expmpo(xxx_opsum(...), sites, -im*dt; alg=Algorithm(_alg_string(recipe))).
   Driver helper: the UNIFIED `compute_entropies(mp::ModelParams, T; scheme, nbeta, ...)` in
   src/transverse_tools.jl wires all of the above to powermethod_lr + gen_renyi2 (it replaces the
-  old per-model compute_alcaraz/tricritical_entropies). All use init_state = |X+>.
+  old per-model compute_alcaraz/tricritical_entropies). Supports `init_state` kwarg (default "X+";
+  XXZ-Néel uses "Up").
 
 ---
 
-## 4. FILE STRUCTURE  (reorganized June 2026 — clean 1–7 notebook series)
+## 4. FILE STRUCTURE  (reorganized June 2026 — clean 1–9 notebook series; old nb8 merged into nb5)
 
 master_thesis/
   CLAUDE.md                      <- this file (read first every session)
   README.md                     <- human-facing project overview
   carignano-tagliacozzo.md      <- Carignano & Tagliacozzo 2024 paper in markdown (primary ref)
 
-  src/                           <- CONSOLIDATED LIBRARY (notebooks `include("src/thesislib.jl")`)
+  src/                           <- CONSOLIDATED LIBRARY (notebooks `include("../src/thesislib.jl")`)
     thesislib.jl                   <- entry point: all `using` + includes models.jl & transverse_tools.jl
-    models.jl                      <- model defs: AlcarazParams / TricriticalParams, opsums, expmpo
-                                      wrappers, ITransverse.expH dispatch (was main.jl). NOTE: the
-                                      old Benchmark model — Alcaraz minus the XX term — was DROPPED.
-    transverse_tools.jl            <- build_alcaraz_tmpo, block_transfer_eigs, lincomb_mps,
+    models.jl                      <- model defs: AlcarazParams / TricriticalParams / XXZ (via
+                                      ITransverse XXZParams) / XXZNeelParams, opsums, expmpo wrappers,
+                                      ITransverse.expH dispatch. NOTE: the old Benchmark model — Alcaraz
+                                      minus the XX term — was DROPPED.
+    transverse_tools.jl            <- build_tmpo (generic, model-agnostic tMPO builder),
+                                      build_alcaraz_tmpo (thin wrapper), block_transfer_eigs, lincomb_mps,
                                       run_pm_diagnosed, compute_entropies (UNIFIED, model-agnostic;
-                                      replaces compute_alcaraz/tricritical_entropies; supports
-                                      use_block_pm=true for robust block-PM eigenvector extraction),
+                                      supports use_block_pm=true, init_state kwarg, itermax/seed kwargs),
                                       plot_entropy_profiles (same use_block_pm passthrough),
                                       tdvp_loschmidt_amplitude, crashsafe_sweep, plot_panels.
                                       Z2 helpers (z2_operator/project_parity) DROPPED. Caches default
@@ -198,35 +212,70 @@ master_thesis/
     4_cft_ground_state.ipynb       <- DMRG equilibrium central charge: c(p) sweep, finite-size
                                       scaling S(L/2) vs ln(L), full chord fit S(x) for p=0/0.1.
                                       Three independent reads all give c≈1/2 (KEY confirmed result).
-    5_spectral_gap_degeneracy.ipynb<- deflation (single-vector) fails (NaN/Inf) → BLOCK power method;
-                                      gap closes FASTER at larger p (barrier onset earlier);
-                                      DQPTs introduced for completeness (Ising has one; our quench
-                                      TO criticality does NOT).
+    5_spectral_gap_degeneracy.ipynb<- (June 2026; MERGE of the old nb5 + nb8_gap_closing_and_limits)
+                                      THE SPECTRUM + LIMITS notebook. Reads the converged nbeta=4 master
+                                      sweep results/data/nb8_master.jld2 (nbeta=0 DROPPED — no conformal
+                                      boundary per C-T). Arc: (1) single-vector deflation fails → BLOCK
+                                      power method (ONE live demo at T=3 reproduces the cache, rest loads);
+                                      (2) gap closes FASTER for frustrated p=0.1 (barrier onset earlier),
+                                      |λ0| flat + λ0 circle = emergent dual unitarity; (3) THE WALL —
+                                      entropy dome inflates at T≈10 (p=0.1), ill-conditioned eigenVECTOR
+                                      (not a PM bug), failed repairs (projector inflates / continuity
+                                      drifts), no degeneracy-free route, eigenvalue route ALSO contaminated
+                                      (Eq.3 c swings 0.17–0.98); robust c is the pre-wall window; Ising
+                                      reached T=14 only because SYMMETRIC (Takagi) + UNFRUSTRATED.
+                                      APPENDIX: DQPTs (Ising has one; our quench TO criticality does NOT).
+                                      Figs: block_pm_ising_vs_alcaraz, alcaraz_gap_dualunitarity,
+                                      gap_closing_wall.
     6_loschmidt_ising.ipynb        <- reproduce Carignano-Tagliacozzo for the integrable Ising chain
                                       (symmetric Murg + powermethod_sym): c=1/2 recovered. WORKS.
                                       Dominant eigenvalue λ₀(T) traced in the complex plane — the
                                       "circle plot" confirming emergent dual unitarity.
-    7_loschmidt_alcaraz.ipynb      <- REMADE (June 2026): Alcaraz temporal central charge via the
-                                      well-converged block PM (itermax=8000, nbeta=4), TWO routes —
-                                      Rényi-2 entropy slope (c=8·slope) + leading eigenvalues
-                                      (Eq.3 c, Eq.4 x1, λ0 circle) — with p=0 as the convention
-                                      calibration (headline = p=0.1/p=0 ratio). Single master
-                                      block-PM sweep → results/data/nb7_alcaraz_block.jld2.
-                                      OUTCOME PENDING RE-RUN (the old c≈0.69→6.0 was from the
-                                      under-converged itermax=800 block PM — superseded).
-    TN_assignment.ipynb            <- course exercise (Ising quench TEBD/transverse); not thesis work
+    7_temporal_central_charge.ipynb<- (June 2026; MERGE of the old nb7_loschmidt_alcaraz + nb8_cleaning_
+                                      temporal_c) THE RESULT notebook. Two routes on ONE converged cache
+                                      results/data/nb8_master.jld2 (k=4, ΔT=1, T=2..12, p={0,0.1}, 22/22,
+                                      crash-safe regen cell). Route 1 = Rényi-2 entropy slope (c=8·slope)
+                                      with physical-λ0 selection → clean-window c(p=0.1)=0.47±0.05 (T=4..9),
+                                      the HEADLINE. Route 2 = λ0 circle (dual unitarity, both p) + Eq.4 x1:
+                                      VALIDATES on p=0 (x1=0.498, free-BC Ising) but its p=0.1 eigenvalue
+                                      extractions (Eq.3 c, Eq.4 x1≈1.5) are CONTAMINATED by the near-
+                                      degeneracy — only Route 1 gives a clean p=0.1 number. Figures:
+                                      temporal_entropy_profiles.png, temporal_chord_fit.png.
+                                      Verdict: temporal Ising universality SURVIVES NNN frustration at p=0.1.
+    (the old 8_gap_closing_and_limits.ipynb was MERGED into nb5 — June 2026; its wall/limits content
+     now lives in nb5 §4–5, reading the same nb8_master.jld2.)
+    8_xxz_model_and_neel_quench.ipynb <- (June 2026; was nb9) XXZ MODEL INTRODUCTION + NÉEL QUENCH VALIDATION.
+                                      XXZ Hamiltonian H_Δ=Σ[½(S+S-+S-S+)+Δ SzSz]; equilibrium DMRG c≈1
+                                      sweep over Δ∈[-1,1]; |X+⟩ shown TRIVIAL (no transverse field → near
+                                      eigenstate → Re(S)≈0, χ=4); Néel quench via sublattice rotation
+                                      R=∏(even)exp(iπSx): maps |Néel⟩→|↑⟩, H_Δ→H'_Δ with S+S-→S+S+ and
+                                      −Δ SzSz; echo equivalence verified vs TDVP to 4 digits. Caches:
+                                      nb9_xxz_dmrg.jld2, nb9_neel_echo.jld2. Fig: xxz_c_equilibrium.png.
+    9_xxz_temporal_entropies.ipynb  <- (June 2026; was nb10) XXZ TEMPORAL ENTROPY RESULT. Single-vector PM sweep
+                                      over (Δ,T) with warm-started T-ladder; Rényi-2 profiles → Re(S)
+                                      chord-slope corrupted by parity oscillations (c≈6-10 nonsense);
+                                      clean c from Im(S)→πc/12: c_eff≈0.95 at T=6, approaching c=1.
+                                      Staggered oscillation analysis (amplitude vs Δ). Gap-ratio sweep
+                                      XXZ vs Alcaraz confirms XXZ (NN) gap closes SLOWER than Alcaraz
+                                      (NNN frustrated). Caches: nb10_xxz_neel.jld2, nb10_xxz_gap.jld2.
+                                      Figs: xxz_entropy_profiles.png, xxz_oscillations.png,
+                                      xxz_vs_alcaraz_gap.png.
 
   results/
-    imgs/                          <- figures (cft_L, p_dependence, cft_ising_validation,
-                                      block_pm_ising_p0.0, block_pm_ising_vs_alcaraz,
-                                      ising_lambda0_circle)
+    imgs/                          <- figures, each REGENERATED + displayed by its owning notebook's
+                                      cell (June 2026 self-containment pass): p_dependence (nb4),
+                                      cft_L (nb4), block_pm_ising_vs_alcaraz (nb5, the gap-closes-
+                                      faster-for-Alcaraz comparison), cft_ising_validation +
+                                      ising_lambda0_circle (nb6), temporal_entropy_profiles +
+                                      temporal_chord_fit (nb7). (block_pm_ising_p0.0 DELETED — orphan.)
     data/                          <- cached .jld2:
-      block_pm_alcaraz_p0.0.jld2   <- block PM sweep p=0   (T=0.5..7.0, nbeta=0) — eigenvalues
-      block_pm_alcaraz_p0.1.jld2   <- block PM sweep p=0.1 (T=0.5..5.5, nbeta=0) — eigenvalues
-      cft_renyi2_beta_p5.jld2      <- Alcaraz Rényi-2 c sweep (nbeta=4) — the "bad c" data for nb7
-      tdvp_loschmidt_p0.1_N40.jld2 <- TDVP Loschmidt amplitude N=40 (T=0.5..7.0)
-      tdvp_loschmidt_p0.1_N80.jld2 <- TDVP Loschmidt amplitude N=80 (T=0.5..4.0)
+      block_pm_alcaraz_p0.0.jld2   <- block PM sweep p=0   (nb5, regenerated by its cell 5) — eigenvalues
+      block_pm_alcaraz_p0.1.jld2   <- block PM sweep p=0.1 (nb5, regenerated by its cell 5) — eigenvalues
+      tdvp_loschmidt_p0.1_N40.jld2 <- TDVP Loschmidt amplitude N=40 (nb1; tdvp_loschmidt_amplitude)
       tvdp_run.jld2                <- cached TDVP ⟨Z⟩ benchmark (p=0.5, N=50, |Up⟩) for nb1
+      rate_{TDVP,VD2,WII}.jld2     <- nb2 Schrödinger benchmark rate curves (regenerated by its cell)
+      (DELETED June 2026 — orphan/superseded caches, git-recoverable: cft_renyi2_beta_p5,
+       tdvp_loschmidt_p0.1_N80, rate_VD2_200, rate_trans_VD2, rate_trans_VD2_nbeta0)
       ising_lambda0.jld2           <- symmetric Ising λ₀(T) sweep for nb6 circle plot
       nb7_alcaraz_block.jld2       <- (created on run) NB7 master block-PM sweep: per-(p,T)
                                       leading eigenvalues + Rényi-2 profile, nbeta=4, itermax=8000.
@@ -234,6 +283,13 @@ master_thesis/
       nb7_alcaraz_lite.jld2        <- (created on run) NB7 LITE Route-2 sweep: eigenvalues only via
                                       block_transfer_eigs(k=2, itermax=400) — cheap λ0,λ1 per (p,T).
       nb35_blockpm_bench.jld2      <- (created on run) NB3.5 block-PM cost benchmark, keyed by config.
+      nb9_xxz_dmrg.jld2            <- (created on run) nb8 DMRG c≈1 sweep for XXZ, Δ∈[-1,1].
+      nb9_neel_echo.jld2           <- (created on run) nb8 Néel echo validation (TDVP vs rotated MPO).
+      nb10_xxz_neel.jld2           <- (created on run) nb9 single-vector PM sweep (Δ,T) for XXZ-Néel
+                                      temporal entropies (warm-started T-ladder).
+      nb10_xxz_gap.jld2            <- (created on run) nb9 gap-ratio sweep XXZ vs Alcaraz.
+      (NOTE: the cache/figure prefixes nb9_*/nb10_* are HISTORICAL — after the June-2026 renumber they
+       belong to notebooks 8/9. Filenames were left unchanged to avoid breaking committed data.)
       rate_*.jld2                  <- MPO-exp / rate benchmarks (WII, VD2, TDVP) for nb1/nb2
 
   legacy/                        <- ARCHIVE (git-recoverable; safe to purge once satisfied):
@@ -891,8 +947,10 @@ results/data/ (block_pm_alcaraz_p0.{0,1}.jld2).
 
 ### Confirmed working
 - DMRG central charge: c ~ 0.5 for Alcaraz at p = 0..2 (Ising class in equilibrium).
-- ITensorExpMPOv2.jl MPO construction (validated by TDVP == direct-MPO agreement).
+- DMRG central charge: c ≈ 1.0 for XXZ at |Δ| ≤ 1 (Luttinger liquid; c=1.047 at Δ=0.5, N=80).
+- ITensorExpMPOv2.jl MPO construction (validated by TDVP == direct-MPO agreement, both Alcaraz and XXZ).
 - Symmetric Ising control reproduces Carignano–Tagliacozzo (c=1/2) — see §17 and nb6.
+- XXZ-Néel sublattice rotation echo matches direct TDVP Néel echo to 4 digits.
 
 ### Documentation drift fixed (API truths)
 - `powermethod_both` -> the real function is `powermethod_lr`. Initial state is |X+>, not |Z-up>.
@@ -914,8 +972,10 @@ Step 2 (DONE — nb6/nb7; legacy/18, framework VALIDATED on Ising): pipeline val
         Boundary exponent CONFIRMED: x₁=0.502 (p=0), 0.497 (p=0.1) = free-BC Ising (a₁=0.788≈π/4).
         Symmetric Ising CONFIRMED: T=4,8,12 reproduce Eq.(6) — Re(S) on the c=1/2 chord (peak
         0.37→0.44→0.47), Im(S)≈π/24=0.131. c=1/2 recovered two independent ways. ALCARAZ p=0.1
-        Rényi-2 (nb7) is the OPEN PROBLEM: c≈0.69 (T=4), 6.0 (T=6), p=0 calib ≈0.70 — NOT 0.5,
-        the asymmetric LR Rényi-2 profile is contaminated near the gap closing.
+        RESOLVED (NB7 result + NB5 limits, June 2026): the old c≈0.69→6.0 was −λ0-partner contamination
+        of the single-vector dome; with physical-λ0 selection the clean-window slope gives c(p=0.1)≈
+        0.47±0.05 (T=4..9) ≈ Ising 1/2. Past T≈10 the entropy breaks at the gap closing and is
+        UNRECOVERABLE (ill-conditioned eigenvector; eigenvalue route also ambiguous) — see §17 + NB5 §4–5.
 
 Step 3 (BLOCKED on Step 2): Extract temporal entropies with CORRECT coefficients:
         - n→1 entropy (Eq. 6): coefficient c/6, available via generalized_vn_entropy_symmetric
@@ -977,7 +1037,8 @@ Hamiltonian sign:   H = -sum_i [...]   (NEGATIVE overall sign; all terms subtrac
 Critical point:     lambda = 1
 Time evolution:     U(t) = exp(-i H t)   (real time, unitary operator)
 Loschmidt echo:     L = <psi_0 | U(t) | psi_0>   (complex amplitude, no absolute value)
-Initial state:      |X+>^N  (NOT z-polarized) — same in TDVP and transverse
+Initial state:      |X+>^N  (NOT z-polarized) — same in TDVP and transverse (Alcaraz/Ising)
+                    |Up>^N for XXZ-Néel (the sublattice-rotated Néel state; see §3b(d))
 tMPS overlap:       overlap_noconj(L, R)  NOT inner(L, R)
 Pauli matrices:     Standard ITensors SpinHalf site convention ("Up"/"Dn" along z); the
                     field couples to sigma_x, so we work with the "X+"/"X-" states.
@@ -1141,13 +1202,76 @@ truth, asymmetric Alcaraz entropy) is RUN. Findings:
   - This finding feeds into the NB7 revision (deferred): applying the block-PM entropy route may
     improve the Alcaraz c-extraction that currently comes out badly.
 
-STATUS: framework VALIDATED on the symmetric Ising case (NB6). The asymmetric Alcaraz temporal-c
-(NB7) is the OPEN PROBLEM: the asymmetric LR Rényi-2 route does not yet yield a clean c at p>0.
-NB7 is DEFERRED for revision after the NB3 block-PM findings mature.
-Likely directions: block-PM entropy profiles at larger T (now available via use_block_pm=true);
-the Eq.(3) eigenvalue c with β₀>0 + longer T (eigenvalues are more robust than contaminated
-eigenvectors); higher maxdim/longer T to clean the profile; dt-convergence. The headline
-c(p=0.1) is NOT yet established.
+### FINAL OUTCOME (June 2026 — NB7 result + NB5 limits; RESOLVED, headline ESTABLISHED)
+### (NB7 = temporal central charge; the gap-closing WALL/limits content was MERGED into NB5 in the
+###  June-2026 5+8 merge — old standalone "nb8_gap_closing_and_limits" no longer exists.)
+
+HEADLINE: c(p=0.1) = 0.47 ± 0.05, consistent with Ising c=1/2 → temporal Ising universality SURVIVES
+NNN frustration at p=0.1. Source: clean-window Rényi-2 slope (NB7, T=4..9, calibrated against p=0),
+per-T values 0.43,0.46,0.56,0.48,0.46,0.42. Data: results/data/nb8_master.jld2 (converged k=4 block-PM
+sweep, ΔT=1, T=2..12, p={0,0.1}, 22/22; generated by NB7, also read by NB5).
+
+THE WALL (NB5 §4–5 — the method-limit result): the temporal entropy is recovered as a conformal dome only
+UP TO T≈8 for p=0.1; at T≥10 it breaks. This is the entanglement barrier / emerging dual unitarity (a
+real critical-point feature), surfacing as a NUMERICAL wall because:
+  - the leading transfer eigenVALUES stay well-conditioned (|λ0| reproducible to ~1e-5), but the
+    individual eigenVECTOR is ILL-CONDITIONED at the near-degeneracy (sensitivity ~ 1/gap; gap→1e-3).
+    This is fundamental linear algebra, NOT a power-method bug — better PM internals cannot beat it.
+  - NO post-processing of the block subspace recovers the physical dome: the gauge-invariant subspace
+    PROJECTOR P=Σ|Ri⟩⟨Li| INFLATES (it is a rank-m MIXED state, its Rényi-2 adds classical mixing
+    entropy: peak 0.28→0.76(m=2)→1.16(m=3)); pure-state CONTINUITY (project prev-T physical vector onto
+    the current block) DRIFTS (0.26→0.34→0.86) because the block vectors are themselves contaminated.
+  - there is NO degeneracy-free route: run_cone is the FOLDED ⟨O(t)⟩ picture (not our bare ⟨L|R⟩); a
+    direct finite-L forward contraction converges to the fixed point only at rate (λ1/λ0)^L → needs
+    L~1e4 at the gap closing. The ill-conditioned eigenvector is intrinsic to the dual-unitarity regime.
+  - the EIGENVALUE route does NOT rescue c for p=0.1 either: SELECTING the physical λ0 is itself
+    ambiguous when 3 eigenvalues share |θ|≈1.55, so the tracked |λ0| is non-monotone and Eq.(3) c swings
+    0.17–0.98 with the fit window. (It is robust only for the well-separated p=0 case.)
+  - WHY ISING (C-T) REACHED T=14 BUT FRUSTRATED ALCARAZ STOPS AT T≈10: (1) Ising's Murg MPO is
+    left-right SYMMETRIC → C-T use the Autonne-Takagi (complex-symmetric) RTM diagonalization, far
+    better conditioned near a degeneracy; Alcaraz is ASYMMETRIC → forced non-symmetric PM with
+    ill-conditioned eigenvectors. (2) Frustration closes the gap FASTER → the wall arrives earlier.
+
+METHODOLOGICAL TAKEAWAY (for the thesis "pushing the classical-simulation limit"): the reach of the
+asymmetric transverse method here is BOUNDED, and we mapped that bound — the universal physics (c≈1/2)
+is extracted in the pre-wall window, and the structural causes (asymmetry + frustration) are identified.
+Characterizing the limit IS the result; it is not a failure of the approach.
+
+CODE CLEANUP: the failed-repair functions (rtm2_cross_contracted, gen_renyi2_subspace, select_cluster,
+physical_pair_by_continuity) were ADDED then REMOVED from src/transverse_tools.jl (git-recoverable);
+the finding lives in NB5 §4–5 + here. The genuine mixed-fixed-point entropy at TRUE degeneracy is the
+only context where the projector code would be the right tool again.
+
+### XXZ TEMPORAL ENTROPY INVESTIGATION (June 2026 — NB8 + NB9; NOTEBOOKS BUILT, PENDING FULL RUN)
+
+CONTEXT: Supervisor asked to repeat the Alcaraz temporal-entropy analysis on the critical XXZ chain
+  H_Δ = Σ [½(S+S- + S-S+) + Δ SzSz],  |Δ|≤1 critical, c=1 Luttinger liquid.
+  Expectation: log temporal entropy growth (like Alcaraz) but with c=1 instead of c=1/2, and
+  possible parity oscillations (supervisor: "a lo mejor hay oscilaciones").
+
+KEY FINDINGS (from smoke tests and preliminary runs; full sweep PENDING user running NB9):
+  1. |X+⟩ IS TRIVIAL for XXZ: no transverse field → uniform product states near the ferromagnetic
+     eigenstate → χ=4 product temporal MPS, Re(S)≈0. Echo decays but temporal entanglement is zero.
+  2. NÉEL QUENCH VIA SUBLATTICE ROTATION: R=∏(even) exp(iπSx) maps (|Néel⟩, H_Δ) → (|↑⟩, H'_Δ)
+     where H'_Δ = Σ[½(S+S+ + S-S-) − Δ SzSz]. The −Δ is forced by the rotation. Single-site
+     uniform boundary preserved. Echo equivalence verified to 4 digits vs TDVP.
+  3. SINGLE-VECTOR PM IS CORRECT (mirror of Alcaraz where block was needed):
+     - Block k=2: INFLATES (peak 1.33 vs true 0.70 at T=4) — mixes two Z₂ Néel sectors
+     - Single-vector: spontaneously selects one Z₂ sector → clean dome (0.70 at T=4, 0.97 at T=6)
+  4. c EXTRACTION FROM Im(S): Re(S) chord-slope corrupted by parity oscillations (gives c≈6-10
+     nonsense). Clean c from Im(S) → πc/12: c_eff≈0.95 at T=6, approaching c=1 target (0.262).
+  5. ITransverse's SymSVD builder is NOT actually symmetric (normdiff ~0.07-0.45) → cannot use
+     powermethod_sym or Takagi RTM for XXZ. VD2 (asymmetric powermethod_lr) is the only route.
+  6. EQUILIBRIUM DMRG c≈1 CONFIRMED: smoke test N=80, Δ=0.5 gives c=1.047.
+  7. GAP CLOSES SLOWER FOR XXZ (NN) THAN ALCARAZ (NNN): gap_ratio at T=3: XXZ=0.880, Alcaraz=0.978.
+     Quantifies "no NNN → gap closes slower → larger T-reach."
+
+XXZ IS HARDER THAN ISING despite being NN: (1) no symmetric MPO → no Takagi, forced asymmetric PM;
+  (2) Z₂ Néel-quench degeneracy → block PM inflates, single-vector spontaneously selects;
+  (3) c=1 marginal operator → parity oscillations contaminate Re(S) chord fit.
+
+STATUS: NB8 and NB9 (XXZ) built and code-complete; library changes verified; awaiting user to run the
+  full sweep cells (crash-safe caches will be generated). DMRG + echo + gap smoke tests pass.
 
 ### DEFERRED
 
@@ -1155,20 +1279,32 @@ c(p=0.1) is NOT yet established.
     validates the pipeline.
   Full p-sweep (0,0.1,0.2,0.5,1.0): map c(p) and locate the breaking point p* where temporal
     universality departs from Ising (if ever). Blocked on Step 2 validation.
+  XXZ period scan: FFT of Re(S) staggered component to extract oscillation period vs Δ — deferred
+    to a future session (FFTW not in Project.toml; manual Fourier sufficient but not yet run).
+  XXZ Δ-sweep: map c_eff(Δ) and oscillation amplitude across the critical line |Δ|≤1.
 
 ### KEY TOOLS AND THEIR LOCATIONS
 
-  src/transverse_tools.jl (was dqpt_diagnostics.jl; load via include("src/thesislib.jl")):
-    build_alcaraz_tmpo(T; p, lambda, dt, nbeta, MPO_alg) → (mpo, scaffold)
+  src/transverse_tools.jl (was dqpt_diagnostics.jl; load via include("../src/thesislib.jl")):
+    build_tmpo(mp, scheme, T; dt, nbeta, init_state) → (mpo, scaffold)  [GENERIC, model-agnostic]
+    build_alcaraz_tmpo(T; p, lambda, dt, nbeta, MPO_alg) → (mpo, scaffold)  [thin wrapper]
     block_transfer_eigs(mpo, scaffold; k, maxdim, ...) → (theta, L, R, info)
     lincomb_mps(coeffs, vecs; cutoff, maxdim) → MPS
     run_pm_diagnosed(T; ...) → NamedTuple with diagnostics (slimmed; Z2/DQPT-cosine signal dropped)
-    compute_entropies(mp::ModelParams, T; scheme, nbeta, ...) → (bonds, re, im, L, R, mpo)
-                       UNIFIED driver (replaces compute_alcaraz/tricritical_entropies)
+    compute_entropies(mp::ModelParams, T; scheme, nbeta, init_state, itermax, seed, ...) →
+                       (bonds, re, im, L, R, mpo)  [UNIFIED; init_state="Up" for XXZ-Néel]
     tdvp_loschmidt_amplitude(N, Ts; ...) → Dict with G, absG, rate per T (caches to results/data/)
     crashsafe_sweep(f, Ts; cachefile) → Dict
-  src/models.jl (was main.jl): AlcarazParams/TricriticalParams, *_opsum, expH_*, ITransverse.expH
-  Cached data (now under results/data/):
-    block_pm_alcaraz_p0.0.jld2 (T=0.5..7, nbeta=0) — eigenvalues only
-    block_pm_alcaraz_p0.1.jld2 (T=0.5..5.5, nbeta=0) — eigenvalues only
-    cft_renyi2_beta_p5.jld2 (nbeta=4) — Alcaraz Rényi-2 c: p=0.1 gives c≈0.69 (T=4), 6.0 (T=6) [BAD]
+  src/models.jl: AlcarazParams/TricriticalParams/XXZParams(VD2)/XXZNeelParams, *_opsum, expH_*,
+    ITransverse.expH dispatch for all four models.
+  Cached data (now under results/data/): each is REGENERABLE by its owning notebook's crash-safe
+  cell (June 2026 self-containment pass — no notebook depends on a background-only cache anymore).
+    block_pm_alcaraz_p0.{0,1}.jld2 — old nbeta=0 eigenvalue sweeps; SUPERSEDED by nb8_master (nbeta=4)
+                                     in the 5+8 merge — nb5 now reads nb8_master, not these (orphaned but kept)
+    nb8_master.jld2 — the converged headline sweep (generated by nb7; nb5 also reads it for the gap/wall)
+    ising_lambda0.jld2 (nb6),  [nb7_alcaraz_{block,lite,k4_diag}.jld2 DELETED — superseded by nb8_master]
+    tdvp_loschmidt_p0.1_N40.jld2 + tvdp_run.jld2 (nb1), rate_{TDVP,VD2,WII}.jld2 (nb2),
+    nb35_{blockpm_bench,t6_accept}.jld2 (nb3.5)
+    nb9_xxz_dmrg.jld2, nb9_neel_echo.jld2 (nb8); nb10_xxz_neel.jld2, nb10_xxz_gap.jld2 (nb9)
+      (filename prefixes nb9_/nb10_ are historical → notebooks 8/9 after the renumber)
+    (cft_renyi2_beta_p5.jld2 — the OLD [BAD] c≈0.69 nb7 data — DELETED, git-recoverable)

@@ -7,38 +7,40 @@
 overlap_lr(L::MPS, R::MPS) = overlap_noconj(L, R)
 
 """
+    build_tmpo(mp, scheme, target_T; dt, nbeta, init_state) → (mpo, scaffold)
+
+Model-agnostic tMPO builder. Returns the rotated forward tMPO (the spatial transfer
+matrix) and a structured seed tMPS on the same time-site indices (the scaffold). The
+scaffold gets overwritten with random complex tensors before any power method.
+`init_state` is the single-site boundary state name (e.g. "X+"). Works for any
+`ModelParams`/`ExpHRecipe` pair that has an `ITransverse.expH` method.
+"""
+function build_tmpo(mp::ModelParams, scheme::ExpHRecipe, target_T::Float64;
+        dt::Float64=0.1, nbeta::Int=0, init_state::String="X+")
+    Nsteps      = round(Int, target_T / dt) + nbeta          # time-steps + nbeta cooling sites
+    s           = mp.phys_site
+    init        = complex(state(s, init_state))              # single-site LEFT/RIGHT boundary
+    tp          = tMPOParams(mp=mp, dt=dt, nbeta=nbeta, scheme=scheme, dbeta=-im*dt, bl=init)
+    b           = FwtMPOBlocks(tp)                           # rotated bulk/boundary tensors
+    # the spatial MPO's VIRTUAL bond => the temporal PHYSICAL dimension (read it dynamically)
+    spatial_bond_dim = dim(inds(b.Wc, "Site,time")[1])
+    time_sites  = addtags(siteinds(spatial_bond_dim, Nsteps; conserve_qns=false), "time")
+    mpo         = fw_tMPO(b, time_sites, tr=init)            # the transfer matrix (an MPO)
+    scaffold    = fw_tMPS(b, time_sites; tr=init, LR=:right) # structured seed tMPS (index skeleton + dims)
+    return mpo, scaffold
+end
+
+"""
     build_alcaraz_tmpo(target_T; p, lambda, dt, nbeta, MPO_alg) → (mpo, scaffold)
 
-Returns the rotated forward tMPO (the spatial transfer matrix) and a structured
-seed tMPS on the same time-site indices (the scaffold). The scaffold gets
-overwritten with random complex tensors before any power method.
+Alcaraz-specific thin wrapper around `build_tmpo` (boundary |X+⟩). Kept for the
+existing Alcaraz notebooks/sweeps.
 """
 function build_alcaraz_tmpo(target_T::Float64;
         p::Float64=0.1, lambda::Float64=1.0, dt::Float64=0.1,
         nbeta::Int=0, MPO_alg::String="VD2")
-    # Number of time-steps (size dt) + the nbeta ("cooling" imaginary-time) = length of tMPS
-    Ntime_steps = round(Int, target_T / dt)
-    Nsteps      = Ntime_steps + nbeta
-
-    s           = Index(2, "S=1/2")              # spin-1/2 physical leg (dim 2)
-    init_state  = complex(state(s, "X+"))        # boundary state |X+> (+1 eigenstate of sigma_x)
-
-    RECIPES     = Dict("WI"=>AlcarazWI(),
-                        "WII"=>AlcarazWII(),      #   WI/WII = 1st order, VD2 = 2nd order
-                        "VD2"=>AlcarazVD2())
-    mp          = AlcarazParams(lambda=lambda, p=p, phys_site=s)
-    # Build the (rotated) transfer matrix
-    #   dbeta=-im*dt is "imaginary-time" cooling steps; bl is the LEFT boundary state
-    tp          = tMPOParams(mp=mp, dt=dt, nbeta=nbeta, scheme=RECIPES[MPO_alg],
-                             dbeta=-im*dt, bl=init_state)
-    b           = FwtMPOBlocks(tp)               # the rotated bulk/boundary tensors (Wl, Wc, Wr, ...)
-    # the spatial MPO's VIRTUAL bond => the temporal PHYSICAL dimension (read it dynamically)
-    spatial_bond_dim = dim(inds(b.Wc, "Site,time")[1])
-
-    time_sites  = addtags(siteinds(spatial_bond_dim, Nsteps; conserve_qns=false), "time")
-    mpo         = fw_tMPO(b, time_sites, tr=init_state)              # the transfer matrix (an MPO)
-    scaffold    = fw_tMPS(b, time_sites; tr=init_state, LR=:right)   # structured seed tMPS (we want only the index skeleton + dims)
-    return mpo, scaffold
+    recipe = Dict("WI"=>AlcarazWI(), "WII"=>AlcarazWII(), "VD2"=>AlcarazVD2())[MPO_alg]
+    return build_tmpo(AlcarazParams(lambda=lambda, p=p), recipe, target_T; dt=dt, nbeta=nbeta)
 end
 
 # Weighted sum of several MPS:  result = Σ_i coeffs[i] * vecs[i]
@@ -107,11 +109,16 @@ transfer operator `mpo`, with separate left/right bases and a fully non-conjugat
 `cutoffs` is the analogous OPTIONAL per-iteration cutoff schedule (looser early, 
 tighter late); `nothing` (default) ⇒ fixed `cutoff`.
 
-`trunc_mode` selects how each de-mixed Ritz pair is truncated:
-  • `:rtm` (DEFAULT): combine exactly (directsum) then truncate each matched (L,R) pair JOINTLY on
-    its transition matrix via `truncate_sweep` (same RTM-structure truncation `powermethod_lr` uses);
-    keeps fewer states at the gap closing (faster + cleaner)
-  • `:naive`: independent per-vector SVD truncation
+`trunc_mode` selects how each de-mixed Ritz pair is truncated — the block analogues of the two
+truncations `powermethod_lr` offers via `truncp.alg`:
+  • `:rtm` (DEFAULT): RTM truncation. Combine exactly (directsum), then truncate each matched (L,R)
+    pair JOINTLY on its bilinear transition matrix |R⟩⟨L| via `truncate_sweep` — the same
+    non-conjugating RTM route as `truncp.alg="RTM"`. Optimal for the ⟨L|R⟩ overlap and keeps fewer
+    states, but its SVD of a non-Hermitian object is ill-conditioned exactly at the gap closing.
+  • `:rdm` (= `:naive`, historical alias): RDM truncation. Truncate each L and R INDEPENDENTLY, each
+    on its own Hermitian reduced density matrix |v⟩⟨v*| (the conjugating SVD inside `truncate!`) —
+    the block analogue of `truncp.alg="densitymatrix"`. Discards the L–R coupling but stays
+    well-conditioned (a positive Hermitian spectrum) through the near-degeneracy.
 
 `itermin`/`stuck_after` give an early-stop: after `itermin` iters, break with `reason="stuck"`
 once the tracked Δθ fails to improve for `stuck_after` consecutive iters
@@ -226,20 +233,30 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         # taking those linear combinations of the applied vectors AR / ATL. This replaces the old
         # block with k cleanly-separated (approximate) eigenvectors, ready for the next iteration.
         if trunc_mode === :rtm
-            # :rtm truncates each matched (L_j,R_j) pair JOINTLY on its transition matrix via `truncate_sweep`.
-            # Truncating the pair together (rather than each vector alone) keeps only the states that matter for
-            # the physical ⟨L|R⟩ structure (usually much faster and cleaner).
-            # De-mix with the EXACT directsum (do_truncate=false): truncate_sweep orthogonalizes its inputs
-            # itself, so a pre-truncate! here would be a redundant
+            # :rtm — RTM truncation: the block analogue of powermethod_lr's truncp.alg="RTM"
+            # (tlrcontract(::Algorithm"RTM")). Truncate each matched (L_j,R_j) pair JOINTLY on its
+            # bilinear transition matrix |R_j⟩⟨L_j| (NO conjugation) via `truncate_sweep`. Keeps only
+            # the states that matter for the physical ⟨L|R⟩ structure (fewer states, cleaner), but the
+            # non-Hermitian SVD is ill-conditioned right at the gap closing.
+            # De-mix with the EXACT directsum (do_truncate=false): truncate_sweep orthogonalizes its
+            # inputs itself, so a pre-truncate! here would be redundant.
             Rnew = MPS[lincomb_mps(VR[:, j], AR;  do_truncate=false) for j in 1:k]
             Lnew = MPS[lincomb_mps(VL[:, j], ATL; do_truncate=false) for j in 1:k]
             for j in 1:k
                 res = truncate_sweep(Lnew[j], Rnew[j]; cutoff=cut, maxdim=md)   # joint pair truncation
                 Lnew[j], Rnew[j] = res.L, res.R
             end
-        else  # :naive truncates each vector on its own (more expensive in general)
+        elseif trunc_mode === :rdm || trunc_mode === :naive
+            # :rdm — RDM truncation: the block analogue of powermethod_lr's truncp.alg="densitymatrix"
+            # (the generic tlrcontract fallback → tcontract(::Algorithm"densitymatrix")). Truncate every
+            # L_j and R_j INDEPENDENTLY, each on its own Hermitian reduced density matrix |v⟩⟨v*| (the
+            # conjugating SVD inside `truncate!`). Discards the L–R coupling, but it is a positive
+            # Hermitian eigenproblem, so it stays well-conditioned through the near-degeneracy where the
+            # RTM SVD scatters. (:naive is the historical alias for this same per-vector route.)
             Rnew = MPS[lincomb_mps(VR[:, j], AR;  cutoff=cut, maxdim=md) for j in 1:k]
             Lnew = MPS[lincomb_mps(VL[:, j], ATL; cutoff=cut, maxdim=md) for j in 1:k]
+        else
+            error("block_transfer_eigs: unknown trunc_mode=$(trunc_mode) (use :rtm, :rdm, or :naive)")
         end
         # Re-normalise each new vector (or replace it with a fresh random vector if norm -> 0, Inf)
         for j in 1:k
@@ -390,46 +407,51 @@ function compute_entropies(mp::ModelParams, target_T::Float64;
         use_block_pm::Bool=false, k_block::Int=2,
         maxdims::Union{Nothing,AbstractVector{<:Integer}}=nothing,
         cutoffs::Union{Nothing,AbstractVector{<:Real}}=nothing,
-        trunc_mode::Symbol=:rtm)
+        trunc_mode::Symbol=:rtm, init_state::String="X+",
+        itermax::Int=8000, stuck_after::Int=2000, seed::Union{Nothing,MPS}=nothing)
 
     Ntime_steps = round(Int, target_T / dt)
     Nsteps      = Ntime_steps + nbeta
     s           = mp.phys_site
-    init_state  = complex(state(s, "X+"))
+    init        = complex(state(s, init_state))
 
-    tp = tMPOParams(mp=mp, dt=dt, nbeta=nbeta, scheme=scheme, dbeta=-im*dt, bl=init_state)
+    tp = tMPOParams(mp=mp, dt=dt, nbeta=nbeta, scheme=scheme, dbeta=-im*dt, bl=init)
     b  = FwtMPOBlocks(tp)
     spatial_bond_dim = dim(inds(b.Wc, "Site,time")[1])
     time_sites = addtags(siteinds(spatial_bond_dim, Nsteps; conserve_qns=false), "time")
 
-    mpo       = fw_tMPO(b, time_sites, tr=init_state)
-    start_mps = fw_tMPS(b, time_sites; tr=init_state, LR=:right)
+    mpo       = fw_tMPO(b, time_sites, tr=init)
+    start_mps = fw_tMPS(b, time_sites; tr=init, LR=:right)
 
     if use_block_pm
         # (A) robust block PM through gap closing
         _, L_vecs, R_vecs, info = block_transfer_eigs(mpo, start_mps;
-            k=k_block, maxdim=maxdim, cutoff=cutoff, itermax=8000, eps_conv=eps_converged,
+            k=k_block, maxdim=maxdim, cutoff=cutoff, itermax=itermax, eps_conv=eps_converged,
             maxdims=maxdims, cutoffs=cutoffs, trunc_mode=trunc_mode)
         # Warm only if method is stuck or reached max iterations
         info[:reason] in ("maxiter", "stuck") && @warn "block PM did not strictly converge at T=$target_T (reason=$(info[:reason]))"
         psi_L, psi_R = L_vecs[1], R_vecs[1]            # take the leading (dominant) pair
     else
         # (B) cheap single-vector method
-        for i in eachindex(start_mps)                  # random seed (avoids the subdominant-sector trap)
-            start_mps[i] = randomITensor(ComplexF64, inds(start_mps[i]))
+        if seed === nothing
+            for i in eachindex(start_mps)              # random seed (avoids the subdominant-sector trap)
+                start_mps[i] = randomITensor(ComplexF64, inds(start_mps[i]))
+            end
+        else
+            start_mps = pad_tmps(seed, siteinds(start_mps))   # warm-start: prev-T fixed point onto these time-sites
         end
         normalize!(start_mps)
 
         pm_params = PMParams(;
             truncp = (; cutoff=cutoff, maxdim=maxdim, alg=alg),
             opt_method = :nosym,
-            cutoffs = [cutoff],
-            maxdims = 2:2:maxdim,
-            itermax = 8000,
+            cutoffs = cutoffs === nothing ? [cutoff] : cutoffs,
+            maxdims = maxdims === nothing ? (2:2:maxdim) : maxdims,
+            itermax = itermax,
             eps_converged = eps_converged,
             normalization = "overlap",
-            stuck_after = 2000,
-            compute_fidelity = true)
+            stuck_after = stuck_after,
+            compute_fidelity = false)
 
         psi_L, psi_R, _ = ITransverse.powermethod_lr(start_mps, mpo, mpo, pm_params)
 

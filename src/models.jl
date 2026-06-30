@@ -100,3 +100,108 @@ function ITransverse.expH(sites::Vector{<:Index}, mp::TricriticalParams, recipe:
     os = tricritical_opsum(length(sites), mp.lambda)
     return expmpo(os, sites, -im * dt; alg=Algorithm(_alg_string(recipe)))
 end
+
+# ══════════════════════════════════════════════════════════════════════════════
+# XXZ MODEL — our asymmetric exp-MPO (VD2) path
+#   Reuses ITransverse's XXZParams (J_XY, J_ZZ, hz) with convention
+#     H = -( J_XY (XX+YY + J_ZZ ZZ) + 2 hz Z ),   J_ZZ = Δ.
+#   The supervisor's  H_Δ = Σ_x [½(S+S- + S-S+) + Δ Sz Sz]  ⇒  XXZParams(-1.0, Δ, 0.0)
+#   (overall sign of H is immaterial to |L| and the temporal entropy).
+#   ITransverse already provides the SYMMETRIC SymSVD builder; THIS adds the 2nd-order
+#   asymmetric VD2 builder (like Alcaraz) for the gap-vs-Alcaraz comparison and a
+#   higher-Trotter-order cross-check.
+# ══════════════════════════════════════════════════════════════════════════════
+
+abstract type AbstractXXZRecipe <: ExpHRecipe end
+struct XXZWI  <: AbstractXXZRecipe end
+struct XXZWII <: AbstractXXZRecipe end
+struct XXZVD2 <: AbstractXXZRecipe end
+
+_alg_string(::XXZWI)  = "WI"
+_alg_string(::XXZWII) = "WII"
+_alg_string(::XXZVD2) = "VD2"
+
+"""Builds the XXZ Hamiltonian as an OpSum (ITransverse convention H=-(J_XY(XX+YY+Δ ZZ)+2hZ))."""
+function xxz_opsum(N::Int, J_XY::Number, J_ZZ::Number, hz::Number=0.0)
+    os = OpSum()
+    for j in 1:(N - 1)
+        os += -J_XY / 2,    "S+", j, "S-", j + 1
+        os += -J_XY / 2,    "S-", j, "S+", j + 1
+        if abs(J_ZZ) > 1e-12
+            os += -J_XY * J_ZZ, "Sz", j, "Sz", j + 1
+        end
+    end
+    if abs(hz) > 1e-12
+        for j in 1:N
+            os += -2 * hz, "Sz", j
+        end
+    end
+    return os
+end
+
+"""Direct U(dt)=exp(-i H dt) MPO for the XXZ model (Schrödinger pipeline). alg = {WI,WII,VD2}"""
+function expH_xxz(sites::Vector{<:Index}, J_XY::Number, J_ZZ::Number; dt::Number, mpo_alg::String="VD2", hz::Number=0.0)
+    os = xxz_opsum(length(sites), J_XY, J_ZZ, hz)
+    return expmpo(os, sites, -im * dt; alg=Algorithm(mpo_alg))
+end
+
+function ITransverse.expH(sites::Vector{<:Index}, mp::XXZParams, recipe::AbstractXXZRecipe; dt::Number)
+    os = xxz_opsum(length(sites), mp.J_XY, mp.J_ZZ, mp.hz)
+    return expmpo(os, sites, -im * dt; alg=Algorithm(_alg_string(recipe)))
+end
+
+# ══════════════════════════════════════════════════════════════════════════════
+# XXZ NÉEL QUENCH (sublattice-rotated frame) — the model we actually time-evolve
+#   Physical setup: quench the NÉEL state |↑↓↑↓…⟩ with the critical XXZ Hamiltonian
+#     H_Δ = Σ_x [ ½(S+_x S-_{x+1} + S-_x S+_{x+1}) + Δ Sz_x Sz_{x+1} ]   (supervisor's Eq. 2, +Δ)
+#   The single-site sublattice rotation R = ∏_{x even} exp(iπ Sx_x) maps
+#     |Néel⟩ → |↑↑↑…⟩ (uniform)  and
+#     H_Δ → H'_Δ = Σ_x [ ½(S+_x S+_{x+1} + S-_x S-_{x+1}) − Δ Sz_x Sz_{x+1} ].
+#   R is a product of single-site unitaries ⇒ the Loschmidt echo and the entire temporal-
+#   entropy structure are IDENTICAL, so we evolve the UNIFORM |↑⟩ state under H'_Δ and reuse
+#   the single-site transverse machinery (no 2-site unit cell needed).
+#   IMPORTANT: `Delta` is the PHYSICAL XXZ anisotropy (supervisor's +Δ convention); the ZZ
+#   sign necessarily flips to −Δ in the rotated frame (any Néel→ferromagnet rotation is a
+#   π-rotation in the XY plane, which flips Sz). Verified: |↑⟩-under-H'_Δ echo == direct
+#   Néel-under-H_Δ TDVP echo to 4 digits. Critical regime |Δ| ≤ 1 (c = 1 Luttinger liquid).
+# ══════════════════════════════════════════════════════════════════════════════
+
+abstract type AbstractXXZNeelRecipe <: ExpHRecipe end
+struct XXZNeelWI  <: AbstractXXZNeelRecipe end
+struct XXZNeelWII <: AbstractXXZNeelRecipe end
+struct XXZNeelVD2 <: AbstractXXZNeelRecipe end
+
+_alg_string(::XXZNeelWI)  = "WI"
+_alg_string(::XXZNeelWII) = "WII"
+_alg_string(::XXZNeelVD2) = "VD2"
+
+Base.@kwdef mutable struct XXZNeelParams <: ModelParams
+    Delta::Float64 = 0.5                      # PHYSICAL XXZ anisotropy (supervisor's +Δ SzSz)
+    phys_site::Index{Int64} = Index(2, "S=1/2")
+end
+
+XXZNeelParams(Δ::Number) = XXZNeelParams(; Delta=Float64(Δ))
+XXZNeelParams(x::XXZNeelParams; Delta=x.Delta) = XXZNeelParams(; Delta, phys_site=x.phys_site)
+
+"""Sublattice-rotated XXZ Hamiltonian (Néel→uniform |↑⟩ frame): Σ ½(S+S+ + S-S-) − Δ SzSz.
+   `Delta` is the physical (+Δ) anisotropy; the −Δ here is the rotation-induced ZZ sign flip."""
+function xxz_neel_opsum(N::Int, Delta::Number)
+    os = OpSum()
+    for j in 1:(N - 1)
+        os += 0.5,      "S+", j, "S+", j + 1
+        os += 0.5,      "S-", j, "S-", j + 1
+        os += -Delta,   "Sz", j, "Sz", j + 1
+    end
+    return os
+end
+
+"""Direct U(dt) MPO for the rotated XXZ-Néel model (Schrödinger pipeline)."""
+function expH_xxz_neel(sites::Vector{<:Index}, Delta::Number; dt::Number, mpo_alg::String="VD2")
+    os = xxz_neel_opsum(length(sites), Delta)
+    return expmpo(os, sites, -im * dt; alg=Algorithm(mpo_alg))
+end
+
+function ITransverse.expH(sites::Vector{<:Index}, mp::XXZNeelParams, recipe::AbstractXXZNeelRecipe; dt::Number)
+    os = xxz_neel_opsum(length(sites), mp.Delta)
+    return expmpo(os, sites, -im * dt; alg=Algorithm(_alg_string(recipe)))
+end
