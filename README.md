@@ -29,23 +29,28 @@ as the central charge `c` can be read off the Loschmidt echo. Carignano & Taglia
 (arXiv:2405.14706) showed this explicitly for the integrable critical Ising and Potts
 chains.
 
-**Central question of this thesis:** does emergent dual unitarity — and with it the
-logarithmic scaling of the temporal entropies — *survive when integrability is
-broken*? We test it on an **ANNNI-type (Alcaraz) model**: a self-dual spin chain that
-extends the transverse-field Ising model with next-nearest-neighbour (NNN) couplings
-of strength `p`,
+**Central question of this thesis:** where does the entanglement barrier put the
+*practical* limit of transverse contraction, and what sets that limit — the physics
+(central charge, symmetries of the quench) or the numerics (MPO symmetry, power-method
+conditioning)? We map the barrier's manifestations across **four models**:
 
-```
-H = -Σ_i [ σᶻ_i σᶻ_{i+1}  +  p σᶻ_i σᶻ_{i+2}  +  λ σˣ_i  +  p λ σˣ_i σˣ_{i+1} ].
-```
+- the integrable **Ising** chain (the Carignano–Tagliacozzo control; symmetric MPO,
+  `c=1/2` — clean out to `T≈14`);
+- an **ANNNI-type (Alcaraz) model** — self-dual, non-integrable NNN extension of Ising,
 
-The model is non-integrable for any `p>0` yet (confirmed here by DMRG) stays critical
-and in the **Ising universality class** `c≈1/2` over a wide range of `p`. It is a
-deliberate **stress-test**: its longer-range couplings are exactly what makes it
-expensive for conventional methods, while the CFT prediction still has a well-defined
-target. We quench from the polarized paramagnet `|Ψ₀⟩ = |X+⟩^N` to the critical point
-`λ=1`, compute the Loschmidt echo by transverse contraction, and compare the
-generalized temporal entropies against the Ising CFT prediction.
+  ```
+  H = -Σ_i [ σᶻ_i σᶻ_{i+1} + p σᶻ_i σᶻ_{i+2} + λ σˣ_i + p λ σˣ_i σˣ_{i+1} ],
+  ```
+
+  which stays in the Ising class (`c≈1/2` by DMRG) — the headline result is that its
+  *temporal* central charge also stays Ising, `c(p=0.1)=0.47±0.05`, up to a wall at `T≈10`;
+- the critical **XXZ** chain quenched from the Néel state (`c=1` Luttinger liquid;
+  the exact Z₂ degeneracy of the quench walls the method already at `T≈4`);
+- the **tricritical (O'Brien–Fendley)** point (`c=7/10`; the fast-closing gap merges
+  the whole leading transfer band — essentially no clean window).
+
+The synthesis lives in `barrier_section.md` (results) and `blockpm_methods.md`
+(methods), both drafted as thesis sections.
 
 ---
 
@@ -54,38 +59,44 @@ generalized temporal entropies against the Ising CFT prediction.
 ```
 README.md                     this file
 CLAUDE.md                     technical context for AI agents (highly detailed)
-carignano-tagliacozzo.md      primary physics reference (arXiv:2405.14706), in markdown
+barrier_section.md            thesis-section draft: the entanglement barrier across 4 models
+blockpm_methods.md            thesis-section draft: the block power method (methods §5.4)
+thesisdraft.md                the thesis manuscript draft
+literature/                   reference papers in markdown (Carignano–Tagliacozzo 2024, …)
 Project.toml / Manifest.toml  Julia environment
 
 src/                          consolidated library (include "src/thesislib.jl")
   thesislib.jl                  entry point: loads packages + both files below
-  models.jl                     Alcaraz (ANNNI) + tricritical Hamiltonians, OpSums,
-                                exp-MPO wrappers, ITransverse.expH dispatch hooks
+  models.jl                     Alcaraz (ANNNI), tricritical, XXZ / XXZ-Néel Hamiltonians,
+                                OpSums, exp-MPO wrappers, ITransverse.expH dispatch hooks
   transverse_tools.jl           build the temporal MPO, (block) power method,
                                 generalized temporal entropies, TDVP cross-check,
                                 crash-safe sweeps and plotting
 
-Notebooks — the narrative, in order:
+NBs/ — the narrative, in order:
   1_introduction_model.ipynb     naive Trotter TEBD benchmarked vs TDVP ⟨Z⟩ (mismatch);
                                  TDVP Loschmidt rate + the entanglement barrier
   2_mpo_exponentiation.ipynb     the finite-state-machine exp-MPO: WI / WII / VD2 benchmarks
   3_temporal_entropies.ipynb     generalized temporal entropies; single-vector PM convergence
                                  failure at the gap closing → block PM recovers the dome
-  3.5_block_pm_efficiency.ipynb  making the block power method cheaper — profile + maxdim/ramp/
-                                 cutoff/kernel/warm-start/k benchmarks
   4_cft_ground_state.ipynb       DMRG: c(p) sweep, finite-size scaling, chord fit — c ≈ 1/2
-  5_spectral_gap_degeneracy.ipynb  deflation → block PM; gap closes faster at larger p; DQPTs
+  5_spectral_gap_degeneracy.ipynb  deflation → block PM; gap closes faster at larger p; the wall
   6_loschmidt_ising.ipynb        reproduce Carignano–Tagliacozzo (c=1/2); λ₀(T) circle plot
-  7_loschmidt_alcaraz.ipynb      Alcaraz temporal c via block PM — entropy slope + leading
-                                 eigenvalues (Eq.3/Eq.4/circle), p=0 calibration (outcome pending run)
-  TN_assignment.ipynb            course exercise (kept, unrelated to the thesis)
+  7_temporal_central_charge.ipynb  THE Alcaraz result: c(p=0.1)=0.47±0.05 from the clean window
+  8_xxz_model_and_neel_quench.ipynb  XXZ physics map (§0), equilibrium c≈1, Néel quench via
+                                 sublattice rotation (echo verified vs TDVP)
+  9_xxz_temporal_entropies.ipynb   XXZ temporal entropies: Z₂ sector structure (§0), Im-S₂ c,
+                                 deterministic dome inflation, intra-sector barrier (k=6)
+  10_tricritical_model.ipynb     O'Brien–Fendley: locating λ_c (equilibrium) + the
+                                 charge-driven transfer band (corrected reading)
+  11_block_pm_validation.ipynb   the block power method under the microscope: dense ground
+                                 truth, regression, the tricritical probe + performance (§P)
+  12_xxz_symmetric_mpo.ipynb     the asymmetry experiment: symmetric (Murg-type) + WII XXZ —
+                                 is the wall the MPO's asymmetry or the physics?
 
 results/
-  imgs/                         figures used by the notebooks / thesis
-  data/                         cached .jld2 (power-method sweeps, TDVP runs, rate benchmarks)
-
-legacy/                         superseded notebooks, old helper scripts, and obsolete data
-                                from closed investigations (kept for provenance; safe to purge)
+  imgs/                         figures, each regenerated by its owning notebook
+  data/                         cached .jld2 (crash-safe sweeps; regenerable by their cells)
 
 ITensorExpMPOv2.jl/             exp-MPO package (fork — see credits below)
 ITransverse_source/             read-only reference clone of ITransverse.jl (see version note)
@@ -151,7 +162,7 @@ sweep resumes where it stopped.
 
 - Carignano & Tagliacozzo, *Loschmidt echo, emerging dual unitarity and scaling of
   generalized temporal entropies after quenches to the critical point*, arXiv:2405.14706
-  (the primary physics reference; included as `carignano-tagliacozzo.md`).
+  (the primary physics reference; included as `literature/carignano-tagliacozzo.md`).
 - Carignano, *The ITransverse.jl library for transverse tensor network contractions*,
   arXiv:2509.03699.
 - Van Damme, Haegeman, McCulloch, Vanderstraeten, *Efficient higher-order matrix product

@@ -205,3 +205,67 @@ function ITransverse.expH(sites::Vector{<:Index}, mp::XXZNeelParams, recipe::Abs
     os = xxz_neel_opsum(length(sites), mp.Delta)
     return expmpo(os, sites, -im * dt; alg=Algorithm(_alg_string(recipe)))
 end
+
+# ── symmetric (Murg-type) propagator for the rotated XXZ-Néel chain (July 2026, NB12) ─────────
+# In Pauli form H'_Δ = Σ_j ¼(σx σx − σy σy − Δ σz σz). Each layer Σ_j σᵃ_j σᵃ_{j+1} is internally
+# commuting, so its exponential is an EXACT bond-2 LEFT-RIGHT-SYMMETRIC MPO (the Murg cos/sin
+# splitting — same construction as ITransverse's expXX_murg, generalized to any Pauli a).
+# This opens the SYMMETRIC route (powermethod_sym + Autonne–Takagi) for XXZ — the asymmetry
+# experiment: is the XXZ wall at T≈4 the MPO's asymmetry, or the exact Z₂ quench degeneracy?
+#
+# TWO KERNELS, both exactly reflection-symmetric (reflection acts site-wise, so ANY product of
+# per-layer-symmetric factors stays symmetric — the palindrome buys TROTTER ORDER, not symmetry):
+#   order=2 (default): palindromic sandwich e^{ZZ/2}e^{YY/2}e^{XX}e^{YY/2}e^{ZZ/2}, 2nd order in
+#     dt, temporal physical dim d_t=32 (4 chained applyn's of bond-2 factors: 2*2*2*2*2=32).
+#   order=1: single sandwich e^{ZZ}e^{YY}e^{XX} (full, not half, steps), 1st order in dt, but
+#     d_t=8 (2 chained applyn's: 2*2*2=8) — ≈16x cheaper per apply, comparable to the asymmetric
+#     WII/VD2 runs. Must be accuracy-validated per dt (NB12 §1); use if the O(dt) error is small
+#     enough at the dt already in use, or drop dt to compensate.
+
+struct XXZNeelMurg <: AbstractXXZNeelRecipe
+    order::Int
+end
+XXZNeelMurg() = XXZNeelMurg(2)
+
+"""Exact symmetric bond-2 MPO of exp(+i*Jdt*Σ_j σᵃ_j σᵃ_{j+1}), a ∈ {"X","Y","Z"} (Pauli ops).
+   Transcription of ITransverse's `expXX_murg` cos/sin splitting, generalized to any Pauli."""
+function exp2site_murg(sites::Vector{<:Index}, Jdt::Number, opname::String)
+    N = length(sites)
+    U = MPO(N)
+    links = [Index(2, "Link,l=$(n-1)") for n in 1:(N + 1)]
+    for n in 1:N
+        ll, rl = dag(links[n]), links[n + 1]
+        I = op(sites, "Id", n)
+        A = op(sites, opname, n)
+        if n == 1
+            U[n]  = onehot(rl => 1) * sqrt(cos(Jdt)) * I
+            U[n] += onehot(rl => 2) * sqrt(im * sin(Jdt)) * A
+        elseif n == N
+            U[n]  = onehot(ll => 1) * sqrt(cos(Jdt)) * I
+            U[n] += onehot(ll => 2) * sqrt(im * sin(Jdt)) * A
+        else
+            U[n]  = onehot(ll => 1, rl => 1) * cos(Jdt) * I
+            U[n] += onehot(ll => 1, rl => 2) * sqrt(im * sin(Jdt)) * sqrt(cos(Jdt)) * A
+            U[n] += onehot(ll => 2, rl => 1) * sqrt(im * sin(Jdt)) * sqrt(cos(Jdt)) * A
+            U[n] += onehot(ll => 2, rl => 2) * im * sin(Jdt) * I
+        end
+    end
+    return U
+end
+
+"""Symmetric 2nd-order U(dt) = exp(−i dt H'_Δ) via the palindromic Murg sandwich.
+   Layer coefficients (exp(−i dt J Σσσ) = exp(+i(−J dt)Σσσ), spin→Pauli factor ¼):
+   XX: J=+¼ full step → Jdt = −dt/4;  YY: J=−¼ half step → +dt/8;  ZZ: J=−Δ/4 half step → +Δdt/8."""
+function expH_xxz_neel_murg(sites::Vector{<:Index}, Delta::Number; dt::Number)
+    Uzz2 = exp2site_murg(sites, Delta * dt / 8, "Z")
+    Uyy2 = exp2site_murg(sites, dt / 8,         "Y")
+    Uxx  = exp2site_murg(sites, -dt / 4,        "X")
+    U = applyn(Uyy2, Uzz2)          # build the palindrome Uzz2·Uyy2·Uxx·Uyy2·Uzz2
+    U = applyn(Uxx,  U)
+    U = applyn(Uyy2, U)
+    U = applyn(Uzz2, U)
+    return U
+end
+
+ITransverse.expH(sites::Vector{<:Index}, mp::XXZNeelParams, ::XXZNeelMurg; dt::Number) =
+    expH_xxz_neel_murg(sites, mp.Delta; dt=dt)

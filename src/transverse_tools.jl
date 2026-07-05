@@ -129,6 +129,14 @@ once the tracked Δθ fails to improve for `stuck_after` consecutive iters
 initial left/right bases (any shorter than `k` is padded with random vectors). Defaults `nothing`
 generates fully random seeds. A converged pair reused here (see `pad_tmps` for cross-T) converges fast.
 
+`basis` selects the coefficient basis the block is de-mixed onto each iteration:
+  • `:eig` (DEFAULT): the Ritz EIGENVECTOR basis — each (L_j,R_j) is an approximate eigenpair.
+    Ill-conditioned when eigenvalues cluster (cond of the eigenvector matrix ~ 1/gap).
+  • `:schur`: an ordered SCHUR-like basis (QR-orthonormalized eigen coefficients, leading-|θ|
+    first). The coefficient rotations are unitary, so the block stays well-conditioned through a
+    near-degenerate cluster; the leading pair still spans the dominant eigenvector, and θ is read
+    from the projected pencil as usual.
+
 info keys: :niters, :reason, :condS (final), :condS_hist, :dtheta, :theta, :theta_eigen.
 """
 function block_transfer_eigs(mpo::MPO, scaffold::MPS;
@@ -139,7 +147,8 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         cutoffs::Union{Nothing,AbstractVector{<:Real}}=nothing,
         trunc_mode::Symbol=:rtm, itermin::Int=20, stuck_after::Int=100,
         seedL::Union{Nothing,AbstractVector{MPS}}=nothing,
-        seedR::Union{Nothing,AbstractVector{MPS}}=nothing)
+        seedR::Union{Nothing,AbstractVector{MPS}}=nothing,
+        basis::Symbol=:eig)
 
     # SETUP
     sit  = siteinds(scaffold)
@@ -202,31 +211,31 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         # Solve the generalised eigenproblem: M v = θ S v 
         # we map it to the ordinary problem (S⁻¹M) v = θ v
         # and we use the PSEUDO-inverse pinv(S) which behaves well even when S is near-singular (gap closing) 
-        W  = pinv(S; rtol=1e-12) * M
+        pS = pinv(S; rtol=1e-12)
+        W  = pS * M
         Fr = eigen(W)                                   # Fr.values = θ's, Fr.vectors = right coeffs
         permr = sortperm(abs.(Fr.values); rev=true)     # sort by |θ| descending (largest first)
         theta = Fr.values[permr]                        # the eigenvalue estimates this iteration
         VR    = Fr.vectors[:, permr]                    # matching right mixing-coefficients (columns)
 
-        # The LEFT eigenvectors come from the TRANSPOSED pencil (permutedims = transpose, no conj).
-        #   eigen() may return them in a different order, so we re-pair each left eigenvalue to the
-        #   right θ it is CLOSEST to in the complex plane
-        Wl = pinv(permutedims(S); rtol=1e-12) * permutedims(M)
-        Fl = eigen(Wl)
-        VL = Matrix{ComplexF64}(undef, k, k)
-        used = falses(k)                                # track which left eigenvectors are taken (false = not yet used)
-        for j in 1:k
-            best, bestd = 0, Inf                        # best = index of closest left eigenvalue, bestd = distance to it
-            for m in 1:k
-                used[m] && continue                     # skip already-assigned ones
-                d = abs(Fl.values[m] - theta[j])        # distance between the m-th left eigenvaue and the j-th right eigenvalue
-                if isfinite(d) && d < bestd
-                    bestd, best = d, m
-                end
-            end
-            best == 0 && (best = findfirst(!, used))    # fallback: take any remaining one
-            used[best] = true
-            VL[:, j] = Fl.vectors[:, best]              # the matched left mixing-coefficients
+        # LEFT coefficients from the SAME decomposition (no second eigen, no matching heuristic):
+        # a left pencil eigenvector obeys uᵀM = θ uᵀS ⇔ (uᵀS) W = θ (uᵀS), i.e. uᵀS is a left
+        # eigenvector of W = the matching ROW of VR⁻¹. Hence u_j = pinv(S)ᵀ (VR⁻¹)ᵀ[:,j] — paired
+        # with theta[j] EXACTLY and bi-orthogonal (uᵢᵀ S vⱼ = δᵢⱼ) by construction, where the old
+        # nearest-value matching of a second independent eigen() could mispair the left/right
+        # vectors inside a near-degenerate cluster (the tricritical failure mode).
+        VL = transpose(pS) * transpose(pinv(VR; rtol=1e-12))
+
+        if basis === :schur
+            # Near a degenerate cluster the eigenvector basis itself is ill-conditioned
+            # (cond(VR) ~ 1/gap), so de-mixing onto it amplifies noise. Instead rotate the block
+            # onto ordered-Schur-like bases: QR-orthonormalize the |θ|-sorted eigen coefficients.
+            # The rotations are unitary (well-conditioned always); the leading j columns span the
+            # same leading-j eigenvector subspaces, and column 1 is still the dominant eigenvector.
+            VR = Matrix(qr(VR).Q)
+            VL = Matrix(qr(VL).Q)
+        elseif basis !== :eig
+            error("block_transfer_eigs: unknown basis=$(basis) (use :eig or :schur)")
         end
 
         # "De-mix": turn the abstract eigen-coefficients (VR, VL columns) back into actual MPS, by
@@ -268,8 +277,25 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         # Convergence / stopping checks (only tracking the leading n_track eigenvalues)
         ntr = min(n_track, k)
         if it > 1 && all(isfinite, theta_prev[1:ntr])
-            # How much did the tracked eigenvalues move since last step? (max over them)
-            dtheta = maximum(abs.(theta[1:ntr] .- theta_prev[1:ntr]))
+            # How much did the tracked eigenvalues move since last step? Match each tracked
+            # PREVIOUS θ to its nearest CURRENT θ (continuity) before differencing: members of a
+            # ±pair or a near-degenerate cluster swap |θ|-sort order between iterations, and a
+            # raw index-wise difference would register that swap as a spurious Δθ jump
+            # (fake non-convergence → premature "stuck").
+            dtheta = 0.0
+            usedc  = falses(k)
+            for j in 1:ntr
+                best, bestd = 0, Inf
+                for m in 1:k
+                    usedc[m] && continue
+                    d = abs(theta[m] - theta_prev[j])
+                    if isfinite(d) && d < bestd
+                        bestd, best = d, m
+                    end
+                end
+                best != 0 && (usedc[best] = true)
+                dtheta = max(dtheta, bestd)
+            end
             push!(dtheta_hist, dtheta)
             if dtheta < eps_conv                      
                 reason = "converged"
@@ -296,8 +322,12 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
             jb = k
             r = rand_mps(); l = rand_mps()
             for a in 1:(k-1)    # take random vector r (l) and subtract away any component it shared with R[1], ..., R[k-1] (L[1], ..., L[k-1])
-                r = lincomb_mps([1.0, -overlap_noconj(L[a], r)], MPS[r, R[a]]; cutoff=cutoff, maxdim=md)
-                l = lincomb_mps([1.0, -overlap_noconj(R[a], l)], MPS[l, L[a]]; cutoff=cutoff, maxdim=md)
+                # bi-orthogonal projection: the (L_a,R_a) pairs are NOT bi-normalized during the
+                # iteration, so the projection coefficient must be divided by ⟨L_a|R_a⟩
+                den = overlap_noconj(L[a], R[a])
+                abs(den) < 1e-14 && continue
+                r = lincomb_mps([1.0, -overlap_noconj(L[a], r)/den], MPS[r, R[a]]; cutoff=cutoff, maxdim=md)
+                l = lincomb_mps([1.0, -overlap_noconj(R[a], l)/den], MPS[l, L[a]]; cutoff=cutoff, maxdim=md)
             end
             R[jb] = normalize(r); L[jb] = normalize(l)
             reason = (reason == "converged") ? reason : "refreshed"
@@ -407,7 +437,7 @@ function compute_entropies(mp::ModelParams, target_T::Float64;
         use_block_pm::Bool=false, k_block::Int=2,
         maxdims::Union{Nothing,AbstractVector{<:Integer}}=nothing,
         cutoffs::Union{Nothing,AbstractVector{<:Real}}=nothing,
-        trunc_mode::Symbol=:rtm, init_state::String="X+",
+        trunc_mode::Symbol=:rtm, init_state::String="X+", basis::Symbol=:eig,
         itermax::Int=8000, stuck_after::Int=2000, seed::Union{Nothing,MPS}=nothing)
 
     Ntime_steps = round(Int, target_T / dt)
@@ -427,7 +457,7 @@ function compute_entropies(mp::ModelParams, target_T::Float64;
         # (A) robust block PM through gap closing
         _, L_vecs, R_vecs, info = block_transfer_eigs(mpo, start_mps;
             k=k_block, maxdim=maxdim, cutoff=cutoff, itermax=itermax, eps_conv=eps_converged,
-            maxdims=maxdims, cutoffs=cutoffs, trunc_mode=trunc_mode)
+            maxdims=maxdims, cutoffs=cutoffs, trunc_mode=trunc_mode, basis=basis)
         # Warm only if method is stuck or reached max iterations
         info[:reason] in ("maxiter", "stuck") && @warn "block PM did not strictly converge at T=$target_T (reason=$(info[:reason]))"
         psi_L, psi_R = L_vecs[1], R_vecs[1]            # take the leading (dominant) pair
