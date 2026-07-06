@@ -2,8 +2,7 @@
 
 *(drop-in thesis section, written July 2026 in the style of thesisdraft.md; companion to the
 methods section in blockpm_methods.md. Sources: NBs 5–7 (Alcaraz/Ising), 8–9 (XXZ), 10
-(tricritical), 11 (method validation), 12 (the symmetric-XXZ experiment, marked [P2] where its
-outcome is pending).)*
+(tricritical), 11 (method validation), 12 (the symmetric-XXZ experiment — resolved).)*
 
 ## 1. One phenomenon, four disguises
 
@@ -92,7 +91,7 @@ the question itself loses meaning.
 |---|---|---|---|---|---|
 | Ising | symmetric (Takagi) | 1/2 | symmetric ($|X^+\rangle$) | none until barrier | $T\approx14$ |
 | Alcaraz $p=0.1$ | asymmetric | 1/2 | symmetric ($|X^+\rangle$) | dynamical (barrier) | $T\approx10$ |
-| XXZ Néel | asymmetric | 1 | **breaking** (Néel) | **exact, from $T=0$** | $T\approx4$ |
+| XXZ Néel | **both tested** | 1 | **breaking** (Néel) | **exact, from $T=0$** | $T\approx4$ (either MPO) |
 | tricritical | asymmetric | 7/10 | symmetric ($|X^+\rangle$) | band (charge-driven) | $\lesssim2$ |
 
 Three independent dials set the wall: **(i) central charge** — larger $c$ means more temporal
@@ -100,7 +99,11 @@ entanglement per unit $T$, a faster-closing gap, an earlier band (tricritical wo
 symmetry content** — a symmetry-breaking initial state contributes an exact degeneracy that no
 window precedes, only a decaying cat splitting masks (XXZ); **(iii) MPO symmetry** — a symmetric
 construction unlocks Takagi diagonalization, whose conditioning near degeneracy is qualitatively
-better (Ising's entire advantage over Alcaraz at equal $c$).
+better (Ising's entire advantage over Alcaraz at equal $c$) — **except when dial (ii) is exact**:
+for XXZ, symmetrizing the MPO (notebook 12) leaves the reach at $T\approx4$ unchanged, because the
+offending degeneracy is a property of the quench's transfer matrix itself (confirmed present in
+both constructions), not of the asymmetric solver. Dial (ii) dominates dial (iii) when the
+degeneracy it creates is exact and structural rather than dynamically emergent.
 
 ## 4. Is there a way out?
 
@@ -118,32 +121,39 @@ $\lambda_0$ circle, the boundary exponent $x_1$ — which remain well-conditione
 
 The decisive escape experiment (notebook 12): a **symmetric MPO for XXZ**. The rotated two-site
 term decomposes as $S^xS^x - S^yS^y - \Delta S^zS^z$, three mutually commuting layers each
-admitting an *exact* bond-2 symmetric (Murg-type) factorization, so a reflection-symmetric
-second-order propagator $e^{ZZ/2}e^{YY/2}e^{XX}e^{YY/2}e^{ZZ/2}$ exists — unlike the package's
-SymSVD attempt, which is demonstrably not symmetric. **Built and verified**: the propagator
-reproduces the exact one-step evolution of a small chain, and its Néel-quench echo matches the
-independent TDVP benchmark to $2.6\times10^{-5}$ — the same accuracy as the production VD2 kernel.
-An independent WII cross-check of the *asymmetric* pipeline (cheaper and, for this
-strictly-nearest-neighbour model, still second order) reproduces the notebook-9 story point for
-point, including the eventual wall — a second, independent confirmation that dials (i)+(ii)
-alone, without touching MPO symmetry, already explain the asymmetric result.
+admitting an *exact* bond-2 symmetric (Murg-type) factorization — unlike the package's SymSVD
+attempt, which is demonstrably not symmetric. Two symmetric kernels were built: the palindromic
+2nd-order sandwich $e^{ZZ/2}e^{YY/2}e^{XX}e^{YY/2}e^{ZZ/2}$, and a cheaper single sandwich
+$e^{ZZ}e^{YY}e^{XX}$ (nominally 1st order, but empirically *more* accurate against the TDVP
+benchmark at the working $\delta t$ — echo error $1.1\times10^{-5}$, better than the palindrome's
+own $2.6\times10^{-5}$ — at $16\times$ lower cost, which is what made the full experiment
+affordable). An independent WII cross-check of the *asymmetric* pipeline reproduces the notebook-9
+story point for point, including the eventual wall — confirming dials (i)+(ii) alone already
+explain the asymmetric result.
 
-**Isolating dial (iii) itself gave an inconclusive but suggestive result.** Feeding the verified
-symmetric propagator into `powermethod_sym` + the Autonne–Takagi $n\to1$ entropy, cold-started
-independently at each $T$ (no warm-starting across the ladder — an implementation gap relative to
-the asymmetric sweeps, left as follow-up), the extracted $c$ **does not stabilize**: $1.50, 0.25,
-0.96, 1.21, 0.48$ over $T=2..6$, with no discernible trend, even though the bond dimension stays
-modest throughout ($\chi=5\to15$, comparable growth to the asymmetric case, no blowup). Two
-readings are possible. Either the noise is purely a seeding artifact and a warm-started rerun
-would recover a clean signal — in which case the question of whether Takagi conditioning moves the
-wall remains genuinely open; or, more suggestively, the *erratic, cold-start-dependent* result is
-itself informative: unlike Ising, whose symmetric fixed point is unique and reproducible from any
-seed, XXZ's symmetric route lands on a *different* answer at every independent draw — exactly the
-signature expected if the exact $\mathbb Z_2$ Néel degeneracy persists **regardless of MPO
-symmetry**, i.e. dial (ii) dominates dial (iii) here. This tentative reading is consistent with
-the rest of this section's argument (the degeneracy is a property of the quench, not the
-contraction scheme) but was not confirmed with a controlled warm-started sweep before this
-thesis's numerical campaign closed; it is the natural next experiment.
+**Isolating dial (iii) itself: resolved.** Three further experiments pin the mechanism down
+completely. A **seed test** (three independent random draws through `powermethod_sym` at fixed
+$T$) is seed-*independent* to machine precision — the symmetric route has a unique, reproducible
+attractor, just like Ising, ruling out "wanders the degenerate manifold." A **warm-started full
+ladder** ($\Delta\in\{0.5,1.0\}$, $T=2..8$, `pad_tmps`-based, mirroring the asymmetric sweeps
+exactly) reproduces the earlier cold-started numbers almost exactly ($c=1.483,0.278,0.928,1.197,
+0.486$ vs $1.50,0.25,0.96,1.21,0.48$ at $\Delta=0.5$, $T=2..6$) — ruling out "cold-start artifact."
+And a **construction-independent spectrum bridge** — running the ordinary (non-symmetric-solver)
+block eigensolver on the symmetric tMPO itself — finds the *same* 4-fold near-degenerate band,
+locking in at the *same* $T\approx4$, as the asymmetric VD2 spectrum (e.g. $T=4$:
+$|\theta|=[0.864,0.829,0.829,0.826]$ symmetric vs $[0.893,0.885,0.867,0.867]$ asymmetric). **The
+degeneracy is a property of the Néel quench's transfer matrix, confirmed present regardless of
+which MPO construction probes it.** What changes with symmetry is not whether the wall appears but
+*how* the failure manifests: the power method converges to a well-defined fixed point at every
+$T$ (unlike the asymmetric case, which needs the ill-conditioned eigenvector itself), but the
+$n\to1$ entropy extracted from it — a log-weighted sum over the entire Autonne–Takagi spectrum of
+the RTM — becomes numerically unstable once that spectrum contains near-degenerate directions
+(the execution log shows `norm²`/`log(norm²)` reality warnings appearing exactly once $T\gtrsim5$).
+**Dial (ii) dominates dial (iii)**: symmetry does not buy back the reach an exact quench
+degeneracy takes away. This also sharpens the Ising contrast: Ising's near-degenerate band is an
+*emergent, asymptotic* approach to dual unitarity that develops gradually, leaving a long
+well-conditioned window; XXZ's is an *exact, structural* degeneracy of the boundary condition,
+present from $T=0$ and merely unmasked once other levels decay below it.
 
 Finally, the honest framing. Emergent dual unitarity — the physics this method was built to see —
 *is* the closing of the gap. A contraction scheme whose accuracy requires an open gap therefore

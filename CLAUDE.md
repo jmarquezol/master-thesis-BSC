@@ -7,10 +7,13 @@
 >>> NEW SESSION: read §18 (END of this file) FIRST — it is the latest handoff (July 2026): the
 >>> THESIS IS NOW REFOCUSED on "the entanglement barrier across four models" (Ising, Alcaraz, XXZ,
 >>> tricritical) — why it appears everywhere, what sets where it lands, and whether it can be
->>> escaped. Campaign CLOSED: Q1 (was the block PM broken?) answered NO — it's physics; the XXZ
->>> Z2-quench-degeneracy wall mapped in full; the symmetric-XXZ asymmetry experiment run but
->>> INCONCLUSIVE (needs a warm-started follow-up). Two new thesis-section drafts at repo root:
->>> barrier_section.md (results) and blockpm_methods.md (methods §5.4). Notebook series is now
+>>> escaped. NUMERICAL CAMPAIGN FULLY CLOSED: Q1 (was the block PM broken?) answered NO — it's
+>>> physics; the XXZ Z2-quench-degeneracy wall mapped in full; the symmetric-XXZ asymmetry
+>>> experiment (phase 2) RESOLVED — dial (ii) [quench symmetry] dominates dial (iii) [MPO
+>>> symmetry], confirmed by a seed test + warm-started ladder + construction-independent spectrum
+>>> bridge, all three agreeing. Only remaining work is WRITING UP into thesisdraft.md. Two
+>>> thesis-section drafts at repo root: barrier_section.md (results) and blockpm_methods.md
+>>> (methods §5.4). Notebook series is now
 >>> 1–12 (NB3.5 retired into NB11 §P; NB10 renamed; NB11 rescoped to validation+performance; NB12
 >>> is new). legacy/ folder DELETED (git-recoverable). CONTINUATION.md was deleted long ago.
 
@@ -348,32 +351,42 @@ master_thesis/
                                       better implementation, not as "the fix" — they were never
                                       the culprit. Caches: nb11_tricrit_probe.jld2 (+ reused
                                       nb35_blockpm_bench/t6_accept.jld2 for §P).
-    12_xxz_symmetric_mpo.ipynb      <- NEW (July 2026): THE ASYMMETRY EXPERIMENT. Does the XXZ wall
-                                      at T≈4 come from the MPO's asymmetry (fixable) or the exact
-                                      Z2 Néel degeneracy (intrinsic)? §1-2: built + verified an
-                                      EXACT symmetric (Murg-type) propagator for rotated XXZ-Néel
-                                      (exp2site_murg/expH_xxz_neel_murg/XXZNeelMurg in src/
-                                      models.jl) — reflection-symmetric by construction, echo
-                                      matches TDVP to 2.6e-5 (ties VD2's own accuracy). §3: WII
-                                      cross-check of the ASYMMETRIC story — independently
-                                      reproduces NB9's findings (both Δ, including the eventual
-                                      wall), confirming that story is kernel-independent physics.
-                                      §4: the dial-(iii) run itself (powermethod_sym + Takagi +
-                                      the n→1 entropy) — INCONCLUSIVE: extracted c does not
-                                      stabilize over the range actually computed (Δ=0.5, T=2..6;
-                                      the fuller grid was abandoned — each point costs far more
-                                      than its asymmetric counterpart and grows fast with T, and
-                                      `sym_sweep` cold-starts every T instead of warm-starting like
-                                      NB9 does, a known implementation gap). §5 verdict: TWO
-                                      readings left open — (a) the noise is a warm-start artifact,
-                                      question genuinely open; (b) the SUGGESTIVE reading — unlike
-                                      Ising, whose symmetric route is seed-independent, XXZ's gives
-                                      a DIFFERENT answer at every cold start, consistent with the
-                                      exact Z2 degeneracy persisting regardless of MPO symmetry
-                                      (dial ii dominates dial iii). NOT CONFIRMED. FOLLOW-UP: add
-                                      seed=prev warm-starting to sym_sweep (mirror NB9 exactly),
-                                      re-run the full Δ×T grid. Caches: nb12_echo.jld2,
-                                      nb12_xxz_wii.jld2, nb12_xxz_sym.jld2 (partial: Δ=0.5,T=2..6).
+    12_xxz_symmetric_mpo.ipynb      <- THE ASYMMETRY EXPERIMENT — RESOLVED (July 2026, two phases).
+                                      Does the XXZ wall at T≈4 come from the MPO's asymmetry
+                                      (fixable) or the exact Z2 Néel degeneracy (intrinsic)?
+                                      ANSWER: intrinsic — dial (ii) dominates dial (iii). §1-2:
+                                      built + verified an EXACT symmetric (Murg-type) propagator
+                                      for rotated XXZ-Néel (exp2site_murg/expH_xxz_neel_murg/
+                                      XXZNeelMurg in src/models.jl, with an `order` field: order=2
+                                      is the original palindrome d_t=32, order=1 is a single
+                                      sandwich e^{ZZ}e^{YY}e^{XX} at d_t=8 — 16x cheaper AND
+                                      empirically more accurate at dt=0.05, echo 1.1e-5 vs TDVP,
+                                      beating the palindrome's own 2.6e-5) — reflection-symmetric
+                                      by construction. §3: WII cross-check of the ASYMMETRIC story
+                                      — independently reproduces NB9's findings. §4: the dial-(iii)
+                                      run (powermethod_sym + Takagi n→1 entropy) — phase 1 (cold-
+                                      started, palindrome kernel) gave erratic c, INCONCLUSIVE.
+                                      §4b (phase 2): a SEED TEST is seed-independent to machine
+                                      precision — refutes "wanders the degenerate manifold". §4c
+                                      (phase 2): a WARM-STARTED full ladder (order=1 kernel, all
+                                      Δ×T=2..8) reproduces phase 1's cold-started numbers almost
+                                      exactly — refutes "cold-start artifact". §4d (phase 2): a
+                                      construction-independent SPECTRUM BRIDGE (ordinary
+                                      block_transfer_eigs on the symmetric tMPO) finds the SAME
+                                      4-fold Z2 band locking in at the SAME T≈4 as the asymmetric
+                                      VD2 spectrum — the degeneracy is confirmed a property of the
+                                      quench's transfer matrix, present regardless of MPO
+                                      construction. §5 verdict: symmetry moves WHERE the method
+                                      fails (power-method convergence → Takagi-diagonalization
+                                      conditioning of the RTM, visible as norm²-not-real warnings
+                                      once T≳5) but not WHETHER or WHEN. Contrast with Ising: its
+                                      near-degenerate band is emergent/asymptotic (gradual, long
+                                      clean window); XXZ's is exact/structural (built into the
+                                      Néel boundary condition from T=0). Caches: nb12_echo.jld2,
+                                      nb12_echo_order1.jld2, nb12_xxz_wii.jld2, nb12_xxz_sym.jld2
+                                      (phase-1 cold-start record, Δ=0.5,T=2..6), nb12_sym_seedtest
+                                      .jld2, nb12_xxz_sym2.jld2 (phase-2 warm-started, full grid),
+                                      nb12_sym_spectrum.jld2.
 
   results/
     imgs/                          <- figures, each REGENERATED + displayed by its owning notebook's
@@ -1462,52 +1475,66 @@ quench is a worse enemy than frustration. XXZ (NN, unfrustrated, slow barrier) w
 — earlier than frustrated Alcaraz's $T\approx10$ — purely because of what symmetry the quench
 breaks.
 
-### NB12 — the asymmetry experiment: built and verified, but the answer is open
+### NB12 — the asymmetry experiment: RESOLVED (phase 2, July 2026) — dial (ii) dominates dial (iii)
 
-The natural next question — does the wall come from the MPO's **asymmetry** (fixable) or from
-**physics** (dials i–ii above)? — needed a symmetric XXZ propagator, which didn't exist. Built one
-(`exp2site_murg`/`expH_xxz_neel_murg`/scheme `XXZNeelMurg` in `src/models.jl`): the rotated
-two-site term decomposes into mutually-commuting $XX$, $YY$, $ZZ$ layers, each admitting an EXACT
-bond-2 Murg cos/sin factorization (the same construction ITransverse uses for Ising), assembled
-into a palindromic 2nd-order sandwich $e^{ZZ/2}e^{YY/2}e^{XX}e^{YY/2}e^{ZZ/2}$.
-- **§1–2, verified solidly**: one-step accuracy vs exact dense evolution: Murg $4.8\times10^{-5}$,
-  essentially tied with production VD2's $6.1\times10^{-5}$ (WII: $7.8\times10^{-3}$, expected —
-  cheaper/lower-order). Néel-quench echo matches independent TDVP to $2.6\times10^{-5}$ (again
-  tied with VD2). `powermethod_sym`'s Takagi-based `RTMsym` truncation ran to completion without
-  error, which requires a genuinely symmetric MPO. (The naive DENSE reflection-symmetry check in
-  §1 gave exactly 0.0 for Murg, VD2, *and* WII — that check is too weak to discriminate, since any
-  correct propagator of a reflection-symmetric Hamiltonian is trivially dense-symmetric regardless
-  of its MPO tensor structure; the real gate is the package's own tMPO symmetry checker fired
-  inside `FwtMPOBlocks`, which the Ising notebooks show passing/failing exactly where expected.)
-- **§3 (WII cross-check of the ASYMMETRIC pipeline)**: independently reproduces NB9's story point
-  for point on both $\Delta$, including the eventual wall — confirms that result is
-  kernel-independent physics.
-- **§4 (the dial-(iii) run itself) — INCONCLUSIVE.** `powermethod_sym` + the $n\to1$ Takagi entropy
-  on the SAME quench: extracted $c$ does **not** stabilize ($1.50,0.25,0.96,1.21,0.48$ over
-  $\Delta{=}0.5$, $T{=}2..6$ — the only range completed; each point costs far more than its
-  asymmetric counterpart and grows fast with $T$, and this campaign's `sym_sweep` **cold-starts
-  every $T$ instead of warm-starting** like NB9's asymmetric sweep does — a known implementation
-  gap). Bond dimension stays modest ($\chi{=}5\to15$, no blow-up), so this isn't a truncation
-  failure — the entropy extraction itself is unreliable at this seeding.
-- **Verdict, two readings left open**: (a) *implementation artifact* — a warm-started rerun might
-  recover a clean signal, leaving the dial-(iii) question genuinely open; (b) *suggestive physics*
-  — unlike Ising, whose symmetric route gives the SAME answer from any seed, XXZ's gives a
-  DIFFERENT one at every independent cold start, which is exactly the signature expected if the
-  exact $\mathbb Z_2$ degeneracy persists **regardless of MPO symmetry** (dial ii dominates dial
-  iii here). Reading (b) would strengthen this thesis's central claim but is **not confirmed**.
+The question — does the XXZ wall come from the MPO's **asymmetry** (fixable) or from **physics**
+(dials i–ii)? — is now answered: **physics**. Two phases:
+
+**Phase 1** built the symmetric XXZ propagator (`exp2site_murg`/`expH_xxz_neel_murg`/scheme
+`XXZNeelMurg` in `src/models.jl`; the rotated two-site term decomposes into mutually-commuting
+$XX$, $YY$, $ZZ$ layers, each an exact bond-2 Murg factorization) and verified it (§1–2: one-step
+accuracy tied with VD2 at $\sim5\times10^{-5}$; echo tied with VD2 at $2.6\times10^{-5}$; §3's WII
+cross-check independently reproduces NB9's asymmetric story point for point). But the direct
+dial-(iii) run (§4, `powermethod_sym` + Takagi $n\to1$ entropy, cold-started every $T$) gave an
+erratic, non-stabilizing $c$ over the only range it could afford ($\Delta{=}0.5$, $T{=}2..6$),
+leaving two candidate readings open — see the July-2026 mid-campaign version of this section for
+detail (superseded below).
+
+**Phase 2 ran the three follow-up experiments and both candidate readings were REFUTED — replaced
+by a confirmed mechanism.** Enabling discovery: the palindromic kernel's Trotter order ($d_t=32$)
+is separable from its symmetry — a cheaper single sandwich $e^{ZZ}e^{YY}e^{XX}$ (`order=1` on
+`XXZNeelMurg`, $d_t=8$, $16\times$ cheaper) is *equally* exactly symmetric (reflection acts
+site-wise; any product of per-layer-symmetric factors stays symmetric) and, empirically, *more*
+accurate at the working $\delta t{=}0.05$ (echo error $1.1\times10^{-5}$, beating the palindrome's
+own $2.6\times10^{-5}$) — this is what made the full experiment affordable.
+- **Seed test** (3 random seeds, $T{=}4,6$, `powermethod_sym`): **seed-independent to machine
+  precision** (spread $=0.0000$) — refutes "the symmetric route wanders the degenerate manifold."
+- **Warm-started full ladder** ($\Delta\in\{0.5,1.0\}$, $T{=}2..8$, `pad_tmps`-based, mirroring
+  NB9's `seed=prev` exactly — NOTE the `powermethod_sym` `maxdims` trap: it applies the schedule
+  PER ITERATION, so a `2:2:64` ramp on a warm-started $\chi{\sim}15$ vector would truncate it to
+  $\chi{=}2$ at step 1; warm rungs must use fixed `maxdims=[64]`): reproduces phase 1's
+  cold-started numbers almost exactly ($c=1.483,0.278,0.928,1.197,0.486$ vs $1.50,0.25,0.96,1.21,
+  0.48$ at $\Delta{=}0.5,T{=}2..6$) — refutes "cold-start artifact."
+- **Spectrum bridge** (ordinary `block_transfer_eigs`, non-symmetric solver, on the symmetric
+  order-1 tMPO): finds the **same 4-fold near-degenerate band**, locking in at the **same
+  $T\approx4$**, as the asymmetric VD2 spectrum (NB9 §4) — e.g. $T{=}4$:
+  $|\theta|=[0.864,0.829,0.829,0.826]$ (symmetric) vs $[0.893,0.885,0.867,0.867]$ (asymmetric).
+  **The degeneracy is confirmed to be a property of the Néel quench's transfer matrix, present
+  regardless of MPO construction.**
+
+**Mechanism.** The power method DOES converge to a unique, reproducible symmetric fixed point at
+every $T$ — the failure mode is different from the asymmetric case (which needs the ill-conditioned
+eigenvector itself). Instead, the $n\to1$ entropy — a log-weighted sum over the ENTIRE
+Autonne–Takagi spectrum of the RTM — becomes numerically unstable once that spectrum contains
+near-degenerate directions (the execution log shows `norm²`/`log(norm²)` non-real warnings firing
+exactly once $T\gtrsim5$, i.e. a near-singular complex-symmetric eigenproblem). **Symmetry moves
+*where* the method fails (power-method convergence → entropy-formula conditioning) but not
+*whether* or *when*.** Contrast with Ising: its near-degenerate band is *emergent and asymptotic*
+(gradual approach to dual unitarity, long well-conditioned window); XXZ's is *exact and
+structural* (built into the Néel boundary condition from $T{=}0$, merely unmasked once other
+levels decay below it around $T\approx4$) — a harder obstacle regardless of contraction flavor.
+
+Three-dial table verdict (barrier_section.md, updated): XXZ row now reads "both MPO symmetries
+tested, reach $T\approx4$ unchanged either way" — the last empty cell of the three-dial table is
+filled, decisively, not tentatively.
 
 ### NEXT STEPS (in priority order)
 
-1. **Add `seed=prev` warm-starting to NB12's `sym_sweep`** (mirror NB9's pattern exactly) and
-   re-run the full $\Delta\in\{0.5,1.0\}$, $T{=}2..8$ grid. This is the one remaining experiment
-   that would convert the barrier map's three-dial table from "suggestive" to "confirmed" in its
-   last empty cell. Budget: symmetric points are markedly slower than asymmetric ones and grow
-   fast with $T$ (the $T{=}6$ point alone took ~50 min on this machine); plan for several hours,
-   crash-safe, one point at a time.
-2. Write up `barrier_section.md` + `blockpm_methods.md` into the actual thesis manuscript
+1. Write up `barrier_section.md` + `blockpm_methods.md` into the actual thesis manuscript
    (`thesisdraft.md`) — both are drafted in its style specifically so this is a copy-and-integrate
-   step, not a rewrite.
-3. Deferred, lower priority: XXZ Δ-sweep (map $c_{\rm eff}(\Delta)$ across $|\Delta|\le1$), full
+   step, not a rewrite. This is now the only remaining major task — the numerical campaign (all
+   four models, the block-PM validation, and the asymmetry experiment) is CLOSED.
+2. Deferred, lower priority: XXZ Δ-sweep (map $c_{\rm eff}(\Delta)$ across $|\Delta|\le1$), full
    Alcaraz $p$-sweep (locate $p^*$ where temporal universality might depart from Ising, if ever),
    dt-convergence checks, oscillation-period FFT (XXZ's null result at current resolution makes
    this low-value now).

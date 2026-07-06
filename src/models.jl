@@ -253,19 +253,33 @@ function exp2site_murg(sites::Vector{<:Index}, Jdt::Number, opname::String)
     return U
 end
 
-"""Symmetric 2nd-order U(dt) = exp(−i dt H'_Δ) via the palindromic Murg sandwich.
+"""U(dt) = exp(−i dt H'_Δ) via a Murg sandwich of the mutually-commuting XX/YY/ZZ layers.
+   `order=2` (default): the palindrome e^{ZZ/2}e^{YY/2}e^{XX}e^{YY/2}e^{ZZ/2}, 2nd order in dt,
+   d_t=32. `order=1`: the single sandwich e^{ZZ}e^{YY}e^{XX} (full steps), 1st order in dt, d_t=8.
    Layer coefficients (exp(−i dt J Σσσ) = exp(+i(−J dt)Σσσ), spin→Pauli factor ¼):
-   XX: J=+¼ full step → Jdt = −dt/4;  YY: J=−¼ half step → +dt/8;  ZZ: J=−Δ/4 half step → +Δdt/8."""
-function expH_xxz_neel_murg(sites::Vector{<:Index}, Delta::Number; dt::Number)
-    Uzz2 = exp2site_murg(sites, Delta * dt / 8, "Z")
-    Uyy2 = exp2site_murg(sites, dt / 8,         "Y")
-    Uxx  = exp2site_murg(sites, -dt / 4,        "X")
-    U = applyn(Uyy2, Uzz2)          # build the palindrome Uzz2·Uyy2·Uxx·Uyy2·Uzz2
-    U = applyn(Uxx,  U)
-    U = applyn(Uyy2, U)
-    U = applyn(Uzz2, U)
-    return U
+   XX: J=+¼ → Jdt = −dt/4 (full) or −dt/4 (order=1, same — XX is never split);
+   YY: J=−¼ → Jdt = +dt/8 (half, order=2) or +dt/4 (full, order=1);
+   ZZ: J=−Δ/4 → Jdt = +Δdt/8 (half, order=2) or +Δdt/4 (full, order=1)."""
+function expH_xxz_neel_murg(sites::Vector{<:Index}, Delta::Number; dt::Number, order::Int=2)
+    Uxx = exp2site_murg(sites, -dt / 4, "X")
+    if order == 1
+        Uzz = exp2site_murg(sites, Delta * dt / 4, "Z")
+        Uyy = exp2site_murg(sites, dt / 4,         "Y")
+        U = applyn(Uyy, Uzz)            # build e^{ZZ}·e^{YY}·e^{XX}
+        U = applyn(Uxx, U)
+        return U
+    elseif order == 2
+        Uzz2 = exp2site_murg(sites, Delta * dt / 8, "Z")
+        Uyy2 = exp2site_murg(sites, dt / 8,         "Y")
+        U = applyn(Uyy2, Uzz2)          # build the palindrome Uzz2·Uyy2·Uxx·Uyy2·Uzz2
+        U = applyn(Uxx,  U)
+        U = applyn(Uyy2, U)
+        U = applyn(Uzz2, U)
+        return U
+    else
+        error("expH_xxz_neel_murg: order must be 1 or 2, got $order")
+    end
 end
 
-ITransverse.expH(sites::Vector{<:Index}, mp::XXZNeelParams, ::XXZNeelMurg; dt::Number) =
-    expH_xxz_neel_murg(sites, mp.Delta; dt=dt)
+ITransverse.expH(sites::Vector{<:Index}, mp::XXZNeelParams, recipe::XXZNeelMurg; dt::Number) =
+    expH_xxz_neel_murg(sites, mp.Delta; dt=dt, order=recipe.order)
