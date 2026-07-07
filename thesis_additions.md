@@ -42,15 +42,24 @@ referenced by filename in `results/imgs/`.)*
    1.4×10⁻⁸ / 4.6×10⁻¹³ / 4.2×10⁻¹⁰ / 2.3×10⁻¹⁰ for Alcaraz-VD2 / Alcaraz-WII / Ising-Murg /
    tricritical). First check in the project that does not route through another power method.
 
-6. **New this week — the asymmetry experiment (NB12), resolved.** We built the first genuinely
-   symmetric XXZ propagator (Murg-type, exact bond-2 commuting Pauli layers; the package's SymSVD
-   was demonstrably not symmetric) and ran the same Néel quench through the symmetric
-   Takagi machinery that carries Ising to T=14. **Result: the wall does not move.** The same Z₂
-   band appears in the symmetric tMPO at the same T≈4 (construction-independent spectrum check),
-   a 3-seed test is reproducible to machine precision, and a warm-started ladder reproduces the
-   cold-started numbers — so **quench symmetry (dial ii) dominates MPO symmetry (dial iii)**.
-   Symmetry changes *how* the method fails (power-method convergence → conditioning of the Takagi
-   entropy formula), not *whether* or *when*.
+6. **New this week — the asymmetry experiment (NB12), resolved (with a self-correction worth
+   telling).** We built the first genuinely symmetric XXZ propagator (Murg-type, exact bond-2
+   commuting Pauli layers; the package's SymSVD is demonstrably not symmetric). Stress-testing the
+   plan surfaced a subtlety: the XXZ propagator is an exactly symmetric *operator*
+   (‖U−Uᵀ‖~10⁻¹⁸, inevitable since H is real-symmetric) but is **not manifestly symmetric as an
+   MPO tensor** — its YY layer carries σʸ (transpose-antisymmetric), and σˣ,σʸ,σᶻ cannot all be
+   symmetric in any single-site basis. So the symmetric-Takagi solver is **structurally
+   unavailable to XXZ** (a result in itself: it's a privilege of Ising-like models), and our
+   direct Takagi runs were invalid. **The conclusion — the wall does not move — is instead
+   carried by two gauge-free routes**: (a) the *construction-independence test* — the
+   independent Murg construction run through the ordinary two-sided solver reproduces VD2 to
+   3–4 digits, wall and all (two completely different constructions, one solver, same physics);
+   and (b) the spectrum bridge (same Z₂ band in the symmetric tMPO). Plus a benign control: the
+   pure TFIM (Alcaraz p=0) through our *same* generic pipeline keeps a flat |λ₀|≈1.49 with **no
+   band** out to T=12 — the XXZ band at T≈4 is a property of the quench, not a broken pipeline. **So the wall is physics,
+   not our adaptation of the package** — quench symmetry (dial ii) dominates MPO symmetry (dial
+   iii). What *does* give Ising its T=14 is genuinely its symmetric MPO + Takagi + small dₜ +
+   single-sector quench + low c — a privileged combination XXZ is denied on every count.
 
 **One-sentence summary for the meeting:** *we turned a single-model result into a validated,
 falsification-driven map of where and why transverse contraction reaches its limit, with the
@@ -142,9 +151,14 @@ at 10).
   |θ₅/θ₁| closes 0.14→0.75 over T=1..5 vs Alcaraz's 0.35→0.97 — "NN + unfrustrated ⇒ slow
   barrier" is TRUE in the corrected observable; the reach is killed by the symmetry cluster
   sitting on top of a slow barrier. Figure: `xxz_intrasector_gap.png`.
-- **The asymmetry experiment (NB12) — resolved, see §4.4/§5**: symmetric MPO built and verified;
-  wall unchanged at T≈4; same band in the symmetric tMPO (T=4: [0.864,0.829,0.829,0.826] vs
-  asymmetric [0.893,0.885,0.867,0.867]); dial (ii) dominates dial (iii).
+- **The asymmetry experiment (NB12) — resolved, see §4.4/§5**: symmetric Murg MPO built and
+  verified; the wall is unchanged at T≈4, established gauge-free by (a) the
+  **construction-independence test** — the independent Murg construction (= symmetric order-2 to 4 digits) through the two-sided
+  solver reproduces VD2 to 3–4 digits including the T=4→5 inflation, and (b) the spectrum bridge
+  (same Z₂ band, T=4: [0.864,0.829,0.829,0.826] vs [0.893,0.885,0.867,0.867]). The *direct*
+  symmetric-Takagi test was found **gauge-invalid** (the σʸ obstruction: XXZ has no manifestly
+  symmetric single-site-Murg MPO) — a self-correction, not a retraction; the conclusion (dial ii
+  dominates dial iii) stands on the gauge-free routes.
 
 ### 3.4 Tricritical O'Brien–Fendley — the charge wall (NB10, NB11)
 - **Equilibrium success**: the entropy-free finite-size gap brackets **λ_c between 0.42 and 0.43**
@@ -207,16 +221,27 @@ the partner-filtered physical gap. Already written in draft style with local equ
   n-independent**, so c = 12·Im S₂/π, with a ~10% systematic (the offset drifts +12% at p=0.1).
   No XXZ data entered the calibration; it was applied blind.
 
-### 4.4 The symmetric Murg-XXZ propagator → new §4.3 or fold into §5.4's discussion
+### 4.4 The symmetric Murg-XXZ propagator + the operator-vs-tensor symmetry distinction → new §4.3
 The rotated Néel-frame two-site term decomposes as SxSx − SySy − ΔSzSz: three **mutually
-commuting layers**, each an exact bond-2 left-right-symmetric MPO (Murg cos/sin splitting — the
-Ising construction generalized to any Pauli). Two kernels: order=2 palindrome
-e^{ZZ/2}e^{YY/2}e^{XX}e^{YY/2}e^{ZZ/2} (d_t=32) and order=1 single sandwich e^{ZZ}e^{YY}e^{XX}
-(d_t=8, 16× cheaper). Key structural insight: **the palindrome buys Trotter order, not
-symmetry** — reflection acts site-wise, so any product of symmetric layers is symmetric. Validated:
-order-1 echo error vs TDVP 1.1×10⁻⁵ at dt=0.05 (better than the palindrome's own 2.6×10⁻⁵, both at
-VD2's level); entropy cross-check at (Δ=0.5,T=4) matches order-2 to 4 digits (χ=8, peak 0.8632,
-both). This is the construction the package's SymSVD builder failed to be (normdiff 0.07–0.45).
+commuting layers**, each an exact bond-2 Murg cos/sin factorization (the Ising construction
+generalized to any Pauli). Two kernels: order=2 palindrome e^{ZZ/2}e^{YY/2}e^{XX}e^{YY/2}e^{ZZ/2}
+(d_t=32) and order=1 single sandwich e^{ZZ}e^{YY}e^{XX} (d_t=8, 16× cheaper). Validated: order-1
+echo error vs TDVP 1.1×10⁻⁵ at dt=0.05 (better than the palindrome's own 2.6×10⁻⁵, both at VD2's
+level); entropy cross-check at (Δ=0.5,T=4) matches order-2 to 4 digits (χ=8, peak 0.8632, both).
+
+**The subtle and important part (worth a boxed remark in the thesis): "symmetric operator" ≠
+"manifestly-symmetric MPO."** Every propagator we use is an exactly transpose-symmetric *operator*
+(‖U−Uᵀ‖~10⁻¹⁸, since our H are real-symmetric — so even "asymmetric" VD2 is a symmetric operator).
+But the symmetric-solver machinery (`powermethod_sym` + Takagi) needs the MPO *tensor* to be
+symmetric under a *raw* index swap, with no gauge search. Ising's Murg MPO is manifestly symmetric
+(its coupling σˣ is transpose-symmetric); XXZ's is **not** (its YY layer stores σʸ, which is
+transpose-antisymmetric), and — the structural punchline — **no single-site basis makes σˣ,σʸ,σᶻ
+simultaneously symmetric** (three mutually anticommuting operators; at most two symmetrizable). So
+the symmetric-Takagi route is *structurally unavailable* to XXZ, and to any model requiring three
+anticommuting couplings. This is why our direct Takagi runs (NB12 §4) were invalid, and why the
+dial-(iii) conclusion had to be — and was — established by the gauge-free construction-independence
+test (§3.3). Also: ITransverse's SymSVD builder fails even the operator-symmetric-construction bar
+(normdiff 0.07–0.45), which is what motivated building the Murg version from scratch.
 
 ### 4.5 Performance engineering → short paragraphs in §5.4 / Appendix B
 - **RTM joint truncation of the de-mixed (L,R) pairs is worth 97×** (27 201 s → 280 s at the
@@ -246,14 +271,19 @@ it. Recommend keeping a condensed version in the thesis — it is the honest sha
 | 4 | The inflated XXZ dome is a **random Z₂ mixture** | 3-seed test | Seed-independent to 4 digits — a *deterministic* attractor of the truncated iteration; same wall as Alcaraz |
 | 5 | The tricritical block PM is **buggy** (oscillating gap) | NB11: dense ground truth + old-vs-new comparison | Eigenvalues were always right (3–4 digit agreement); the wobble was the λ₀-*selector* hopping inside a real band |
 | 6 | The **greedy left/right pairing** caused the cluster noise | planted-spectrum dense test | In exact arithmetic old and new pairing are identical; fixes kept as strictly-better, but the wall is physics + truncation |
-| 7 | Symmetric-XXZ noise is a **cold-start artifact** | warm-started full ladder | Reproduces cold-start numbers almost exactly (1.483/0.278/0.928/1.197/0.486 vs 1.50/0.25/0.96/1.21/0.48) |
-| 8 | …or the symmetric route **wanders the degenerate manifold** | 3-seed symmetric test | Seed-independent to machine precision (spread 0.0000) — unique attractor, like Ising |
-| 9 | **MPO symmetry might extend XXZ's reach** (dial iii) | spectrum bridge: block eigensolver on the *symmetric* tMPO | Same 4-fold band, same T≈4 — degeneracy is intrinsic to the quench's transfer matrix; symmetry only moves *where* the failure shows up (Takagi-entropy conditioning, visible as norm² non-reality warnings at T≳5) |
+| 7 | The direct **symmetric-Takagi run** settles dial (iii) — it converges, is seed-independent, and its warm/cold results agree, so "the symmetric route also walls" | operator-vs-tensor-symmetry check (§3b), prompted by the supervisor's stress-test | **Those runs were GAUGE-INVALID.** XXZ's tMPO is a symmetric *operator* (‖U−Uᵀ‖~10⁻¹⁸) but not a manifestly-symmetric *MPO* — its σʸ layer is transpose-antisymmetric and σˣ,σʸ,σᶻ cannot all be symmetrized in any single-site basis. So `powermethod_sym` is structurally unavailable to XXZ; the runs are discarded. A genuine self-correction. |
+| 8 | (the real question) **MPO symmetry might extend XXZ's reach** (dial iii) | **construction-independence test** (symmetric-construction propagator through the *two-sided* solver) + spectrum bridge + a TFIM control | Symmetric construction reproduces VD2 to 3–4 digits *including* the T=4→5 inflation; the same Z₂ band sits in the symmetric tMPO; the pure TFIM reaches T≈12 through the *same generic pipeline*. **The wall is physics, not our adaptation of the package** — dial (ii) dominates dial (iii). |
 
 Also refuted along the way: the naive πc/16 guess for the Rényi-2 imaginary offset (measurement:
 πc/12, n-independent — row zero of the calibration story), and the June claim "XXZ's gap closes
 slower than Alcaraz's" as read from the naive ratio (true only before the symmetry cluster forms;
 the *intra-sector* barrier is what's genuinely slower).
+
+**Why row 7 matters most for the meeting.** It is the cleanest illustration of the campaign's
+method: a claim that *looked* solid (converged, reproducible, self-consistent) was overturned by
+asking "symmetric in *what* sense?" — and the overturning did not weaken the conclusion, it
+*strengthened* it (the construction-independence test is a better argument than the gauge-broken
+Takagi run ever was). This is worth telling Stefano verbatim.
 
 ---
 
@@ -290,10 +320,21 @@ Appendix B → the results chapter → Conclusions.
    Unlike the June Z₂-projection idea (dead for Alcaraz because its boundary is single-sector),
    XXZ's degeneracy IS inter-sector, so projection could genuinely work there. Worth a chapter
    note as future work, or an actual attempt before September?
-3. **Symmetric-MPO tooling**: our Murg-XXZ construction generalizes (any Hamiltonian whose bond
-   term splits into mutually commuting Pauli strings). Also: SymSVD in ITransverse is not
-   left-right symmetric (normdiff 0.07–0.45) — report upstream? And is a Takagi-gauge *compressor*
-   (to shrink the d_t=32 palindrome symmetrically) worth having in the package?
+3. **The σʸ obstruction and symmetric-MPO tooling** (the meaty methods discussion). We found that
+   XXZ has **no single-site-Murg gauge** in which its tMPO is manifestly transpose-symmetric — σʸ
+   is antisymmetric, and σˣ,σʸ,σᶻ can't all be symmetrized at once — so `powermethod_sym`/Takagi is
+   *structurally unavailable* to XXZ (and to any model needing three anticommuting couplings). This
+   is a clean statement about *which models the symmetric machinery is a privilege for*. Two
+   follow-on questions: (a) **the one remaining loose end** — the XXZ tMPO IS a symmetric operator,
+   so a symmetric MPO representation exists in *some* (non-single-site) gauge; is it worth finding
+   it to run a genuinely gauge-correct Takagi solver, or is the construction-independence test
+   enough to close the dial-(iii) question for the thesis? (My reading: enough — the band is in the
+   symmetric tMPO regardless, so Takagi would face the same ill-conditioned eigenvector; but you
+   may want the formal check.) (b) Package notes for Stefano: ITransverse's SymSVD builder is not
+   actually left-right symmetric (normdiff 0.07–0.45) — report upstream? And the checker only tests
+   the *raw*-swap gauge, silently invalidating `powermethod_sym` on operators that are symmetric in
+   a non-trivial gauge — worth a gauge-aware check and/or a Takagi-gauge compressor for the d_t=32
+   palindrome.
 4. **Remaining sweeps vs deadline**: Δ-sweep (c_eff(Δ) across the Luttinger line), Alcaraz p-sweep
    (locate p* if it exists), dt-convergence bounds. Our reading: none changes the thesis's
    conclusions; all are polish. Agree/deprioritize?

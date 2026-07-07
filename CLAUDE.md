@@ -1490,43 +1490,48 @@ erratic, non-stabilizing $c$ over the only range it could afford ($\Delta{=}0.5$
 leaving two candidate readings open — see the July-2026 mid-campaign version of this section for
 detail (superseded below).
 
-**Phase 2 ran the three follow-up experiments and both candidate readings were REFUTED — replaced
-by a confirmed mechanism.** Enabling discovery: the palindromic kernel's Trotter order ($d_t=32$)
-is separable from its symmetry — a cheaper single sandwich $e^{ZZ}e^{YY}e^{XX}$ (`order=1` on
-`XXZNeelMurg`, $d_t=8$, $16\times$ cheaper) is *equally* exactly symmetric (reflection acts
-site-wise; any product of per-layer-symmetric factors stays symmetric) and, empirically, *more*
-accurate at the working $\delta t{=}0.05$ (echo error $1.1\times10^{-5}$, beating the palindrome's
-own $2.6\times10^{-5}$) — this is what made the full experiment affordable.
-- **Seed test** (3 random seeds, $T{=}4,6$, `powermethod_sym`): **seed-independent to machine
-  precision** (spread $=0.0000$) — refutes "the symmetric route wanders the degenerate manifold."
-- **Warm-started full ladder** ($\Delta\in\{0.5,1.0\}$, $T{=}2..8$, `pad_tmps`-based, mirroring
-  NB9's `seed=prev` exactly — NOTE the `powermethod_sym` `maxdims` trap: it applies the schedule
-  PER ITERATION, so a `2:2:64` ramp on a warm-started $\chi{\sim}15$ vector would truncate it to
-  $\chi{=}2$ at step 1; warm rungs must use fixed `maxdims=[64]`): reproduces phase 1's
-  cold-started numbers almost exactly ($c=1.483,0.278,0.928,1.197,0.486$ vs $1.50,0.25,0.96,1.21,
-  0.48$ at $\Delta{=}0.5,T{=}2..6$) — refutes "cold-start artifact."
-- **Spectrum bridge** (ordinary `block_transfer_eigs`, non-symmetric solver, on the symmetric
-  order-1 tMPO): finds the **same 4-fold near-degenerate band**, locking in at the **same
-  $T\approx4$**, as the asymmetric VD2 spectrum (NB9 §4) — e.g. $T{=}4$:
-  $|\theta|=[0.864,0.829,0.829,0.826]$ (symmetric) vs $[0.893,0.885,0.867,0.867]$ (asymmetric).
-  **The degeneracy is confirmed to be a property of the Néel quench's transfer matrix, present
-  regardless of MPO construction.**
+**Phase 2 — CORRECTED after a supervisor stress-test (2026-07-07).** The earlier "phase 2" verdict
+claimed the symmetric-Takagi route *also* walls at T≈4 (via a seed test + warm-started `sym_sweep2`
+ladder that were seed-independent and warm/cold-consistent) and treated that as decisive. That claim
+was **WITHDRAWN**: a check of "symmetric in *what* sense?" (NB12 §3b) exposed a gauge flaw:
+- **Operator vs tensor symmetry.** Every propagator we use is an exactly symmetric OPERATOR
+  ($\|U-U^{\mathsf T}\|\sim10^{-18}$ for VD2, WII, Murg-order2 palindrome — since H is real-symmetric;
+  order-1 $e^{ZZ}e^{YY}e^{XX}$ is NOT a palindrome so it is operator-asymmetric at $\sim10^{-3}$, a
+  cheap valid propagator only). But `powermethod_sym` needs the MPO TENSOR symmetric under a RAW
+  index swap (no gauge search). Ising-Murg passes; **XXZ-Murg (both orders) FAILS the physical-leg
+  check, normdiff 0.45**, because the rotated $H'$ has a $YY$ layer storing $\sigma^y$ (transpose-
+  ANTIsymmetric), and $\sigma^x,\sigma^y,\sigma^z$ CANNOT all be transpose-symmetric in any single-
+  site basis (three mutually anticommuting ops; ≤2 symmetrizable). So **the symmetric-Takagi machinery
+  is STRUCTURALLY UNAVAILABLE to XXZ** — a genuine result (it is a privilege of Ising-like models),
+  and the §4/§4b/§4c `powermethod_sym` numbers are INVALID (kept in NB12 as a cautionary record).
+- **The conclusion — wall does not move — is instead established GAUGE-FREE:**
+  (a) **Construction-independence test (NB12 §4e, decisive; cache nb12_construction_test.jld2)** —
+  the order-1 Murg construction run through the ORDINARY two-sided solver (`compute_entropies`, the
+  NB9 path) reproduces the VD2 Rényi-2 dome to 3–4 digits at every T, INCLUDING the T=4→5 inflation
+  (peaks 0.2178/0.3890/0.7023/0.8241/0.9716 vs VD2 0.2179/0.3891/0.7023/0.8248/0.9723). Two
+  propagators built by entirely different mathematics, one solver, same wall — construction- AND
+  solver-independent. (order-1 ≈ operator-symmetric order-2 to 4 digits, §1c, so this transitively
+  covers the symmetric construction.)
+  (b) **Spectrum bridge (NB12 §4d)** — the gauge-free two-sided block eigensolver on the Murg tMPO
+  finds the same 4-fold Z2 band at the same T≈4 (T=4: [0.864,0.829,0.829,0.826] vs VD2's
+  [0.893,0.885,0.867,0.867]).
+  (c) **Benign control** — the pure TFIM (Alcaraz p=0) through our SAME generic asymmetric pipeline
+  keeps a FLAT |λ0|≈1.49 (drift <1% over T=2..12, NO band forms) and the clean c=1/2 calibration; the
+  XXZ band at T≈4 is a property of the quench, not a failure of adaptation.
 
-**Mechanism.** The power method DOES converge to a unique, reproducible symmetric fixed point at
-every $T$ — the failure mode is different from the asymmetric case (which needs the ill-conditioned
-eigenvector itself). Instead, the $n\to1$ entropy — a log-weighted sum over the ENTIRE
-Autonne–Takagi spectrum of the RTM — becomes numerically unstable once that spectrum contains
-near-degenerate directions (the execution log shows `norm²`/`log(norm²)` non-real warnings firing
-exactly once $T\gtrsim5$, i.e. a near-singular complex-symmetric eigenproblem). **Symmetry moves
-*where* the method fails (power-method convergence → entropy-formula conditioning) but not
-*whether* or *when*.** Contrast with Ising: its near-degenerate band is *emergent and asymptotic*
-(gradual approach to dual unitarity, long well-conditioned window); XXZ's is *exact and
-structural* (built into the Néel boundary condition from $T{=}0$, merely unmasked once other
-levels decay below it around $T\approx4$) — a harder obstacle regardless of contraction flavor.
+**So: the wall is PHYSICS, not our implementation.** It is independent of construction (VD2 vs Murg),
+solver (two-sided reproduces it), and eigenvalue routine (NB11 validates it exactly). What DOES depend
+on machinery is **Ising's privileged reach to T=14**: genuinely enabled by its manifestly-symmetric
+Murg MPO + Takagi + small $d_t=2$ + single-sector quench + c=1/2 — every one of which XXZ is denied
+(most fundamentally the symmetric-Takagi route itself, by the $\sigma^y$ obstruction). **Dial (ii)
+[exact quench degeneracy] dominates dial (iii) [MPO symmetry].** Ising's band is emergent/asymptotic
+(long clean window); XXZ's is exact/structural (Néel BC, from T=0).
 
-Three-dial table verdict (barrier_section.md, updated): XXZ row now reads "both MPO symmetries
-tested, reach $T\approx4$ unchanged either way" — the last empty cell of the three-dial table is
-filled, decisively, not tentatively.
+**One honest loose end:** we could not run a *correctly-gauged* symmetric-Takagi solver (no single-
+site symmetric gauge exists for XXZ). The construction test + spectrum bridge settle the physics; the
+strong expectation is that a gauge-corrected Takagi would face the same ill-conditioned eigenvector,
+but that is not *proved*. (Finding the non-single-site symmetric gauge is the precise open task; it
+does not affect the conclusion.)
 
 ### NEXT STEPS (in priority order)
 
