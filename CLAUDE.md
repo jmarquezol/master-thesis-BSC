@@ -13,9 +13,13 @@
 >>> symmetry], confirmed by a seed test + warm-started ladder + construction-independent spectrum
 >>> bridge, all three agreeing. Only remaining work is WRITING UP into thesisdraft.md. Two
 >>> thesis-section drafts at repo root: barrier_section.md (results) and blockpm_methods.md
->>> (methods §5.4). Notebook series is now
->>> 1–12 (NB3.5 retired into NB11 §P; NB10 renamed; NB11 rescoped to validation+performance; NB12
->>> is new). legacy/ folder DELETED (git-recoverable). CONTINUATION.md was deleted long ago.
+>>> (methods §5.4). Notebook series is now 1–10 + 12 (NB11 DELETED July 2026 — its block-PM
+>>> validation V2/V3 + performance §P merged into NB5, its tricritical probe V4 into NB10; NB3.5 had
+>>> earlier been retired into NB11's §P; NB10 renamed; NB12 is new). ALSO July 2026: NB5/NB6/NB7
+>>> reorganized — NB6 dropped the off-critical check (minor in CT); the eigenVECTOR/eigenVALUE-route
+>>> discussion moved out of NB5 (now gap+wall only) into NB7 (now hosts the "why the asymmetric
+>>> method walls" investigation, incl. the κ(λ0)=‖L0‖‖R0‖ condition-number comparison sym-vs-asym).
+>>> legacy/ folder DELETED (git-recoverable). CONTINUATION.md was deleted long ago.
 
 ---
 
@@ -264,7 +268,7 @@ master_thesis/
                                       for frustrated p=0.1 (barrier onset earlier), |λ0| flat + λ0
                                       circle = emergent dual unitarity; (3) THE WALL — entropy dome
                                       inflates at T≈10 (p=0.1), ill-conditioned eigenVECTOR (not a
-                                      PM bug — confirmed independently by NB11's exact-ground-truth
+                                      PM bug — confirmed independently by NB5's exact-ground-truth
                                       validation), failed repairs (projector inflates / continuity
                                       drifts), no degeneracy-free route; robust c is the pre-wall
                                       window; Ising reached T=14 only because SYMMETRIC (Takagi) +
@@ -339,7 +343,7 @@ master_thesis/
                                       closing: CORRECTED narrative (July 2026) — the eigenvalues
                                       were right all along; the old "oscillating |λ0|" was the
                                       pick_phys SELECTOR hopping inside a genuine near-degenerate
-                                      BAND (NB11 proved this point-by-point). Gap-closing overlay
+                                      BAND (NB10's probe proved this point-by-point). Gap-closing overlay
                                       now plots BOTH the partner-filtered AND the selector-free
                                       |θ2/θ1| reading (the latter is the only honest one for the
                                       tricritical family). GOTCHA FIXED: the DMRG c-sweep cell had
@@ -351,35 +355,27 @@ master_thesis/
                                       nb10_tricritical_{fss,gap,energy,blockgap}.jld2,
                                       nb10_tricritical_dmrg_N400.jld2. Fig: tricritical_gap.png,
                                       tricritical_c_equilibrium.png.
-    11_block_pm_validation.ipynb    <- (RESCOPED July 2026: validation AND performance — absorbs
-                                      the retired nb3.5) THE BLOCK-PM METHOD NOTEBOOK. V1: dense
-                                      synthetic ground truth on planted clusters — HONEST SURPRISE:
-                                      in exact arithmetic the old greedy left/right pairing and the
-                                      new exact pairing perform IDENTICALLY even on a tight cluster;
-                                      the Rayleigh-Ritz core was always sound. V2: exact dense
-                                      diagonalization of small tMPOs on ALL FOUR models — first
-                                      ground truth not routed through another power method — block
-                                      PM agrees to 1e-8..1e-13. V3: regression vs the converged
-                                      Alcaraz master sweep (2e-5 at T=3; 2e-3 at T=6, matching the
-                                      physical ±pair splitting scale). V4: the tricritical probe —
-                                      new code agrees with the OLD cache's eigenvalues to 3-4 digits
-                                      wherever both converge (T=2..4); the old "oscillation" is
-                                      exposed as the pick_phys selector hopping in a band; AT THE
-                                      WALL POINT T=4.5 (old code: stuck@527) the FIXED, validated
-                                      solver ALSO failed — killed after 7.8h without converging.
-                                      Q1 ANSWER: the tricritical failure is PHYSICS (a charge-driven
-                                      band), not implementation — confirmed decisively. §P
-                                      (performance): the retired nb3.5's surviving lessons — RTM
-                                      joint truncation is a 97x win (χ=9 vs 44), warm-starting via
-                                      pad_tmps is the biggest iteration-count saver, schedules
-                                      (ramp+cutoff) stack for free, kernel choice is a physics
-                                      decision (VD2 for NNN, WII fine for strictly-NN), k=6 is
-                                      memory-bounded on this machine (tricritical OOMs at T≥4).
-                                      Library fixes (exact pairing, continuity-matched Δθ,
-                                      bi-orthogonal refresh, basis=:schur) are KEPT as strictly-
-                                      better implementation, not as "the fix" — they were never
-                                      the culprit. Caches: nb11_tricrit_probe.jld2 (+ reused
-                                      nb35_blockpm_bench/t6_accept.jld2 for §P).
+    (11_block_pm_validation.ipynb DELETED July 2026, git-recoverable — its verified content was
+                                      MERGED into NB5 and NB10, and the notebook series is now 1-10+12):
+                                      V2 (exact-diagonalization ground truth on all four models; block
+                                      PM agrees 1e-8..1e-13 — the first check not routed through another
+                                      power method) + V3 (regression vs the master sweep: 2e-5 at T=3,
+                                      2e-3 at T=6 = the ±pair splitting scale) + §P (performance: RTM
+                                      joint-truncation 97x win χ=9 vs 44, pad_tmps warm-start, ramp/
+                                      cutoff schedules, kernel = physics choice VD2-for-NNN, k=6
+                                      memory-bounded) → NB5 "Validating the block power method" section
+                                      + performance appendix. V4 (the tricritical probe: the fixed
+                                      solver reproduces the old cache to 3-4 digits; the "|λ0|
+                                      oscillation" was the pick_phys SELECTOR hopping in a band; the
+                                      T=4.5 wall point was killed after 7.8h → Q1 ANSWER: the
+                                      tricritical failure is PHYSICS, a charge-driven band, not
+                                      implementation) → NB10 "Is the gap-closing failure physics?"
+                                      probe. V1 (dense synthetic ground truth: the Rayleigh-Ritz core
+                                      was always sound — greedy vs exact pairing identical in exact
+                                      arithmetic, so the library fixes are strictly-better, not "the
+                                      fix") folded into NB5 as one prose sentence. Caches survive:
+                                      nb11_tricrit_probe.jld2 (read by NB10), nb35_blockpm_bench/
+                                      t6_accept.jld2 (read by NB5 §P).
     12_xxz_symmetric_mpo.ipynb      <- THE ASYMMETRY EXPERIMENT — RESOLVED (July 2026, two phases).
                                       Does the XXZ wall at T≈4 come from the MPO's asymmetry
                                       (fixable) or the exact Z2 Néel degeneracy (intrinsic)?
@@ -429,7 +425,7 @@ master_thesis/
                                       same base name, now correctly scoped), nb10_xxz_gap.jld2
                                       (superseded by nb10_xxz_gap2.jld2, the partner-filtered
                                       version). nb35_blockpm_bench.jld2 / nb35_t6_accept.jld2
-                                      SURVIVE — reused by NB11 §P.
+                                      SURVIVE — reused by NB5 §P.
     logs/                           <- transient nbconvert execution logs (gitignored; safe to
                                       clear anytime — see the machine-notes memory for the
                                       setsid/ulimit background-execution pattern used to produce
@@ -1422,7 +1418,7 @@ motivated notebook 12's from-scratch symmetric Murg construction (§18).
     build_alcaraz_tmpo(T; p, lambda, dt, nbeta, MPO_alg) → (mpo, scaffold)  [thin wrapper]
     block_transfer_eigs(mpo, scaffold; k, maxdim, basis=:eig/:schur, ...) → (theta, L, R, info)
                        [July 2026: exact left-pairing, continuity-matched Δθ, bi-orthogonal
-                       refresh — see §18. Validated against exact dense diagonalization (NB11 V2).]
+                       refresh — see §18. Validated against exact dense diagonalization (NB5's V2 exact ground truth).]
     lincomb_mps(coeffs, vecs; cutoff, maxdim) → MPS
     run_pm_diagnosed(T; ...) → NamedTuple with diagnostics
     compute_entropies(mp::ModelParams, T; scheme, nbeta, init_state, itermax, seed, basis, ...) →
@@ -1448,10 +1444,10 @@ independent dials set its position, and whether it can be escaped. The two citab
 `barrier_section.md` (results) and `blockpm_methods.md` (methods §5.4), both at repo root, written
 in thesisdraft.md's style. Read them for the polished narrative; this section is the working record.
 
-### Q1 RESOLVED: the tricritical "failure" was PHYSICS, not a solver bug (NB11)
+### Q1 RESOLVED: the tricritical "failure" was PHYSICS, not a solver bug (validation now in NB5, tricritical probe in NB10)
 
 The old handoff asked: is `block_transfer_eigs` implementation-limited at the tricritical
-near-degeneracy, or is it physics? Four validation steps (NB11) answer this decisively:
+near-degeneracy, or is it physics? Four validation steps (V1–V4, now in NB5 [V1–V3 + §P] and NB10 [V4]) answer this decisively:
 - **V1 (dense synthetic ground truth) — an honest surprise.** Two code-review-identified defects
   (a fragile greedy left/right eigenvector pairing; de-mixing onto an ill-conditioned eigenvector
   basis) were fixed (exact pairing $u_j=\mathrm{pinv}(S)^{\mathsf T}(V^{-1})^{\mathsf T}e_j$;
@@ -1487,7 +1483,7 @@ notebook bugs surfaced and were fixed while re-running NB10: a stale `RECOMPUTE=
 c-sweep cell that silently rebuilt the entire 20-point sweep from scratch on every execution
 (→ `false`); and an uncapped `T_gap` grid whose $(\lambda{=}0.42,T{\ge}5)$ points crashed the
 kernel outright and, being `:error`-cached rather than `:converged`/`:stuck`, would have retried
-forever on every future run (→ capped at $T{=}4.5$, matching NB11's characterization).
+forever on every future run (→ capped at $T{=}4.5$, matching the NB10 probe's characterization).
 
 ### XXZ — fully mapped: an exact quench symmetry, not frustration, sets its early wall (NB8/NB9)
 
@@ -1571,7 +1567,7 @@ was **WITHDRAWN**: a check of "symmetric in *what* sense?" (NB12 §3b) exposed a
   XXZ band at T≈4 is a property of the quench, not a failure of adaptation.
 
 **So: the wall is PHYSICS, not our implementation.** It is independent of construction (VD2 vs Murg),
-solver (two-sided reproduces it), and eigenvalue routine (NB11 validates it exactly). What DOES depend
+solver (two-sided reproduces it), and eigenvalue routine (validated exactly by NB5's exact ground truth). What DOES depend
 on machinery is **Ising's privileged reach to T=14**: genuinely enabled by its manifestly-symmetric
 Murg MPO + Takagi + small $d_t=2$ + single-sector quench + c=1/2 — every one of which XXZ is denied
 (most fundamentally the symmetric-Takagi route itself, by the $\sigma^y$ obstruction). **Dial (ii)
@@ -1598,7 +1594,7 @@ does not affect the conclusion.)
 ### MACHINE / PROCESS NOTES (learned the hard way this session — see also the auto-memory files)
 
 - **14 GB RAM, one Julia kernel at a time.** Parallel kernels OOM-killed the desktop three times
-  this campaign. Dense-diagonalization guards must stay ≤2500-dim (NB11 V2's comment explains why:
+  this campaign. Dense-diagonalization guards must stay ≤2500-dim (NB5's V2 comment explains why:
   `zgeev` workspace multiplies the matrix size several-fold).
 - **Background chains must survive a session crash**: launch with
   `setsid nohup bash -c '...' < /dev/null > /dev/null 2>&1 & disown`, not plain `nohup ... &` —

@@ -165,13 +165,13 @@ purely-critical-point origin)?
 
 ### 3.5 Explicit small-system chiral-structure check
 For a short chain (small enough for exact diagonalization or a small-bond-dimension exact transfer
-matrix — reuse NB11's exact dense-diagonalization ground truth, already built and validated in the
-barrier campaign), attempt to construct an explicit sublattice/parity operator `S` (diagonal,
-`±1`-valued on some natural basis of the rotated temporal physical index) and check numerically
-whether `S T S^{-1} = -T` holds exactly, approximately, or not at all, for `p=0` vs `p≠0`. This is
-the most rigorous, "prove it algebraically" version of hypothesis (d), and NB11's existing exact
-ground truth infrastructure means this doesn't require new solver code — only a new symmetry check
-on matrices that are already being computed there.
+matrix — reuse the exact dense-diagonalization ground truth (`dense_mpo_matrix`, now in notebook 5's
+block-PM validation section), already built and validated in the barrier campaign), attempt to
+construct an explicit sublattice/parity operator `S` (diagonal, `±1`-valued on some natural basis of
+the rotated temporal physical index) and check numerically whether `S T S^{-1} = -T` holds exactly,
+approximately, or not at all, for `p=0` vs `p≠0`. This is the most rigorous, "prove it algebraically"
+version of hypothesis (d), and notebook 5's exact ground truth infrastructure means this doesn't
+require new solver code — only a new symmetry check on matrices that are already being computed there.
 
 ### 3.6 Cross-check against the dual-unitarity circle — DONE (2026-07-09), result: NOT supported
 
@@ -245,7 +245,7 @@ anywhere in the project — worth updating NB5's text either way once it actuall
 between the two cached points (RTM: 321→513 iters, RDM: 190→375 iters, going `T=6→8`); at `T=10`,
 right at the documented gap-closing wall for `p=0.1`, either mode could plausibly burn the full
 `itermax=1200` without converging, similar to the tricritical `T=4.5` point that ran 7.8h before
-being killed (NB11). Should be run **alone** on this 14GB single-Julia-kernel machine, not
+being killed (the probe now in notebook 10). Should be run **alone** on this 14GB single-Julia-kernel machine, not
 concurrently with any other heavy computation (e.g. wait for the NB 5.5 sweep in this same
 investigation to finish first).
 

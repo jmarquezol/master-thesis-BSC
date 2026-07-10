@@ -80,7 +80,8 @@ NBs/ — the narrative, in order:
   3_temporal_entropies.ipynb     generalized temporal entropies; single-vector PM convergence
                                  failure at the gap closing → block PM recovers the dome
   4_cft_ground_state.ipynb       DMRG: c(p) sweep, finite-size scaling, chord fit — c ≈ 1/2
-  5_spectral_gap_degeneracy.ipynb  deflation → block PM; gap closes faster at larger p; the wall
+  5_spectral_gap_degeneracy.ipynb  block PM (validated vs exact diagonalization); gap closes
+                                 faster at larger p; the wall; performance dossier (§P)
   6_loschmidt_ising.ipynb        reproduce Carignano–Tagliacozzo (c=1/2); λ₀(T) circle plot
   7_temporal_central_charge.ipynb  THE Alcaraz result: c(p=0.1)=0.47±0.05 from the clean window
   8_xxz_model_and_neel_quench.ipynb  XXZ physics map (§0), equilibrium c≈1, Néel quench via
@@ -88,9 +89,7 @@ NBs/ — the narrative, in order:
   9_xxz_temporal_entropies.ipynb   XXZ temporal entropies: Z₂ sector structure (§0), Im-S₂ c,
                                  deterministic dome inflation, intra-sector barrier (k=6)
   10_tricritical_model.ipynb     O'Brien–Fendley: locating λ_c (equilibrium) + the
-                                 charge-driven transfer band (corrected reading)
-  11_block_pm_validation.ipynb   the block power method under the microscope: dense ground
-                                 truth, regression, the tricritical probe + performance (§P)
+                                 charge-driven transfer band + solver-vs-physics probe
   12_xxz_symmetric_mpo.ipynb     the asymmetry experiment: symmetric (Murg-type) + WII XXZ —
                                  is the wall the MPO's asymmetry or the physics?
 
