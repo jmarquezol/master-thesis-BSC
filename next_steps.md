@@ -282,6 +282,40 @@ first move is simply to check whether $x_1(p)$ varies smoothly with $p$ near $p=
 planned sweep) — if $x_1$ departs from $1/2$ at the same rate the pairing turns on, that is direct
 evidence the two are linked.
 
+### 3.10 The `p=0.3`/`p=0.5` physical-gap anomaly (surfaced while merging NB 5.5 into NB3)
+
+**Observed** (now documented in notebook 3): the physical gap $|\lambda_1|/|\lambda_0|$ for the
+Alcaraz model rises smoothly and monotonically with $T$ at `p=0` and `p=0.1`, but is genuinely
+erratic at `p=0.3` and `p=0.5` — e.g. at `p=0.3` it goes $0.81\to0.99\to0.86\to0.98\to0.99\to0.99$
+over $T=2\ldots7$, jumping up and back down rather than climbing steadily. This uses the same
+cheap, exploratory block-PM budget (`itermax=2000`, vs notebook 7's production `itermax=8000`) as
+the rest of that cross-check sweep.
+
+**What's confirmed**, from a direct investigation of the cached `k=4` eigenvalues
+(`results/data/nb55_pgap.jld2`):
+
+- The `pick_phys`-style selector (restricted to choosing only between the two largest-modulus Ritz
+  values, since `block_transfer_eigs` always returns `theta` sorted by modulus) is not innocuous —
+  an unrestricted version that searches all 4 candidates for whichever is closest to the previous
+  step's value genuinely picks a *different* index at several `T`. But the unrestricted version's own
+  "gap" exceeds 1 at some of those points, which is impossible for a genuine dominant/subdominant
+  pair — it is tracking a *subdominant* branch, not a validated better choice. Selector fragility is
+  real here, but there is no working fix yet.
+- The 4-eigenvalue spectral spread is **not** simply "the near-degenerate band forms earlier" for
+  larger `p` — the spread `(max−min)/max` is non-monotonic in `T` for `p=0.3` (`0.24→0.08→0.19→
+  0.03→0.02→0.03`), and never gets particularly tight at all for `p=0.5` (`0.17→0.17→0.10→0.08→
+  0.08→0.09`, staying an order of magnitude looser than `p=0.1`/`p=0.3` ever reach).
+- Non-convergence (`reason="stuck"` under the cheap budget) explains the anomaly for `p=0.5`:
+  restricting to only the `converged` points there (`T=2,3,5`) recovers a clean monotonic sequence
+  (`0.834→0.870→0.927`). It does **not** explain `p=0.3`: the sharp `0.991→0.855` drop occurs
+  between two points that are *both* `reason="converged"`.
+
+**Next step**: disentangle the two candidate contributors (selector fragility vs. under-convergence)
+by re-running the `p=0.3`/`p=0.5` ladder at notebook 7's production budget (`itermax=8000`,
+`stuck_after=400`) and/or a finer `ΔT` (e.g. `0.5` instead of `1.0`) to see whether either change —
+alone or combined — restores monotonicity. If neither does, that would point toward a genuine,
+not-yet-understood physical effect at stronger frustration rather than a numerical artifact.
+
 ---
 
 ## 4. Why this matters for the thesis
