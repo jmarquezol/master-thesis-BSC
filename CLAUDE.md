@@ -9,9 +9,13 @@
 >>> tricritical) — why it appears everywhere, what sets where it lands, and whether it can be
 >>> escaped. NUMERICAL CAMPAIGN FULLY CLOSED: Q1 (was the block PM broken?) answered NO — it's
 >>> physics; the XXZ Z2-quench-degeneracy wall mapped in full; the symmetric-XXZ asymmetry
->>> experiment (phase 2) RESOLVED — dial (ii) [quench symmetry] dominates dial (iii) [MPO
->>> symmetry], confirmed by a seed test + warm-started ladder + construction-independent spectrum
->>> bridge, all three agreeing. Only remaining work is WRITING UP into thesisdraft.md. Two
+>>> experiment RESOLVED (phase 3, 2026-07-12) — dial (ii) [quench symmetry] dominates dial (iii)
+>>> [MPO symmetry], now confirmed DIRECTLY: the phase-2 "gauge-invalid" retraction of the
+>>> symmetric-Takagi runs was itself wrong (the σy obstruction sits on the tMPO's time-bond legs,
+>>> which the symmetric solver never transposes — E=Eᵀ holds at 1e-18 on the legs it does use), so
+>>> NB12 §4's direct runs stand: the wall stays at T≈4 under the symmetric solver too, and phase
+>>> rigidity collapses gauge-blind (NB12 §4f). See xxz_symmetric_gauge_report.md + §18 phase-3
+>>> correction. Only remaining work is WRITING UP into thesisdraft.md. Two
 >>> thesis-section drafts at repo root: barrier_section.md (results) and blockpm_methods.md
 >>> (methods §5.4). Notebook series is now 1–10 + 12 (NB11 DELETED July 2026 — its block-PM
 >>> validation V2/V3 + performance §P merged into NB5, its tricritical probe V4 into NB10; NB3.5 had
@@ -1079,8 +1083,22 @@ results/data/ (block_pm_alcaraz_p0.{0,1}.jld2).
   - `seedL`/`seedR::AbstractVector{MPS}` — OPTIONAL WARM-START seeds (padded with random if < k).
     `nothing` (default) = random seeds. A converged pair reused here converges in a few iters; the
     high-payoff use is cross-T ladder warm-starting (needs a pad-tMPS helper — nb3.5 future work).
+  - `eigvals_only::Bool` (default false; added July 2026, NB13 spin-off) — OPT-IN eigenvalue-only
+    mode for Route-2 sweeps (λ0 circle / dual unitarity, gap-closing spectra, Eq.(3)/(4)
+    c-extraction — anything that needs ONLY `theta`, not entropy-quality vectors). It does NOT add a
+    cheaper algorithm (the 2k MPO applies + block de-mix are unavoidable for the eigenvalues too, and
+    the k×k eigenvector algebra was always ~free). It bundles the two settings that make a COARSE run
+    well-conditioned: forces `basis=:schur` (de-mix on the orthonormal block basis, never the
+    1/gap-ill-conditioned eigenvector basis) and skips the final ⟨L_j|R_j⟩=1 bi-normalisation (which
+    only conditions the VECTORS for entropy). The actual speed-up is the CALLER's to take by ALSO
+    passing a smaller `maxdim`/`cutoff`/`maxdims` — justified because θ is a Rayleigh quotient with
+    O(δ²) error in the eigenvector error δ, so it converges at coarser χ than the vectors need (this
+    is the same fact as "θ accurate to 1e-8 while phase rigidity r_j→1e-4 at the wall", NB13). WARNING:
+    the returned L,R are NOT bi-normalised in this mode — do not feed them to `gen_renyi2` or read r_j
+    off them; use `eigvals_only=false` (the default) whenever you need the vectors.
   `compute_entropies` forwards `maxdims`. nb3.5 benchmarks these; the eigenvalue-only (Route 2)
-  sweep can drop to ~k=2/maxdim≈128/ramp/cutoff=1e-10 once verified (converged χ ≪ 256).
+  sweep can drop to ~k=2/maxdim≈128/ramp/cutoff=1e-10 once verified (converged χ ≪ 256) — now with
+  `eigvals_only=true` to make that coarse run well-conditioned and self-documenting.
 
 ### Confirmed working
 - DMRG central charge: c ~ 0.5 for Alcaraz at p = 0..2 (Ising class in equilibrium).
@@ -1416,9 +1434,11 @@ motivated notebook 12's from-scratch symmetric Murg construction (§18).
   src/transverse_tools.jl (load via include("../src/thesislib.jl")):
     build_tmpo(mp, scheme, T; dt, nbeta, init_state) → (mpo, scaffold)  [GENERIC, model-agnostic]
     build_alcaraz_tmpo(T; p, lambda, dt, nbeta, MPO_alg) → (mpo, scaffold)  [thin wrapper]
-    block_transfer_eigs(mpo, scaffold; k, maxdim, basis=:eig/:schur, ...) → (theta, L, R, info)
+    block_transfer_eigs(mpo, scaffold; k, maxdim, basis=:eig/:schur, eigvals_only=false, ...) → (theta, L, R, info)
                        [July 2026: exact left-pairing, continuity-matched Δθ, bi-orthogonal
-                       refresh — see §18. Validated against exact dense diagonalization (NB5's V2 exact ground truth).]
+                       refresh — see §18. Validated against exact dense diagonalization (NB5's V2 exact ground truth).
+                       `eigvals_only=true` = spectrum-only mode (forces :schur, skips bi-norm) for
+                       coarse Route-2 sweeps; L,R come back NOT bi-normalised — see §10.]
     lincomb_mps(coeffs, vecs; cutoff, maxdim) → MPS
     run_pm_diagnosed(T; ...) → NamedTuple with diagnostics
     compute_entropies(mp::ModelParams, T; scheme, nbeta, init_state, itermax, seed, basis, ...) →
@@ -1537,7 +1557,12 @@ erratic, non-stabilizing $c$ over the only range it could afford ($\Delta{=}0.5$
 leaving two candidate readings open — see the July-2026 mid-campaign version of this section for
 detail (superseded below).
 
-**Phase 2 — CORRECTED after a supervisor stress-test (2026-07-07).** The earlier "phase 2" verdict
+**Phase 2 — CORRECTED after a supervisor stress-test (2026-07-07).**
+[⚠ THIS WHOLE PHASE-2 BLOCK IS ITSELF SUPERSEDED by the PHASE-3 CORRECTION further below
+(2026-07-12): the "gauge flaw" argued here targeted the WRONG index pair — the σy failure sits on
+the tMPO's time-bond legs, which powermethod_sym never transposes; the Site,time legs pass at
+machine precision, so the §4 runs are VALID and the original phase-2 verdict is REINSTATED. Kept
+for history.] The earlier "phase 2" verdict
 claimed the symmetric-Takagi route *also* walls at T≈4 (via a seed test + warm-started `sym_sweep2`
 ladder that were seed-independent and warm/cold-consistent) and treated that as decisive. That claim
 was **WITHDRAWN**: a check of "symmetric in *what* sense?" (NB12 §3b) exposed a gauge flaw:
@@ -1567,18 +1592,55 @@ was **WITHDRAWN**: a check of "symmetric in *what* sense?" (NB12 §3b) exposed a
   XXZ band at T≈4 is a property of the quench, not a failure of adaptation.
 
 **So: the wall is PHYSICS, not our implementation.** It is independent of construction (VD2 vs Murg),
-solver (two-sided reproduces it), and eigenvalue routine (validated exactly by NB5's exact ground truth). What DOES depend
-on machinery is **Ising's privileged reach to T=14**: genuinely enabled by its manifestly-symmetric
-Murg MPO + Takagi + small $d_t=2$ + single-sector quench + c=1/2 — every one of which XXZ is denied
-(most fundamentally the symmetric-Takagi route itself, by the $\sigma^y$ obstruction). **Dial (ii)
+solver (two-sided reproduces it), and eigenvalue routine (validated exactly by NB5's exact ground truth).
+[SUPERSEDED 2026-07-12, see the phase-3 correction below: the "XXZ is denied the symmetric-Takagi
+route by the σy obstruction" attribution was WRONG — the route is available, was validly run, and
+does not move the wall. Ising's T=14 privilege is re-attributed to having NO exact symmetry cluster
++ d_t=2 + c=1/2, not to symmetry per se.] **Dial (ii)
 [exact quench degeneracy] dominates dial (iii) [MPO symmetry].** Ising's band is emergent/asymptotic
 (long clean window); XXZ's is exact/structural (Néel BC, from T=0).
 
-**One honest loose end:** we could not run a *correctly-gauged* symmetric-Takagi solver (no single-
-site symmetric gauge exists for XXZ). The construction test + spectrum bridge settle the physics; the
-strong expectation is that a gauge-corrected Takagi would face the same ill-conditioned eigenvector,
-but that is not *proved*. (Finding the non-single-site symmetric gauge is the precise open task; it
-does not affect the conclusion.)
+**~~One honest loose end~~ — CLOSED (phase 3, 2026-07-12): the gauge invalidation was itself wrong;
+the direct symmetric-Takagi test IS valid and confirms the verdict.** Full analysis:
+`xxz_symmetric_gauge_report.md` (repo root). The disentanglement: FwtMPOBlocks checks TWO swaps.
+The σy-obstructed one ("physical(space) => bond(time)", normdiff 0.45) becomes the tMPO's internal
+TIME-BOND direction, which NOTHING in powermethod_sym/RTMsym/Takagi ever transposes (verified in the
+installed source: every environment is the tMPS doubled against its own unconjugated copy). The one
+the solver actually needs — E=Eᵀ on the Site,time legs, i.e. "bond(space) => phys(time)" — PASSES at
+machine precision for BOTH Murg orders: each Murg layer stores the SAME operator on both link
+entries, so link-swap symmetry is blind to σy's transpose-antisymmetry and survives any layer
+product (order 1 included, despite being operator-asymmetric at 1e-3 — spatial reflection ≠ operator
+transpose). Verified dense (NB12 §3c): XXZ-Murg tMPO ‖M−Mᵀ‖/‖M‖ = 1.1e-18 (order 1, Nt=3) / 9e-21
+(order 2); left=right transfer eigenvectors to |⟨l,r⟩|=1.0000 (all 4 leading); VD2 control 0.35 —
+its PUP=U reflection gauge G≠1 is PROMOTED to the temporal physical basis by the rotation, so
+"similar to symmetric" ≠ symmetric, which is why "manifest" matters. Package expH_XXZ_svd also
+diagnosed (NB12 §3c): it staircases NON-commuting bond gates in one sweep; reflection reverses the
+order → asymmetry scales EXACTLY O(dt²) (1.22e-2/3.06e-3/7.65e-4 at dt=0.2/0.1/0.05) — an assembly
+artifact, not a basis obstruction (Potts works because its diagonal bond gates all commute; the
+commuting-LAYER Murg factorization is the correct XXZ analog of the Potts symm_svd template).
+CONSEQUENCES: (1) NB12 §4/§4b/§4c re-classified VALID = the direct dial-(iii) run: the symmetric
+n→1 Takagi dome inflates at the SAME T≈4 as the asymmetric Rényi-2 dome (Δ=0.5 peaks 0.55→0.86→1.10
+over T=3→5; Δ=1.0 0.43→1.03 at T=4→5), seed-independent, warm/cold-consistent — the wall does NOT
+move. (2) NEW NB12 §4f + cache nb12_rigidity.jld2: phase rigidity r_j(T) (Rotter; = Takagi
+self-orthogonality for symmetric E) through the neutral block solver — sym and asym collapse at the
+SAME geometric rate toward the wall (r₀ over T=1..4: 0.66/0.45/0.33/0.22 sym vs 0.54/0.30/0.19/0.10
+asym — a constant factor ≈2, NOT a change of exponent), with the sym arm's Hermitian L/R alignment
+pinned at 1.000 at every T (live E=Eᵀ check) and eigenvalues equal across constructions to 4 digits
+(incl. the EXACT |θ2|=|θ3| Z₂ pair). SURPRISE from the Ising control arm: its rigidity collapses
+even DEEPER (r₀ = 0.30/0.10/0.034/0.012/0.004/0.0013 over T=2..12) while its entropy stays clean to
+T≈14 ⇒ r→0 alone is NOT the wall criterion (it is the universal dual-unitarity fingerprint, cf.
+NB13's Alcaraz r₀≈0.02 at T=3 with a clean dome to T≈9); the wall is set by WHEN the modulus band
+tightens to few-% (XXZ: T≈4 because the exact Z₂ pair closes on λ0; Ising: T≳12, smooth
+non-degenerate band) — pure quench physics, gauge- and construction-blind.
+Complex symmetry imposes NO constraint on eigenvector conditioning (every matrix is similar to a
+complex-symmetric one); it relabels the near-EP collapse as Takagi quasi-null vectors (the §4
+"norm² not real" warnings), it cannot forbid it — and inside an EXACTLY degenerate subspace the
+individual eigenvector is not ill-conditioned but UNDEFINED. (3) Ising's T=14 privilege
+RE-ATTRIBUTED: not "has a symmetric MPO" (XXZ has one; it buys constants only) but NO exact
+symmetry cluster + d_t=2 + c=1/2. WHAT SURVIVES of σy: both-checker-legs-manifest is impossible in any single-site basis ⇒ the
+folded/time-reflected machinery stays unavailable to XXZ (moot for the echo pipeline). NB12 edits:
+§3b rewritten (two-swaps disentanglement), NEW §3c (falsification cells) + §4f (rigidity), §0/§4
+banner/§4e/§5 corrected.
 
 ### NEXT STEPS (in priority order)
 
