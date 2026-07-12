@@ -148,7 +148,33 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         trunc_mode::Symbol=:rtm, itermin::Int=20, stuck_after::Int=100,
         seedL::Union{Nothing,AbstractVector{MPS}}=nothing,
         seedR::Union{Nothing,AbstractVector{MPS}}=nothing,
-        basis::Symbol=:eig)
+        basis::Symbol=:eig,
+        eigvals_only::Bool=false)
+
+    # EIGENVALUES-ONLY FAST PATH (opt-in; default false keeps the full behaviour, byte-for-byte).
+    #
+    # Why this is safe and useful: the transfer matrix here is strongly non-normal, so near the
+    # entanglement-barrier wall the individual eigenVECTORS become ill-defined (their phase rigidity
+    # ⟨L|R⟩/‖L‖‖R‖ → 0). The eigenVALUES do NOT: an eigenvalue read off a Rayleigh quotient
+    # θ = ⟨L|E|R⟩/⟨L|R⟩ has error O(δ²) in the eigenvector error δ (it is quadratically insensitive),
+    # which is exactly why θ stays accurate to ~1e-8 while the vectors scramble. So a caller who wants
+    # ONLY the spectrum — the λ0 circle / dual-unitarity plots, the gap-closing sweeps, the Eq.(3)/(4)
+    # eigenvalue c-extractions, none of which need entropy-quality vectors — can afford a coarser
+    # truncation and still get trustworthy θ's.
+    #
+    # This flag does NOT invent a cheaper algorithm (the cost is the 2k MPO applications + the block
+    # de-mixing, both unavoidable for the eigenvalues too). It just bundles the two settings that make
+    # a coarse run well-conditioned, and nothing else:
+    #   • it de-mixes on the ORTHONORMAL (Schur) block basis rather than the eigenvector basis (whose
+    #     conditioning ~1/gap blows up as the cluster closes), so the iteration never amplifies noise;
+    #   • it skips the final ⟨L_j|R_j⟩ = 1 bi-normalisation below, which only prepares the VECTORS for
+    #     entropy use — work this path does not need.
+    # The realised speed-up is the CALLER's to take, by ALSO passing a smaller `maxdim`/`cutoff` (or a
+    # `maxdims` ramp) than an entropy run would need; the flag simply makes doing so safe and
+    # self-documenting. The returned `theta` is computed by the identical Rayleigh–Ritz step as always.
+    if eigvals_only
+        basis = :schur
+    end
 
     # SETUP
     sit  = siteinds(scaffold)
@@ -337,12 +363,17 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
 
     theta_eigen = copy(theta)         # keep the raw eigenvalues
 
-    # Bi-orthonormalise each pair so that ⟨L_j|R_j⟩ = 1 exactly
-    for j in 1:k
-        ov = overlap_noconj(L[j], R[j])
-        if abs(ov) > 1e-10   
-            L[j] = (1 / sqrt(ov)) * L[j]
-            R[j] = (1 / sqrt(ov)) * R[j]
+    # Bi-orthonormalise each pair so that ⟨L_j|R_j⟩ = 1 exactly.
+    # Skipped on the eigenvalues-only path: this step only conditions the VECTORS for entropy use
+    # (e.g. so the phase rigidity reads r_j = 1/‖L_j‖‖R_j‖); the eigenvalues in `theta` are final
+    # already, so an eigenvalues-only caller pays nothing for a normalisation it will not read.
+    if !eigvals_only
+        for j in 1:k
+            ov = overlap_noconj(L[j], R[j])
+            if abs(ov) > 1e-10
+                L[j] = (1 / sqrt(ov)) * L[j]
+                R[j] = (1 / sqrt(ov)) * R[j]
+            end
         end
     end
 
