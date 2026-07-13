@@ -1,1 +1,8 @@
 results/logs/
+
+# Claude process/meta files: kept locally for session context, not tracked in the repo
+CLAUDE.md
+eigvec_robustness_report.md
+next_steps.md
+xxz_symmetric_gauge_report.md
+symmetric_xxz_prompt.md
