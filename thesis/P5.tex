@@ -1,0 +1,165 @@
+\section{The Non-Hermitian Transfer Matrix}
+\label{sec:nonhermitian}
+
+One of the most important objects in the transverse picture is the spatial transfer matrix $\mathcal{E}$, a column of the rotated network. Unlike the Hamiltonian, or the time-evolution operator $U(\delta t)$, this matrix is generally non-Hermitian---and, due to the asymmetry of the MPO (Section~\ref{sec:mporep}), it is also non-normal ($\mathcal{E}\mathcal{E}^\dagger\neq\mathcal{E}^\dagger\mathcal{E}$). Non-Hermitian operators behave differently from the Hermitian operators of standard quantum mechanics, and these differences are important both for the physics we want to extract and for the numerical methods we use below.
+
+\subsection{Left and right eigenvectors, and biorthogonality}
+
+A Hermitian operator has a single orthonormal eigenbasis. A non-Hermitian $\mathcal{E}$ has two: right eigenvectors, defined by $\mathcal{E}\ket{R_i}=\mu_i\ket{R_i}$, and left eigenvectors, by $\bra{L_i}\mathcal{E}=\mu_i\bra{L_i}$, and in general $\ket{L_i}\neq\ket{R_i}$. These sets are not individually orthonormal; instead they form a biorthogonal system, $\braket{L_i|R_j}\propto\delta_{ij}$. This has two direct consequences for the calculation. First, the dominant left and right temporal states must be obtained independently---the right state cannot be obtained by conjugating the left one as happends in the symmetric case. Second, the physically meaningful contraction is the bilinear overlap $\braket{L|R}$ that encodes the network, not the usual sesquilinear overlap $\langle L^*|R\rangle$. Therefore, overlaps must be taken without complex conjugation.
+
+Since the eigenvalues $\mu_i$ are generally complex, we order them by their modulus. The eigenvalue with the largest modulus, $\mu_0$, controls the long-chain contraction and therefore determines the Loschmidt rate in the thermodynamic limit:
+\begin{equation}
+    \ell(T) = -\lim_{N\to\infty}\frac{1}{N}\log|\mathcal{L}(T)|
+            = -\log|\mu_0(T)|.
+    \label{eq:rate}
+\end{equation}
+For a finite open chain, this relation receives $\mathcal{O}(1/N)$ boundary corrections. Thus, when comparing $-\log|\mu_0|$ with a finite-size Loschmidt echo divided by $N$, these boundary effects have to be taken into account.
+
+\subsection{Eigenvalues versus singular values}
+
+For Hermitian positive operators, such as the RDMs used in conventional tensor-network methods, eigenvalues and singular values carry essentially the same information: the eigenvalues are real, positive, and coincide with the squared singular values. This is what makes the usual truncation procedure variationally controlled. For the non-Hermitian transfer matrix $\mathcal{E}$, and for the associated RTM, this connection is lost. Its trace, $\mathrm{Tr}\,\mathcal{E}=\sum_i\mu_i$, is a sum of complex eigenvalues, so different contributions can cancel each other even when the singular values are large (as in the $\{+1,-1\}$ example of Section~\ref{sec:transverse}). As a result, truncating by singular values does not provide the same direct control over the physical contraction. The situation is further complicated by non-normality: finite applications of a non-normal matrix can show transient amplification that is not visible from the eigenvalues alone. In practice these effects remain manageable for the transfer matrices we study, but they explain why RTM truncation, although more efficient, is less rigorously controlled than RDM truncation.
+
+\subsection{Emergent dual unitarity as a spectral statement}
+\label{sec:emergent}
+
+Section~\ref{sec:cft:temporal} introduced emergent dual unitarity as a physical prediction of the underlying CFT: the transfer eigenvalues migrate onto the unit circle as $T\to\infty$, so that the temporal transfer matrix becomes effectively unitary. Here we restate it as a concrete statement about the spectrum of $\mathcal{E}$ that we can monitor numerically, and draw out its consequence for the power method. The important point is to separate two pieces of information carried by each eigenvalue: its modulus, which controls growth or decay under repeated contractions, and its phase, which carries the oscillatory dynamics.
+
+For a unitary operator $U$, all eigenvalues lie on the unit circle. They can be written as $\mu_j=e^{i\theta_j}$, so $|\mu_j|=1$ for every $j$. In this case there is no hierarchy in modulus: no eigenvalue is larger than the others, and the spectrum is distinguished only by its phases. This is true for the rows of our two-dimensional network, namely the time-evolution layers $U(\delta t)=e^{-iH\delta t}$, which are unitary by construction.
+
+The column transfer matrix $\mathcal{E}$ is different. At finite time it is not generally unitary, so its eigenvalues need not stay on the unit circle. They typically move into the complex plane and develop a hierarchy in modulus. The eigenvalue with the largest modulus, $\mu_0$, then dominates the contraction, while the subleading eigenvalues are suppressed by powers of $|\mu_1/\mu_0|<1$. This is why the Loschmidt rate is fixed by $\ell(T)=-\log|\mu_0(T)|$ (Eq.~\eqref{eq:rate}), and why the gap ratio $|\mu_1|/|\mu_0|$ also controls the convergence of the power method.
+
+After a quench to a critical point, conformal invariance predicts that this hierarchy gradually disappears as the temporal extent $T$ grows. The leading eigenvalues move back toward a common circle in the complex plane: their moduli become degenerate, while their phases remain distinct. In other words,
+\begin{equation}
+    \frac{|\mu_i(T)|}{|\mu_0(T)|}
+        = 1 - \frac{a_i}{T} - \frac{b_i}{T^2} - \cdots
+        \;\xrightarrow[T\to\infty]{}\; 1,
+    \label{eq:gapclose}
+\end{equation}
+with corrections that decay as integer powers of $1/T$. A band of eigenvalues with equal moduli and different phases is the spectral signature of a unitary operator, up to an overall scale. This is the sense in which the spatial transfer matrix becomes effectively unitary at long times. Importantly, this prediction comes from conformal invariance at the critical point, not from integrability.
+
+This also explains why we monitor the leading band of eigenvalues rather than only $\mu_0$. The approach to dual unitarity shows up in two complementary ways: the leading moduli collapse toward a common value, equivalently $|\mu_1|/|\mu_0|\to1$, and the corresponding phases continue to spread around the unit circle as $T$ changes. Once several eigenvalues are nearly degenerate in modulus, a single dominant eigenvalue is no longer clearly separated, so a one-vector power method becomes unreliable. One must instead track the leading band as a whole---which is precisely what the block power method of the following section is built to do.
+
+
+
+
+
+
+
+
+\section{A block power method for the leading transfer spectrum}
+
+\textit{(drop-in section for the thesis; written to follow \S5.1--5.3, whose notation --- the spatial transfer matrix $E$, its biorthogonal eigenpairs $\langle L_i|$, $|R_i\rangle$ with eigenvalues $\mu_i$ ordered by modulus --- it reuses. Equation numbers are local, (B1)--(B9).)}
+
+\subsection{Why a single dominant vector is not enough}
+
+The power method of Section 3.3 converges to the dominant eigenpair at a rate set by the gap ratio $|\mu_1/\mu_0|$: each application of $E$ suppresses the subleading components of the boundary states by one factor of $|\mu_1/\mu_0| < 1$. Section 5.3 showed, however, that a quench to a critical point drives exactly this ratio to one --- emergent dual unitarity \textit{is} the statement that the leading moduli become degenerate as $T$ grows. The better the conformal physics, the worse the power method: at the temporal extents where the interesting scaling sets in, the single-vector iteration slows down critically and eventually stalls, mixing the dominant eigenvector with its near-degenerate partners.
+
+The standard cure, familiar from Hermitian eigensolvers, is to iterate a \textit{block} of $k$ vectors at once and let them span the whole quasi-degenerate cluster. Convergence of the leading pair is then governed not by $|\mu_1/\mu_0|$ but by $|\mu_k/\mu_j|$ --- the gap \textit{between the block and the rest of the spectrum} --- which stays finite as long as the block is large enough to contain the cluster. The subtlety is that our $E$ is non-Hermitian and non-normal (Section 5.1), so every ingredient of the block method --- orthogonalization, projection, even the notion of ``overlap'' --- must be reformulated in the biorthogonal, \textit{bilinear} language. This section walks through that reformulation as implemented in \texttt{block\_transfer\_eigs} (our addition on top of \texttt{ITransverse.jl}).
+
+\subsection{The two-sided block and the oblique projection}
+
+We keep $k$ right vectors $|R_1\rangle,\dots,|R_k\rangle$ and, independently, $k$ left vectors $\langle L_1|,\dots,\langle L_k|$, all of them temporal MPS on the same time sites, seeded with random complex tensors (Section 3.3 explains why a random seed is required). One iteration applies the transfer matrix to every member of the right block and its \textit{transpose} to every member of the left block,
+\begin{equation}
+  |\tilde R_j\rangle = E\,|R_j\rangle, \qquad
+  \langle \tilde L_j| = \langle L_j|\,E
+  \quad\Longleftrightarrow\quad
+  |\tilde L_j\rangle = E^{\mathsf T}|L_j\rangle .
+  \tag{B1}
+\end{equation}
+
+The transpose --- implemented as a prime-level swap of the MPO's physical legs, with \textit{no} complex conjugation --- is the adjoint with respect to the bilinear form of Section 5.1: it is defined by $(E^{\mathsf T}L)^{\mathsf T}R = L^{\mathsf T}(ER)$, so left overlaps computed with \texttt{overlap\_noconj} remain consistent. Using the Hermitian adjoint $E^\dagger$ here would be a conceptual error, not a convention choice: it would converge the left block to the dominant eigenvector of $E^\dagger$, which for a non-normal $E$ is \textit{not} the dominant left eigenvector of $E$.
+
+As in the single-vector method, each MPO application multiplies the bond dimension, so every product in (B1) is truncated back to a cap $\chi_{\max}$ (more on the truncation mode below), and each vector is renormalized.
+
+\subsection{The projected pencil: Rayleigh--Ritz without conjugation}
+
+After the applications, we compress all the spectral information the blocks carry into two small $k\times k$ matrices,
+\begin{equation}
+  S_{ij} = \langle L_i | R_j\rangle, \qquad
+  M_{ij} = \langle L_i | E | R_j \rangle ,
+  \tag{B2}
+\end{equation}
+both evaluated with the bilinear overlap (no conjugation anywhere --- $S$ is complex \textit{symmetric-free}: it has no Hermiticity properties at all, and that is fine). $S$ is the metric of the oblique (Petrov--Galerkin) projection: it says how the left test space and the right trial space are angled against each other. $M$ is the transfer matrix seen through that projection. Approximations $\theta$ to the eigenvalues of $E$ --- \textit{Ritz values} --- then solve the small generalized eigenproblem
+\begin{equation}
+  M\,v = \theta\, S\, v .
+  \tag{B3}
+\end{equation}
+
+Numerically we do \textbf{not} hand (B3) to a generalized eigensolver. Near the degeneracy the columns of the right block begin to coincide, $S$ becomes nearly singular, and \texttt{eigen(M, S)} responds with infinite or wildly scattered eigenvalues. Instead we regularize with the pseudoinverse,
+\begin{equation}
+  W = S^{+} M, \qquad W = V\,\Theta\,V^{-1},
+  \tag{B4}
+\end{equation}
+where $S^{+}$ is the Moore--Penrose pseudoinverse with a relative tolerance ($10^{-12}$): directions of the block that have effectively collapsed onto each other are projected out rather than inverted. The eigenvalues $\Theta = \mathrm{diag}(\theta_1,\dots,\theta_k)$, sorted by modulus, are our estimates of $\mu_0,\dots,\mu_{k-1}$; the columns of $V$ say which linear combination of the current right block best approximates each eigenvector.
+
+\subsection{Pairing the left coefficients exactly}
+
+The left block needs its own mixing coefficients, and here hides a trap we fell into at first. One can diagonalize the transposed pencil, $u^{\mathsf T} M = \theta\, u^{\mathsf T} S$, in a second, independent \texttt{eigen} call --- but then nothing guarantees that its eigenvalues come out in the same order, and inside a quasi-degenerate cluster ``match each left eigenvalue to the nearest right one'' is ambiguous precisely when it matters: several $\theta$'s sit within a fraction of a percent of each other, the greedy match picks a wrong partner, and the de-mixed left and right vectors no longer describe the same eigenvector. The block then oscillates instead of converging --- a failure mode that, before it was fixed, contaminated the gap data in the near-degenerate regime discussed in Section~\ref{sec:results:limits}.
+
+The fix is that no second diagonalization is needed. Writing $y^{\mathsf T} = u^{\mathsf T} S$, the left eigenproblem becomes $y^{\mathsf T} W = \theta\, y^{\mathsf T}$: the $y$'s are the left eigenvectors of the \textit{same} matrix $W$, i.e.\ the rows of $V^{-1}$. Hence
+\begin{equation}
+  u_j = \big(S^{+}\big)^{\mathsf T} \big(V^{-1}\big)^{\mathsf T} e_j ,
+  \tag{B5}
+\end{equation}
+paired with $\theta_j$ \textit{by construction}, and automatically biorthogonal through the metric, $u_i^{\mathsf T} S\, v_j = \delta_{ij}$ (up to the pseudoinverse regularization). One decomposition, exact pairing, no heuristic.
+
+\subsection{De-mixing, and why the eigenvector basis eventually fails}
+
+The iteration closes by rotating the applied blocks onto the Ritz combinations,
+\begin{equation}
+  |R_j\rangle \leftarrow \sum_i V_{ij}\, |\tilde R_i\rangle, \qquad
+  |L_j\rangle \leftarrow \sum_i U_{ij}\, |\tilde L_i\rangle ,
+  \tag{B6}
+\end{equation}
+(the MPS linear combinations are formed with an exact direct-sum addition and compressed once at the end --- the naive density-matrix addition is numerically fragile for near-parallel vectors). Each new pair is then truncated, in one of two modes that mirror the RTM/RDM discussion of Section 3.2:
+
+\begin{itemize}
+    \item \textbf{RTM mode} truncates the matched pair $(L_j, R_j)$ \textit{jointly} on its bilinear transition matrix $|R_j\rangle\langle L_j|$ --- optimal for the physical overlap, dramatically cheaper in bond dimension, but built on the SVD of a non-Hermitian object that becomes ill-conditioned exactly at the degeneracy;
+    \item \textbf{RDM mode} truncates every vector \textit{independently} on its Hermitian density matrix $|v\rangle\langle v^*|$ --- blind to the $L$--$R$ pairing, more expensive, but positive and well-conditioned through the cluster. It is the safe fallback when RTM output turns noisy.
+\end{itemize}
+
+There remains one structural weakness that no truncation mode removes. Equation (B6) de-mixes onto the \textit{eigenvector} basis, and for a non-normal matrix the eigenvector basis itself degenerates as eigenvalues cluster: the condition number of $V$ grows like the inverse gap. Rotating the block onto nearly-parallel directions amplifies every source of noise (truncation, finite convergence) by that condition number. The remedy, standard in non-Hermitian subspace iteration, is to give up on individual eigenvectors \textit{inside} the cluster and maintain only a well-conditioned basis of the invariant \textit{subspace}: we QR-orthonormalize the modulus-sorted coefficient matrices,
+\begin{equation}
+  V \to Q_V, \qquad U \to Q_U, \qquad (Q^\dagger Q = \mathbb{1}),
+  \tag{B7}
+\end{equation}
+an ordered-Schur-like choice whose leading $j$ columns span the same leading-$j$ eigenspaces while the rotations stay unitary. The Ritz values are still read from the pencil (B3)--(B4) at every step; only the basis carried between iterations changes. In this mode the individual pairs $(L_j, R_j)$ for $j$ inside a cluster are no longer eigenvector approximations --- a price one must remember when feeding them into entropy formulas --- but the \textit{spectrum}, and the leading pair when it is isolated, remain clean.
+
+\subsection{Convergence, the $\pm$ partner, and the physical gap}
+
+Convergence is declared on the movement of the leading Ritz values between iterations, $\max_j |\theta_j^{(n)}-\theta_j^{(n-1)}| < \varepsilon$. One more non-Hermitian subtlety enters here: the transfer spectrum comes in near-$\pm$ pairs --- for each dominant $\mu_0$ there is a partner of nearly equal modulus and phase shifted by $\approx\pi$ (a period-two structure in the time direction). Two consequences:
+
+\begin{enumerate}
+    \item \textit{Bookkeeping.} Sorting by modulus lets $\mu_0$ and its partner swap places between iterations, which a naive difference registers as a spurious jump; the tracked values must be matched between iterations by continuity in the complex plane before differencing.
+    \item \textit{Physics.} The naive gap ratio $|\theta_2|/|\theta_1|$ measures the \textit{splitting of the pair}, not the spectral gap. The meaningful, ``physical'' gap takes the largest modulus among the Ritz values that are \textbf{neither} the physical $\mu_0$ (selected by continuity in $T$) \textbf{nor} its $-\mu_0$ partner:
+\end{enumerate}
+\begin{equation}
+  \mathrm{gap}(T) = \frac{\max\{|\theta_i| : i \neq i_0,\, i \neq i_{\text{partner}}\}}{|\theta_{i_0}|}.
+  \tag{B8}
+\end{equation}
+All gap-closing plots in this thesis use (B8); the RTM- and RDM-truncated results agree on it, which excludes a truncation artifact.
+
+Two practical accelerations complete the algorithm. Along a ladder of temporal extents $T_1 < T_2 < \dots$ the converged block at one rung \textit{warm-starts} the next: the converged tensors are re-indexed onto the longer time-site set and the few added sites are padded with a small random tail, so the iteration only has to relax the new sites. And the bond-cap and cutoff follow a schedule --- loose and cheap in the early iterations, tight near convergence --- since the early block is random garbage not worth representing accurately.
+
+\subsection{What bounds the reach}
+
+The block method extends the usable window considerably --- it is what carried the ANNNI-type analysis through the gap closing to $T \approx 9$ --- but it does not abolish the wall of Section~\ref{sec:results:limits}. The reason is worth stating precisely, because it separates what an algorithm can and cannot fix. The leading eigen\textit{values} of $E$ are well-conditioned essentially always (their sensitivity involves the biorthogonal pair through $1/|u^{\mathsf T} v|$, which the block method keeps under control). The individual eigen\textit{vectors}, however, have condition number $\sim 1/\text{gap}$: as emergent dual unitarity closes the gap, any numerical representation of ``the'' dominant eigenvector --- and hence any entropy built from it --- degrades at a rate fixed by the physics itself, not by the iteration. A block method with exact pairing and a Schur basis therefore delivers clean eigenvalues (moduli, phases, the gap (B8)) arbitrarily deep into the dual-unitary regime, while the entropy profile, which needs the eigenvector, is trustworthy only in the pre-wall window where the leading pair is still isolated:
+\begin{equation}
+  \underbrace{\text{spectrum of } E}_{\text{robust: eigenvalue conditioning}}
+  \qquad\text{vs}\qquad
+  \underbrace{S^{\mathrm{gen}}_2 \text{ from } (L_0, R_0)}_{\text{bounded by } 1/\text{gap}} .
+  \tag{B9}
+\end{equation}
+Characterizing this boundary --- where it sits, and why frustration pulls it to earlier times --- is itself part of the results (Section~\ref{sec:results:limits}).
+
+\subsection{Phase rigidity: a diagnostic for the wall}
+\label{sec:rigidity}
+
+The statement that the individual eigenvector has condition number $\sim1/\mathrm{gap}$ can be sharpened into a single measurable quantity, which we use in Section~\ref{sec:results:limits} to diagnose exactly \emph{how} the wall forms. The subtlety is genuinely non-Hermitian and has no counterpart in the Hermitian eigenproblems of standard tensor-network methods. For a Hermitian operator the left and right eigenvectors coincide and remain orthonormal; a small perturbation only rotates them gently, provided the eigenvalues stay apart. For our non-normal $\mathcal{E}$ the left and right eigenvectors are distinct objects paired by the bilinear form $\braket{L_i|R_j}$ (Section~\ref{sec:nonhermitian}), and they can do something a Hermitian pair cannot: as two eigenvalues approach each other, the corresponding left and right eigenvectors can \emph{coalesce}, so that the pair becomes self-orthogonal, $\braket{L|R}\to0$, even though neither vector vanishes. The limiting configuration is an \emph{exceptional point}, where the matrix is defective and can no longer be diagonalized at all.
+
+The order parameter for this approach is the \emph{phase rigidity} of a biorthogonal pair~\cite{rotter2009},
+\begin{equation}
+    r_j = \frac{|\braket{L_j|R_j}|}{\lVert L_j\rVert\,\lVert R_j\rVert},
+    \label{eq:rigidity}
+\end{equation}
+which equals one for a well-conditioned (near-Hermitian) pair and tends to zero as the pair approaches an exceptional point. Its usefulness is that it discriminates two scenarios that are otherwise easy to confuse. An ordinary avoided crossing keeps $r_j\approx1$ and nothing breaks; a collapse $r_j\to0$ signals that the eigenvectors themselves are becoming ill-defined, so that any observable built from an individual eigenvector---the temporal entropy in particular---loses meaning, even while the eigenvalue it belongs to stays perfectly accurate. This is exactly the asymmetry of Equation~(B9), now with a number attached to it. We defer the measurement of $r_j(T)$, which turns out to collapse geometrically across several orders of magnitude as the wall is approached, to Section~\ref{sec:results:limits}.

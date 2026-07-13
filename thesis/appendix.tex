@@ -1,0 +1,183 @@
+\appendix
+
+\section{Fundamentals of Tensor Networks and Optimal Truncation}
+\label{app:tensor_networks}
+
+The simulation of a quantum many-body system is fundamentally bottlenecked by the ``curse of dimensionality'': for $N$ spin-$1/2$ particles the Hilbert space has dimension $2^N$, so a completely general wavefunction requires an exponentially large number of coefficients. Tensor networks exploit the fact that nature rarely uses all of that space: physically relevant states typically carry little entanglement---the ground states of local gapped Hamiltonians obey an \emph{area law}, in which the entanglement across a cut grows only with the boundary of the subsystem rather than its volume---and such states can be represented faithfully by a network of small tensors joined by internal bonds of controlled dimension. This appendix collects the foundations of that ansatz for readers who want them, but it is written with a specific destination in mind, and it is worth stating that destination up front, because it is what makes the appendix relevant to \emph{this} thesis rather than a generic primer.
+
+Everything the main text does---the transverse contraction of Section~\ref{sec:transverse}, the block power method of Section~\ref{sec:nonhermitian}---rests on repeatedly truncating a tensor network, and the crux of the whole method is \emph{which object one truncates}. In the ordinary Schr\"odinger picture that object is the reduced density matrix (RDM) of a single state; in the transverse picture, where the transfer matrix is non-Hermitian and its left and right fixed points differ, it is instead a reduced \emph{transition} matrix (RTM) built from both. The single property that decides which of these gives a stable, well-defined truncation is \emph{gauge freedom}: the RTM spectrum is gauge-invariant, and the RDM spectrum is not. The subsections below build, in order, exactly what is needed to understand that statement---graphical notation and the singular value decomposition; matrix product states and operators; gauge freedom and canonical forms; the Schmidt decomposition and the RDM; optimal truncation and its variational bound; and finally the RTM, the non-Hermitian object on which the transverse method's truncation is actually performed. The reader already fluent in tensor networks may skip to Sections~\ref{app:sub:canonical_forms} and~\ref{app:sub:rtm_truncation}, which carry the ideas this thesis leans on most heavily.
+
+\subsection{Graphical notation and basic operations}
+\label{app:sub:graphical_notation}
+
+Tensor-network calculations quickly become difficult to read if every tensor is written only in index notation. Even a moderate contraction, such as
+\begin{equation}
+    C_{\alpha \beta \gamma \delta} = \sum_{i,j,k} A_{\alpha \beta i j} B_{j k \gamma} D_{k i \delta},
+\end{equation}
+contains enough indices that the structure of the operation is no longer immediately clear. The expression is correct, but it is hard to see at a glance which tensors are connected, which indices remain open, and which contraction order would be efficient.
+
+For this reason, the standard diagrammatic notation for tensor networks---originally introduced by Penrose---is incredibly useful. A tensor is then represented by a shape with one leg for each index. A scalar has no legs, a vector has one, a matrix has two, and a rank-$R$ tensor $T_{i_1 i_2 \dots i_R}$ has $R$ legs. In this notation, the rank of an object is visible directly from the picture, rather than being hidden in a long list of indices.
+
+Contractions are represented by joining legs. If two tensors share an index and we sum over it, the corresponding legs are connected by an internal line. The legs that remain open become the free indices of the resulting tensor. This gives a direct visual representation of the same algebraic operation as matrix multiplication, but it also makes the structure of larger tensor networks much easier to follow.
+
+The diagram is not only a convenient shorthand. It also helps identify the contraction path, this is, the order in which the tensors should be contracted for efficiency. Different orders give the same final tensor, but their computational costs can be very different: a poor choice may create a very large intermediate object, while a better one avoids it. For this reason, choosing an efficient contraction sequence is an essential part of developing tensor-network algorithms.
+
+A second basic operation is reshaping. Linear-algebra routines, such as eigensolvers and singular value decompositions, act on matrices, so higher-rank tensors must often be viewed as matrices by grouping several indices into composite ones. For example, a rank-3 tensor $A_{i,\alpha,\beta}$ can be reshaped into a matrix $M_{(i\alpha),\beta}$ by treating $(i,\alpha)$ as a single index. We simply change the way we label the same entries, not their content. This simple operation is what allows us to apply matrix tools, especially the singular value decomposition, directly inside tensor networks.
+
+\subsection{The singular value decomposition}
+\label{app:sub:svd}
+
+One of the central tools in tensor-network algorithms is the singular value decomposition (SVD). Any matrix $M$ of dimension $D_A \times D_B$ can be written as
+\begin{equation}
+    M = U S V^\dagger,
+\end{equation}
+where $U$ has orthonormal columns ($U^\dagger U=\mathbb{1}$), $V^\dagger$ has orthonormal rows ($V^\dagger V=\mathbb{1}$), and $S$ is a diagonal matrix whose entries are non-negative singular values, ordered as $\lambda_1 \ge \lambda_2 \ge \dots \ge 0$.
+
+In tensor-network language, an SVD is the operation that splits one tensor into two. The two new tensors are connected by a new internal index, and the dimension of this index is set by the number of nonzero singular values. In this sense, the SVD not only factorizes an object, but also tells us how large the new bond has to be in order to represent the original tensor exactly.
+
+The ordering of the singular values is what makes the SVD especially useful. Large singular values correspond to the most important components across the chosen bipartition, while small singular values carry less weight. This gives a controlled way to compress a tensor: by discarding the smallest singular values, we reduce the dimension of the new bond while keeping the dominant correlations. This is the basic idea behind truncation.
+
+We will use this mechanism repeatedly. First, it allows us to build matrix product states by splitting a many-body wavefunction site by site. Later, in Section~\ref{app:sub:truncation}, it provides the practical rule for reducing bond dimensions after operations that make them grow too large. The important point is that the SVD gives a systematic way to decide what to keep and what can be safely discarded.
+
+
+\subsection{Matrix product states and operators}
+\label{app:sub:mps_mpo}
+
+A matrix product state (MPS) is obtained by applying the SVD idea repeatedly along a one-dimensional chain. A completely general state on $N$ sites can be written as
+\begin{equation}
+    |\Psi\rangle = \sum_{i_1,\dots,i_N} C_{i_1\dots i_N}\,|i_1,\dots,i_N\rangle,
+\end{equation}
+where the coefficient tensor $C$ contains $d^N$ entries. A direct representation is then impossible for large systems. But by sweeping an SVD through the chain, this large tensor can be factorized exactly into a product of smaller tensors,
+\begin{equation}
+    C_{i_1\dots i_N} = \sum_{\alpha_1,\dots,\alpha_{N-1}}
+        A^{[1]}_{i_1,\alpha_1} A^{[2]}_{i_2,\alpha_1,\alpha_2}
+        \cdots A^{[N]}_{i_N,\alpha_{N-1}},
+\end{equation}
+where each tensor carries one physical index $i_n$ and, except at the boundaries, two virtual indices connecting it to its neighbours.
+
+The dimensions of the virtual indices are the bond dimensions. They determine how much correlation the MPS can carry across each cut. If the bond dimension is $\chi=1$, the state is simply a product state with no entanglement between the two sides of any cut. Increasing $\chi$ allows the ansatz to represent more entangled states. The factorization itself is exact if the bond dimensions are allowed to grow as needed; the approximation enters only when we impose a maximum bond dimension and truncate the smaller singular values, as discussed in Section~\ref{app:sub:truncation}.
+
+Matrix product operators (MPOs) use the same idea but for operators instead of states. An MPO is a chain of local tensors with two physical indices, one incoming and one outgoing, together with virtual indices that connect neighbouring tensors. Applying an MPO to an MPS generally increases the bond dimension, because the virtual spaces of the operator and the state combine. This growth is one of the main reasons truncation is needed in practical tensor-network algorithms.
+
+
+\subsection{Gauge freedom and canonical forms}
+\label{app:sub:canonical_forms}
+
+The MPS representation is not unique. On any virtual bond we can insert the identity in the form $\mathbb{1}=XX^{-1}$ and absorb the two factors into the neighbouring tensors,
+\begin{equation}
+    A^{[n]} \to A^{[n]}X, \qquad A^{[n+1]} \to X^{-1}A^{[n+1]}.
+\end{equation}
+This transformation changes the individual tensors but leaves the physical state $|\Psi\rangle$ unchanged. This freedom is called gauge freedom. It is extremely useful because it allows us to choose the tensor representation that is best suited to a given calculation.
+
+The most important choice is the canonical form. By sweeping QR or SVD decompositions from left to right, tensors can be brought into left-canonical form, meaning that they satisfy $A^\dagger A=\mathbb{1}$ when contracted over their physical and left virtual indices. Similarly, a right-to-left sweep gives right-canonical tensors satisfying $BB^\dagger=\mathbb{1}$. If the two sweeps meet at a chosen site or bond, the MPS is in mixed canonical form: tensors on the left are left-canonical, tensors on the right are right-canonical, and the center tensor carries the nontrivial weight of the state.
+
+This form is especially useful for local expectation values. If the orthogonality center is placed at site $n$, the tensors to the left and right contract with their conjugates to identities. The full network for $\langle\Psi|\hat O_n|\Psi\rangle$ then collapses to a local contraction at the center,
+\begin{equation}
+    \langle\Psi|\hat O_n|\Psi\rangle =
+        \mathrm{Tr}\!\left[ \Lambda^{[n]\dagger}\, \hat O_n\, \Lambda^{[n]} \right].
+\end{equation}
+Thus, instead of contracting the entire chain, we only need the local tensor carrying the orthogonality center. This is why canonical forms are so central in tensor-network algorithms: they turn many global-looking operations into local ones.
+
+The deeper point, and the one this thesis rests on, is that gauge freedom draws a sharp line between quantities that are \emph{physical} and quantities that are merely \emph{representational}. Any object that depends on the individual tensors---rather than on the physical state they encode---can be moved around at will by a gauge transformation, and is therefore not, by itself, a meaningful thing to truncate on. A truncation scheme is only trustworthy if it targets a gauge-invariant object. In the ordinary single-state setting this subtlety is invisible, because the canonical form fixes the gauge and the Schmidt values of the next subsection are automatically the physical ones. In the transverse picture it becomes decisive: as we will see in Section~\ref{app:sub:rtm_truncation}, the reduced density matrix of a boundary state is \emph{not} gauge-invariant there, whereas the reduced transition matrix built from both boundaries \emph{is}---and that single fact is what selects the correct truncation for the whole method (Section~\ref{sec:transverse}).
+
+
+
+\subsection{Schmidt decomposition and the reduced density matrix}
+\label{app:sub:schmidt}
+
+Consider a bipartition cut that divides the chain into two parts: a block $\mathcal{A}=\{1,\dots,j\}$ and its complement $\mathcal{B}=\{j+1,\dots,N\}$. If we group all physical indices in $\mathcal A$ into one composite index and all physical indices in $\mathcal B$ into another, the wavefunction becomes a matrix $\Psi_{(\mathcal A),(\mathcal B)}$. Performing an SVD of this matrix gives the Schmidt decomposition,
+\begin{equation}
+  \ket\psi = \sum_{\alpha=1}^{\chi} s_\alpha\,
+    \ket{\alpha}_{\mathcal A}\otimes\ket{\alpha}_{\mathcal B},
+  \qquad s_\alpha\ge0,\quad \sum_\alpha s_\alpha^2=1,
+\end{equation}
+where the states $\ket{\alpha}_{\mathcal A}$ and $\ket{\alpha}_{\mathcal B}$ form orthonormal bases on the two sides of the cut. The numbers $s_\alpha$ are the Schmidt coefficients, and they are exactly the singular values of the reshaped wavefunction.
+
+In an MPS, this structure is already built into the bonds. If the state is brought into mixed canonical form with the center placed on bond $j$, the center object is precisely the diagonal matrix of Schmidt coefficients across that cut. The MPS bond dimension $\chi$ is therefore the number of Schmidt values kept on that bond. In this sense, the canonical form makes the entanglement structure of every cut explicit.
+
+The reduced density matrix of the block $\mathcal A$ is diagonal in the Schmidt basis,
+\begin{equation}
+  \rho_{\mathcal A} = \mathrm{Tr}_{\mathcal B}\,\ket\psi\bra\psi
+    = \sum_\alpha s_\alpha^2\, \ket\alpha_{\mathcal A}\bra\alpha_{\mathcal A},
+\end{equation}
+so its eigenvalues are simply $p_\alpha=s_\alpha^2$. These probabilities determine the entanglement across the cut, for example through the von Neumann entropy or the R\'enyi entropies.
+
+
+\subsection{Optimal truncation}
+\label{app:sub:truncation}
+
+Truncating a tensor network means reducing some or all of their bond dimensions from $\chi$ to a smaller value $\chi'<\chi$. In the Schmidt basis, the natural way to do this is to keep the $\chi'$ largest Schmidt coefficients and discard the rest. This choice is optimal in a precise sense, given by the Eckart--Young--Mirsky theorem: among all states $\ket{\tilde\psi}$ with Schmidt rank at most $\chi'$, the truncated state is the closest one to $\ket\psi$ in norm. The corresponding error is simply the discarded weight,
+\begin{equation}
+  \varepsilon = \big\lVert \ket\psi - \ket{\tilde\psi}\big\rVert_2^2
+    = \sum_{\alpha>\chi'} s_\alpha^2.
+\end{equation}
+This gives a direct and practical criterion for compression: if the discarded Schmidt values are small, the truncation error is small.
+
+For the states of local gapped Hamiltonians, for instance, the Schmidt values typically decay rapidly, reflecting the limited entanglement expected from the area-law structure discussed above. As a result, keeping only the largest singular values often gives an accurate representation with a much smaller bond dimension. In practice, every truncation step follows this logic. Whenever an operation increases the bond dimension, for example when applying an MPO to an MPS, we perform an SVD and keep only the leading singular values. This trades a controlled and usually very small loss of accuracy for a representation that remains computationally manageable.
+
+Two features of this scheme are worth isolating, because the transverse picture keeps one and loses the other. The first is that the object being truncated, the reduced density matrix, is Hermitian and positive, so its eigenvalues \emph{are} the (squared) Schmidt values and dropping the smallest of them is unambiguous. The second is the variational guarantee stated above: the Eckart--Young--Mirsky theorem certifies that this truncation is the \emph{best} rank-$\chi'$ approximation and bounds its error by the discarded weight. Both features are special to the Hermitian, single-state setting. When we move to the non-Hermitian transition matrix of the next subsection, the eigenvalue--singular-value coincidence and the variational bound are both lost, and the truncation becomes a physically-motivated heuristic rather than a theorem---a trade we make deliberately, and monitor, because of the large gain in efficiency it brings.
+
+\subsection{The reduced transition matrix and its truncation}
+\label{app:sub:rtm_truncation}
+
+The discussion so far concerned the truncation of a single state $\ket\psi$, where the reduced density matrix (RDM) provides the natural object to diagonalize. In the transverse picture, the situation is different. The transfer matrix is non-Hermitian, so its dominant left and right fixed points are distinct: a left tMPS $\bra L$ and a right tMPS $\ket R$. The object that must be truncated is therefore not an ordinary reduced density matrix, but a reduced transition matrix (RTM) built from both fixed points.
+
+For a temporal cut that separates the ``past'' steps $\le j$ from the ``future'' steps $>j$, the RTM is defined as
+\begin{equation}
+  T_j = \frac{\mathrm{Tr}_{\text{future}}\,\ket R\bra L}{\braket{L|R}}.
+\end{equation}
+Because $\bra L$ and $\ket R$ are generally not related by Hermitian conjugation, $T_j$ is itself non-Hermitian. Its eigenvalues can be complex. They still sum to one, but they are not probabilities, so the usual Schmidt-value interpretation of Section~\ref{app:sub:schmidt} no longer applies directly.
+
+This is exactly the setting that the gauge discussion of Section~\ref{app:sub:canonical_forms} was pointing towards, and it is worth making the pivotal property explicit. Under a gauge transformation $X$ inserted on the cut bond, the two candidate objects behave completely differently. The isolated boundary RDM transforms by a \emph{congruence}, $\rho_L\to X^\dagger\rho_L X$, which for a non-unitary $X$ ($X^\dagger X\neq\mathbb{1}$, the generic case here) distorts its spectrum---so the Schmidt values of a single boundary state are not physical in the transverse picture, and truncating on them can discard precisely the weight that the global overlap needs. The transition matrix, by contrast, transforms by a \emph{similarity}, $T_j\to X^{-1}T_j X$, which leaves its eigenvalues untouched. The RTM spectrum, and therefore the generalized temporal entropies built from it, are thus gauge-invariant: they are properties of the physical contraction, not of the representation. This is the precise sense in which the RTM is the ``correct'' object to truncate on, and it is what the production scheme of Section~\ref{sec:transverse} exploits; the concrete cost comparison between the two schemes is carried out there.
+
+This changes the logic of truncation. In the ordinary case, we keep the directions that best preserve the norm of a single state. Here, the physically relevant quantities are instead bilinear overlaps of the form $\braket{L|\mathcal O|R}$. A component of $\ket R$ that has little overlap with $\bra L$ does not contribute much to such observables, even if it looks important from the point of view of $\ket R$ alone. Conversely, a component with small weight in $\ket R$ can still matter if it has a large projection onto $\bra L$.
+
+The appropriate truncation must therefore use the transition matrix itself. The method introduced by Carignano, Marim\'on and Tagliacozzo~\cite{carignano_marimon_tagliacozzo2024} performs a biorthogonal decomposition of $\ket R\bra L$ and keeps the eigenvalues of largest modulus. These are the directions that dominate the bilinear form and therefore the physical contractions. Since relevance is measured through the overlap between left and right fixed points, this procedure can retain fewer states than a standard reduced-density-matrix truncation at the same accuracy.
+
+The corresponding cost is naturally measured by the generalized R\'enyi-2 temporal entropy,
+\begin{equation}
+  S_2^{\text{gen}}(j) = -\log \mathrm{Tr}\, T_j^{\,2}.
+\end{equation}
+This is the entropy we use throughout the thesis to quantify the temporal entanglement that controls the difficulty of the transverse contraction.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{The second-order VD2 exponential-MPO blocks}
+\label{app:vd2}
+
+For completeness we record here the explicit local tensor of the second-order time-evolution MPO used throughout this work, referenced in Section~\ref{sec:mporep}. These are the closed-form, second-order expressions of Van Damme et al.~\cite{vandamme2024}, specialized to our finite-state-machine blocks; they are what the exponentiation routine assembles for a given memory dimension $\chi$.
+
+We start from the four blocks $A,B,C,D$ of the Hamiltonian MPO $W_H$ (Equation~\eqref{eq:Wannni}): $D$ is the on-site term, $C$ initiates an interaction, $B$ terminates one, and $A$ propagates it. Following the time-step split of Section~\ref{sec:mporep}, we scale them as
+\begin{equation}
+  \tilde D = \tau D, \qquad \tilde C = t_C\, C, \qquad \tilde B = t_B\, B, \qquad \tilde A = A,
+  \qquad t_C = \sqrt{\delta t},\ \ t_B = \tau/t_C,\ \ \tau=-i\delta t .
+\end{equation}
+The construction organizes the exponential $e^{\tau W_H}$ not by powers of $W_H$, but by the symmetric products of overlapping blocks that its Taylor series generates. We write $\{X_1\dots X_m\}$ for the \emph{symmetrized} product, i.e.\ the sum over all distinct orderings of the operator-valued blocks (for example $\{XY\}=X\otimes Y + Y\otimes X$, and $\{XXY\}=XXY+XYX+YXX$), where $\otimes$ is the Kronecker product on the virtual memory index and the ordinary product on the physical index. The multinomial weights $1/2!,\,1/3!,\dots$ of the exponential are carried by the explicit prefactors below.
+
+The resulting local tensor is a $3\times3$ block object (indices $1,2,3$ label the scalar, single- and doubled-memory sectors, which is the origin of the enlarged $1+\chi+\chi^2$ virtual bond),
+\begin{equation}
+  W^{\mathrm{VD2}} =
+  \begin{pmatrix}
+    W_{11} & W_{12} & W_{13} \\
+    W_{21} & W_{22} & W_{23} \\
+    W_{31} & W_{32} & W_{33}
+  \end{pmatrix},
+\end{equation}
+with
+\begin{align}
+  W_{11} &= \mathbb{I} + \tilde D + \tfrac12\{\tilde D\tilde D\} + \tfrac16\{\tilde D\tilde D\tilde D\}, \\
+  W_{12} &= \tilde C + \tfrac12\{\tilde C\tilde D\} + \tfrac16\{\tilde C\tilde D\tilde D\}, \qquad
+  W_{13} = \{\tilde C\tilde C\} + \tfrac13\{\tilde C\tilde C\tilde D\}, \\
+  W_{21} &= \tilde B + \tfrac12\{\tilde B\tilde D\} + \tfrac16\{\tilde B\tilde D\tilde D\}, \qquad
+  W_{31} = \tfrac12\{\tilde B\tilde B\} + \tfrac16\{\tilde B\tilde B\tilde D\}, \\
+  W_{22} &= \tilde A + \tfrac12\big(\{\tilde B\tilde C\}+\{\tilde A\tilde D\}\big)
+            + \tfrac16\big(\{\tilde C\tilde B\tilde D\}+\{\tilde A\tilde D\tilde D\}\big), \\
+  W_{23} &= \{\tilde A\tilde C\} + \tfrac13\big(\{\tilde A\tilde C\tilde D\}+\{\tilde C\tilde C\tilde B\}\big), \qquad
+  W_{32} = \tfrac12\{\tilde A\tilde B\} + \tfrac16\big(\{\tilde A\tilde B\tilde D\}+\{\tilde B\tilde B\tilde C\}\big), \\
+  W_{33} &= \{\tilde A\tilde A\} + \tfrac13\big(\{\tilde A\tilde B\tilde C\}+\{\tilde A\tilde A\tilde D\}\big).
+\end{align}
+The scalar track $W_{11}$ carries the on-site evolution to third Taylor order; the $W_{12},W_{13}$ entries dress an outgoing memory leg (single and doubled), $W_{21},W_{31}$ the incoming one, and the lower-right block dresses the through-wire $\tilde A$ with all of its symmetric companions. Keeping the doubled-leg (index-3) sector is exactly what reproduces the connected clusters spanning three sites---the next-nearest-neighbour overlaps that $W^{\mathrm{II}}$ misses---and is why VD2 is genuinely second order for our model at the cost of the enlarged virtual bond.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

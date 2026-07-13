@@ -1,0 +1,104 @@
+\section{Time Evolution via Transverse Contraction}
+\label{sec:transverse}
+
+We implement the transverse contractions with \texttt{ITransverse.jl}, the package developed by Carignano~\cite{carignano2025itransverse}. The reader interested in the software engineering is referred there. Here we summarize what the framework computes and how it works.
+
+Transverse contraction translates the time evolution of a $D$-dimensional system as the
+contraction of a $(D{+}1)$-dimensional tensor network, the extra dimension being time. For our 1D chain, this is a 2D network (a Projected Entangled-Pair States, PEPS, up to Trotter error) of finite bond dimension that encodes the entire dynamics of our system. The problem then becomes one of contracting it, which is a generally hard
+task, since exact PEPS contraction is \#P-hard.
+
+In order to visualize this contraction scheme, let us consider a 1D system described by a Hamiltonian $H$, and the Loschmidt echo, the return amplitude of an initial state $\ket{\Psi_0}$ after evolving for a time $T$:
+\begin{equation}
+    \mathcal{L} = \bra{\Psi_0} e^{-iHT} \ket{\Psi_0}.
+    \label{eq:echo}
+\end{equation}
+The ingredients are the initial and final states, written as MPS, and the time-evolution operator, written as a product of MPO layers. For simplicity, we work with a translation-invariant, time-independent Hamiltonian that guarantees that all bulk MPO tensors $W$ are identical (Section~\ref{sec:mporep} explains how to build such an MPO for an NNN model).
+
+In this setup, rather than stacking Trotterized MPO layers on top of the initial MPS---the usual procedure, which steadily increases the spatial entanglement---we perform a transverse contraction: we rotate the network by $90^\circ$, so that what were virtual spatial links become physical temporal links and what were physical spatial links become the virtual temporal bonds. In this rotated picture, the boundary columns are temporal Matrix Product States (tMPS), $\bra{L}$ and $\ket{R}$, and a bulk column is a temporal Matrix Product Operator (tMPO), $\mathcal{E}$, which acts as a spatial transfer matrix---which, by translation invariance, is the same fixed operator at every spatial site for different time steps. Contracting the network along the spatial direction---which is the same as performing time evolution---then amounts to repeatedly applying $\mathcal{E}$ to the boundary tMPS. For an infinite (or long) chain, this reduces to finding the dominant left and right eigenvectors of $\mathcal{E}$ and taking their overlap, which can be done with
+the tensor-network Power Method (Section~\ref{sec:powermethod}).
+
+It is worth contrasting the two directions of this network explicitly, because they have very different spectral character. The rows are the Trotter layers $U(\delta t)=e^{-iH\delta t}$, which are unitary, and therefore their spectrum lies entirely on the unit circle (the eigenvalues are pure phases). The column $\mathcal{E}$, on the other hand, is not unitary in general; it is non-Hermitian, and its eigenvalues are generic complex numbers. The interplay
+between these two facts is exactly where the CFT physics enters, as we discuss below and develop in Section~\ref{sec:nonhermitian}.
+
+
+\subsection{Temporal entanglement and the CFT connection}
+
+Each application of $\mathcal{E}$ increases the bond dimension of the tMPS, so we must necessarily truncate after every step. Whether this truncation is computationally cheap or not is determined by the temporal entanglement: the entanglement entropy across a cut in the time domain of the tMPS. Although its physical meaning is still under investigation, it is a well-defined computational quantity, and one can study how it scales with the number of temporal sites $N_t$ (equivalently, the number of time steps). For many systems, it is observed to obey a volume law, making the contraction no easier than the Schr\"odinger approach.
+
+The reason transverse contraction can nevertheless succeed at a critical point is that the relevant entropies are precisely the quantities that CFT predicts. The key object here is the Reduced Transition Matrix (RTM), built jointly from the two temporal boundary states,
+\begin{equation}
+    \mathcal{T}_t \propto \ket{R}\bra{L},
+\end{equation}
+which captures the overlap $\braket{L}{R}$ that we actually want to compute. The spectrum of $\mathcal{T}_t$ defines a family of generalized temporal entropies, and the central result we rely on---derived in Section~\ref{sec:cft:temporal}---is that, for a quench to a conformally invariant critical point, these generalized entropies are exactly the entropies predicted by CFT, and grow only logarithmically with time~\cite{carignano_tagliacozzo2025}. This means the bond dimension needed to represent the tMPS grows only polynomially, and a truncation that targets the RTM spectrum keeps the entire transverse contraction efficient. In other words, the efficiency of the RTM approach is not primarily algorithmic, but physical: it is a consequence of its spectrum being fixed by the CFT at the critical point.
+
+
+
+
+\subsection{Truncation based on RDM and RTM}
+
+We have two complementary truncation schemes at our disposal, based respectively on the Reduced Density Matrix (RDM) and the Reduced Transition Matrix (RTM). The first is the conventional truncation available in most tensor-network libraries; the second is the gauge-invariant scheme that \texttt{ITransverse.jl} implements for the transverse picture. They differ in two respects that turn out to be linked---gauge invariance and bond-dimension cost---and each has a regime in
+which it is preferable.
+
+The RDM truncation acts on a single boundary state: one brings the MPS to mixed canonical form and discards the smallest singular values of the orthogonality center, which is the optimal low-rank approximation of that state in the $2$-norm. In the transverse picture, however, the transfer matrices are non-Hermitian, and the RDM truncation becomes gauge-dependent. In order to visualize why, consider the overlap $\braket{L | R}$ (or $\bra{L}\mathcal{E}\ket{R}$ for an operator) which encodes the physically relevant content of the network. Thanks to the gauge freedom within our tensor network, we can insert an identity $XX^{-1}=\mathbb{I}$ between adjacent columns while keeping the exact global contraction invariant,
+\begin{equation}
+    \braket{L | R} = \bra{L}XX^{-1}\ket{R} = \braket{\tilde L | \tilde R}.
+\end{equation}
+The boundary RDM, by contrast, is not invariant: for the gauged left state,
+\begin{equation}
+    \tilde\rho_L = \ket{\tilde L}\bra{\tilde L} = X^\dagger\rho_L X,
+\end{equation}
+and since $X$ is in general not unitary ($X^\dagger X\neq\mathbb{I}$), its spectrum can be significantly distorted. The isolated RDM spectrum is therefore not a canonical, gauge-invariant quantity: if we perform a truncation by discarding the smallest singular values of these isolated RDMs, it is possible that the singular values that carry the critical information required to preserve the global scalar product $\langle L | R \rangle$ might be pushed into the tails of the spectrum by the gauge transformation and subsequently thrown away, fundamentally breaking the calculation. As long as we are in a fixed canonical form, the RDM truncation remains well defined and usable. While this is the standard scheme, it does not target the overlap directly, which is the conceptual reason to look for an alternative.\\
+
+The RTM approach removes the gauge ambiguity entirely. Under the same gauge,
+\begin{equation}
+    \tilde{\mathcal{T}} = \ket{\tilde R}\bra{\tilde L} = X^{-1}\ket{R}\bra{L}X
+        = X^{-1}\mathcal{T}X,
+\end{equation}
+which is a similarity transformation: $\tilde{\mathcal{T}}$ and $\mathcal{T}$ share the same eigenvalues, so the RTM spectrum is gauge-invariant. The RTM is therefore both the object CFT predicts and the only gauge-stable thing to truncate on.
+
+In practice, neither scheme requires computing the eigenvalues of the exponentially large global matrix: thanks to canonical forms, it is possible to reduce the problem to diagonalising a local $\chi\times\chi$ environment matrix, $M_A$. For the Hermitian RDM, a bipartite cut gives $\rho_B = U_B M_A U_B^\dagger$, with $U_B$ being unitary (built from left-orthogonal tensors), so $\mathrm{eig}(\rho_B)=\mathrm{eig}(M_A)$, and one can truncate rigorously and straightforwardly on the eigenvalues of the smaller matrix. For the RTM, built from two different states, the same cut gives $\tau_B = U_B M_A V_B$, with $U_B\neq V_B^\dagger$. This is no longer a similarity transformation as before, so $\mathrm{eig}(\tau_B)\neq\mathrm{eig}(M_A)$. Fortunately, $U_B$ and $V_B$ are isometries, so they preserve singular values: $\mathrm{sv}(\tau_B)=\mathrm{sv}(M_A)$, allowing us to truncate on the singular values of the small environment instead.
+
+This last step requires special care, though. The singular values of a matrix $M$ are always related to its eigenvalues via $sv(M) = \sqrt{eig(M M^\dagger)}$. For a Hermitian positive-definite RDM, since the singular values coincide with the eigenvalues, dropping the smallest singular values is mathematically equivalent to dropping the smallest eigenvalues. For the non-Hermitian RTM, however, the eigenvalues can be complex or negative, and the trace $\mathrm{Tr}\, \mathcal{T}_t=\sum_i\lambda_i$---which gives us the physical overlap we are interested in computing---is no longer in one-to-one correspondence with the singular-value magnitudes. To see why, let us consider the toy example of an RTM with eigenvalues $+1$ and $-1$: while their singular values (their moduli) are both large ($1$) and would therefore be preserved by the Singular Value Decomposition (SVD) algorithm, they exactly cancel out when evaluating the actual physical quantity of interest. RTM truncation therefore lacks the rigorous mathematical bounds of RDM truncation and would likely fail for a generic random non-Hermitian matrix. The reason why it nevertheless works in practice is physical: because the transfer matrices related to time evolution have highly constrained, physical structures, these cancellations are in practice harmless.
+
+
+One advantage of the RTM approach is that it is considerably cheaper to compute than the RDM one. We can understand better why from what each scheme tries to preserve. The eigenvalues of the boundary RDM $\rho_R=\mathrm{Tr}_{\bar A}\ket{R}\bra{R}$ are the squared Schmidt coefficients of $\ket{R}$ across the cut, so its truncation keeps the directions in which $\ket{R}$ carries the most weight, regardless of whether those directions overlap with $\bra{L}$. It thus faithfully represents the entire state $\ket{R}$, including the component orthogonal to $\bra{L}$ that will contribute nothing once the overlap $\braket{L}{R}$ is taken. The RTM, $\mathcal{T}\propto \ket{R}\bra{L}$, instead weights each direction by its contribution to the overlap itself: a direction along which $\ket{R}$ is large but which is orthogonal to the corresponding part of $\bra{L}$ carries a small singular value and is thus discarded. By retaining only the part of each boundary that actually contributes to $\braket{L|R}$, the RTM needs fewer Schmidt values---which translates into a lower bond dimension---than the RDM, which pays to store information the final overlap throws away. Formally, the RDM compression is bounded by the standard state entanglement, whereas the RTM compression is bounded by the smaller operator-space entanglement~\cite{carignano_marimon_tagliacozzo2024}.
+
+In summary, the two schemes are complementary and we use both. The RTM truncation is gauge-invariant and substantially cheaper in bond dimension, and it is our default for production runs; but it rests on a singular-value heuristic with no strict bound on the overlap, so its convergence can be less smooth and occasionally unstable, and it must be monitored with care. The RDM truncation is gauge-dependent and more expensive, but as the truncation of a Hermitian, positive operator, it inherits a rigorous variational bound, so it converges smoothly and monotonically and yields more robust results. We therefore fall back to the RDM scheme whenever the RTM output is noisy or difficult to interpret, accepting the higher bond dimension in exchange for a cleaner and more reliable answer.
+
+
+
+\subsection{The Power Method}
+\label{sec:powermethod}
+
+Ultimately, we are interested in computing the full transverse contraction of the (infinite) 2D tensor network encoding the dynamics of our system. For spatially translation-invariant systems, this task reduces to finding the dominant left and right eigenvectors of a single spatial transfer matrix $\mathcal{E}$ and computing their overlap $\braket{L|R}$. To achieve this, we will use the tensor-network version of the Power Method.
+
+Starting from initial guesses for the temporal boundary states (tMPS) $\bra{L_0}$ and $\ket{R_0}$, we repeatedly absorb at each step $i$ one column of the network---corresponding to our transfer matrix---into each boundary,
+\begin{equation}
+    \bra{\tilde L_{i+1}} = \bra{L_i}\,\mathcal{E},
+    \qquad
+    \ket{\tilde R_{i+1}} = \mathcal{E}\,\ket{R_i}.
+\end{equation}
+Each application multiplies the bond dimension, so we truncate (on the RTM or RDM) after every step. In addition, because $\mathcal{E}$ is non-unitary, we also renormalize at every step to avoid numerical instabilities. The iteration process stops once the generalized temporal entropy stabilizes between consecutive steps, $\Delta S < \varepsilon$, with $\varepsilon$ taken small. Because $\mathcal{E}$ is non-Hermitian, its left and right eigenvectors differ, so the two boundaries must be evolved independently---which is achieved by the left--right power method implementation in \texttt{ITransverse.jl}, appropriate to the asymmetric MPO of our model (Section~\ref{sec:mporep}).
+
+It is important to consider some caveats regarding the choice of the truncation scheme used for the power method. Ideally, we would truncate using the full remaining network, e.g. the global transition matrix $\bra{L}\mathcal{E}\cdots\mathcal{E}\ket{R}$. But the power method grows the network iteratively column by column, so whether we are extracting the dominant singular values from the local RDM of $|\tilde{R}_{i+1}\rangle$ or from the joint local RTM governing the overlap $\langle \tilde{L}_{i+1} | \tilde{R}_{i+1} \rangle$, the algorithm optimizes at each step the boundary states based exclusively on the current local environment alone. It completely ignores the remaining $\mathcal{E}$ columns that have yet to be applied. One might worry that information which looks irrelevant now (small local singular values) but is relevant later for the full contraction is discarded prematurely. But for homogeneous problems---such as the Loschmidt echo of a translation-invariant chain---this is not a problem: every bulk column is the same $\mathcal{E}$, so if relevant weight is dropped at step $i$, the next application of the identical $\mathcal{E}$ regenerates it, and the method converges ultimately to the true dominant eigenspace (provided the system is gapped; at a closing gap it converges to the degenerate subspace, a point we return to in Section~\ref{sec:nonhermitian}).
+
+
+
+\subsection{Generalized temporal entropies}
+
+There is an important relationship between the entanglement entropy of a state and the bond dimension required to faithfully represent it with a tensor network. In standard Schr\"odinger time evolution, the complexity is governed by the spatial entanglement of the state, which typically grows linearly with time (volume law). In the transverse picture, on the other hand, the objects of interest are now temporal boundary states, whose complexity is encoded in the spectrum of the RTM
+$\mathcal{T}_t\propto\ket{R}\bra{L}$. This leads us to the concept of generalized temporal entropies, first introduced in high-energy physics and holography to describe transition matrices between different quantum states---which correspond to our left, $\bra{L}$, and right, $\ket{R}$, boundary states.
+
+From the RTM $\mathcal{T}_t$, we can define the generalized von Neumann temporal entropy as:
+\begin{equation}
+    S_{1}^{gen}(t) = -\text{Tr}(\mathcal{T}_t \log \mathcal{T}_t).
+\end{equation}
+This definition presents several practical challenges, primarily inherited from the mathematical nature of the RTM. Because $\mathcal{T}_t$ is non-Hermitian, its eigenvalues---and hence $S_1^{\mathrm{gen}}$---can be complex, requiring its physical interpretation to be handled with care. Furthermore, evaluating the matrix logarithm requires the exact eigenvalues of $\mathcal{T}_t$, which is an exponentially large matrix. As we discussed in the RTM and RDM truncations section, our local tensor network algorithm only gives us access to the singular values of the smaller environment. But because there is no exact one-to-one correspondence between the singular values and the eigenvalues of a non-Hermitian operator---unlike the well-behaved Hermitian RDM---extracting the exact von Neumann entropy becomes a very complicated task (although it is possible to do it, we refer to ITransverse paper).
+
+We therefore work instead with higher-order generalized entropies, such as the generalized R\'enyi-2 entropy,
+\begin{equation}
+    S_{2}^{gen}(t) = -\log \text{Tr}(\mathcal{T}_t^2).
+\end{equation}
+which needs neither a diagonalization nor a logarithm: $\mathrm{Tr}(\mathcal{T}_t^2)$ is obtained by taking two copies of the RTM and contracting them, making the calculation efficient and numerically robust. These generalized entropies are of central interest because they dictate the cost of the transverse contraction: whereas spatial entanglement always grows linearly in time, the generalized temporal entropy can behave far more favourably---and, as discussed in Section~\ref{sec:transverse}, CFT predicts logarithmic growth at a critical point.
+
+Operationally, once the power method has converged to $\bra{L}$ and $\ket{R}$ for evolution up to a final time $T$, we evaluate $S_2^{\mathrm{gen}}$ across every bipartition of the temporal chain: each internal bond corresponds to a temporal cut $t\in(0,T)$. A dedicated routine in \texttt{ITransverse.jl} builds the two RTM copies and contracts them at each link. Because the transition matrices are non-Hermitian, the resulting entropy is generally complex, so we plot the real and imaginary parts separately against the (normalized) temporal cut. This profile tells us how the complexity of the contraction evolves with time and---by comparison with the CFT prediction (Section~\ref{sec:results})---whether the universal Ising behaviour persists once integrability is broken.

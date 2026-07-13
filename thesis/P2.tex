@@ -1,0 +1,55 @@
+\section{The ANNNI-type Model}
+\label{sec:annni}
+
+We study a self-dual quantum spin chain that generalizes the transverse-field Ising model by adding next-nearest-neighbour (NNN) interactions \cite{alcaraz2016}. For the spin-$1/2$ case its Hamiltonian reads
+\begin{equation}
+    H = - \sum_{i} \left( \sigma_i^z \sigma_{i+1}^z
+        + p\, \sigma_i^z \sigma_{i+2}^z
+        + \lambda\, \sigma_i^x
+        + p\lambda\, \sigma_i^x \sigma_{i+1}^x \right),
+    \label{eq:annni_H}
+\end{equation}
+where $\sigma^{x,z}$ are the standard Pauli matrices, $\lambda$ is the transverse field, and $p$ controls the strength of the longer-range (NNN) coupling.
+
+Setting $p=0$ removes the NNN terms and recovers the standard, integrable transverse-field Ising model, with $\lambda$ playing the role of the transverse magnetic field. Switching on $p>0$ introduces a second interaction length scale and breaks integrability: the chain acquires genuine many-body chaos and is no longer exactly solvable.
+
+Breaking integrability raises the following question: does the model remain critical, and if so, does it stay in the same universality class as the Ising chain? We answer this in equilibrium by examining the ground-state entanglement and comparing it with the predictions of Conformal Field Theory (Section~\ref{sec:cft}).
+
+For a critical 1D system, CFT predicts that the ground-state von Neumann entropy of a block of length $l$ in an open chain of length $L$ scales logarithmically as (the open-chain, half-line version of Equation~\eqref{eq:cft:coeff} at $n\to1$)
+\begin{equation}
+    S_{\mathrm{vN}}(l,L) = \frac{c}{6}\,
+        \ln\!\left(\frac{L}{\pi}\sin\!\frac{l\pi}{L}\right) + k,
+    \label{eq:cft_obc}
+\end{equation}
+where $c$ is the central charge of the underlying CFT and $k$ is a non-universal constant. Evaluating Eq.~\eqref{eq:cft_obc} at the mid-chain cut $l=L/2$, where $\sin(\pi/2)=1$, simplifies it to
+\begin{equation}
+    S_{\mathrm{vN}}(L/2) = \frac{c}{6}\,\ln\!\left(\frac{L}{\pi}\right) + k
+        = \frac{c}{6}\,\ln L + k'.
+    \label{eq:cft_mid}
+\end{equation}
+Thus, if we run DMRG for a range of system sizes, extract the mid-bond von Neumann entropy, and plot it against $\ln L$, criticality manifests as a straight line whose slope is exactly $c/6$.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imgs/cft_L.png}
+    \caption{Finite-size scaling of the mid-chain von Neumann entropy for the ANNNI-type model at $p=0.5$. The linear dependence on $\ln L$ is consistent with the CFT prediction of Eq.~\eqref{eq:cft_mid}, and from the slope we obtain the central charge $c$.}
+    \label{fig:cft_L}
+\end{figure}
+
+As Figure~\ref{fig:cft_L} shows, the mid-chain entropy at $p=0.5$ follows precisely this linear law, confirming that, even with integrability broken, the system still exhibits the scale invariance characteristic of a CFT.
+
+We now ask how the central charge evolves as the NNN coupling is increased. In his original proposal \cite{alcaraz2016}, Alcaraz argued, via finite-size scaling, that for sufficiently small coupling ($p\lesssim1.5$) the model stays critical and in the same universality class as the integrable Ising chain, so the central charge should remain very close to $c=1/2$.
+
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imgs/p_dependence.png}
+    \caption{Dependence of the fitted central charge $c$ on the frustration parameter $p$ for the Alcaraz model and a finite chain of $N=300$ spins. The values remain close to the Ising prediction $c=1/2$ over the studied range.}
+    \label{fig:c_vs_p}
+\end{figure}
+
+To verify this numerically, the central charge was fitted across $p\in[0,2]$ on a chain of $N=300$ spins (Figure~\ref{fig:c_vs_p}). At the integrable point $p=0$ the extracted value is $c\approx0.502$. The small deviation from the exact $c=1/2$ is a well-understood finite-size artifact: on a finite lattice, the subleading corrections to Eq.~\eqref{eq:cft_obc} have not fully vanished, producing the systematic offset observed from the thermodynamic limit. As $p$ grows, the fitted charge drifts gently upward, but the deviation remains small---even at $p=2$, it barely exceeds $0.510$. This persistent proximity to $c=1/2$ provides strong numerical support for Alcaraz's claim \cite{alcaraz2016}: the NNN coupling does not drive the system into a new phase. The model remains critical and within the Ising universality class, so the CFT framework is a legitimate tool for describing its dynamics.
+
+This equilibrium picture also fixes the role that the integrable point $p=0$ will play in the dynamical study that follows. At $p=0$ the model \emph{is} the transverse-field Ising chain, whose post-quench temporal entropies were computed from CFT and reproduced numerically by Carignano and Tagliacozzo~\cite{carignano_tagliacozzo2025}. It is therefore our touchstone: a point where the exact conformal answer is known, against which we can calibrate the whole transverse pipeline before switching on frustration. The novelty of this work is then to \emph{tune} $p$ away from that solvable point---keeping the model critical and Ising-class, as we have just verified, but non-integrable and longer-ranged---and ask whether the same universal signatures persist.
+
+Once the equilibrium criticality is established, we move to the dynamical question that motivates the rest of this work. We quench the system from the polarized initial state $\ket{\Psi_0}=\ket{X+}^{\otimes N}$ to the critical point $\lambda=1$ and ask whether the universal CFT signatures that organize the equilibrium entanglement also organize the temporal entanglement of the post-quench dynamics. To address this, we turn to transverse contraction, which gives us efficient access to the generalized temporal entropies whose CFT predictions we wish to test.

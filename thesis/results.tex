@@ -1,0 +1,126 @@
+\section{Results}
+\label{sec:results}
+
+We now put the framework to work. The logic of this section mirrors the logic of the whole thesis. We first go to the integrable point $p=0$, where the model is the transverse-field Ising chain and the conformal answer is known exactly, and check that the transverse pipeline reproduces it (Section~\ref{sec:results:validation}). We then switch on frustration and ask whether the universal signatures survive as $p$ grows (Section~\ref{sec:results:frustration}). Finally, we turn the method on itself and map its limits---the point at which the entanglement barrier stops the calculation, and what exactly fails there (Section~\ref{sec:results:limits}).
+
+Unless stated otherwise, all runs use the second-order VD2 time-evolution MPO (Section~\ref{sec:mporep}) with $\delta t=0.05$, a conformal regulator $\beta_0=0.2$ (i.e.\ $N_\beta=4$ imaginary-time sites split between the two ends, Section~\ref{sec:cft:boundary}), the initial state $\ket{\Psi_0}=\ket{X+}^{\otimes N}$, and the left--right block power method of Section~\ref{sec:nonhermitian} to obtain the dominant temporal states.
+
+\subsection{Validation at the integrable point}
+\label{sec:results:validation}
+
+At $p=0$ every conformal prediction of Section~\ref{sec:cft} has an exact target, so this point is where we calibrate the pipeline and confirm that it measures what we think it measures. Four independent checks, each testing a different one of the universal formulas collected in Section~\ref{sec:cft:temporal}, all come out consistent with the Ising CFT ($c=\tfrac12$, $v=2$).
+
+\emph{The conformal dome.} The generalized R\'enyi-2 temporal entropy, evaluated across every temporal cut of the converged tMPS, traces the symmetric ``dome'' of Equation~\eqref{eq:cft:chord} (Figure~\ref{fig:val_profiles}). Plotted against the conformal chord variable $\log[\tfrac{2T}{\pi}\sin\tfrac{\pi t}{T}]$, its real part collapses onto a straight line (Figure~\ref{fig:val_chord}) whose slope is the R\'enyi-2 coefficient $c/8$ of Equation~\eqref{eq:cft:coeff}; the extracted slope returns $c\approx\tfrac12$, as it must. We stress the coefficient again because it is a common pitfall: for the generalized R\'enyi-2 entropy on a boundary cut the slope is $c/8$, not the bulk von Neumann value $c/3$.
+
+\emph{The imaginary plateau.} The imaginary part of the same entropy sits on a flat plateau across the dome. Equation~\eqref{eq:cft:chord} predicts $\mathrm{Im}\,S^{\mathrm{gen}}=\pi c/12$, which for $c=\tfrac12$ is $\pi/24\approx0.131$; the measured plateau agrees. This is a genuinely independent read of the central charge, requiring no fit at all, and we find its value to be the same for the R\'enyi-2 entropy as for the $n\to1$ prediction---the imaginary offset is, empirically, $n$-independent.
+
+\emph{The boundary exponent.} The gap between the two leading transfer eigenvalues gives the boundary scaling dimension through Equation~\eqref{eq:cft:eq4}. A fit of $\mathrm{Im}(\lambda_1-\lambda_0)$ against $1/T$ (Figure~\ref{fig:val_x1}) returns $x_1=0.502$, with a leading coefficient $a_1=0.788\approx\pi/4$. Both are the exact free-boundary Ising values, confirming that the field-polarized $\ket{X+}$ realizes the free (disordered) boundary condition of Section~\ref{sec:cft:boundary}.
+
+\emph{Emergent dual unitarity, and the eigenvalue route to $c$.} Traced in the complex plane as $T$ grows, the leading eigenvalue $\lambda_0(T)$ moves along a circle of near-constant radius while its phase winds (Figure~\ref{fig:val_circle})---the modulus flattens and only the phase evolves, which is exactly the spectral fingerprint of the emergent dual unitarity of Section~\ref{sec:emergent}. From the imaginary part of that same leading eigenvalue we can extract $c$ a second, independent way, via Equation~\eqref{eq:cft:eq3}: isolating the universal $\kappa/T^2$ Casimir term (Figure~\ref{fig:val_kappa}) and converting it returns a central charge consistent with $c=\tfrac12$. Having two independent routes to the same number---the entropy slope and the eigenvalue fit---is what makes the calibration trustworthy, and both are carried into the frustrated case below.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imgs/temporal_entropy_profiles.png}
+    \caption{Generalized R\'enyi-2 temporal entropy profiles at the integrable point $p=0$, across the temporal cuts of the converged tMPS for several evolution times $T$. The real part forms the symmetric conformal dome predicted by Equation~\eqref{eq:cft:chord}, its peak growing logarithmically with $T$.}
+    \label{fig:val_profiles}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imgs/temporal_chord_fit.png}
+    \caption{The real part of the generalized R\'enyi-2 entropy plotted against the conformal chord variable $\log[\tfrac{2T}{\pi}\sin\tfrac{\pi t}{T}]$. The collapse onto a straight line of slope $c/8$ is the direct measurement of the central charge from the entropy (Route~1).}
+    \label{fig:val_chord}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imgs/ising_boundary_exponent.png}
+    \caption{Boundary scaling dimension from the first spectral gap, $\mathrm{Im}(\lambda_1-\lambda_0)$ against $1/T$ (Equation~\eqref{eq:cft:eq4}). The fit returns $x_1=0.502$, the free-boundary Ising value, confirming that $\ket{X+}$ is the free boundary condition.}
+    \label{fig:val_x1}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.49\textwidth]{imgs/ising_lambda0_circle.png}
+    \includegraphics[width=0.49\textwidth]{imgs/eq3_kappa_fit.png}
+    \caption{Left: the leading transfer eigenvalue $\lambda_0(T)$ traced in the complex plane; the near-constant modulus with a winding phase is the fingerprint of emergent dual unitarity (Section~\ref{sec:emergent}). Right: extraction of the central charge from the leading eigenvalue via the Casimir term of Equation~\eqref{eq:cft:eq3} (Route~2).}
+    \label{fig:val_circle}
+    \label{fig:val_kappa}
+\end{figure}
+
+\subsection{Switching on frustration: the \texorpdfstring{$p$}{p}-sweep}
+\label{sec:results:frustration}
+
+With the pipeline calibrated, we ask the central question of this work: do the universal signatures survive when the model is made non-integrable and longer-ranged? We answer it by tuning the frustration $p$ away from the Ising point and repeating the measurements above, using $p=0$ as the convention-fixing calibration and reporting the frustrated central charge relative to it. \textit{[OPEN: the sweep to stronger frustration, $p=0.3$ and $p=0.5$, is in progress in a parallel run; the entries below are filled for $p=0.1$ and stubbed for the larger values, and the figures are designed to extend to a multi-$p$ comparison once that data lands.]}
+
+\emph{The headline, at $p=0.1$.} The entropy dome remains conformal and the chord fit remains clean through a well-defined pre-wall window. Extracting the R\'enyi-2 slope over $T=4$--$9$ and calibrating against $p=0$ gives
+\begin{equation}
+    c(p=0.1) = 0.47 \pm 0.05,
+    \label{eq:results:headline}
+\end{equation}
+with per-time values $0.43,\,0.46,\,0.56,\,0.48,\,0.46,\,0.42$---consistent, within the uncertainty, with the Ising value $c=\tfrac12$. The eigenvalue route corroborates this independently: fitting the Casimir term of Equation~\eqref{eq:cft:eq3} using the physically-tracked leading eigenvalue returns $c=0.50$--$0.53$, stable across every fit window we tried. The boundary content also carries over: the boundary exponent comes out $x_1=0.497$, again the free-boundary value. Taken together, these say that temporal Ising universality survives the introduction of next-nearest-neighbour frustration at $p=0.1$: the emergent dual-unitary structure and the conformal entropy scaling are not artifacts of integrability.
+
+\emph{Frustration moves the barrier.} There is, however, a clear effect of $p$ on \emph{where} the method stops working. The transfer gap closes faster for the frustrated chain than for $p=0$ (Figure~\ref{fig:frust_gap}): the leading band of eigenvalues collapses toward a common modulus at smaller $T$, so the entanglement barrier---the wall of Section~\ref{sec:results:limits}---sets in earlier. This is the first hint that frustration and the conformal physics are in tension not in the \emph{value} of the universal data but in the \emph{reach} over which we can extract it.
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{lccc}
+    \hline
+    $p$ & R\'enyi-2 slope $c$ & eigenvalue-route $c$ (Eq.~\eqref{eq:cft:eq3}) & boundary exponent $x_1$ \\
+    \hline
+    $0$   & $\tfrac12$ (calibration) & $\approx\tfrac12$ & $0.502$ \\
+    $0.1$ & $0.47\pm0.05$ & $0.50$--$0.53$ & $0.497$ \\
+    $0.3$ & \textit{[OPEN]} & \textit{[OPEN]} & \textit{[OPEN]} \\
+    $0.5$ & \textit{[OPEN]} & \textit{[OPEN]} & \textit{[OPEN]} \\
+    \hline
+    \end{tabular}
+    \caption{Central charge and boundary exponent versus frustration. The $p=0.1$ row is the headline result of this work; the $p=0.3,0.5$ rows are being filled by the ongoing sweep. \textit{[OPEN: once complete, these become a $c(p)$ curve testing whether universality persists, or breaks, at stronger frustration.]}}
+    \label{tab:cp}
+\end{table}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.49\textwidth]{imgs/alcaraz_gap_dualunitarity.png}
+    \includegraphics[width=0.49\textwidth]{imgs/nb55_p_gap.png}
+    \caption{Left: the leading transfer spectrum for the frustrated chain, showing the flat leading modulus and closing gap characteristic of emergent dual unitarity. Right: the frustration-dependence of the gap closing---the barrier sets in at earlier $T$ as $p$ grows. \textit{[OPEN: extend to the full $p=0.1,0.3,0.5$ comparison.]}}
+    \label{fig:frust_gap}
+\end{figure}
+
+One tension in the boundary data is worth flagging honestly. While the R\'enyi-2 boundary exponent at $p=0.1$ comes out at the free-boundary value, a variant of the eigenvalue-gap extraction returns instead a value near $x_1\approx1.5$. \textit{[OPEN: this discrepancy is under investigation; the current working explanation is that the $x\approx1/2$ boundary descendant is anomalously suppressed in amplitude at $p\approx0.1$, so a gap estimator that tracks the first \emph{visible} subleading state reads a heavier operator---an effect that appears specific to $p\approx0.1$ and not to $p=0,0.3,0.5$.]}
+
+\subsection{The limits of the method}
+\label{sec:results:limits}
+
+The most honest---and, for a thesis about pushing the classical-simulation frontier, arguably the most useful---result of this work is a precise characterization of \emph{where} and \emph{why} the method fails. The entanglement barrier is not an implementation detail we could engineer away; it is a physical consequence of the emergent dual unitarity that makes the whole approach possible. Here we map that boundary.
+
+\emph{The block method buys reach, then hits a wall.} As the transfer gap closes, the single-vector power method loses its ability to separate the dominant eigenvector from its near-degenerate neighbours and stalls. The block power method of Section~\ref{sec:nonhermitian}, which tracks the whole leading cluster at once, extends the usable window considerably---for the frustrated chain it carries the analysis through the gap closing to $T\approx9$ (Figure~\ref{fig:limit_blockpm}). But it does not abolish the barrier. At $T\approx10$ the entropy dome inflates discontinuously---its peak jumps by more than a third in a single step, from $0.33$ to $0.71$ (Figure~\ref{fig:limit_wall})---while, tellingly, the transfer \emph{eigenvalues} themselves remain perfectly well-behaved. Against an exact dense diagonalization of the transfer matrix (feasible at small bond dimension), the block-method eigenvalues agree to between $10^{-8}$ and $10^{-13}$ straight through the wall. The eigenvalues are right; it is the eigenvectors, and hence the entropy built from them, that break.
+
+\emph{The wall is a near-exceptional point.} Section~\ref{sec:rigidity} argued that this asymmetry---accurate eigenvalues, unusable eigenvectors---is the signature of an approaching exceptional point, and gave the phase rigidity $r_j$ of Equation~\eqref{eq:rigidity} as its order parameter. Measuring $r_j$ across the sweep confirms the picture precisely: it collapses geometrically over roughly five orders of magnitude as $T$ grows, uniformly across the members of the leading cluster, reaching the numerical floor exactly where the entropy dome inflates (Figure~\ref{fig:limit_rigidity}). The leading eigenvectors are becoming self-orthogonal in the bilinear form---the pair is trying to coalesce into a defective, non-diagonalizable configuration. This is not a failure of the iteration scheme; it is the physics of the dual-unitary limit, in which ``the'' dominant eigenvector ceases to be a well-defined object.
+
+\emph{No post-processing rescues the entropy.} Because the eigenvalues survive, it is natural to ask whether a cleverer way of extracting the eigenvector from the (well-converged) leading subspace could push the entropy past the wall. We tested several, and report a uniformly negative result, because the negative result is itself the point. Reading the eigenvector off the converged block by a refined, residual-minimizing projection instead of the ordinary route changes nothing: the two give numerically identical residuals, which moreover grow with $T$ rather than being fixed by any $k\times k$ algebra. Reconstructing the entropy from the gauge-invariant subspace \emph{projector} inflates it, because that object is a mixed state and adds a classical mixing entropy. Transporting the physical eigenvector from one $T$ to the next through the best unitary map between successive subspaces (a Procrustes alignment) is meaningless here, because the subspaces themselves rotate too fast---the map is far from unitary, its deviation ranging from $0.4$ to $0.98$. Every repair asks the one question that is mathematically ill-posed at the degeneracy---``which direction, inside the cluster?''---and inherits its ill-posedness.
+
+\emph{A diagnostic that does survive.} The one construction that behaves well is not a rescue but a cross-check. Instead of isolating an eigenvector, one can propagate the physical boundary state a finite number $\ell$ of columns into the network and read the entropy off the resulting pure state; this is an analytic matrix function of the transfer matrix, well-conditioned at any gap. In the clean window it reproduces the single-eigenvector dome exactly, as it must. Crucially, at the wall it does \emph{not} smooth over the discontinuity---built from an entirely independent selection of the boundary-visible cluster members, it reproduces the same jump. Two independent constructions landing on the same discontinuity is strong evidence that the jump is real spectral physics, not an artifact of how we track the dominant eigenvalue. It confirms the wall rather than removing it.
+
+The overall picture is captured by the asymmetry of Equation~(B9): the \emph{spectrum} of the transfer matrix is robust arbitrarily deep into the dual-unitary regime, while the temporal \emph{entropy}, which needs an individual eigenvector, is trustworthy only in the pre-wall window where the leading pair is still isolated. The universal physics of Section~\ref{sec:results:frustration}---the central charge, the boundary exponent, the dual-unitary circle---is extracted precisely in that window; the wall is the price the method pays for the very conformal structure it exploits. \textit{[OPEN: how the wall position scales with $p$ is part of the ongoing sweep---the earlier onset at $p=0.1$ relative to $p=0$ suggests frustration systematically compresses the usable window, a trend the $p=0.3,0.5$ data will quantify. The origin of the near-$\pm$ pairing of the leading eigenvalues, which sharpens as the wall approaches, remains an open question. A systematic $\delta t$-convergence study of the wall position is also outstanding.]}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imgs/block_pm_ising_vs_alcaraz.png}
+    \caption{The block power method versus the single-vector iteration. Tracking the whole near-degenerate leading cluster (rather than a single vector) extends the usable window through the gap closing, to $T\approx9$ for the frustrated chain.}
+    \label{fig:limit_blockpm}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imgs/gap_closing_wall.png}
+    \caption{The wall. The recovered entropy dome is conformal up to $T\approx9$ and then inflates discontinuously at $T\approx10$, even though the transfer eigenvalues remain accurate to $10^{-8}$--$10^{-13}$ against exact diagonalization there. The break is in the eigenvector, not the eigenvalue.}
+    \label{fig:limit_wall}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.49\textwidth]{imgs/nb13_rigidity.png}
+    \includegraphics[width=0.49\textwidth]{imgs/condition_number_asymmetry.png}
+    \caption{Left: the phase rigidity $r_j$ of Equation~\eqref{eq:rigidity} across the sweep, collapsing geometrically over five orders of magnitude toward the numerical floor---the fingerprint of an approaching exceptional point. Right: the associated eigenvalue condition number, showing the same near-degenerate collapse that makes the individual eigenvector, and hence the temporal entropy, ill-conditioned at the wall.}
+    \label{fig:limit_rigidity}
+\end{figure}
