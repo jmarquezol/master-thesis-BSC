@@ -648,3 +648,100 @@ function plot_panels(panels...; filename::String, title::String="",
     savefig(plt, joinpath("results", "imgs", filename))
     return plt
 end
+
+# ────────────────────────────────────────────────────────────────────────────────────────────────
+# PHASE-BASED SPECTRUM CLASSIFICATION AND CONTINUITY (added July 2026, promoted from NB3/NB5/NB8)
+#
+# The transfer-matrix spectrum comes in ± pairs: a physical eigenvalue λ0 and a "-λ0 partner" at
+# nearly the same modulus but phase shifted by ≈π. Selecting "the physical branch" or "the gap" by
+# MODULUS RANK ALONE (comparing only the two largest-|θ| values) silently breaks once frustration
+# grows: extra partners crowd into the leading k-block and a rank-based pick can grab a partner
+# instead of the genuine λ1 (NB5: at p=0.3, T=4 the whole k=4 block is λ0 plus three partners, with
+# λ1 entirely absent), or lose continuity across a cold-started T-ladder (NB9). The fix is to
+# classify by PHASE relative to λ0: the "tower" is every eigenvalue within π/2 of λ0's phase (its
+# own CFT descendants), the "partners" are everything else (the π-shifted copies). This is exactly
+# NB3/NB5's finding and NB8's `classify_block`, promoted here as the one authoritative
+# implementation — new drivers should use this, not re-derive a modulus-rank selector.
+# ────────────────────────────────────────────────────────────────────────────────────────────────
+
+# Phase convention used throughout this project: Im(λ) = arg(-τ), i.e. phase measured from -θ.
+phase_of(z) = angle(-z)
+
+# Phase difference φ(a) - φ(b), wrapped into (-π, π].
+phase_difference(a, b) = mod(phase_of(a) - phase_of(b) + π, 2π) - π
+
+"""
+    classify_tower(theta; i0=argmax(abs.(theta)))
+
+Classify every member of a transfer-matrix spectrum `theta` relative to the physical eigenvalue at
+index `i0`: `:tower` if within π/2 in phase (λ0's own descendants), `:partner` otherwise (the
+π-shifted -λ0-type copies). Returns `(dphi, cls)`, both vectors indexed like `theta`.
+"""
+function classify_tower(theta; i0::Int=argmax(abs.(theta)))
+    dphi = [phase_difference(theta[j], theta[i0]) for j in eachindex(theta)]
+    cls  = [abs(d) < pi / 2 ? :tower : :partner for d in dphi]
+    return dphi, cls
+end
+
+"""
+    tower_gap(theta; i0=argmax(abs.(theta)))
+
+The physical gap |λ1|/|λ0|, where λ1 is the largest-modulus TOWER member (excluding i0 itself) —
+never a -λ0 partner. Returns `NaN` if the block contains no tower member besides i0 (λ1 is missing
+from this block; the caller needs a bigger k — see `block_transfer_eigs_adaptive`).
+"""
+function tower_gap(theta; i0::Int=argmax(abs.(theta)))
+    _, cls = classify_tower(theta; i0=i0)
+    tower_moduli = [abs(theta[j]) for j in eachindex(theta) if j != i0 && cls[j] === :tower]
+    isempty(tower_moduli) && return NaN
+    return maximum(tower_moduli) / abs(theta[i0])
+end
+
+"""
+    pick_phys_continuity(theta, previous_phys)
+
+Select the physical eigenvalue by continuity: the member of `theta` closest in the complex plane
+to the previous rung's physical value. Unlike a modulus-rank selector (which only ever compares the
+top-2 by |θ| and silently fails once ≥3 near-degenerate values crowd the block — NB5), this searches
+the WHOLE block, so it survives an arbitrarily crowded near-degenerate cluster. Falls back to
+largest-modulus when `previous_phys === nothing` (the first rung of a ladder, nothing to anchor to).
+Returns the index `i0`.
+"""
+function pick_phys_continuity(theta, previous_phys)
+    previous_phys === nothing && return argmax(abs.(theta))
+    return argmin([abs(t - previous_phys) for t in theta])
+end
+
+"""
+    block_transfer_eigs_adaptive(mpo, scaffold; k=4, k_retry=6, anchor=nothing,
+                                  seedL=nothing, seedR=nothing, kwargs...)
+
+Thin k-adaptive wrapper around `block_transfer_eigs`. Runs at `k` first (optionally warm-started
+between T-rungs via `seedL`/`seedR`, exactly as a direct `block_transfer_eigs` call would be); if
+the resulting block has no tower member besides the physical one (`tower_gap` returns `NaN` — λ1
+missing from the block, the p≥0.3 failure mode found in NB5), escalates to `k_retry`, warm-seeded
+with the just-converged `k`-block (`block_transfer_eigs`'s own `seed_block` pads the extra slots
+with random vectors, so this retry is far cheaper than a cold `k_retry` run). Escalation is decided
+fresh every call, so a later, better-conditioned rung can drop back to the cheap `k` on its own.
+Returns `(theta, L, R, info)` exactly like `block_transfer_eigs`, with `info[:k_used]` and
+`info[:escalated]` added.
+"""
+function block_transfer_eigs_adaptive(mpo::MPO, scaffold::MPS;
+        k::Int=4, k_retry::Int=6, anchor=nothing,
+        seedL::Union{Nothing,AbstractVector{MPS}}=nothing,
+        seedR::Union{Nothing,AbstractVector{MPS}}=nothing,
+        kwargs...)
+    theta, L, R, info = block_transfer_eigs(mpo, scaffold; k=k, seedL=seedL, seedR=seedR, kwargs...)
+    i0 = pick_phys_continuity(theta, anchor)
+
+    if k_retry > k && isnan(tower_gap(theta; i0=i0))
+        @info "block_transfer_eigs_adaptive: λ1 missing at k=$k, escalating to k=$k_retry (warm-seeded)"
+        theta2, L2, R2, info2 = block_transfer_eigs(mpo, scaffold; k=k_retry,
+            seedL=L, seedR=R, kwargs...)
+        info2 = merge(info2, Dict(:k_used => k_retry, :escalated => true))
+        return theta2, L2, R2, info2
+    end
+
+    info = merge(info, Dict(:k_used => k, :escalated => false))
+    return theta, L, R, info
+end
