@@ -1,0 +1,1225 @@
+load JULIA/1.12.0 (PATH, LD_LIBRARY_PATH, LIBRARY_PATH, C_INCLUDE_PATH,
+CPLUS_INCLUDE_PATH, MANPATH) 
+Precompiling packages...
+    MKL_jll Being precompiled by another machine (hostname: gs03r2b16, pid: 3364626, pidfile: /home/bsc/bsc948371/.julia/compiled/v1.12/MKL_jll/DHEix_3NBx9.ji.pidfile)
+  21022.9 ms  ✓ MKL_jll
+    MKL Being precompiled by another machine (hostname: gs24r2b71, pid: 623282, pidfile: /home/bsc/bsc948371/.julia/compiled/v1.12/MKL/tDGGv_3NBx9.ji.pidfile)
+  10026.9 ms  ✓ MKL
+  2 dependencies successfully precompiled in 31 seconds. 31 already precompiled.
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=989|"S=1/2,Site") <-> (dim=2|id=989|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=878|"Link,l=1") <-> (dim=7|id=974|"Link,l=2"), normdiff = 1.1566412865695994
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=885|"S=1/2,Site") <-> (dim=2|id=885|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=715|"Link,l=1") <-> (dim=7|id=688|"Link,l=2"), normdiff = 1.4350175351861996
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+┌ Warning: norm² is 3.579452206992912e14 - 0.8439212833836791im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.0402989716221373e17 + 455.1421075014514im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2488786761563758e14 - 0.2784104338355746im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.3058514730159914e14 + 0.30534918407920486im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.13839722366900836 + 2.4544781309117078e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 3.2891487827573325e14 - 0.8203068203367536im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.1225220673896504e13 + 0.06088706004006994im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 0.8587296179996651 - 2.422070513957089e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.4998616270919378e16 + 44.66788608720253im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.454110868478008e13 - 0.064358102391326im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8738814326714432 + 2.905383469651984e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.5473627556597134 + 4.5568963840610956e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.4365520338631432 + 2.3156843612110902e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.4905748427535683 - 4.108765715321887e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.4885060117013866 + 2.8512626504572104e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.2069345702516443e13 - 0.03259059936899522im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 5.2826962403602836e13 - 0.16626560689726944im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.5149542017114825 - 3.59504642674058e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 6.392904350267904e14 - 1.8292417253512667im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 0.7615055700877611 + 2.498618736559779e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is -0.27245779204758647 - 2.3817043859034524e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.718508338489778 - 4.09515191062604e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 5.11783909090109e13 - 0.1517678963853939im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.0642434916718552e14 + 0.2676596848816075im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 6.4122784265868586e13 + 0.147191237738582im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.4161920615657002 - 3.1574677768209103e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2679013465933389e13 - 0.030207849911587203im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.5802316157994637e13 - 0.07231085316726649im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.932120914162034e14 - 0.5920022792853388im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.6806424932027384 + 2.5900798003692107e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.5913987609081647 + 2.266136799613205e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.9016761831322176e13 - 0.047941726963387055im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.266317786777027 - 6.283947276782996e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.5776706339240158e13 + 0.044637795816221626im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 5.443110596760109e13 - 0.14146295852361845im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.0399247508416848e13 + 0.0827007643068356im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.4507587436559142 - 4.628606930943287e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.972671461726727e13 - 0.08846732714457062im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.5819582638384074e13 - 0.08965155573041272im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.5762173325731517 + 3.951726124538295e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 1.1573159160795625 + 2.9375337883820198e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.0024318576598361e13 - 0.025276464543907196im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.6333413979166627 - 3.762584408570238e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.49062785393627706 + 2.255102104849763e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 5.619844372841947e12 - 0.017399820044676773im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2990644403049879e13 + 0.036150416681344666im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.858809007453239 - 8.952102595881259e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.042133889525449e15 + 3.8897270684460636im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.7573119913397641 - 2.3569211865323886e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 6.375220897330687e12 + 0.02042914329785006im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.7357375965126984e13 - 0.11688208601927386im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.328436367707973 + 2.4210239581278873e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 3.668840300653291e14 - 0.8603829454945071im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.6764647480243318e13 + 0.04418022855711712im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.755090208661135 + 3.912079026906383e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.5625202565433606 - 2.286473439172602e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.3740969082285826e13 + 0.037358510629481145im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.0008706499341624 - 5.347497217042456e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2473108434602535e15 + 2.948600600329428im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 5.328389229928815e13 + 0.15758280499426291im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 5.054272886186306e12 - 0.012287393742699493im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 5.346943635029263e12 - 0.012294852843549364im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.250908780930548e12 - 0.010921427057679622im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.809047961152704 - 4.175479433145954e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.5928007185839346 + 2.3766968934989487e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 6.739448051220931e13 + 0.1884840919524322im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 4.748497517820322e13 - 0.10812523437421362im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.584552246029838e12 - 0.010044123329889132im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.3856119607068896e13 - 0.03191406659035323im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.4568223382695282 - 8.80479734595553e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.4638020250543719 - 2.9209481719300577e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 6.273071336312102e13 + 0.14761284315866874im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.5390829061121054 - 5.97119730166829e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.011150149496022 - 4.976798276934736e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.951015387592185e12 - 0.008344628892683836im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.1564920048463097 + 4.9061540615376125e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.9161494872366313e12 + 0.006915098396826913im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.7586213379607805 - 2.3550259346542204e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.6829375708757834 + 4.973269061220442e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 6.201586591769447e12 + 0.015123093556308476im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.455095869555553e12 - 0.03338718507031402im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 8.540916415161928e13 + 0.27081546145711854im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is -0.1789497791255963 - 2.61197431800085e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.6209799264195346 - 7.287595980709906e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 4.185273325393216e13 - 0.10178831650080156im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.9174188493410215e13 + 0.04376007965880291im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.5017275512698003e12 + 0.008101070537785304im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.5985292374808326 + 3.8843658294078964e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.2759275939430152e13 - 0.06976213908276208im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 5.655954748784207e12 + 0.015772258682464013im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.7324515234814912 - 2.2783148719730145e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.7789957933721008e13 - 0.04936597728760006im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 8.939299979391545e13 + 0.28334453370663937im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.5358996719062412e13 + 0.039081585192583645im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 4.519946764001045e13 - 0.10608821038670158im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.742658286347044e13 + 0.05388873458272414im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.978066500346391 + 8.982614787284167e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8916352292998362 - 2.3765648263927217e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.2296180028271639e13 - 0.04132415490400021im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3646566273582085e12 - 0.006710493714798815im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 5.581867138110781e12 + 0.017634076805848053im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1016526620252469e13 + 0.02481141621453986im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2561874360246172e13 + 0.033916265786910316im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 8.806599840942008e12 + 0.02907343195871448im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.580727407456745e13 - 0.08153212679373922im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.5710782858785e12 + 0.007770685085666251im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.200011832678296e12 + 0.005157442701579473im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.7740065555554243e12 - 0.009041973481103582im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 1.1197690625581085 + 2.9817333858870317e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.8220538023092949 + 2.8759602364471912e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.016923391758223e13 - 0.02568696171903717im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8466648592257883 + 2.2494389392123085e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.862835805197322 - 4.5528992355830026e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3260075938064846 + 5.3769042157376554e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 4.366836826641897e12 - 0.011833711678876924im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 4.850875796209834e12 - 0.01109299004715858im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 4.971300977497526e12 - 0.011303826245820048im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.9251742292471001 + 2.795874689037761e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.5442949393724583 - 5.953317018486903e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 8.472442795646829e12 + 0.02006309646638016im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8291397772953192 + 2.5048912357528247e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.6822567657573361e13 - 0.07459648304985222im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 8.715814392000955e12 - 0.024600448281297815im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.0549727639700408e13 - 0.033465061401276586im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.482781285767058e12 - 0.006390058638929386im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8860013466509578 + 2.9013810635623697e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.1177189491567058e12 + 0.005148465476292774im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.3074891409831644 + 3.811849843250908e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.7801265530336365 + 2.2682778124049717e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.60205750467354 - 6.055494642618859e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.6368736229646597 - 3.8216886073893e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.10510165564012 + 4.736163098762486e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.6474777459021748 + 2.3557788038408395e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.6556798672157146e13 - 0.0564634522331815im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.82975097887807 - 2.2725974333799372e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.2098374773476274e12 - 0.0034238700378723674im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.9078261286103728 - 2.26594690410013e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 5.492921692662921e12 - 0.019216475229201002im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.0428666370241016e12 + 0.00803217284744484im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 7.480822026884371e12 + 0.019471780612823508im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 0.8567117762875598 - 2.5683658117168622e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 7.946377606833498e12 + 0.026261387384781898im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.923426962031654e12 - 0.009202478754307464im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.687457764621285 - 2.6654137230537395e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 5.9414399303877705e12 + 0.014420477405264087im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.295886148667168e12 + 0.005104583494890402im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.3023745891513008e12 + 0.002979878711553585im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.077974802068619e12 - 0.00268476467550971im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 6.559447478915801e12 + 0.015533323877654936im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.482254582224274 - 6.3251348229434974e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.6664546531688202 + 2.305857520611415e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.5886037966884206 + 6.298312002656363e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.8152189149012936 - 4.460462252116455e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.5962060747141785 + 2.2814425219297965e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 6.104268515130623e12 + 0.014408969921026582im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.1434806802707166 + 2.3554110718524008e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.855827031047286 - 4.623663014974587e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 4.5596441840514e12 - 0.014561814725819744im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 4.51263735023223e12 - 0.011312618932292295im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 7.756408458135603e12 - 0.023088098024457437im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.3286251027431553e13 - 0.036310222401297665im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.6008774415127466 + 2.484791263448435e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.7026410379922372 + 4.084885553667963e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.3320832614114705e12 + 0.0043842546425998385im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 5.391828620742374e12 - 0.012947999220232376im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3199240801243595 + 5.299829617372553e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.9376741563784317 + 4.9994893102098335e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.107922664016199 + 5.121531008390315e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.3050559331209507e12 - 0.008510786519657643im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.494563479260393e12 - 0.009102160094829337im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.9197734840203187 - 2.259276706417618e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.7676105150584809 - 2.2510205188767677e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.2481677382573166 - 5.7835869021548615e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.65389006394408e12 - 0.009852417877599606im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1073589321188113e12 - 0.003601365429490855im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.893401941018251 - 2.264998798411895e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.0908359379040518e12 - 0.0024937889665237467im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.5037407590509915 + 5.6352043785214575e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.6889823941233557 - 5.790915517241289e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.89809081452985e12 - 0.008639810094488887im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.6859534516171176 + 2.588752660433798e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.587003450918559e13 - 0.0412072190397339im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.758274700389369 + 7.842632457814758e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2092329994191877e12 + 0.002774880930946688im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.6816167409922341e12 - 0.004505647903748855im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.41266803761350235 - 2.2453028619795213e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 3.136996445600605 + 7.176875883721103e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.8742124272075078e12 + 0.004262317850963981im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.9270519083506252 + 3.3174113369832343e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.8454375778014631 - 2.841187116793593e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.885067316296958e12 - 0.004413727792500488im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.141127140280245 + 5.655493418264044e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.817678966988232e12 + 0.006349815188129604im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.9185405641127876e12 - 0.013193703140006896im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.715372671869517e12 - 0.008030773527318402im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.8031716710210903e12 + 0.006381061862898996im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1160635808720842e12 + 0.0028243034911494824im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.9444318279668301 + 3.2796205979246846e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.355917899354228 - 6.896520147661101e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.7928299376423795 - 2.3290808896358076e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.04818635793447418 - 2.739736360603932e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.331156533843508 + 5.352561342483959e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.460410578486976e11 + 0.0025382381859244685im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8621273644220245 - 2.666129247854109e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.5874779236124014 - 3.1757566465073033e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 1.0907748317303274 + 2.5910117611179764e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.4703391375295967 - 5.56225671658128e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.889959591322375 - 3.19012604934663e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.6649308451023894 - 2.2426457374525968e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 3.0869409596227656e12 + 0.00901521906128977im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8488636061542261 + 2.4685078286533655e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.6829277464922457 - 2.6306861843649583e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.3228351150577597 + 5.1872670979920186e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 4.1035660494648965e12 + 0.010633364117689226im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.9073677566820362 + 2.641965127445356e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.5960000538770557e12 + 0.003811125026119022im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.672450104885824e12 - 0.006260374615948638im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.1184223142331398 + 8.147710134224687e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.0367254458368484e12 + 0.004824464028426068im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.9080800639154019e12 + 0.005755832365336833im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.286345599428848e11 + 0.002503502886456399im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.6758327405804934e12 - 0.004213652923736433im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.777878124827014 + 2.5799745973367125e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.7616187104370254e12 - 0.006373691889274946im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.9089742625594217 + 2.5082623052904154e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.783620509508336e12 - 0.004556519471704323im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.1794899368369023e12 + 0.0055757029019583015im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.627464206845128e12 + 0.005854599189547116im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3652431469062676 + 6.560651261901482e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.0595380887523572e12 - 0.005882397509890502im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.0320898051794604e13 + 0.02418953170175797im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 8.749146018172613e12 - 0.02036065813924992im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.456982537691814e11 + 0.0033978217939101274im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.7032267702490334e12 + 0.00537200614718758im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3458898796714297e12 - 0.006083548815998263im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.3275784448748057e12 - 0.002951296062802422im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.824937894315479 + 2.7598700151521535e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.8524757529669866 - 3.1971648874601692e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.3403501715590993 + 7.091364380597649e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.5971558682607e11 - 0.0025114781918511575im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.325522560457926e12 - 0.011832815797190754im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.260613443798533e11 - 0.0021021934049116897im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.8955953418319307e12 + 0.006102918937477497im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.7333421368002095 - 4.044886116799773e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.323431650537551e12 + 0.0059478400827348565im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.445934208670803 - 8.625988604763363e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3786924046412974 + 6.100188005208487e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.6575807113802498e12 + 0.005047400555671544im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.7474180882118996 + 2.2803651037863735e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.5851687946064006e12 + 0.0037868684446498158im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8143517750486735 + 2.3518320894790574e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.392535330769133 - 6.290331311166892e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.5971806176825674e12 - 0.004440152191760305im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.5556516271100562e12 + 0.0038011453299608977im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.196923108394308e11 + 0.002603273789234306im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8765813490628434 + 2.529193021249823e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.6980428642457903e12 + 0.004616397757104984im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1909194202343484e12 + 0.0028545628565948im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.9006791424883631 - 2.3820028374272094e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.038771625580095e12 - 0.006011500565079153im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8210486528574792 - 2.698889587664495e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.8506724216020467 - 3.121780668760393e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.700439776683632 - 6.608672557383868e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.6964581156664563e12 + 0.003888847526647421im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8500417070737695 - 2.2370953410613532e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.8674303283214762 - 3.141604747572867e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 9.819773164583418e11 + 0.0022097568066992146im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.275231067278559e12 + 0.003122038752649825im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8383493542275023 - 2.9512756202858395e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.40715158411992 - 5.878500040858919e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3801659972873814 - 6.36583952723684e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1503856931399048e12 + 0.0029123557773595987im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.0145237918570056e12 - 0.005570579101906947im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1354730306847048e12 + 0.003745853177383074im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.0478591425108539e12 + 0.00236675331337155im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8686443498175525 - 2.3148728249810223e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.3967016636277605 - 6.596738055062957e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8395999865952628 - 2.3167391899900588e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.7392187854592827e12 - 0.004531352756486751im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8303024180478602 - 3.225616011212477e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.5009982223865492 + 5.949016036643652e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8619360899502677 + 2.905584204808897e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.2727523685577288e12 + 0.0029564365487986244im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.850621430194575 - 2.4281992172407693e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.3148222916835208e12 + 0.0031775564109197685im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8300684693961428 + 2.3943476523011763e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.3701223498174333e12 + 0.0032765816114239676im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.39264545034679e12 - 0.00799458162617972im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1707487398875847e12 - 0.002859338363717212im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.4073654259703554 + 6.165129121301968e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1864680469601328e12 + 0.00445078663291798im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.4208334438061505 + 6.783067714290358e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3780002452641305 - 5.288218635315379e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.4487609897672478 - 6.144986426353354e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.6055332565020598e12 - 0.004060913513266762im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8660320892536544 - 2.556867450016334e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.4473715559556206 - 6.200223880063531e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.6536512846221478 + 2.223877212554975e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.3750308440416985e12 + 0.0032558194126592888im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.234769443846074e11 + 0.002232223712658188im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.0459703788498193e12 + 0.002736797668506874im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8674528906261592 + 3.748127832230042e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.8509420637068865 - 2.4573278528622544e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.3384408736425894e12 + 0.003116105678307113im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8763504027928088 - 2.3645671899323743e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.6013933859755576e12 + 0.0036870116909799577im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.5626147273860163 - 6.5719640089518836e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.5013880384031926 + 5.611951941073343e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8659434997652048 - 2.2974284006007924e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.5544373362649607e12 - 0.0034754480058807324im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1811735345490588e12 - 0.002933563241882764im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1486389381981855e12 - 0.0027899556898740574im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2019435126150244e12 - 0.0031410889915304274im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.275841113864695 - 6.721796037568611e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8223497044532593 + 2.4567285726935914e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.6257815655754565e12 - 0.003996817265300878im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8527327687574678 + 3.155176312521422e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.3340098715525156e12 + 0.0033600656388688144im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.3696944322307056e12 + 0.0038515159079035577im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2079013698867056e12 - 0.0029534932100632183im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.299952509521712e12 + 0.004029640235265974im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8830299259624131 + 2.556326291873216e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.0719218762257952e12 + 0.0025406935036291767im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.9068106019872912 + 2.5416420376632095e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.3080461711726428 + 6.036763514841955e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8889731584190943 - 2.725078907014164e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.0158270142844823e12 - 0.002465445136140998im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8922262133509806 + 2.343006722994713e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.8943138550920993 + 2.9743989161161705e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.9398690173286588 - 2.4501737435177077e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.0392109868334133e12 - 0.0024652184940852084im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1112196900183308e12 - 0.00247298367534321im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.5956704302607783e12 + 0.004047553114525204im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.7200274583574245 - 2.3241509186205942e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.369074877428718 + 6.240857387267189e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8529286036691284 + 2.2628952544694558e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.38969300485501 + 6.489837666384687e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2320535606951062e12 + 0.0036417614214170335im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.745070100327634e11 + 0.002307102889081536im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.303080405170269e11 + 0.0031272211734880706im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.335545991114142 - 5.2031491179542694e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8827949898941867 + 2.2222608364972112e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.443842010299301e12 - 0.003501165072171686im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.5851179330011245e12 + 0.0036458783467820943im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1368652859680417e12 + 0.0026804851685593434im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8591168857601155 - 2.2461139232764334e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.844032916950562 + 2.878084793037747e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.8676627348494931 - 2.2215204394053296e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 9.187140512073503e11 - 0.0023066312741542028im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.25026635610023e11 + 0.0022339029861979665im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.181705068753009e12 - 0.003369010034848019im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.4637188949284766e12 - 0.004246052414251356im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.375217777229279e12 + 0.003983436751478164im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8286015442264443 + 3.346055492036347e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.865277160466588 + 2.4122603101383952e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.462456805880103e12 - 0.0033112779112400847im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.3383604050772334e12 + 0.003347293628515491im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.091513501318849e11 + 0.003192726783182831im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.450763853920709 - 5.900886261387013e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.4262117009772832e12 - 0.003518721714621087im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3980058508894744 - 5.590012973793734e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3371491576440797 + 5.479571874899377e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.068380296868236e12 - 0.0029207522770759997im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.127986669369175e11 + 0.0023343260633557072im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.3741635772645234e12 + 0.005034982539105171im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8488446538106564 - 2.365233439511576e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.4909849366231736e12 + 0.00449188660290778im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.0958545351165093e12 - 0.0038161105195975153im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.377525780764087 + 6.787374876827146e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.4869302215188142e12 + 0.0033121917523724065im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3466228371266125 + 5.293386528910365e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.4426509158022783e12 - 0.0036052099178029984im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.055811855002269e11 - 0.002144133093247458im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2246988780123245e12 + 0.0031763292286111078im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.133624144823165e11 - 0.0028348842117176254im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.9393646141271914 + 2.45019240578105e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.8325529409886915 + 2.4161240079607685e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.3346396123201597e12 + 0.003245127406080517im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2925276526514036e12 - 0.0037160954378272493im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2181312098621877e12 - 0.004487844626813509im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.6000135649899084e12 + 0.004257080617288578im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8414088256694268 + 3.4128500094079e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.469356215113162e12 + 0.004549400938637316im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8551666441005783 - 2.3002704306216434e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.5243676935217231e12 + 0.0041729398227803305im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.035630601849407e11 + 0.002069050554529772im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.4097458494664158e12 - 0.0034289449076521095im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.5812437428393174e12 + 0.004417572081989896im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.085715316316544e11 - 0.002705479778189357im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2218037972133384e12 + 0.0028225030077384528im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3736301032728617 - 5.5122013442679565e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.101689386111964e12 - 0.0034435390336839955im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3084832031971434 + 6.096457222122526e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.012396766279074e12 - 0.0033243495837362858im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3426997028635395 - 5.647188088162648e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.5316450800577808e12 + 0.004932618958138679im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.068800090365653e11 + 0.003137761911849779im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.4982434261539136e12 + 0.0034380394435566952im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.083772124061697e11 - 0.0021919298184926994im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.6009924401217935e12 + 0.0037097214780605903im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.08601271793584e11 - 0.0022915025881002915im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3570578417696084 - 6.671256453577034e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3457506047603114 + 5.7272766150425386e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.6379559923479822e12 - 0.004709002319276845im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.281708352950739e11 - 0.0029218874628282876im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.6472654164756018e12 + 0.005143942812622315im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.036359812155829e11 - 0.0021299257814400008im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.4027944985923058 + 5.976720856456895e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.2894798944638746 - 5.096833433472511e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8327730828047492 + 2.230828895334446e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.3981279233410526 + 6.206897162964025e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1347759605568953e12 - 0.003621727479904191im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.5720915258048599e12 - 0.003676283901289157im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.346216479291402e12 + 0.003000367630088707im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.347804890388911 + 5.315216328201452e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.457151338653018e11 + 0.0036550544905076254im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.0689129801689686e12 - 0.00268424362288755im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.3219059136845051e12 - 0.0032425666142628096im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8407283884072361 + 2.3993860807637957e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.0319291884188795e12 + 0.0026696539920096907im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8562847621403527 + 2.757795301212598e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 9.301603972977375e11 + 0.002070463081598195im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.4999446077601077 - 7.32593634473222e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.065385473905333e11 + 0.0025965668463352465im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.7442133726350796e12 - 0.0038945452618484033im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3023664446842416 - 5.158741754715793e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1461121737103857e12 - 0.0026699467603865656im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8689691411639757 - 2.3668100680031724e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.6957100180439133e12 + 0.004526437381241699im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3395774323668954 - 6.531735489376131e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.378098534003785 + 9.001779807688302e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.3954732605890432e12 - 0.003113657340531706im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.505733806963761 - 5.726411119424012e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.300215507333638e12 - 0.004188278310649718im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1604518607124675e12 - 0.00338590556512286im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8711661569558763 + 2.6510190036935604e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.0921610550738368e12 + 0.0024653041716882207im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 8.999608150671978e11 - 0.00354839688039732im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.8876145002883147e12 - 0.005369442961401738im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.9008219982450469 + 2.3981242554269193e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.9810035275538083e12 - 0.00882411662820859im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.9184785279188477e12 + 0.006092832672566217im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3972141251865886 + 5.415147938594644e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3525716162694494 + 7.96482530505421e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8809541019769136 + 2.2224248520885714e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.9255531473411316e12 + 0.005029150550218908im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3893719523760226 + 5.7793592151313274e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1566471297369224e12 + 0.0030632492885869222im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3546553332315043 + 5.752677611118368e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.3876640658875095e12 - 0.004668525486903885im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.9942952302333967e12 - 0.007442458423954523im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1957486037013772e12 + 0.002783233727186918im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.043972859780983e11 - 0.002038886186007227im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.0683732266408396e12 + 0.0028940009045137494im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.013048686075791e11 - 0.0027984859920631155im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.3827780138137632e12 + 0.0043902145474614684im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8446094325486548 + 2.330647530515088e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.8754434634290053 + 2.378660987314784e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 9.537627643127144e11 + 0.0022432308716417992im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.987475812594674e12 - 0.006456233933092026im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.034398000864684e11 + 0.00264192598966706im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.0448552843890863e12 - 0.0029847951089425617im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1709669494392158e12 - 0.0028693886730866147im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.1556923953306504e12 + 0.005043358056126213im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8639989503251221 - 2.512968235292962e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 9.720352571057734e11 - 0.00268390934049334im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.105516057530112e12 - 0.005898327852271734im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.174792365802471e12 + 0.0026819648903260163im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.125626278086626e12 - 0.003016479070203637im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.390970698237978 - 6.260298910989044e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.027925173029366e11 + 0.0022574337637624176im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.2419799694053022e12 + 0.005975891922841203im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.013479517979546e11 - 0.0020858000285481904im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8695864853105743 - 2.2952393304009535e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.8697683042146599 + 2.3662440025803984e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.1192078490807998e12 - 0.0026093088003125153im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.242635733064617e12 + 0.005115961420935289im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.4945688634708945 - 6.06037113041021e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8255749391726812 - 2.352603935000555e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.3649968581838077 - 5.322921561929498e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.345887763797928 + 6.546697988899688e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.077856226371313e11 + 0.0031653141038368027im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.0982923642701945e12 + 0.0026003421221325596im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.364957941951656e12 + 0.0071807606477922725im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1063672099064778e12 - 0.002967575570530956im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1201229810330493e12 + 0.0025983427814906257im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8743388487779082 - 2.994603029682239e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.2605766617544824e12 + 0.0038204744668002277im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1767196270959827e12 + 0.002721121325906628im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8338887866232738 - 2.731274238221658e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.5318599661029966e12 - 0.006940693000422549im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.2837582176089475 - 5.407821288889352e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.600427243384896e11 - 0.0024902338851875427im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.439300457827252e12 - 0.006492382862921975im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.5447461062098786 - 6.143598642278617e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3494956017859767 + 5.7737520158391816e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.0238644827416348e12 + 0.0023347423661397304im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1814602717597554e12 - 0.0030739305332461164im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.494844531532937e12 + 0.009668940051609454im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.5278118630565522e12 - 0.008300513044860125im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.383399588537307 - 5.7044232690789236e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8724067388256225 + 2.286747738835797e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 8.986123550348014e11 + 0.002393299115880154im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8455665817799937 - 3.1497396143580974e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.1378741055122952e12 + 0.003014495705295772im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8766051757657262 - 2.469721629507869e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.4319289836004225 - 5.4248800692259104e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.88444359813216 - 2.3310106255266387e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.399386673983525 + 7.085321971806737e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2817013644450144e12 - 0.0037612502197155173im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.756198934504471e12 - 0.007109388225253088im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.1677600437740128 - 5.5661130061272226e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.160365197630882e12 - 0.0026204067745159154im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.903540510174327e11 - 0.002605361120807892im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8603862435460607 + 2.4893166937609498e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.694833677025445e12 - 0.006354773046407747im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.9342753046007126 - 3.2037592188488736e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.3570902114684285 - 5.749598937522674e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8297768021902504 - 2.2814246982536768e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 9.347136255467163e11 + 0.0026593586195473584im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.467692634981727 - 5.587913834244535e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.0762698839979447e12 + 0.002737020426712089im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3910894931887805 + 6.4818373409361966e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.869313598084733 - 2.3070250152392e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 9.908899942968987e11 - 0.0025125804603891577im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.299291569017418e11 - 0.0025690857460944905im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2707629709013374e12 + 0.0029935749890634966im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.059026555133434e11 - 0.00378660418664456im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.0368339561959698e12 + 0.002481918695096841im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.015963474665645e11 + 0.0020986557432305375im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.59402255024229e11 + 0.0021533228131400683im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.400255036705169 + 6.717812110745429e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.026620649480447e12 + 0.007640061622705474im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.1468913322165425e12 + 0.011350785920147821im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2710998588459636e12 + 0.0034419308553497174im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2762820856724329e12 - 0.003683029719780073im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.4060753384332645 + 5.607534346616056e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.390211306616204 - 7.150423064630685e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.391208752351156 - 5.761040698278855e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.9261977687579324 + 2.4437133844879435e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 3.3894624895173013e12 - 0.007918214927467027im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.003287237034517e11 + 0.0020322046703760144im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.257679933479252e12 - 0.0028670019163605787im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.386636466604195 + 5.385744394205683e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.4325834448826504e12 - 0.009897879124366682im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.409414184562365 + 6.619745362499625e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.4940025301876484e12 - 0.012855211873824324im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8602886779648073 + 2.6592221894602226e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.0242609604579102e12 - 0.002460678806748051im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.9017963791811974 - 2.694986811636217e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 3.3483335555550015e12 + 0.010785844090253072im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 3.545032953876576e12 - 0.008532836634128849im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.0903305582244094e12 + 0.002490370907126005im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8601664769368784 + 2.9018812784978285e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 9.022356205090582e11 + 0.002103989993551769im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2872382853768403e12 + 0.003182831529539243im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 8.999900790932576e11 - 0.002894586962071788im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.342705300805465e11 + 0.0025665894408142265im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8692143733457516 + 2.815445925577273e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 3.5710165866090693e12 + 0.011624975333178966im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.011881382828889e11 - 0.0026309210947856876im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.0041403209202189e12 - 0.0025720608177728366im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3799994250926417 + 6.4973689274863005e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1693945828499854e12 - 0.002911145048611452im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.016750083723197e11 + 0.0033753310972903794im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.5560541712412332 + 7.218725783176578e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.071041764103441e12 - 0.003712703753287805im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.389543897094834 + 6.985741542596965e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.033660028398419e11 + 0.002591268877716768im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3871673999481597 - 5.523429374788743e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.386355590872085 - 5.8089644592408535e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 4.18039714020241e12 + 0.012374902780595498im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 4.1682565043964614e12 + 0.010789611044068614im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 4.307146839451363e12 + 0.011585811067106988im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.011079104241885e11 + 0.0020137074396260335im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 4.3689640298424253e12 + 0.01331540392221875im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.721805036792483e11 + 0.0021847154009109193im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 4.675561842939283e12 - 0.0145537137246885im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.2065006687588774e12 - 0.003303134532496088im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3951082532420482 + 5.431777140878047e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.1882496367650388e12 - 0.002930855666742449im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.035555108424489e11 - 0.002452915228636776im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 4.946988316949646e12 - 0.012628666265925403im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 4.814091225223831e12 + 0.011132476990772133im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.0192574667213644e12 - 0.0025697190621134514im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 4.93660113176463e12 + 0.013962621945509568im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 5.099072878886612e12 - 0.01828413427396569im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8285946508507367 - 2.696852730407961e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 2.409632084872366 + 6.482944671078609e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 5.138290711234162e12 - 0.01285612022234961im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 5.164673800144993e12 - 0.019595612358738634im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: log(norm²) is 0.8689967010274408 - 2.3585135302227506e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: norm² is 1.1977015113591165e12 - 0.0029101834494662526im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3623436370665294 - 5.915747057399896e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3610131667331147 + 7.304746227369878e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.3894796018905806 + 5.5738838849086805e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 5.076303091766932e12 + 0.014688649823163757im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.5410885197754944 - 6.2459242060087665e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 5.122336543483164e12 + 0.011895919173944947im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 5.288164991086321e12 - 0.012542605492722458im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.4768469068293717 + 6.400814437453811e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.0092368132399834e12 - 0.002876833036401072im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+[ Info: [rtm64_full] T=11.0  stuck@1217  |θ0|=1.5532  peak=0.7301  r=[1.4e-06,1.6e-06,6.8e-07,1.5e-06]  15429s

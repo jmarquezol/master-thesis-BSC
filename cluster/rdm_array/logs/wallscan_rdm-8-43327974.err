@@ -1,0 +1,19 @@
+load JULIA/1.12.0 (PATH, LD_LIBRARY_PATH, LIBRARY_PATH, C_INCLUDE_PATH,
+CPLUS_INCLUDE_PATH, MANPATH) 
+Precompiling packages...
+    MKL Being precompiled by another machine (hostname: gs03r3b12, pid: 1522807, pidfile: /home/bsc/bsc948371/.julia/compiled/v1.12/MKL/tDGGv_3NBx9.ji.pidfile)
+  11056.9 ms  ✓ MKL
+  1 dependency successfully precompiled in 11 seconds. 32 already precompiled.
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=668|"S=1/2,Site") <-> (dim=2|id=668|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=235|"Link,l=1") <-> (dim=7|id=539|"Link,l=2"), normdiff = 1.1566412865695994
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=848|"S=1/2,Site") <-> (dim=2|id=848|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=973|"Link,l=1") <-> (dim=7|id=966|"Link,l=2"), normdiff = 1.4350175351861996
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: [rdm64] T=9.0  converged@639  |θ0|=1.5526  peak=0.7031  r=[1.8e-05,1.6e-05,1.8e-05,1.7e-05]  74117s
