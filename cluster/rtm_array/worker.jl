@@ -4,7 +4,9 @@ ENV["GKSwstype"] = "100"
 include(joinpath(@__DIR__, "..", "..", "src", "thesislib.jl"))
 
 using LinearAlgebra, Printf
-BLAS.set_num_threads(Sys.CPU_THREADS)
+using MKL
+
+BLAS.set_num_threads(16)
 
 const P_NNN  = 0.1
 const LAMBDA = 1.0

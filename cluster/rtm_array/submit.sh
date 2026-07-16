@@ -20,12 +20,11 @@ for TASK_ID in {1..13}; do
 #SBATCH --error=logs/wallscan_rtm-${TASK_ID}-%j.err
 #SBATCH --account=bsc21
 #SBATCH --qos=gp_bsccase
-#SBATCH --time=${HOURS_STR}:00:00
+#SBATCH --time=1-12:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
 
-module purge
 module load julia/1.12.0
 
 export JULIA_NUM_THREADS=\$SLURM_CPUS_PER_TASK
