@@ -1,29 +1,29 @@
 #!/bin/bash
-#SBATCH --chdir .
-#SBATCH --job-name=wallscan_rtm-%j
-#SBATCH --output=<TODO: absolute path to your cloned repo>/cluster/logs/wallscan_rtm-%j.out
-#SBATCH --error=<TODO: absolute path to your cloned repo>/cluster/logs/wallscan_rtm-%j.err
-#SBATCH --account=<TODO: your BSC project code, e.g. bsc21>
-#SBATCH --qos=<TODO: e.g. gp_bsccase on MN5, ngp_bsccase on GRACE — confirm which system first;
-#              use the _debug variant (e.g. gp_debug) for a quick smoke test before the real run>
-#SBATCH --time=<TODO: DD-HH:MM:SS, e.g. 2-00:00:00 — T=11..14 is uncharted territory, likely the
-#              most expensive points seen yet; request generously, the job is resumable if not>
+#SBATCH --job-name=wallscan_rtm
+#SBATCH --output=logs/wallscan_rtm-%j.out
+#SBATCH --error=logs/wallscan_rtm-%j.err
+#SBATCH --account=bsc21
+#SBATCH --qos=gp_bsccase
+#SBATCH --time=2-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=<TODO: e.g. 112 on an MN5 general-purpose node — check what your account
-#              can request>
+#SBATCH --cpus-per-task=16
 
-# Re-derived χ=64 baseline (trunc_mode=:rtm), full T=2..14 ladder. Run alongside submit_rdm.slurm
-# and submit_cutoff.slurm — all three write into the same results/data/nb13_wallscan_cluster.jld2.
+# Warm-started, checkpointed χ=64 baseline (trunc_mode=:rtm), full T=2..20 ladder (extended from
+# T=14 to match the p-sweep arms' reach — this is now the master p=0.1/RTM reference for all of
+# them). Run alongside submit_rdm.slurm, submit_cutoff.slurm, and the submit_rtm_p*.slurm p-sweep
+# arms — all write into the same results/data/cluster/warm_sweep.jld2, keyed by (label, T), so
+# nothing clobbers anything else. If this job hits the walltime cap, just `sbatch` it again: it
+# resumes from the last checkpointed T, truly warm (not just continuity-anchored). T=20 is a lot
+# further than the original T=14, so expect this job to need at least one resubmission.
 
-module purge
-module load <TODO: BSC's julia module + version, e.g. `module load julia/1.12` — check
-#           `module avail julia`>
+# Move to the script's directory so it can be launched from anywhere (matches the *_array/ layout)
+cd "$(dirname "$0")" || exit 1
+mkdir -p logs
 
-# This workload is BLAS-bound (ITensors tensor contractions), not Threads.@threads-parallel, so
-# point BLAS at the cores SLURM actually gave us rather than relying on Julia's own thread pool.
+module load julia/1.12.0
+
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
-cd <TODO: absolute path to your cloned repo>
-julia --project=. cluster/wall_scan_cluster.jl rtm
+julia --project=.. wall_scan_cluster.jl rtm
