@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=wallscan_rdm
-#SBATCH --output=logs/wallscan_rdm-%j.out
-#SBATCH --error=logs/wallscan_rdm-%j.err
+#SBATCH --output=cluster/logs/wallscan_rdm-%j.out
+#SBATCH --error=cluster/logs/wallscan_rdm-%j.err
 #SBATCH --account=bsc21
 #SBATCH --qos=gp_bsccase
 #SBATCH --time=2-00:00:00
@@ -15,12 +15,9 @@
 # and submit_cutoff.slurm. If this job hits the walltime cap, just `sbatch` it again: it resumes
 # from the last checkpointed T, truly warm (not just continuity-anchored).
 
-cd "$(dirname "$0")" || exit 1
-mkdir -p logs
-
 module load julia/1.12.0
 
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
-julia --project=.. wall_scan_cluster.jl rdm
+julia --project=. cluster/wall_scan_cluster.jl rdm

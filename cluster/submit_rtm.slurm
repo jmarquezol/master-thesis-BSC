@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=wallscan_rtm
-#SBATCH --output=logs/wallscan_rtm-%j.out
-#SBATCH --error=logs/wallscan_rtm-%j.err
+#SBATCH --output=cluster/logs/wallscan_rtm-%j.out
+#SBATCH --error=cluster/logs/wallscan_rtm-%j.err
 #SBATCH --account=bsc21
 #SBATCH --qos=gp_bsccase
 #SBATCH --time=2-00:00:00
@@ -17,13 +17,10 @@
 # resumes from the last checkpointed T, truly warm (not just continuity-anchored). T=20 is a lot
 # further than the original T=14, so expect this job to need at least one resubmission.
 
-# Move to the script's directory so it can be launched from anywhere (matches the *_array/ layout)
-cd "$(dirname "$0")" || exit 1
-mkdir -p logs
 
 module load julia/1.12.0
 
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
-julia --project=.. wall_scan_cluster.jl rtm
+julia --project=. cluster/wall_scan_cluster.jl rtm

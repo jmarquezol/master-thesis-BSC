@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=wallscan_rtm_p0.3
-#SBATCH --output=logs/wallscan_rtm_p0.3-%j.out
-#SBATCH --error=logs/wallscan_rtm_p0.3-%j.err
+#SBATCH --output=cluster/logs/wallscan_rtm_p0.3-%j.out
+#SBATCH --error=cluster/logs/wallscan_rtm_p0.3-%j.err
 #SBATCH --account=bsc21
 #SBATCH --qos=gp_bsccase
 #SBATCH --time=2-00:00:00
@@ -15,12 +15,10 @@
 # that larger p can produce a k=4 block with no tower member besides lambda0) — expect this arm to
 # be more expensive per-T than p=0.0/0.1 for that reason, on top of T reaching further (20 vs 14).
 
-cd "$(dirname "$0")" || exit 1
-mkdir -p logs
 
 module load julia/1.12.0
 
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
-julia --project=.. wall_scan_cluster.jl psweep 0.3 20
+julia --project=. cluster/wall_scan_cluster.jl psweep 0.3 20

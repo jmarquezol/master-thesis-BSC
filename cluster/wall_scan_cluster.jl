@@ -31,8 +31,11 @@ ENV["GKSwstype"] = "100"   # headless GR backend (src/thesislib.jl unconditional
 
 include(joinpath(@__DIR__, "..", "src", "thesislib.jl"))
 
-using LinearAlgebra, Printf
-BLAS.set_num_threads(Sys.CPU_THREADS)   # BLAS-bound workload; SLURM also sets OPENBLAS_NUM_THREADS
+using LinearAlgebra
+using MKL
+using Printf
+
+BLAS.set_num_threads(16)   # BLAS-bound workload; SLURM also sets OPENBLAS_NUM_THREADS
 
 # Model / sweep constants — MUST match NB7's master sweep and the desktop χ-scan.
 const P_NNN  = 0.1
