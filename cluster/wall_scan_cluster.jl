@@ -32,7 +32,11 @@ ENV["GKSwstype"] = "100"   # headless GR backend (src/thesislib.jl unconditional
 include(joinpath(@__DIR__, "..", "src", "thesislib.jl"))
 
 using LinearAlgebra
-using MKL
+try
+    @eval using MKL          # Intel MKL BLAS — much faster on the cluster's Xeon nodes
+catch err
+    @warn "MKL unavailable, falling back to the default BLAS (fine for local dry-runs)" err
+end
 using Printf
 
 BLAS.set_num_threads(16)   # BLAS-bound workload; SLURM also sets OPENBLAS_NUM_THREADS
@@ -66,11 +70,20 @@ end
 function run_wall_scan(; chi::Int, label::String,
         Ts=collect(2.0:1.0:14.0),
         p_nnn::Float64=P_NNN,
-        cutoff=1e-12, cutoffs=[fill(1e-8, 40); 1e-10],
+        cutoff=1e-14, cutoffs=[fill(1e-12, 40); 1e-14],   # v3: tighter (was 1e-8/1e-10) — stabilises
+                                                          # branch selection at large T (fixed the
+                                                          # v2 T=10 wrong-branch jump).
         trunc_mode=:rtm, basis=:eig,
         itermax=8000, stuck_after=400,
-        k=4, k_retry=6,
-        cachefile=CLUSTER_CACHE,
+        k=4, k_retry=4,   # v3: NO k=6 escalation. The escalation was a workaround for classifying the
+                          # (physical) π-displaced odd partners as "no tower member"; x1 needs only
+                          # λ0 + the smallest partner (both in k=4), and all tower/x1 selection is
+                          # post-processing. Keeping k=4 also lightens memory (OOM). k_retry=k=4 ⇒
+                          # the adaptive wrapper never bumps k.
+        cachefile=joinpath(CLUSTER_DIR, "sweep_$(label).jld2"),   # v3: PER-LABEL cache. Every arm
+                          # writes its OWN file — this ends the concurrent-write race on the single
+                          # warm_sweep.jld2 that clobbered most of the v2 compute. Merge with
+                          # cluster/merge_sweeps.jl for the notebooks.
         checkpointfile=joinpath(@__DIR__, "checkpoint_$(label).jld2"))
 
     mkpath(dirname(cachefile))
@@ -133,6 +146,18 @@ function run_wall_scan(; chi::Int, label::String,
             k_actual = length(theta)
 
             i0 = pick_phys_continuity(theta, previous_phys)
+
+            # v3 validity guard: reject a collapsed/overflowed solve BEFORE caching it as a success.
+            # At strong frustration the top of the spectrum becomes (near-)exactly degenerate, and
+            # the block solver can return a spurious null Ritz vector (|θ0|≈0) or overflow (|θ0|→∞);
+            # v2 cached these as "success", so a resubmit SKIPPED them and warm-start-cascaded the
+            # collapse. Throwing here routes it to the catch: cached as :error (hence retried, not
+            # skipped) and the warm chain is broken (previous_L/R reset), stopping the cascade.
+            lam0_mag = abs(theta[i0])
+            if !isfinite(lam0_mag) || lam0_mag < 1e-6 || lam0_mag > 50.0
+                error("collapsed/invalid |θ0|=$lam0_mag (near-exact top degeneracy or overflow)")
+            end
+
             dphi, cls = classify_tower(theta; i0=i0)
             gap = tower_gap(theta; i0=i0)
             s2_base = trim_dome(ITransverse.gen_renyi2(L[i0], R[i0]), NBETA)
@@ -192,27 +217,22 @@ function run_wall_scan(; chi::Int, label::String,
 end
 
 # ── entry point: dispatch on the command-line mode ──────────────────────────────────────────────
-mode = length(ARGS) >= 1 ? ARGS[1] : error("usage: julia wall_scan_cluster.jl <rtm|rdm|cutoff|psweep> [p] [Tmax]")
+mode = length(ARGS) >= 1 ? ARGS[1] : error("usage: julia wall_scan_cluster.jl <rdm|psweep> [p] [Tmax]")
 
-const FULL_LADDER    = collect(2.0:1.0:14.0)
-const RTM_FULL_LADDER = collect(2.0:1.0:20.0)  # rtm alone now matches the psweep arms' T=20 reach
-const RDM_LADDER     = collect(2.0:1.0:12.0)   # cold T=9 alone took 20.6h; two points past the warm
-                                                # wall suffice — extend Ts + resubmit if ever needed.
+# v3: the `cutoff` mode is GONE — its tight cutoff (1e-12/1e-14) is now the default for every arm
+# (see run_wall_scan). The p=0.1 arm is just `psweep 0.1 14` (no more standalone `rtm` label).
+const RDM_LADDER = collect(2.0:1.0:12.0)   # RDM is the separate, run-LATER diagnostic (NB9: no
+                                            # physical gain over RTM for 4-11x cost); own cache via Fix A.
 
-if mode == "rtm"
-    run_wall_scan(chi=64, label="rtm64_full", Ts=RTM_FULL_LADDER, p_nnn=P_NNN)
-elseif mode == "rdm"
+if mode == "rdm"
     run_wall_scan(chi=64, label="rdm64", trunc_mode=:rdm, Ts=RDM_LADDER, p_nnn=P_NNN)
-elseif mode == "cutoff"
-    run_wall_scan(chi=64, label="cut_tight", cutoffs=[fill(1e-10, 40); 1e-12], Ts=FULL_LADDER, p_nnn=P_NNN)
 elseif mode == "psweep"
-    # A p-sweep job, always through the RTM route (NB9's cost comparison: RDM buys nothing
-    # physical for ~4-11x the cost, so it is not worth extending to the p-sweep at all).
-    # Usage: julia wall_scan_cluster.jl psweep <p> <Tmax>
+    # A p-sweep arm through the RTM route. Usage: julia wall_scan_cluster.jl psweep <p> <Tmax>
+    # Inherits the tight default cutoff and k=4 (no escalation). Writes its own sweep_rtm_p<p>.jld2.
     length(ARGS) >= 3 || error("psweep needs two extra args: julia wall_scan_cluster.jl psweep <p> <Tmax>")
     p_val = parse(Float64, ARGS[2])
     Tmax  = parse(Float64, ARGS[3])
     run_wall_scan(chi=64, label="rtm_p$(p_val)", Ts=collect(2.0:1.0:Tmax), trunc_mode=:rtm, p_nnn=p_val)
 else
-    error("unknown mode \"$mode\" — expected one of: rtm, rdm, cutoff, psweep")
+    error("unknown mode \"$mode\" — expected one of: rdm, psweep")
 end

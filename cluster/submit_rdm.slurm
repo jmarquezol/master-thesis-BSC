@@ -8,12 +8,17 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
+#SBATCH --mem=120G
 
-# Warm-started, checkpointed :rdm truncation mode, T=2..12 ladder (the cold array run showed T=9
-# alone takes ~20.6h under :rdm; extend Ts in wall_scan_cluster.jl + resubmit if more T is needed
-# later — the cache/checkpoint machinery makes that incremental). Run alongside submit_rtm.slurm
-# and submit_cutoff.slurm. If this job hits the walltime cap, just `sbatch` it again: it resumes
-# from the last checkpointed T, truly warm (not just continuity-anchored).
+# v3 RDM diagnostic — RUN SEPARATELY, and only AFTER the 5 RTM arms have landed clean. It is a
+# cross-check, not a result: NB9 already found RDM buys no physics over RTM for 4-11x the cost.
+# Own cache results/data/cluster/sweep_rdm64.jld2 (per-label), --mem=120G, T=12.
+#
+# IMPORTANT: v2's rdm job produced ZERO output in 2 full days (only the shell module-load line) and
+# was walltime-killed. Likely causes now addressed: the shared-file stall (fixed by per-label
+# caches) or the RDM path hanging. WATCH the first ~10 minutes of cluster/logs/wallscan_rdm-*.err:
+# if it prints T=2 progress, let it run; if it is still silent after ~10 min, KILL it and report
+# rather than burning another 2 days.
 
 module load julia/1.12.0
 

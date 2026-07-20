@@ -8,19 +8,18 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
+#SBATCH --mem=120G
 
-# p-sweep arm: p=0.0 (pure TFIM, the Ising calibration point), RTM route, warm-started and
-# checkpointed, all the way to T=20 — much further than the original p=0.1 triple (T=14), so this
-# job is very likely to need several resubmissions before it finishes. That is expected and safe:
-# hitting the walltime cap loses no progress, just `sbatch` this same script again and it resumes
-# from the last checkpointed T, truly warm (not just continuity-anchored). Runs alongside the other
-# psweep arms (p=0.3/0.5/1.0/1.5) and the original p=0.1 triple — all write into the same
-# results/data/cluster/warm_sweep.jld2, keyed by (label, T), so nothing clobbers anything else.
-
+# v3 p-sweep arm: p=0.0, RTM route, TIGHT cutoff (1e-12/1e-14), k=4 (no k=6 escalation),
+# warm-started + checkpointed, capped at T=14. Writes its OWN cache
+# results/data/cluster/sweep_rtm_p0.0.jld2 (per-label -> no more shared-file clobbering, the bug
+# that lost most of the v2 compute). Walltime cap loses no progress: just resubmit, it resumes from
+# the last checkpointed T. --mem=120G fixes the v2 OOM kills (raise toward --mem=0 = whole node if
+# OOM recurs). When all arms are done, run: julia --project=. cluster/merge_sweeps.jl
 
 module load julia/1.12.0
 
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
-julia --project=. cluster/wall_scan_cluster.jl psweep 0.0 20
+julia --project=. cluster/wall_scan_cluster.jl psweep 0.0 14

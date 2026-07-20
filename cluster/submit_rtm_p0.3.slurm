@@ -8,17 +8,18 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
+#SBATCH --mem=120G
 
-# p-sweep arm: p=0.3, RTM route, warm-started and checkpointed, all the way to T=20. See
-# submit_rtm_p0.0.slurm for the full explanation — same design, just a different NNN coupling.
-# NOTE: block_transfer_eigs_adaptive will auto-escalate k=4->6 here whenever needed (NB5's finding
-# that larger p can produce a k=4 block with no tower member besides lambda0) — expect this arm to
-# be more expensive per-T than p=0.0/0.1 for that reason, on top of T reaching further (20 vs 14).
-
+# v3 p-sweep arm: p=0.3, RTM route, TIGHT cutoff (1e-12/1e-14), k=4 (no k=6 escalation),
+# warm-started + checkpointed, capped at T=14. Writes its OWN cache
+# results/data/cluster/sweep_rtm_p0.3.jld2 (per-label -> no more shared-file clobbering, the bug
+# that lost most of the v2 compute). Walltime cap loses no progress: just resubmit, it resumes from
+# the last checkpointed T. --mem=120G fixes the v2 OOM kills (raise toward --mem=0 = whole node if
+# OOM recurs). When all arms are done, run: julia --project=. cluster/merge_sweeps.jl
 
 module load julia/1.12.0
 
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
-julia --project=. cluster/wall_scan_cluster.jl psweep 0.3 20
+julia --project=. cluster/wall_scan_cluster.jl psweep 0.3 14

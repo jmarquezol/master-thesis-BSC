@@ -131,3 +131,33 @@ comparison in point 1 above, and stays where it is.
 (the phase classification per spectrum member), `tower_gap`, `k_used`/`escalated` (did this T need
 the k=4→6 retry?), `s2_base` (the trimmed Rényi-2 dome), `peak`, `rigidity`, `reason`
 (`"converged"` or `"stuck"`), `niters`, and `elapsed`. Loadable with `JLD2.load(path, "done")`.
+
+---
+
+## v3 (2026-07-20) — corrected campaign after the v2 post-mortem
+
+The v2 run mostly failed for infrastructure reasons, not physics (logs archived in
+`cluster/archive_v2/copy_logs_v2/`, the clobbered cache in `cluster/archive_v2/warm_sweep_v2.jld2`).
+Fixes in this version:
+
+- **Per-label caches (the critical fix).** Every arm now writes its OWN
+  `results/data/cluster/sweep_<label>.jld2`. v2 had all 8 jobs writing the SAME `warm_sweep.jld2`
+  concurrently → a race clobbered most of the 2-day compute (only 16 of ~60 points survived).
+  Assemble the notebooks' `warm_sweep.jld2` afterward with `julia --project=. cluster/merge_sweeps.jl`.
+- **`--mem=120G`** in every script (v2 had none → 4 OOM kills). Raise toward `--mem=0` (whole node) if
+  OOM recurs.
+- **Tight cutoff `[1e-12…; 1e-14]`** is now the default (was 1e-8/1e-10). It fixed the v2 wrong-branch
+  jump at T=10 AND converges far better (e.g. p=0.1 T=3: 32 iters vs 461 stuck). The separate
+  `cutoff` mode is gone.
+- **k=4, no k=6 escalation.** The escalation was a workaround for misclassifying the physical
+  π-displaced partners; x1/tower selection is post-processing. Also lighter on memory.
+- **Validity guard.** A solve with |θ0|<1e-6 / non-finite / >50 is cached as `:error` (retried, not
+  skipped) and breaks the warm chain — stops the v2 large-p null-collapse cascade.
+- **p arms:** {0.0, 0.1, 0.3, 0.5} core + {0.8, 1.0, 1.5} reach, all `psweep <p> 14`. (p=1.0/1.5 no
+  longer null-collapse with the tight cutoff, but their |θ0| is large/growing — treat as exploratory.)
+- **RDM:** run SEPARATELY and AFTER the RTM arms land clean (`submit_rdm.slurm`, own cache, T=12).
+  WATCH its first ~10 min: v2's rdm produced zero output for 2 days — if silent again, kill & report.
+
+**Submit order:** the 7 `submit_rtm_p*.slurm` (in parallel) → when clean, `merge_sweeps.jl` → then
+`submit_rdm.slurm`. Each job is independent, crash-safe (resubmit resumes from its checkpoint), and
+memory-capped.
