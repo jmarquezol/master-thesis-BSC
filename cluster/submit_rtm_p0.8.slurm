@@ -7,8 +7,7 @@
 #SBATCH --time=2-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=16
-#SBATCH --mem=120G
+#SBATCH --cpus-per-task=40
 
 # v3 REACH arm: p=0.8 (strong frustration). The tight cutoff (1e-12/1e-14) prevents the v2
 # null-collapse (v2 gave |θ0|=0 here; v3 gives finite, growing |θ0|). CAVEAT: |θ0| is large and

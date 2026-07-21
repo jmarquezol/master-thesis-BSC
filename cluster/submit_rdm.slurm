@@ -7,8 +7,7 @@
 #SBATCH --time=2-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=16
-#SBATCH --mem=120G
+#SBATCH --cpus-per-task=40
 
 # v3 RDM diagnostic — RUN SEPARATELY, and only AFTER the 5 RTM arms have landed clean. It is a
 # cross-check, not a result: NB9 already found RDM buys no physics over RTM for 4-11x the cost.

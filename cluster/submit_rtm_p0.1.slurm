@@ -7,8 +7,7 @@
 #SBATCH --time=2-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=16
-#SBATCH --mem=120G
+#SBATCH --cpus-per-task=40
 
 # v3 p-sweep arm: p=0.1, RTM route, TIGHT cutoff (1e-12/1e-14), k=4 (no k=6 escalation),
 # warm-started + checkpointed, capped at T=14. Writes its OWN cache
