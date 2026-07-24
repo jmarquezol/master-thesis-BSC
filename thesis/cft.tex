@@ -1,36 +1,23 @@
 \section{Conformal Field Theory and Universal Dynamics}
 \label{sec:cft}
 
-The rest of this thesis is, in the end, an elaborate way of measuring a single number---the central charge $c$---from the temporal direction of a quench, and of asking whether that number survives the breaking of integrability. Before we can build the machinery to do so, we need to understand where these universal numbers come from, why a lattice model at a critical point is described by a conformal field theory at all, and how that theory makes sharp, fittable predictions for the objects we compute. This section provides that background. It is deliberately self-contained: every later chapter---the model, the transverse method, the transfer matrix, the results---points back here for the physical meaning of what it is computing.
+The rest of this thesis is, in the end, an elaborate way of measuring a single number---the central charge $c$---from the temporal direction of a quench, and of asking whether that number survives the breaking of integrability. This section collects the conformal-field-theory background needed to make that quantitative: where these universal numbers come from, and how they turn into the handful of formulas we later fit. We keep the main line of reasoning here and defer the supporting derivations---the stress-tensor origin of the spectrum, the twist-field origin of the entropy coefficient, and the conformal maps behind both---to Appendix~\ref{app:cft}, to which every result below points.
 
-The one-paragraph version is this. At a continuous critical point a lattice model forgets its microscopic details and is governed by a \emph{conformal field theory}: a continuum theory with an enormous symmetry that, in two dimensions, fixes almost everything in terms of $c$ and a discrete list of operators. Our whole approach exploits a fortunate accident of Euclidean physics---that after a Wick rotation time and space play interchangeable roles---so that the same CFT formulas that describe a spatial slice also describe a temporal one. The eigenvalues of the transverse transfer matrix are then, quite literally, the CFT's list of operators, and the temporal entropy is a CFT correlation function. Everything below unpacks that sentence.
+The one-paragraph version is this. At a continuous critical point a lattice model forgets its microscopic details and is governed by a \emph{conformal field theory}: a continuum theory whose enormous symmetry, in two dimensions, fixes almost everything in terms of $c$ and a discrete list of operators. Our whole approach exploits a fortunate accident of Euclidean physics---that after a Wick rotation time and space play interchangeable roles---so that the same CFT formulas that describe a spatial slice also describe a temporal one. The eigenvalues of the transverse transfer matrix are then, quite literally, the CFT's list of operators, and the temporal entropy is a CFT correlation function. Everything below unpacks that sentence.
 
 \subsection{Criticality, scale invariance, and universality}
 \label{sec:cft:criticality}
 
-It is worth starting from the physical picture, because it is what licenses everything else. Away from a phase transition a spin chain has a finite correlation length $\xi$: two spins farther apart than $\xi$ are essentially independent, and microscopic details (the exact couplings, the lattice spacing $a$) matter, because one can resolve them at the scale $\xi$.
+Away from a phase transition a spin chain has a finite correlation length $\xi$: spins farther apart than $\xi$ are essentially independent, and microscopic details (the exact couplings, the lattice spacing) still matter. At a continuous critical point $\xi\to\infty$. There is now no intrinsic length scale between the lattice spacing and the system size, and a system with no scale looks the same at every magnification---it is \emph{scale invariant}. This is the engine of \emph{universality}: if we blur the lattice into a continuum, the microscopic details wash out and what survives is a continuum field theory that depends only on the symmetries and dimensionality of the problem. Wildly different microscopic models---the Ising chain, a lattice gas, or the ANNNI-type chain we study in Section~\ref{sec:annni} at small frustration---can flow to the \emph{same} continuum theory, and belong to the same \emph{universality class}. That continuum theory is massless (no scale means no gap), and promoting ``scale invariance plus locality'' to its full local form yields \emph{conformal invariance}: the theory is a conformal field theory (CFT). This is precisely why we may replace the messy lattice Hamiltonian by a clean CFT when predicting universal quantities, and why a number computed once in the Ising CFT can be compared directly against numbers extracted from our ANNNI-type simulations.
 
-At a continuous critical point $\xi\to\infty$. There is now no intrinsic length scale between the lattice spacing and the system size, and a system with no scale looks the same at every magnification---it is \emph{scale invariant}. This is the engine of \emph{universality}. If we zoom out, blurring the lattice into a continuum, the microscopic details wash out and what survives is a continuum field theory that depends only on the symmetries and the dimensionality of the problem, not on its microscopic realization. Wildly different microscopic models---the Ising chain, a lattice gas, or the ANNNI-type chain we study in Section~\ref{sec:annni} at small frustration---can flow to the \emph{same} continuum theory. They belong to the same \emph{universality class}.
-
-That continuum theory, at a critical point, is massless (no scale means no gap, hence gapless excitations), and it turns out to carry a much larger symmetry than plain scale invariance. Promoting ``scale invariance plus locality'' to its full local form yields \emph{conformal invariance}, and the theory is a conformal field theory (CFT). This is precisely why we are allowed to replace the messy lattice Hamiltonian by a clean CFT when we want to predict universal quantities---and why a number computed once, in the Ising CFT, can be compared directly against numbers extracted from our ANNNI-type simulations.
-
-\subsection{Conformal invariance in two dimensions}
+\subsection{Conformal invariance in two dimensions, and the central charge}
 \label{sec:cft:2d}
 
-A conformal transformation is a coordinate change that preserves angles but not necessarily lengths: it can stretch, but only locally isotropically, the same stretch in every direction at a given point. Rotations, translations and uniform rescalings are all conformal, and so is any smoother warping that locally looks like ``rotate and scale''.
-
-In a generic number of dimensions the conformal group is finite-dimensional and only mildly constraining. Two dimensions is the exception, and the exception is the whole story. In 2D, ``locally rotate and scale'' is exactly what multiplication by the derivative $f'(z)$ of a holomorphic (analytic) function of a complex variable does. So in 2D \emph{every} analytic change of coordinates $z\mapsto f(z)$ is a conformal symmetry, and there are infinitely many of them. The symmetry algebra becomes infinite-dimensional---the Virasoro algebra, which we meet in Section~\ref{sec:cft:spectrum}---and it constrains the theory so tightly that 2D CFTs are essentially solvable~\cite{bpz1984, difrancesco1997}.
-
-Two habits of thought follow, and we use both. First, one works on the \emph{complex plane}: the two Euclidean coordinates $(x,\tau)$ are packaged into $z=x+i\tau$ and $\bar z=x-i\tau$, and physical quantities factorize into a holomorphic piece (depending on $z$) and an antiholomorphic piece (depending on $\bar z$). This is the origin of the separate weights $h$ and $\bar h$ that appear below. Second, one changes geometry by changing coordinates: because analytic maps are symmetries, knowing a correlation function on the plane means knowing it on any shape an analytic map can reach---a cylinder, a strip, a disk---simply by substituting $z=z(\omega)$. This ``conformal map'' trick is what takes us from textbook plane results to the specific strip geometry of our quench (Section~\ref{sec:cft:boundary}).
+A conformal transformation preserves angles but not lengths: it can stretch, but only locally isotropically. In a generic number of dimensions the conformal group is finite-dimensional and only mildly constraining. Two dimensions is the exception, and the exception is the whole story: there, ``locally rotate and scale'' is exactly what multiplication by the derivative $f'(z)$ of a holomorphic function of $z=x+i\tau$ does, so \emph{every} analytic map $z\mapsto f(z)$ is a symmetry. The symmetry algebra becomes infinite-dimensional---the Virasoro algebra---and constrains the theory so tightly that 2D CFTs are essentially solvable~\cite{bpz1984, difrancesco1997}. Two habits of thought follow, and we use both: one works on the complex plane, where quantities factorize into holomorphic ($z$) and antiholomorphic ($\bar z$) pieces; and one changes geometry by changing coordinates, so that a correlation function known on the plane is known on any shape an analytic map can reach (a cylinder, a strip). This ``conformal map'' trick, spelled out in Appendix~\ref{app:cft:maps}, is what takes textbook plane results to the specific strip geometry of our quench.
 
 One remark will matter a great deal later. In \emph{Euclidean} CFT the two coordinates $x$ and $\tau$ enter completely symmetrically; nothing intrinsically distinguishes ``space'' from ``imaginary time''. That democracy is exactly what makes the transverse, or temporal, contraction legitimate (Section~\ref{sec:cft:temporal}): we are free to call whichever direction we like ``space'' and quantize along the other.
 
-\subsection{The central charge}
-\label{sec:cft:c}
-
-Every 2D CFT carries a single most-important number, the central charge $c$. There are several ways to read it, all true at once.
-
-It \emph{labels the universality class}: fixing $c$, together with the operator content, essentially fixes the theory. For the models relevant to this thesis,
+Every 2D CFT carries a single most-important number, the central charge $c$, which can be read in several equivalent ways. It \emph{labels the universality class}: fixing $c$ together with the operator content essentially fixes the theory. For the models relevant here,
 \begin{center}
 \begin{tabular}{lll}
 \hline
@@ -41,119 +28,79 @@ ANNNI-type at small $p$ & Ising & $\tfrac{1}{2}$ \\
 \hline
 \end{tabular}
 \end{center}
-so the central question of this work---does temporal Ising universality survive next-nearest-neighbour frustration?---is, concretely, whether the ANNNI-type chain still returns $c=\tfrac12$ when the central charge is measured through \emph{time}.
+so the central question of this work---does temporal Ising universality survive next-nearest-neighbour frustration?---is, concretely, whether the ANNNI-type chain still returns $c=\tfrac12$ when the central charge is measured through \emph{time}. Second, $c$ is a \emph{conformal anomaly}: putting the theory on a finite or curved region costs a universal ground-state (Casimir) energy proportional to $c$, which is the most direct handle we have and exactly how $c$ enters the transfer-matrix spectrum below. Finally, $c$ loosely \emph{counts gapless degrees of freedom} ($c=\tfrac12$ is a single Majorana/Ising mode), so larger $c$ means more entanglement and more cost. Throughout, $c$ is the target: nearly every formula below is a way to isolate it.
 
-It is also a ``conformal anomaly'', the price of curving space. Scale invariance is slightly broken by the geometry itself: putting the theory on a finite or curved region costs a universal ground-state energy proportional to $c$, the Casimir energy. This is the most direct handle we have---measure the finite-size ground-state energy or entropy, read off $c$---and it is exactly how $c$ enters the transfer-matrix spectrum in Section~\ref{sec:cft:spectrum} and the equilibrium entanglement scaling we use in Section~\ref{sec:annni}.
-
-Finally, $c$ loosely \emph{counts gapless degrees of freedom}: $c=\tfrac12$ is ``half'' a degree of freedom, a single Majorana (Ising) mode. Larger $c$ means more entanglement and more computational cost, a fact that will reappear when we discuss the limits of the method. Throughout, $c$ is the target: nearly every formula below is a way to isolate it.
-
-% TRIM-PATH: movable to Appendix (CFT derivations) (~1 page); keep the results in the main text
-\subsection{Operators, scaling dimensions, and the transfer-matrix bridge}
+\subsection{Operators and the transfer-matrix bridge}
 \label{sec:cft:operators}
 
-A CFT is organized not around particles but around local operators (also called fields, or scaling operators). The special ones, the \emph{primary} operators, each carry two numbers, the conformal weights $(h,\bar h)$, whose sum
+A CFT is organized not around particles but around local \emph{primary} operators, each carrying two conformal weights $(h,\bar h)$ whose sum
 \begin{equation}
     x = h + \bar h
     \label{eq:cft:dim}
 \end{equation}
-is the \emph{scaling dimension}: it measures how the operator responds to a rescaling. Scale invariance forces correlation functions to be pure power laws set by these dimensions. On the infinite plane the two-point function of a primary $\phi$ is
-\begin{equation}
-    \langle \phi(z_1)\phi(z_2)\rangle
-      = \frac{1}{(z_1-z_2)^{2h}\,(\bar z_1-\bar z_2)^{2\bar h}},
-    \label{eq:cft:plane2pt}
-\end{equation}
-and the exponent \emph{is} the scaling dimension. A small $x$ means a slowly decaying correlation---a ``light'', easily excited operator; a large $x$ decays fast and is ``heavy''.
-
-Under a conformal map $\omega=f(z)$ a primary transforms by simple Jacobian factors, $\langle\phi(\omega_1)\phi(\omega_2)\rangle=\prod_i f'(z_i)^{-h}\bar f'(\bar z_i)^{-\bar h}\,\langle\phi(z_1)\phi(z_2)\rangle$. Feeding in the plane-to-cylinder map $\omega=\tfrac{\beta}{2\pi}\log z$ turns the plane power law into the hyperbolic-sine form characteristic of a cylinder of circumference $\beta$,
-\begin{equation}
-    \langle\phi(\omega_1)\phi(\omega_2)\rangle \;\propto\;
-      \Big[\sinh\tfrac{\pi(\omega_1-\omega_2)}{\beta}\Big]^{-2h}
-      \Big[\sinh\tfrac{\pi(\bar\omega_1-\bar\omega_2)}{\beta}\Big]^{-2\bar h}.
-    \label{eq:cft:cyl2pt}
-\end{equation}
-We will meet the time-like version of exactly this expression---a $\sin$ instead of a $\sinh$---as the source of the entropy chord in Section~\ref{sec:cft:temporal}. For now the headline is a dictionary we use constantly:
+is the \emph{scaling dimension}: scale invariance forces every two-point function to be a pure power law set by $x$ (Appendix~\ref{app:cft:ops}), so a small $x$ means a slowly decaying, ``light'' operator and a large $x$ a fast-decaying, ``heavy'' one. The list of primary operators, with their dimensions, is a fixed fingerprint of the CFT---and, as the next subsection makes precise, it is \emph{literally} the list of eigenvalues of our transfer matrix:
 \begin{quote}
-the list of primary operators, with their dimensions $x$, is a fixed fingerprint of the CFT---and, as the next subsection shows, it is \emph{literally} the list of eigenvalues of our transfer matrix.
+operators $\leftrightarrow$ transfer-matrix eigenvalues.
 \end{quote}
-That correspondence, operators $\leftrightarrow$ transfer-matrix eigenvalues, is the single most important bridge in the method: it is why staring at the spectrum of a matrix tells us about a continuum field theory.
+That correspondence is the single most important bridge in the method: it is why staring at the spectrum of a matrix tells us about a continuum field theory.
 
-% TRIM-PATH: movable to Appendix (CFT derivations) (~1 page); keep the spectrum form + $\kappa$ in the main text
-\subsection{The transfer-matrix spectrum from the stress tensor}
+\subsection{The transfer-matrix spectrum}
 \label{sec:cft:spectrum}
 
-We now need to see \emph{mechanically} how the abstract central charge $c$ turns into a number we can fit. The carrier is the stress-energy tensor $T_{\mu\nu}$, the operator measuring the theory's response to a change of coordinates. Because coordinate changes \emph{are} the symmetry in 2D, the stress tensor generates conformal transformations, and its modes generate the infinite-dimensional Virasoro algebra. One mode is special: $L_0$, the generator of scaling, whose eigenvalues on the primaries are their weights $h$. So $L_0$ is the ``dictionary operator'' whose spectrum is the operator content.
-
-Quantizing on a finite geometry then produces $c$. On a strip of transverse size $\beta$---the geometry of our quench, Section~\ref{sec:cft:boundary}---the Hamiltonian that generates translations along it is, up to the sound velocity $v$, an integral of the stress tensor, and the conformal map from the plane leaves behind one extra, purely geometric term: the Casimir anomaly proportional to $c$~\cite{carignano_tagliacozzo2025},
+The abstract central charge turns into a fittable number through the stress-energy tensor, the operator that generates conformal transformations and whose modes generate the Virasoro algebra; the scaling generator $L_0$ has the operator dimensions as its spectrum. Quantizing on a strip of transverse size $\beta$---the geometry of our quench (Section~\ref{sec:cft:boundary})---the generator of translations along it is, up to the sound velocity $v$, an integral of the stress tensor, and the conformal map from the plane leaves behind one extra, purely geometric term: the Casimir anomaly proportional to $c$~\cite{carignano_tagliacozzo2025},
 \begin{equation}
     \hat H = \frac{\pi}{\beta}\Big(L_0 - \frac{c}{24}\Big).
     \label{eq:cft:casimir}
 \end{equation}
-This equation is the crux, and it deserves to be read slowly. The $-c/24$ term is the Casimir (anomaly) piece: a universal ground-state offset set only by $c$ and the size $\beta$. Isolate it and you have measured $c$. The $L_0$ term contributes the operator dimensions $x$ on top of that offset---the excited levels, spaced by the dimensions of Section~\ref{sec:cft:operators}.
-
-Since the transfer matrix $\mathcal{E}$ is essentially $e^{-\delta t\,\hat H}$ (it advances the system by one step along the strip; Section~\ref{sec:cft:temporal}), Equation~\eqref{eq:cft:casimir} hands us the entire spectrum of $\mathcal{E}$ in one shot: a dominant eigenvalue whose modulus encodes the Casimir (hence $c$) term, and a tower of subleading eigenvalues whose ratios and phases encode the operator dimensions. Written out, the transfer operator takes the form~\cite{carignano_tagliacozzo2025}
+This equation is the crux. The $-c/24$ term is a universal ground-state offset set only by $c$ and $\beta$; isolate it and you have measured $c$. The $L_0$ term adds the operator dimensions $x$ on top, as the excited levels. Since the transfer matrix $\mathcal{E}$ is essentially $e^{-\delta t\,\hat H}$ (it advances the system one step along the strip; Section~\ref{sec:cft:temporal}), Equation~\eqref{eq:cft:casimir} hands us its entire spectrum at once: a dominant eigenvalue whose modulus encodes the Casimir (hence $c$) term, and a tower of subleading eigenvalues whose ratios and phases encode the operator dimensions. Written out~\cite{carignano_tagliacozzo2025},
 \begin{equation}
     \mathcal{E} = \exp\!\Big[-\big(-\kappa + \pi L_0\big)\cdot(\text{geometry})\Big],
     \qquad \kappa = -\frac{\pi c\,\delta t}{24},
     \label{eq:cft:transfer}
 \end{equation}
-where the geometric factor collects the strip size and the sound velocity. This is the origin of the two independent ``routes'' by which we will read $c$ (Section~\ref{sec:results}): one route fits $\kappa$---and hence $c$---directly out of the leading eigenvalue; the other uses the entanglement, through the twist operators we introduce next. Same $c$, two windows onto it.
+the geometric factor collecting the strip size and $v$ (derivation in Appendix~\ref{app:cft:spectrum}). This is the origin of the two independent routes by which we read $c$ in Section~\ref{sec:results}: one fits $\kappa$ directly out of the leading eigenvalue, the other uses the entanglement, through the twist operators we introduce next. Same $c$, two windows onto it.
 
-% TRIM-PATH: movable to Appendix (CFT derivations) (~1 page); keep the coefficient family in the main text
-\subsection{Entanglement, twist fields, and the entropy coefficients}
+\subsection{Entanglement and the entropy coefficients}
 \label{sec:cft:entropy}
 
-Why does \emph{entanglement} know about $c$? Because computing it forces one to evaluate a correlation function of special operators whose dimension is built from $c$. This is worth spelling out, because the exact coefficient it produces is one we must get right (and got wrong at first).
-
-Take the standard spatial story of Calabrese and Cardy~\cite{calabrese_cardy2004}. To obtain the entanglement entropy of an interval $\mathcal A$ one needs the moments $\mathrm{Tr}\,\rho_{\mathcal A}^{\,n}$ (the $n$-th R\'enyi/Tsallis moment), then continues $n\to1$ to reach the von Neumann entropy. The replica trick computes $\mathrm{Tr}\,\rho_{\mathcal A}^{\,n}$ as a path integral on $n$ copies of the plane sewn cyclically along $\mathcal A$. That sewn geometry is equivalent, on a single plane, to inserting a pair of \emph{twist operators} $\sigma_n$ at the two endpoints of $\mathcal A$---and the twist operator is itself a primary, with the dimension
+Entanglement knows about $c$ because computing it forces one to evaluate a correlation function of special operators whose dimension is built from $c$. In the replica approach of Calabrese and Cardy~\cite{calabrese_cardy2004}, the $n$-th R\'enyi moment $\mathrm{Tr}\,\rho_{\mathcal A}^{\,n}$ of an interval $\mathcal A$ is computed by inserting a pair of \emph{twist operators} $\sigma_n$ at its endpoints; the twist operator is itself a primary, with dimension
 \begin{equation}
-    \Delta_n = \frac{c}{12}\Big(n - \frac{1}{n}\Big).
+    \Delta_n = \frac{c}{12}\Big(n - \frac{1}{n}\Big),
     \label{eq:cft:twist}
 \end{equation}
-Its two-point function, a power law of the form \eqref{eq:cft:plane2pt}, immediately gives $\mathrm{Tr}\,\rho_{\mathcal A}^{\,n}\sim\ell^{-4\Delta_n}$ for an interval of length $\ell$, and hence the famous logarithm
-\begin{equation}
-    S_n = \frac{c}{6}\Big(1+\frac1n\Big)\log\ell + \text{const},
-    \qquad
-    S_{n\to1} = \frac{c}{3}\log\ell + \text{const}.
-    \label{eq:cft:cc}
-\end{equation}
-
-Two things carry forward. First, the entropy is a logarithm whose slope is proportional to $c$: measuring the slope measures $c$. This is the entire logic of the entropy route, and of the equilibrium fits in Section~\ref{sec:annni}. Second---and this is the point that requires care---the R\'enyi order enters through a \emph{known} factor $(1+1/n)$. For a boundary, or half-line, cut, which is our situation in the temporal problem, the coefficient is halved, giving the family
+and its power-law two-point function yields the familiar logarithmic entanglement entropy whose slope is proportional to $c$ (full derivation in Appendix~\ref{app:cft:twist}). Two things carry forward. First, \emph{the entropy is a logarithm whose slope measures $c$}---the entire logic of the entropy route and of the equilibrium fits of Section~\ref{sec:annni}. Second---and this requires care---the R\'enyi order $n$ enters through a known factor. For a boundary (half-line) cut, which is our situation in the temporal problem, the coefficient is halved relative to the bulk, giving the family
 \begin{equation}
     \frac{c}{12}\,\frac{n+1}{n},
     \qquad
     \text{i.e.}\quad \frac{c}{6}\ (n\to1), \qquad \frac{c}{8}\ (n=2).
     \label{eq:cft:coeff}
 \end{equation}
-This is exactly why we use coefficient $c/6$ for the $n\to1$ generalized entropy and $c/8$ for the generalized R\'enyi-2 entropy we actually compute---\emph{not} the bulk value $c/3$. It is a small factor, but using the wrong one shifts every extracted central charge, and it must be kept straight.
+This is exactly why we use $c/6$ for the $n\to1$ generalized entropy and $c/8$ for the generalized R\'enyi-2 entropy we actually compute---\emph{not} the bulk value $c/3$. It is a small factor, but the wrong one shifts every extracted central charge.
 
 \subsection{The quench as a boundary state}
 \label{sec:cft:boundary}
 
-We can now specialize to our problem, the Loschmidt echo $\mathcal L(t)=\bra{\Psi_0}e^{-i\hat H t}\ket{\Psi_0}$: the amplitude to return to the initial product state $\ket{\Psi_0}=\ket{X+}^{\otimes N}$ after evolving with the \emph{critical} Hamiltonian.
-
-The conformal reading of it is as follows. Written as a Euclidean path integral (through the usual rotation $t\to-i\tau$), the two ends of the evolution are the initial and final copies of $\ket{\Psi_0}$. In CFT language, a state one can use to terminate a path integral is a \emph{conformal boundary state} $\ket{b}$, and the consistent ones---the Cardy states~\cite{cardy1989}---correspond to allowed boundary conditions. The upshot is a clean geometric picture:
+We can now specialize to our problem, the Loschmidt echo $\mathcal L(t)=\bra{\Psi_0}e^{-i\hat H t}\ket{\Psi_0}$: the amplitude to return to the initial product state $\ket{\Psi_0}=\ket{X+}^{\otimes N}$ after evolving with the \emph{critical} Hamiltonian. Written as a Euclidean path integral (through the rotation $t\to-i\tau$), the two ends of the evolution are copies of $\ket{\Psi_0}$. In CFT language a state that can terminate a path integral is a \emph{conformal boundary state} $\ket b$, and the consistent ones---the Cardy states~\cite{cardy1989}---correspond to allowed boundary conditions. The upshot is a clean geometric picture:
 \begin{quote}
-the initial product state acts as a conformally invariant boundary condition, and the echo is the partition function of the CFT on an infinitely long \emph{strip} whose two edges carry the boundary condition $\ket b$, with a width set by the (imaginary) evolution time.
+the initial product state acts as a conformally invariant boundary condition, and the echo is the partition function of the CFT on an infinitely long \emph{strip} whose two edges carry $\ket b$, with a width set by the (imaginary) evolution time.
 \end{quote}
 
-Two ingredients decorate this picture, and both reappear throughout the numerics. The first is a UV regulator, $\beta_0$. A sharp product state is not smooth enough to be a clean boundary state---it has structure all the way down to the lattice scale---so we pre-evolve it in \emph{imaginary} time for a short amount $\beta_0$, cooling it into a smooth conformal boundary state. On the lattice this is a handful of imaginary-time sites (we will call their number $N_\beta = 2\beta_0/\delta t$) split between the two ends; the strip width is then $T+2\beta_0$, and the CFT predictions are recovered at small $\beta_0$. This is why every production run uses a nonzero $\beta_0$: with $\beta_0=0$ the conformal boundary condition is dirty and the universal predictions are spoiled.
-
-The second is the \emph{choice} of boundary condition. Different initial states are different Cardy states, with different boundary operator content. The lightest boundary operator has a boundary scaling dimension $x_1$, and it controls how fast finite-size corrections decay. For the Ising CFT the disordered (\emph{free}) boundary has $x_1=\tfrac12$ and converges fast, whereas the ordered (\emph{fixed}) boundary has $x_1=2$ and converges slowly. In the $\sigma^x$-field convention of our model the field-polarized $\ket{X+}$ is the \emph{free} boundary, with $x_1=\tfrac12$, which is why we quench from it and why measuring $x_1\approx\tfrac12$ in Section~\ref{sec:results} is a positive confirmation that we have the boundary physics right.
+Two ingredients decorate this picture, and both recur throughout the numerics. The first is a UV regulator $\beta_0$: a sharp product state has structure down to the lattice scale, so we pre-evolve it in imaginary time for a short amount $\beta_0$, cooling it into a smooth boundary state. On the lattice this is $N_\beta = 2\beta_0/\delta t$ imaginary-time sites split between the two ends; the strip width is then $T+2\beta_0$, and the CFT predictions are recovered at small $\beta_0$. This is why every production run uses a nonzero $\beta_0$: with $\beta_0=0$ the conformal boundary condition is dirty and the universal predictions are spoiled. The second is the \emph{choice} of boundary condition. Different initial states are different Cardy states; the lightest boundary operator has a boundary scaling dimension $x_1$ that controls how fast finite-size corrections decay. For the Ising CFT the disordered (\emph{free}) boundary has $x_1=\tfrac12$ and converges fast, whereas the ordered (\emph{fixed}) boundary has $x_1=2$ and converges slowly. In the $\sigma^x$-field convention of our model the field-polarized $\ket{X+}$ is the \emph{free} boundary with $x_1=\tfrac12$, which is why we quench from it and why measuring $x_1\approx\tfrac12$ in Section~\ref{sec:results} confirms we have the boundary physics right.
 
 \subsection{The temporal reading, and what we will fit}
 \label{sec:cft:temporal}
 
-Everything so far was standard CFT. The move that defines our method is to read the strip \emph{sideways}. As noted in Section~\ref{sec:cft:2d}, in Euclidean CFT the two coordinates are interchangeable; so instead of treating the strip's long direction as imaginary time and quantizing along space, we do the opposite, and build a transfer matrix $\mathcal{E}$ that advances along the \emph{temporal} direction, acting on states that live on a time-like slice. These states are the temporal matrix product states of Section~\ref{sec:transverse}. Because it is the same CFT seen along the other axis, all the machinery above applies verbatim, with space and time swapped: the eigenvalues of $\mathcal{E}$ are the operator content (Section~\ref{sec:cft:spectrum}), and the entanglement of the boundary states is again a twist-field correlation function.
+Everything so far was standard CFT. The move that defines our method is to read the strip \emph{sideways}. Since the two Euclidean coordinates are interchangeable (Section~\ref{sec:cft:2d}), instead of treating the strip's long direction as imaginary time and quantizing along space, we do the opposite and build a transfer matrix $\mathcal{E}$ that advances along the \emph{temporal} direction, acting on states that live on a time-like slice---the temporal matrix product states of Section~\ref{sec:transverse}. Because it is the same CFT seen along the other axis, all the machinery above applies verbatim with space and time swapped: the eigenvalues of $\mathcal{E}$ are the operator content, and the entanglement is again a twist-field correlation function.
 
-There is one genuinely new twist, though---and it is the reason the whole approach can be efficient. The relevant object is not an ordinary reduced density matrix but the reduced transition matrix built from \emph{both} dominant vectors (defined in Section~\ref{sec:transverse}), and its generalized entropies are computed by a twist-field two-point function for a \emph{time-like} separation. That is the $\sin$ (rather than $\sinh$) version of Equation~\eqref{eq:cft:cyl2pt}: $\langle\phi\phi\rangle\propto[\sin\tfrac{\pi}{T}(u_1-u_2)]^{-2x}$. Inserting the twist dimension \eqref{eq:cft:twist} and continuing $n\to1$ gives the master formula of the whole approach, the strip generalized entropy~\cite{carignano_tagliacozzo2025},
+There is one genuinely new twist, and it is the reason the whole approach can be efficient. The relevant object is not an ordinary reduced density matrix but the reduced transition matrix built from \emph{both} dominant vectors (Section~\ref{sec:transverse}), and its generalized entropies are computed by a twist-field two-point function for a \emph{time-like} separation---the $\sin$ (rather than $\sinh$) version of the cylinder correlator. Inserting the twist dimension~\eqref{eq:cft:twist} and continuing $n\to1$ gives the master formula of the whole approach, the strip generalized entropy~\cite{carignano_tagliacozzo2025},
 \begin{equation}
     S^{\mathrm{gen}}(t) = s_0 + \frac{i\pi c}{12}
       + \frac{c}{6}\,\log\!\Big[\frac{2T}{\pi}\sin\frac{\pi t}{T}\Big].
     \label{eq:cft:sgen}
 \end{equation}
-The physically striking fact is hidden in the phrase \emph{time-like}: because the separation is temporal, the entropy grows only logarithmically in $T$ (the $\log$ in \eqref{eq:cft:sgen}), rather than linearly as an ordinary spatial entanglement entropy would after a quench. Logarithmic growth means a polynomially bounded bond dimension, which is the reason the transverse contraction is efficient at all. The \emph{entanglement barrier} of this thesis is precisely the onset of the regime where this favourable logarithm is about to be spoiled.
+The striking fact is hidden in ``time-like'': because the separation is temporal, the entropy grows only logarithmically in $T$, rather than linearly as an ordinary spatial entanglement would after a quench. Logarithmic growth means a polynomially bounded bond dimension, which is the reason the transverse contraction is efficient at all. The \emph{entanglement barrier} of this thesis is precisely the onset of the regime where this favourable logarithm is about to be spoiled.
 
-We can now collect the concrete predictions we will fit against the numerics in Section~\ref{sec:results}. They all descend from Equations~\eqref{eq:cft:transfer} and \eqref{eq:cft:sgen}~\cite{carignano_tagliacozzo2025}.
+We collect the concrete predictions we fit against the numerics in Section~\ref{sec:results}; all descend from Equations~\eqref{eq:cft:transfer} and~\eqref{eq:cft:sgen}~\cite{carignano_tagliacozzo2025}.
 
 \emph{Central charge from the leading eigenvalue.} Writing $\lambda_i=\log(-\tau_i)$ for the transfer eigenvalues $\tau_i$, the imaginary part of the leading one obeys
 \begin{equation}
@@ -162,7 +109,7 @@ We can now collect the concrete predictions we will fit against the numerics in 
     c = \frac{24\,v\,|\kappa|}{\pi\,\delta t},
     \label{eq:cft:eq3}
 \end{equation}
-so isolating the universal $1/T^2$ Casimir coefficient $\kappa$ and converting it gives $c$ directly. This is the eigenvalue route; it needs a nonzero $\beta_0$ and long times, because the tiny $\kappa/T^2$ sits under a large non-universal constant.
+so isolating the universal $1/T^2$ Casimir coefficient $\kappa$ and converting it gives $c$ directly. This eigenvalue route needs a nonzero $\beta_0$ and long times, because the tiny $\kappa/T^2$ sits under a large non-universal constant.
 
 \emph{Boundary exponent from the first gap.} The gap between the leading and first-subleading eigenvalue measures the lightest boundary operator dimension,
 \begin{equation}
@@ -178,6 +125,6 @@ so recovering $x_1\approx\tfrac12$ confirms the free boundary condition, i.e.\ t
     \mathrm{Im}\,S^{\mathrm{gen}} = \frac{\pi c}{12}.
     \label{eq:cft:chord}
 \end{equation}
-The real part is a \emph{chord}: plotted against $\log[\tfrac{2T}{\pi}\sin\tfrac{\pi t}{T}]$ it is a straight line whose slope is $c/6$ for the $n\to1$ entropy, and $c/8$ for the generalized R\'enyi-2 entropy we compute in practice (Equation~\eqref{eq:cft:coeff}). The imaginary part is a flat plateau at $\pi c/12$, which for $c=\tfrac12$ is $\pi/24\approx0.131$---an independent read of $c$ that needs no fit at all. The ``conformal dome'' that appears in every entropy plot below is this chord: it rises to a peak at the midpoint $t=T/2$ (where the sine is one) and is symmetric about it.
+The real part is a \emph{chord}: plotted against $\log[\tfrac{2T}{\pi}\sin\tfrac{\pi t}{T}]$ it is a straight line of slope $c/6$ for the $n\to1$ entropy, and $c/8$ for the generalized R\'enyi-2 entropy we compute (Equation~\eqref{eq:cft:coeff}). The imaginary part is a flat plateau at $\pi c/12$, which for $c=\tfrac12$ is $\pi/24\approx0.131$---an independent read of $c$ needing no fit. The ``conformal dome'' in every entropy plot below is this chord, peaking at the midpoint $t=T/2$ and symmetric about it.
 
-Finally, one physical hallmark ties these together and recurs throughout the method. From Equation~\eqref{eq:cft:transfer}, as $T$ grows the transfer eigenvalues $\tau_i$ migrate onto the unit circle: their moduli tend to one, with only their phases (the operator dimensions) distinguishing them. A matrix whose spectrum lies on the unit circle is unitary, so the temporal transfer matrix becomes effectively unitary at long times---a property called \emph{emergent dual unitarity}. It is a genuine physical fingerprint of a clean quench to a conformal point. As we will see in Section~\ref{sec:emergent}, it is also, from a numerical standpoint, a double-edged sword: the very degeneracy of moduli that signals the emergent conformal structure is what eventually makes the transfer matrix hard to resolve, and it is the spectral root of the entanglement barrier.
+Finally, one physical hallmark ties these together. From Equation~\eqref{eq:cft:transfer}, as $T$ grows the transfer eigenvalues $\tau_i$ migrate onto the unit circle: their moduli tend to one, with only their phases (the operator dimensions) distinguishing them. A spectrum on the unit circle is unitary, so the temporal transfer matrix becomes effectively unitary at long times---\emph{emergent dual unitarity}, the physical fingerprint of a clean quench to a conformal point. As we will see in Section~\ref{sec:emergent}, it is also a double-edged sword: the very degeneracy of moduli that signals the emergent conformal structure is what eventually makes the transfer matrix hard to resolve, and it is the spectral root of the entanglement barrier.

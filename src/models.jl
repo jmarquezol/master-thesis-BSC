@@ -53,6 +53,57 @@ function ITransverse.expH(sites::Vector{<:Index}, mp::AlcarazParams, recipe::Abs
 end
 
 # ══════════════════════════════════════════════════════════════════════════════
+# ANISOTROPIC XY MODEL (velocity-control family; July 2026 velocity investigation)
+#   H = -Σ_i [ (1+γ)/2 X_i X_{i+1} + (1-γ)/2 Y_i Y_{i+1} + λ Z_i ]
+#   ITransverse Ising convention (coupling on X, field on Z); γ=1 recovers the TFIM.
+#   Critical at λ=1 for all γ>0, Ising class c=1/2, with EXACTLY known velocity v = 2γ
+#   (dispersion ε(k) = 2√[(λ-cos k)² + γ² sin²k] → 2γ|k| at λ=1). Used to test whether the
+#   temporal pipeline reads a genuinely different v at fixed c and fixed conventions.
+# ══════════════════════════════════════════════════════════════════════════════
+
+abstract type AbstractXYRecipe <: ExpHRecipe end
+struct XYWI  <: AbstractXYRecipe end
+struct XYWII <: AbstractXYRecipe end
+struct XYVD2 <: AbstractXYRecipe end
+
+_alg_string(::XYWI)  = "WI"
+_alg_string(::XYWII) = "WII"
+_alg_string(::XYVD2) = "VD2"
+
+Base.@kwdef mutable struct XYParams <: ModelParams
+    lambda::Float64 = 1.0
+    gamma::Float64  = 1.0
+    phys_site::Index{Int64} = Index(2, "S=1/2")
+end
+
+XYParams(lambda::Number, gamma::Number) = XYParams(; lambda=Float64(lambda), gamma=Float64(gamma))
+XYParams(x::XYParams; lambda=x.lambda, gamma=x.gamma) = XYParams(; lambda, gamma, phys_site=x.phys_site)
+
+"""Builds the anisotropic XY Hamiltonian as an OpSum (Ising convention: coupling X, field Z)."""
+function xy_opsum(N::Int, lambda::Number, gamma::Number)
+    os = OpSum()
+    for j in 1:(N - 1)                 # anisotropic nearest-neighbour coupling
+        os += -(1 + gamma) / 2, "X", j, "X", j + 1
+        os += -(1 - gamma) / 2, "Y", j, "Y", j + 1
+    end
+    for j in 1:N                       # transverse field
+        os += -lambda, "Z", j
+    end
+    return os
+end
+
+"""Direct U(dt)=exp(-i H dt) MPO for the XY model. alg = {WI,WII,VD2}"""
+function expH_xy(sites::Vector{<:Index}, lambda::Number, gamma::Number; dt::Number, mpo_alg::String="VD2")
+    os = xy_opsum(length(sites), lambda, gamma)
+    return expmpo(os, sites, -im * dt; alg=Algorithm(mpo_alg))
+end
+
+function ITransverse.expH(sites::Vector{<:Index}, mp::XYParams, recipe::AbstractXYRecipe; dt::Number)
+    os = xy_opsum(length(sites), mp.lambda, mp.gamma)
+    return expmpo(os, sites, -im * dt; alg=Algorithm(_alg_string(recipe)))
+end
+
+# ══════════════════════════════════════════════════════════════════════════════
 # TRICRITICAL-ISING MODEL (optional variant)
 #   H = -Σ X_i - Σ Z_i Z_{i+1} + λ Σ ( Z_i Z_{i+1} X_{i+2} + X_i Z_{i+1} Z_{i+2} )
 # ══════════════════════════════════════════════════════════════════════════════

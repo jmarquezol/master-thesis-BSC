@@ -143,12 +143,77 @@ This is the entropy we use throughout the thesis to quantify the temporal entang
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{The second-order VD2 exponential-MPO blocks}
-\label{app:vd2}
+\section{Conformal-field-theory derivations}
+\label{app:cft}
 
-For completeness we record here the explicit local tensor of the second-order time-evolution MPO used throughout this work, referenced in Section~\ref{sec:mporep}. These are the closed-form, second-order expressions of Van Damme et al.~\cite{vandamme2024}, specialized to our finite-state-machine blocks; they are what the exponentiation routine assembles for a given memory dimension $\chi$.
+This appendix supplies the derivations behind the results quoted in Section~\ref{sec:cft}. It is not needed to follow the main line of the thesis---every formula it produces is stated, and used, in the main text---but it makes the conformal machinery self-contained for the interested reader.
 
-We start from the four blocks $A,B,C,D$ of the Hamiltonian MPO $W_H$ (Equation~\eqref{eq:Wannni}): $D$ is the on-site term, $C$ initiates an interaction, $B$ terminates one, and $A$ propagates it. Following the time-step split of Section~\ref{sec:mporep}, we scale them as
+\subsection{Conformal maps and holomorphic factorization}
+\label{app:cft:maps}
+
+In two dimensions one packages the Euclidean coordinates $(x,\tau)$ into $z=x+i\tau$ and $\bar z=x-i\tau$, and physical quantities factorize into a holomorphic piece (a function of $z$) and an antiholomorphic piece (a function of $\bar z$); this is the origin of the separate weights $h$ and $\bar h$. Because every analytic map $z\mapsto f(z)$ is a conformal symmetry, a correlation function known on the plane is known on any geometry an analytic map reaches, by substitution. The map we use repeatedly is the plane-to-cylinder (or strip) logarithm $\omega=\tfrac{\beta}{2\pi}\log z$, which wraps the plane onto a cylinder of circumference $\beta$; its time-like continuation ($\beta\to iT$, $\sinh\to\sin$) produces the strip geometry of the quench (Section~\ref{sec:cft:boundary}).
+
+\subsection{Primary operators and their two-point functions}
+\label{app:cft:ops}
+
+A primary operator $\phi$ of weights $(h,\bar h)$ has, on the infinite plane, the pure power-law two-point function
+\begin{equation}
+    \langle \phi(z_1)\phi(z_2)\rangle
+      = \frac{1}{(z_1-z_2)^{2h}\,(\bar z_1-\bar z_2)^{2\bar h}},
+    \label{eq:cft:plane2pt}
+\end{equation}
+so the exponent \emph{is} the scaling dimension $x=h+\bar h$ of Equation~\eqref{eq:cft:dim}. Under a conformal map $\omega=f(z)$ a primary transforms by Jacobian factors, $\langle\phi(\omega_1)\phi(\omega_2)\rangle=\prod_i f'(z_i)^{-h}\bar f'(\bar z_i)^{-\bar h}\,\langle\phi(z_1)\phi(z_2)\rangle$. Feeding in the plane-to-cylinder map turns Equation~\eqref{eq:cft:plane2pt} into the hyperbolic-sine form characteristic of a cylinder of circumference $\beta$,
+\begin{equation}
+    \langle\phi(\omega_1)\phi(\omega_2)\rangle \;\propto\;
+      \Big[\sinh\tfrac{\pi(\omega_1-\omega_2)}{\beta}\Big]^{-2h}
+      \Big[\sinh\tfrac{\pi(\bar\omega_1-\bar\omega_2)}{\beta}\Big]^{-2\bar h}.
+    \label{eq:cft:cyl2pt}
+\end{equation}
+The time-like version of this expression---a $\sin$ instead of a $\sinh$---is the source of the entropy chord of Equation~\eqref{eq:cft:sgen}.
+
+\subsection{The transfer-matrix spectrum from the stress tensor}
+\label{app:cft:spectrum}
+
+The carrier of the central charge is the stress-energy tensor $T_{\mu\nu}$, the operator measuring the theory's response to a change of coordinates. Because coordinate changes \emph{are} the symmetry in 2D, the stress tensor generates conformal transformations, and its modes generate the Virasoro algebra. One mode is special: $L_0$, the generator of scaling, whose eigenvalues on the primaries are their weights $h$---so $L_0$ is the ``dictionary operator'' whose spectrum is the operator content. Quantizing on a strip of transverse size $\beta$, the Hamiltonian generating translations along it is, up to the sound velocity $v$, an integral of the stress tensor, and the conformal map from the plane leaves behind one extra, purely geometric term---the Casimir anomaly proportional to $c$---giving Equation~\eqref{eq:cft:casimir}, $\hat H = \tfrac{\pi}{\beta}(L_0-\tfrac{c}{24})$. Since the transfer matrix is essentially $\mathcal{E}=e^{-\delta t\,\hat H}$, this hands over its entire spectrum in the form of Equation~\eqref{eq:cft:transfer}: a dominant eigenvalue whose modulus encodes the Casimir ($c$) term, and a tower of subleading eigenvalues whose ratios and phases encode the operator dimensions.
+
+\subsection{Twist fields and the entropy coefficients}
+\label{app:cft:twist}
+
+To obtain the entanglement entropy of an interval $\mathcal A$ one needs the R\'enyi moments $\mathrm{Tr}\,\rho_{\mathcal A}^{\,n}$, then continues $n\to1$. The replica trick~\cite{calabrese_cardy2004} computes $\mathrm{Tr}\,\rho_{\mathcal A}^{\,n}$ as a path integral on $n$ copies of the plane sewn cyclically along $\mathcal A$; that geometry is equivalent, on a single plane, to inserting a pair of twist operators $\sigma_n$ at the endpoints of $\mathcal A$. The twist operator is a primary of dimension $\Delta_n=\tfrac{c}{12}(n-1/n)$ (Equation~\eqref{eq:cft:twist}), and its two-point function, a power law of the form~\eqref{eq:cft:plane2pt}, gives $\mathrm{Tr}\,\rho_{\mathcal A}^{\,n}\sim\ell^{-4\Delta_n}$ for an interval of length $\ell$, hence the logarithm
+\begin{equation}
+    S_n = \frac{c}{6}\Big(1+\frac1n\Big)\log\ell + \text{const},
+    \qquad
+    S_{n\to1} = \frac{c}{3}\log\ell + \text{const}.
+    \label{eq:cft:cc}
+\end{equation}
+The R\'enyi order enters through the known factor $(1+1/n)$. For a boundary (half-line) cut, which is the temporal situation of this thesis, the coefficient is halved, giving the family $\tfrac{c}{12}\tfrac{n+1}{n}$ of Equation~\eqref{eq:cft:coeff}---i.e.\ $c/6$ for $n\to1$ and $c/8$ for $n=2$, not the bulk value $c/3$.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Construction of the time-evolution MPO}
+\label{app:mpo}
+
+This appendix records the machinery behind the exponential-MPO family of Section~\ref{sec:mporep}: how the connected/disconnected organization is turned into an explicit operator, the auxiliary-boson trick that generates the correct symmetric cross terms, the time-step split that keeps them stable, and the closed-form second-order (VD2) blocks we use in production.
+
+\subsection{Size-extensivity and the connected/disconnected organization}
+\label{app:mpo:extensive}
+
+A naive truncated Taylor series $e^{\tau H}=\mathbb{I}+\tau H+\tfrac{\tau^2}{2!}H^2+\cdots$ cannot be used directly in the thermodynamic limit: each power $H^n$ is a sum of $\mathcal{O}(N^n)$ local terms, so successive orders scale with different powers of the chain length $N$ and the result cannot be normalized as $N\to\infty$~\cite{vandamme2024}. Any acceptable construction must be size-extensive---applied to a normalizable state it must return a normalizable state, regardless of $N$. The organizing idea is to expand not by powers of $H$ but by how its local terms overlap along the chain. Terms acting on disjoint regions commute and their product factorizes trivially; these disconnected contributions are harmless and can be kept to all orders at no cost. The difficulty is confined to the connected contributions, where two or more local terms act on overlapping sites and need not commute. For instance an on-site field $D$ may act on the same site where an interaction is initiated by $C$; both orderings $CD$ and $DC$ are then required, since $H^2=(\sum_i h_i)^2$ sums over every ordered pair regardless of commutation, and dropping either would break the Hermiticity that $H^2$ inherits from $H$ (individually $(CD)^\dagger=DC\neq CD$). A suitable time-evolution MPO keeps all disconnected terms exactly, captures connected clusters up to a controlled size, and pushes the truncation error to a chosen order in $\delta t$.
+
+\subsection{The auxiliary-boson trick and the time-step split}
+\label{app:mpo:boson}
+
+The simplest construction on this logic, $W^{\mathrm{I}}$, keeps every disconnected term and discards all overlaps; it is built from the blocks $A,B,C,D$ of $W_H$ by distributing the time step across the initiators $C$, the terminators $B$, and the on-site block $D$, keeping the virtual bond at $1+\chi$, and is only first order. The improvement to $W^{\mathrm{II}}$ additionally keeps single-site overlaps. The algebraic obstacle---writing out the correct symmetric combinations of overlapping blocks by hand---is bypassed by a clever device of Zaletel et al.~\cite{zaletel2015}: encode the four blocks in the dynamics of two auxiliary hard-core bosons, exponentiate a small effective Hamiltonian built from $A,B,C,D$ acting on these bosons, and read off the new MPO blocks by projecting the result onto the boson occupations. Because a hard-core boson can be occupied at most once, the exponential truncates on its own and produces exactly the symmetric cross terms required, keeping the on-site term exactly ($e^{\tau D}$) at the same bond dimension $1+\chi$. The Van Damme construction~\cite{vandamme2024} generalizes this auxiliary-space idea to arbitrary order.
+
+Common to all three schemes is the time-step split, which is what keeps them numerically stable. The complex time step $\tau=-i\delta t$ is not divided evenly: we assign a real factor $t_C=\sqrt{\delta t}$ to the initiator block $C$ and put the phase in $t_B=\tau/t_C$ on the terminator block $B$, so that the product $C\otimes B$ still carries the correct factor $-i\delta t$ while the intermediate memory channels remain well behaved.
+
+\subsection{The second-order VD2 blocks}
+\label{app:mpo:vd2}
+
+We record the explicit local tensor of the second-order MPO (VD2) used throughout this work. These are the closed-form expressions of Van Damme et al.~\cite{vandamme2024}, specialized to our finite-state-machine blocks; they are what the exponentiation routine assembles for a given memory dimension $\chi$.
+
+We start from the four blocks $A,B,C,D$ of the Hamiltonian MPO $W_H$ (Equation~\eqref{eq:Wannni}): $D$ is the on-site term, $C$ initiates an interaction, $B$ terminates one, and $A$ propagates it. Following the time-step split above, we scale them as
 \begin{equation}
   \tilde D = \tau D, \qquad \tilde C = t_C\, C, \qquad \tilde B = t_B\, B, \qquad \tilde A = A,
   \qquad t_C = \sqrt{\delta t},\ \ t_B = \tau/t_C,\ \ \tau=-i\delta t .
@@ -178,6 +243,72 @@ with
   W_{33} &= \{\tilde A\tilde A\} + \tfrac13\big(\{\tilde A\tilde B\tilde C\}+\{\tilde A\tilde A\tilde D\}\big).
 \end{align}
 The scalar track $W_{11}$ carries the on-site evolution to third Taylor order; the $W_{12},W_{13}$ entries dress an outgoing memory leg (single and doubled), $W_{21},W_{31}$ the incoming one, and the lower-right block dresses the through-wire $\tilde A$ with all of its symmetric companions. Keeping the doubled-leg (index-3) sector is exactly what reproduces the connected clusters spanning three sites---the next-nearest-neighbour overlaps that $W^{\mathrm{II}}$ misses---and is why VD2 is genuinely second order for our model at the cost of the enlarged virtual bond.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{The block power method in detail}
+\label{app:blockpm}
+
+This appendix develops the algorithm summarized in Section~\ref{sec:blockpm}, as implemented in the routine \texttt{block\_transfer\_eigs} we added on top of \texttt{ITransverse.jl}. It reuses the notation of Section~\ref{sec:nonhermitian}: the spatial transfer matrix $\mathcal{E}$, its biorthogonal eigenpairs $\langle L_i|$, $|R_i\rangle$ with eigenvalues $\mu_i$ ordered by modulus. Equation numbers are local, (B1)--(B7).
+
+\subsection{The two-sided block and the oblique projection}
+
+We keep $k$ right vectors $|R_1\rangle,\dots,|R_k\rangle$ and, independently, $k$ left vectors $\langle L_1|,\dots,\langle L_k|$, all temporal MPS on the same time sites, seeded with random complex tensors (Section~\ref{sec:powermethod} explains why a random seed is required). One iteration applies the transfer matrix to every member of the right block and its \emph{transpose} to every member of the left block,
+\begin{equation}
+  |\tilde R_j\rangle = \mathcal{E}\,|R_j\rangle, \qquad
+  \langle \tilde L_j| = \langle L_j|\,\mathcal{E}
+  \quad\Longleftrightarrow\quad
+  |\tilde L_j\rangle = \mathcal{E}^{\mathsf T}|L_j\rangle .
+  \tag{B1}
+\end{equation}
+The transpose---implemented as a prime-level swap of the MPO's physical legs, with \emph{no} complex conjugation---is the adjoint with respect to the bilinear form of Section~\ref{sec:nonhermitian}: it is defined by $(\mathcal{E}^{\mathsf T}L)^{\mathsf T}R = L^{\mathsf T}(\mathcal{E}R)$, so left overlaps computed without conjugation remain consistent. Using the Hermitian adjoint $\mathcal{E}^\dagger$ here would be a conceptual error, not a convention choice: it would converge the left block to the dominant eigenvector of $\mathcal{E}^\dagger$, which for a non-normal $\mathcal{E}$ is \emph{not} the dominant left eigenvector of $\mathcal{E}$. As in the single-vector method, each application multiplies the bond dimension, so every product in (B1) is truncated back to a cap $\chi_{\max}$ and each vector is renormalized.
+
+After the applications, we compress all the spectral information the blocks carry into two small $k\times k$ matrices,
+\begin{equation}
+  S_{ij} = \langle L_i | R_j\rangle, \qquad
+  M_{ij} = \langle L_i | \mathcal{E} | R_j \rangle ,
+  \tag{B2}
+\end{equation}
+both evaluated with the bilinear overlap (no conjugation anywhere; $S$ has no Hermiticity properties at all, and that is fine). $S$ is the metric of the oblique (Petrov--Galerkin) projection---how the left test space and the right trial space are angled against each other---and $M$ is the transfer matrix seen through that projection. Approximations $\theta$ to the eigenvalues of $\mathcal{E}$ (\emph{Ritz values}) solve the small generalized eigenproblem $M\,v=\theta\,S\,v$.
+
+\subsection{Regularization and exact left pairing}
+
+Numerically we do \emph{not} hand that generalized problem to a solver. Near the degeneracy the columns of the right block begin to coincide, $S$ becomes nearly singular, and a direct generalized eigensolver responds with infinite or wildly scattered eigenvalues. Instead we regularize with the pseudoinverse,
+\begin{equation}
+  W = S^{+} M, \qquad W = V\,\Theta\,V^{-1},
+  \tag{B3}
+\end{equation}
+where $S^{+}$ is the Moore--Penrose pseudoinverse with a relative tolerance ($10^{-12}$): directions of the block that have effectively collapsed onto each other are projected out rather than inverted. The eigenvalues $\Theta=\mathrm{diag}(\theta_1,\dots,\theta_k)$, sorted by modulus, are our estimates of $\mu_0,\dots,\mu_{k-1}$, and the columns of $V$ say which combination of the current right block approximates each eigenvector.
+
+The left block needs its own mixing coefficients, and here hides a trap. One could diagonalize the transposed pencil in a second, independent call---but then nothing guarantees its eigenvalues come out in the same order, and inside a quasi-degenerate cluster ``match each left eigenvalue to the nearest right one'' is ambiguous precisely when it matters: several $\theta$'s sit within a fraction of a percent, the greedy match picks a wrong partner, and the de-mixed left and right vectors no longer describe the same eigenvector. The block then oscillates instead of converging---a failure mode that, before it was fixed, contaminated the near-degenerate gap data. The fix is that no second diagonalization is needed: writing $y^{\mathsf T}=u^{\mathsf T}S$, the left eigenproblem becomes $y^{\mathsf T}W=\theta\,y^{\mathsf T}$, so the $y$'s are the left eigenvectors of the \emph{same} $W$, i.e.\ the rows of $V^{-1}$. Hence
+\begin{equation}
+  u_j = \big(S^{+}\big)^{\mathsf T}\big(V^{-1}\big)^{\mathsf T} e_j ,
+  \tag{B4}
+\end{equation}
+paired with $\theta_j$ by construction and automatically biorthogonal through the metric, $u_i^{\mathsf T}S\,v_j=\delta_{ij}$ (up to the regularization). One decomposition, exact pairing, no heuristic.
+
+\subsection{De-mixing, truncation modes, and the Schur basis}
+
+The iteration closes by rotating the applied blocks onto the Ritz combinations,
+\begin{equation}
+  |R_j\rangle \leftarrow \sum_i V_{ij}\, |\tilde R_i\rangle, \qquad
+  |L_j\rangle \leftarrow \sum_i U_{ij}\, |\tilde L_i\rangle ,
+  \tag{B5}
+\end{equation}
+where the MPS linear combinations are formed with an exact direct-sum addition and compressed once at the end (the naive density-matrix addition is numerically fragile for near-parallel vectors). Each new pair is then truncated, in one of two modes mirroring the RTM/RDM discussion of Section~\ref{sec:transverse:truncation}: \textbf{RTM mode} truncates the matched pair $(L_j,R_j)$ jointly on its bilinear transition matrix $|R_j\rangle\langle L_j|$---optimal for the physical overlap, far cheaper, but built on the SVD of a non-Hermitian object that becomes ill-conditioned exactly at the degeneracy; \textbf{RDM mode} truncates every vector independently on its Hermitian density matrix---blind to the $L$--$R$ pairing, more expensive, but positive and well-conditioned through the cluster, and the safe fallback when RTM output turns noisy.
+
+One structural weakness remains that no truncation mode removes. Equation (B5) de-mixes onto the \emph{eigenvector} basis, and for a non-normal matrix that basis itself degenerates as eigenvalues cluster: the condition number of $V$ grows like the inverse gap, and rotating the block onto nearly-parallel directions amplifies every source of noise by that condition number. The remedy, standard in non-Hermitian subspace iteration, is to give up on individual eigenvectors \emph{inside} the cluster and maintain only a well-conditioned basis of the invariant \emph{subspace}: we QR-orthonormalize the modulus-sorted coefficient matrices,
+\begin{equation}
+  V \to Q_V, \qquad U \to Q_U, \qquad (Q^\dagger Q = \mathbb{1}),
+  \tag{B6}
+\end{equation}
+an ordered-Schur-like choice whose leading $j$ columns span the same leading-$j$ eigenspaces while the rotations stay unitary. The Ritz values are still read from the pencil at every step; only the basis carried between iterations changes. In this mode the individual pairs $(L_j,R_j)$ inside a cluster are no longer eigenvector approximations---a price to remember when feeding them into entropy formulas---but the spectrum, and the leading pair when it is isolated, remain clean.
+
+\subsection{Convergence and accelerations}
+
+Convergence is declared on the movement of the leading Ritz values between iterations, $\max_j|\theta_j^{(n)}-\theta_j^{(n-1)}|<\varepsilon$, with the tracked values matched by continuity in the complex plane to absorb the $\pm$-partner swaps discussed in Section~\ref{sec:blockpm}. Two practical accelerations complete the algorithm. Along a ladder of temporal extents $T_1<T_2<\dots$ the converged block at one rung \emph{warm-starts} the next: the converged tensors are re-indexed onto the longer time-site set and the few added sites are padded with a small random tail, so the iteration only relaxes the new sites. And the bond cap and cutoff follow a schedule---loose and cheap early, tight near convergence---since the early block is random garbage not worth representing accurately. When the leading band contains no member of the physical tower besides $\mu_0$ (which can happen at stronger frustration), the block size $k$ is escalated, warm-seeded from the converged smaller block, so the extra cost is paid only where it is actually needed.
+
+Finally, the whole construction was validated against an exact dense diagonalization of $\mathcal{E}$ at small bond dimension: on all the models tested, the block-method eigenvalues reproduce the exact leading spectrum to between $10^{-8}$ and $10^{-13}$, confirming that the eigenvalue machinery is correct independently of any power-method comparison.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
