@@ -32,6 +32,47 @@ session** with an explicit kill-mid-ladder-then-resubmit test: the resumed proce
 here, since T=20 is far enough that several of these jobs (especially the higher-p arms, which may
 also trigger the k=4→6 escalation) will very likely need more than one 48h walltime window.
 
+## Weekend rerun — eigenvalue-only spectral sweep (Schur basis, NEW)
+
+**4 new SLURM jobs to submit this weekend**, one per coupling:
+
+| job | truncation | p | T range | mode |
+|---|---|---|---|---|
+| `submit_rtm_eigs_p0.0.slurm` | RTM | 0.0 | 2..14 | eigenvalues only |
+| `submit_rtm_eigs_p0.1.slurm` | RTM | 0.1 | 2..14 | eigenvalues only |
+| `submit_rtm_eigs_p0.3.slurm` | RTM | 0.3 | 2..14 | eigenvalues only |
+| `submit_rtm_eigs_p0.5.slurm` | RTM | 0.5 | 2..14 | eigenvalues only |
+
+These rerun the four low-frustration arms in the driver's new **`eigsweep`** mode
+(`julia wall_scan_cluster.jl eigsweep <p> <Tmax>`). Everything is identical to the full
+`submit_rtm_p*.slurm` runs — χ=64, the same strict cutoff schedule, the same warm-start +
+checkpoint machinery — **except** the block solver runs in the Schur / eigenvalues-only basis: it
+computes only the leading transfer spectrum and **skips the eigenVECTOR work** (the temporal
+entropy and the phase rigidity). This is deliberate. The spectral observables the thesis needs from
+these arms — the dual-unitarity circle, the Eq.(3) central charge from the phase curvature of λ₀,
+the Eq.(4) boundary exponent, and the tower gaps — are all Rayleigh-quotient-like and survive the
+entanglement-barrier wall, whereas the entropy needs the eigenvectors and does not. So the
+eigenvalue-only arms are cheaper per T and reach the full T=14 cleanly, where the earlier
+full-eigenvector runs (`sweep_rtm_p{0.1,0.3,0.5}.jld2`) stalled at T=8/7/7 once the eigenvector
+conditioning collapsed.
+
+Each writes to its **own** per-p cache, `results/data/cluster/sweep_rtm_eigs_p<p>.jld2` (labels
+`rtm_eigs_p0.0`, …), so they never touch the full-eigenvector `sweep_rtm_p<p>.jld2` files already
+pushed. In the output named tuple, `s2_base`/`rigidity` are empty and `peak` is `NaN` for these runs
+(no eigenvectors) — everything eigenvalue-derived (`theta`, `theta_phys`, `dphi`/`cls`, `tower_gap`,
+`k_used`/`escalated`) is present and valid.
+
+Submit all four (resume the same way as the other jobs if any hits the 48h cap — warm from the last
+checkpoint):
+```
+git checkout main && git pull            # picks up the new eigsweep mode + these 4 scripts
+sbatch cluster/submit_rtm_eigs_p0.0.slurm
+sbatch cluster/submit_rtm_eigs_p0.1.slurm
+sbatch cluster/submit_rtm_eigs_p0.3.slurm
+sbatch cluster/submit_rtm_eigs_p0.5.slurm
+```
+Push results back with `git add results/data/cluster/sweep_rtm_eigs_p*.jld2 && git commit && git push`.
+
 ## Why a rerun (background — the original 3-job ε-scan)
 
 Your first pass (`cluster/{rtm,rdm,cutoff}_array/`, one independent SLURM task per T, no warm

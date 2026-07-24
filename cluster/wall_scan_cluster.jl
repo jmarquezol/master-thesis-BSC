@@ -65,10 +65,21 @@ function run_wall_scan(; chi::Int, label::String,
         p_nnn::Float64=P_NNN,
         cutoff=1e-12, cutoffs=[fill(1e-8, 40); 1e-10],
         trunc_mode=:rtm, basis=:eig,
+        eigvals_only::Bool=false,
         itermax=8000, stuck_after=400,
         k=4, k_retry=6,
         cachefile=CLUSTER_CACHE,
         checkpointfile=joinpath(@__DIR__, "checkpoint_$(label).jld2"))
+
+    # Eigenvalue-only mode (basis=:schur, no eigenvector post-processing): the leading spectrum
+    # (dual-unitarity circle, Eq.(3) c, Eq.(4) x1, tower gaps) is a Rayleigh-quotient-like quantity
+    # that survives the entanglement-barrier wall, whereas the entropy needs the eigenVECTORS and
+    # does not. Skipping the vector work (gen_renyi2 + phase rigidity, both of which require the
+    # bi-normalized pairs that :schur/eigvals_only do NOT return) makes each T cheaper and well-
+    # conditioned, so the spectral ladder reaches larger T than the full-eigenvector runs do.
+    if eigvals_only
+        basis = :schur
+    end
 
     mkpath(dirname(cachefile))
     done = isfile(cachefile) ? load(cachefile, "done") : Dict{Tuple{String,Float64},Any}()
@@ -125,6 +136,7 @@ function run_wall_scan(; chi::Int, label::String,
                 maxdim=chi, maxdims=collect(2:2:chi),
                 cutoff=cutoff, cutoffs=cutoffs,
                 itermax=itermax, eps_conv=1e-6, trunc_mode=trunc_mode, basis=basis,
+                eigvals_only=eigvals_only,
                 n_track=2, stuck_after=stuck_after,
                 seedL=seedL, seedR=seedR)
             k_actual = length(theta)
@@ -132,19 +144,29 @@ function run_wall_scan(; chi::Int, label::String,
             i0 = pick_phys_continuity(theta, previous_phys)
             dphi, cls = classify_tower(theta; i0=i0)
             gap = tower_gap(theta; i0=i0)
-            s2_base = trim_dome(ITransverse.gen_renyi2(L[i0], R[i0]), NBETA)
 
-            rigidity = Float64[]
-            for j in 1:k_actual
-                push!(rigidity, phase_rigidity(L[j], R[j]))
+            # The entropy (gen_renyi2) and phase rigidity both need the bi-normalized eigenVECTOR
+            # pairs, which eigvals_only=:schur does NOT return — so skip them entirely in that mode
+            # and store empty placeholders. Everything above (theta, tower classification, gap) needs
+            # only the eigenvalues and is valid.
+            if eigvals_only
+                s2_base = Float64[]
+                rigidity = Float64[]
+            else
+                s2_base = trim_dome(ITransverse.gen_renyi2(L[i0], R[i0]), NBETA)
+                rigidity = Float64[]
+                for j in 1:k_actual
+                    push!(rigidity, phase_rigidity(L[j], R[j]))
+                end
             end
             end # @elapsed
 
+            peak = isempty(s2_base) ? NaN : maximum(real.(s2_base))   # no entropy in eigvals-only mode
             done[(label, T)] = (label=label, T=T, chi=chi, theta=collect(theta),
                 i0=i0, theta_phys=theta[i0],
                 dphi=dphi, cls=string.(cls), tower_gap=gap,
                 k_used=info[:k_used], escalated=info[:escalated],
-                s2_base=s2_base, peak=maximum(real.(s2_base)), rigidity=rigidity,
+                s2_base=s2_base, peak=peak, rigidity=rigidity,
                 reason=string(info[:reason]), niters=info[:niters], elapsed=elapsed)
 
             previous_phys = theta[i0]
@@ -162,7 +184,7 @@ function run_wall_scan(; chi::Int, label::String,
             @info @sprintf("[%s] T=%.1f  %s@%d  k=%d%s  |θ0|=%.4f  gap=%.3f  peak=%.4f  r=[%s]  %.0fs",
                 label, T, info[:reason], info[:niters], info[:k_used],
                 info[:escalated] ? "(esc)" : "", abs(theta[i0]), gap,
-                maximum(real.(s2_base)), join(rigidity_strings, ","), elapsed)
+                peak, join(rigidity_strings, ","), elapsed)
         catch err
             @warn "[$label] T=$T failed: $err"
             done[(label, T)] = (error=string(err),)
@@ -189,7 +211,7 @@ function run_wall_scan(; chi::Int, label::String,
 end
 
 # ── entry point: dispatch on the command-line mode ──────────────────────────────────────────────
-mode = length(ARGS) >= 1 ? ARGS[1] : error("usage: julia wall_scan_cluster.jl <rtm|rdm|cutoff|psweep> [p] [Tmax]")
+mode = length(ARGS) >= 1 ? ARGS[1] : error("usage: julia wall_scan_cluster.jl <rtm|rdm|cutoff|psweep|eigsweep> [p] [Tmax]")
 
 const FULL_LADDER    = collect(2.0:1.0:14.0)
 const RTM_FULL_LADDER = collect(2.0:1.0:20.0)  # rtm alone now matches the psweep arms' T=20 reach
@@ -210,6 +232,22 @@ elseif mode == "psweep"
     p_val = parse(Float64, ARGS[2])
     Tmax  = parse(Float64, ARGS[3])
     run_wall_scan(chi=64, label="rtm_p$(p_val)", Ts=collect(2.0:1.0:Tmax), trunc_mode=:rtm, p_nnn=p_val)
+elseif mode == "eigsweep"
+    # EIGENVALUE-ONLY p-sweep arm: identical configuration to `psweep` (RTM route, χ=64, same strict
+    # cutoff schedule, warm-started + checkpointed) EXCEPT it runs the block solver in Schur /
+    # eigvals-only mode — it computes only the leading spectrum and skips the eigenVECTOR work
+    # (entropy + phase rigidity). This is the right tool for the spectral route (dual unitarity, the
+    # Eq.(3) central charge, the Eq.(4) boundary exponent, and the tower gaps), all of which are
+    # Rayleigh-quotient-like and survive the entanglement-barrier wall — so this arm reaches larger T
+    # than the full-eigenvector `psweep` runs, which stall once the eigenvector conditioning collapses.
+    # Written to its OWN per-p cache (sweep_rtm_eigs_p<p>.jld2) so it never clobbers the full runs.
+    # Usage: julia wall_scan_cluster.jl eigsweep <p> <Tmax>
+    length(ARGS) >= 3 || error("eigsweep needs two extra args: julia wall_scan_cluster.jl eigsweep <p> <Tmax>")
+    p_val = parse(Float64, ARGS[2])
+    Tmax  = parse(Float64, ARGS[3])
+    run_wall_scan(chi=64, label="rtm_eigs_p$(p_val)", Ts=collect(2.0:1.0:Tmax),
+        trunc_mode=:rtm, p_nnn=p_val, eigvals_only=true,
+        cachefile=joinpath(CLUSTER_DIR, "sweep_rtm_eigs_p$(p_val).jld2"))
 else
-    error("unknown mode \"$mode\" — expected one of: rtm, rdm, cutoff, psweep")
+    error("unknown mode \"$mode\" — expected one of: rtm, rdm, cutoff, psweep, eigsweep")
 end
