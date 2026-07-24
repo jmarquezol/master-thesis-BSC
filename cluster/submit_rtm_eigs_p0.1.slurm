@@ -7,7 +7,7 @@
 #SBATCH --time=2-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=40
 
 # EIGENVALUE-ONLY p-sweep arm: p=0.1, RTM route, Schur / eigvals-only mode, warm-started and
 # checkpointed, T=2..14. Identical configuration to the earlier submit_rtm_p*.slurm full runs
