@@ -13,6 +13,9 @@ where $\sigma^{x,z}$ are the standard Pauli matrices, $\lambda$ is the transvers
 
 Setting $p=0$ removes the NNN terms and recovers the standard, integrable transverse-field Ising model, with $\lambda$ playing the role of the transverse magnetic field. Switching on $p>0$ introduces a second interaction length scale and breaks integrability: the chain acquires genuine many-body chaos and is no longer exactly solvable.
 
+\subsection{Equilibrium criticality and the central charge}
+\label{sec:annni:equilibrium}
+
 Breaking integrability raises the following question: does the model remain critical, and if so, does it stay in the same universality class as the Ising chain? We answer this in equilibrium by examining the ground-state entanglement and comparing it with the predictions of Conformal Field Theory (Section~\ref{sec:cft}).
 
 For a critical 1D system, CFT predicts that the ground-state von Neumann entropy of a block of length $l$ in an open chain of length $L$ scales logarithmically as (the open-chain, half-line version of Equation~\eqref{eq:cft:coeff} at $n\to1$)
@@ -50,6 +53,45 @@ We now ask how the central charge evolves as the NNN coupling is increased. In h
 
 To verify this numerically, the central charge was fitted across $p\in[0,2]$ on a chain of $N=300$ spins (Figure~\ref{fig:c_vs_p}). At the integrable point $p=0$ the extracted value is $c\approx0.502$. The small deviation from the exact $c=1/2$ is a well-understood finite-size artifact: on a finite lattice, the subleading corrections to Eq.~\eqref{eq:cft_obc} have not fully vanished, producing the systematic offset observed from the thermodynamic limit. As $p$ grows, the fitted charge drifts gently upward, but the deviation remains small---even at $p=2$, it barely exceeds $0.510$. This persistent proximity to $c=1/2$ provides strong numerical support for Alcaraz's claim \cite{alcaraz2016}: the NNN coupling does not drive the system into a new phase. The model remains critical and within the Ising universality class, so the CFT framework is a legitimate tool for describing its dynamics.
 
-This equilibrium picture also fixes the role that the integrable point $p=0$ will play in the dynamical study that follows. At $p=0$ the model \emph{is} the transverse-field Ising chain, whose post-quench temporal entropies were computed from CFT and reproduced numerically by Carignano and Tagliacozzo~\cite{carignano_tagliacozzo2025}. It is therefore our touchstone: a point where the exact conformal answer is known, against which we can calibrate the whole transverse pipeline before switching on frustration. The novelty of this work is then to \emph{tune} $p$ away from that solvable point---keeping the model critical and Ising-class, as we have just verified, but non-integrable and longer-ranged---and ask whether the same universal signatures persist.
+This equilibrium picture also fixes the role that the integrable point $p=0$ will play in the dynamical study that follows. At $p=0$ the model is the transverse-field Ising chain, whose post-quench temporal entropies were computed from CFT and reproduced numerically by Carignano and Tagliacozzo~\cite{carignano_tagliacozzo2025}. It is therefore our touchstone: a point where the exact conformal answer is known, against which we can calibrate the whole transverse pipeline before switching on frustration. The novelty of this work is then to tune $p$ away from that solvable point---keeping the model critical and Ising-class, as we have just verified, but non-integrable and longer-ranged---and ask whether the same universal signatures persist.
 
-Once the equilibrium criticality is established, we move to the dynamical question that motivates the rest of this work. We quench the system from the polarized initial state $\ket{\Psi_0}=\ket{X+}^{\otimes N}$ to the critical point $\lambda=1$ and ask whether the universal CFT signatures that organize the equilibrium entanglement also organize the temporal entanglement of the post-quench dynamics. To address this, we turn to transverse contraction, which gives us efficient access to the generalized temporal entropies whose CFT predictions we wish to test.
+\subsection{Why the NNN coupling breaks integrability}
+\label{sec:annni:jw}
+
+The claim that $p>0$ breaks integrability can be made precise, and the fermionic language in which it becomes transparent will also explain a key feature of the transfer-matrix spectrum later on. The \ac{JW} transformation rewrites the spin chain exactly as a chain of spinless fermions: in the convention of Equation~\eqref{eq:annni_H}, with the field on $\sigma^x$ and the order parameter on $\sigma^z$,
+\begin{equation}
+    \sigma^x_j = 1 - 2n_j, \qquad
+    \sigma^z_j = \big(c_j + c_j^\dagger\big)\,K_j, \qquad
+    K_j = \prod_{k<j}\big(1-2n_k\big),
+    \label{eq:annni:jwmap}
+\end{equation}
+where $c_j$ are fermionic annihilation operators, $n_j=c^\dagger_j c_j$, and the string $K_j$ supplies the signs that make the fermions anticommute. Under this map the two Ising terms stay quadratic: the transverse field becomes a chemical potential, and the strings of the nearest-neighbour bond cancel between adjacent sites, leaving ordinary hopping and pairing terms. The $p=0$ chain is therefore a free-fermion theory---the reason it is exactly solvable, and the reason its critical point is described by a free ($c=\tfrac12$) Majorana CFT.
+
+The two terms proportional to $p$ behave differently: both become products of four fermion operators, that is, genuine interactions. The self-dual $XX$ term turns into a density--density coupling, $(1-2n_j)(1-2n_{j+1})$, which is diagonal in the occupation basis and moves nothing. The NNN bond is more interesting: its strings no longer cancel completely, and one factor survives at the intermediate site,
+\begin{equation}
+    \sigma^z_i \sigma^z_{i+2}
+    = \big(c_i^\dagger - c_i\big)\,\big(1-2n_{i+1}\big)\,\big(c_{i+2}+c_{i+2}^\dagger\big),
+    \label{eq:annni:hop}
+\end{equation}
+a hop from site $i$ to site $i+2$ carrying a sign fixed by the occupation of the site skipped over---a parity-dressed hopping. With quartic terms present the fermions scatter, Wick's theorem no longer closes the correlation functions, and no free-fermion solution exists: the model is genuinely interacting for any $p\neq0$. Beyond breaking integrability, the parity-dressed hop has a specific dynamical consequence---it attaches a momentum shift of $\pi$ to the odd-fermion-parity sector of the transfer matrix---which we will meet again when reading the spectrum in Section~\ref{sec:results}. The full derivation is given in Appendix~\ref{app:pairing}.
+
+\subsection{The sound velocity grows with frustration}
+\label{sec:annni:velocity}
+
+A second effect of the NNN coupling, less obvious than the breaking of integrability, is that it changes how fast information propagates. At a critical point the low-energy dispersion is linear, $\omega = v|k|$, and the sound velocity $v$ enters every conformal prediction of Section~\ref{sec:cft}: the phases of the transfer-matrix eigenvalues scale as $\pi x/(vT)$, so converting a measured phase into a scaling dimension requires knowing $v$. For the integrable chain the exact value is $v=2$; for $p>0$ it must be measured.
+
+We extract $v(p)$ from the equilibrium dispersion, diagonalizing the periodic chain exactly at small sizes and reading the velocity off the lowest momentum-carrying excitation. The construction and its validation---including the reproduction of Alcaraz's published central charge through his own Casimir formula, fed with our measured velocities---are given in Appendix~\ref{app:velocity}. The result, shown in Figure~\ref{fig:velocity}, is a velocity that grows quickly with frustration:
+\begin{equation}
+    v(0)=1.98, \qquad v(0.1)=2.60, \qquad v(0.3)=3.80, \qquad v(0.5)=4.93.
+    \label{eq:annni:vp}
+\end{equation}
+Physically, the NNN bond opens a second channel for correlations to spread---two sites per step instead of one---so the light cone widens and information is scrambled faster as $p$ grows. For the temporal analysis this has two consequences that will recur. First, every eigenvalue-based measurement must use the true $v(p)$, not the Ising value: with the wrong velocity, the spectral ladders of Section~\ref{sec:results} are misread. Second, at fixed evolution time $T$ a larger velocity compresses the phase ladder $\pi x/(vT)$, pushing the leading spectrum toward degeneracy earlier---a fact that returns when we discuss the reach of the method.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{imgs/nb4_velocity_vs_p.png}
+    \caption{\textbf{The sound velocity grows with frustration.} Sound velocity $v(p)$ of the ANNNI-type chain at criticality, measured from the equilibrium dispersion on periodic rings of $N=12$ sites (Appendix~\ref{app:velocity}). The dashed line marks the exact Ising value $v=2$ recovered at $p=0$.}
+    \label{fig:velocity}
+\end{figure}
+
+Once the equilibrium picture is established, we move to the dynamical question that motivates the rest of this work. We quench the system from the polarized initial state $\ket{\Psi_0}=\ket{X+}^{\otimes N}$ to the critical point $\lambda=1$ and ask whether the universal CFT signatures that organize the equilibrium entanglement also organize the temporal entanglement of the post-quench dynamics. To address this, we turn to transverse contraction, which gives us efficient access to the generalized temporal entropies whose CFT predictions we wish to test.
