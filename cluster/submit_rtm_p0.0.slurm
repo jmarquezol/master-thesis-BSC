@@ -17,7 +17,7 @@
 # psweep arms (p=0.3/0.5/1.0/1.5) and the original p=0.1 triple — all write into the same
 # results/data/cluster/warm_sweep.jld2, keyed by (label, T), so nothing clobbers anything else.
 
-cd "$(dirname "$0")" || exit 1
+cd "${SLURM_SUBMIT_DIR:-.}" || exit 1
 mkdir -p logs
 
 module load julia/1.12.0
@@ -25,4 +25,4 @@ module load julia/1.12.0
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
-julia --project=.. wall_scan_cluster.jl psweep 0.0 20
+julia --project=. cluster/wall_scan_cluster.jl psweep 0.0 20

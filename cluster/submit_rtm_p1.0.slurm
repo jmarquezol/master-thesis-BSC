@@ -12,7 +12,7 @@
 # p-sweep arm: p=1.0, RTM route, warm-started and checkpointed, all the way to T=20. See
 # submit_rtm_p0.0.slurm for the full explanation — same design, just a different NNN coupling.
 
-cd "$(dirname "$0")" || exit 1
+cd "${SLURM_SUBMIT_DIR:-.}" || exit 1
 mkdir -p logs
 
 module load julia/1.12.0
@@ -20,4 +20,4 @@ module load julia/1.12.0
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
-julia --project=.. wall_scan_cluster.jl psweep 1.0 20
+julia --project=. cluster/wall_scan_cluster.jl psweep 1.0 20

@@ -23,7 +23,7 @@
 # If the job hits the walltime cap, just `sbatch` this same script again: it resumes from the last
 # checkpointed T, truly warm (not just continuity-anchored).
 
-cd "$(dirname "$0")" || exit 1
+cd "${SLURM_SUBMIT_DIR:-.}" || exit 1
 mkdir -p logs
 
 module load julia/1.12.0
@@ -31,4 +31,4 @@ module load julia/1.12.0
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
-julia --project=.. wall_scan_cluster.jl eigsweep 0.1 14
+julia --project=. cluster/wall_scan_cluster.jl eigsweep 0.1 14
