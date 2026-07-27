@@ -639,6 +639,32 @@ function crashsafe_sweep(f::Function, Ts; cachefile::String)
     return done
 end
 
+"""
+    thesis_plot_theme!()
+
+Set the global `Plots.default` values used for MANUSCRIPT-QUALITY figures (July 2026 thesis pass):
+larger fonts, no in-figure titles (the caption does that job in the thesis), thicker lines, a boxed
+frame, and a consistent canvas/dpi. Owning notebook figure cells call this once before building a
+figure destined for `thesis/imgs/`; notebook-only diagnostic figures can skip it. Idempotent.
+"""
+function thesis_plot_theme!()
+    Plots.default(
+        # NOTE: no fontfamily override — GR's Computer Modern breaks the Unicode glyphs (λ₀, Δφ, π)
+        # used throughout the axis labels; the default sans font renders them all correctly.
+        guidefontsize  = 14,   # axis labels
+        tickfontsize   = 12,
+        legendfontsize = 11,
+        linewidth      = 2.5,
+        markersize     = 6,
+        framestyle     = :box,
+        grid           = true,
+        size           = (800, 480),
+        dpi            = 200,
+        margin         = 5Plots.mm,
+    )
+    return nothing
+end
+
 # Save a row of subplots as one figure under results/imgs/
 function plot_panels(panels...; filename::String, title::String="",
                      fig_size::Tuple{Int,Int}=(500*length(panels), 480))
@@ -662,6 +688,22 @@ end
 # own CFT descendants), the "partners" are everything else (the π-shifted copies). This is exactly
 # NB3/NB5's finding and NB8's `classify_block`, promoted here as the one authoritative
 # implementation — new drivers should use this, not re-derive a modulus-rank selector.
+#
+# TWO REFINEMENTS from the July-2026 cluster p-sweep (NB9), both baked into the functions below:
+#
+#  (A) SELECT λ0 BY MODULUS-DOMINANCE, NOT COMPLEX CONTINUITY.  An earlier version of
+#      `pick_phys_continuity` searched the WHOLE block for the member closest in the COMPLEX PLANE to
+#      the previous rung's λ0. That drifts and then CASCADES: Im(λ0)≈a·v·T, so the physical λ0's phase
+#      winds by ~a·v every T-step (faster at larger v, i.e. larger p). A nearest-complex-value rule
+#      then latches onto a stationary near-modulus partner, and because the next rung re-anchors on
+#      that slip, one wrong pick corrupts the ENTIRE ladder below it (observed p≥0.5: |λ0| collapsing
+#      to 0.16 at T=4, then partners for all T>4). Modulus is the STABLE quantity — the physical λ0 is
+#      the dominant (largest-|θ|) eigenvalue and its ±π partner is subdominant for the resolvable
+#      range (p≲1) — so we pick by |θ| and use continuity ONLY to break a genuine <1% modulus tie
+#      (the exact ±π near-degeneracy). `phys_lambda0_suspect` flags a non-convergence blow-up/collapse.
+#  (B) ESCALATE k UNTIL A TOWER MEMBER IS CAPTURED.  At larger p the leading block can be λ0 + ONLY
+#      π-partners (tower_gap=NaN, λ1 absent). One bump k=4→6 is not always enough (p≈0.8), so
+#      `block_transfer_eigs_adaptive` now steps k→6→8 (warm-seeded) until λ1 appears or k_retry is hit.
 # ────────────────────────────────────────────────────────────────────────────────────────────────
 
 # Phase convention used throughout this project: Im(λ) = arg(-τ), i.e. phase measured from -θ.
@@ -700,48 +742,70 @@ end
 """
     pick_phys_continuity(theta, previous_phys)
 
-Select the physical eigenvalue by continuity: the member of `theta` closest in the complex plane
-to the previous rung's physical value. Unlike a modulus-rank selector (which only ever compares the
-top-2 by |θ| and silently fails once ≥3 near-degenerate values crowd the block — NB5), this searches
-the WHOLE block, so it survives an arbitrarily crowded near-degenerate cluster. Falls back to
-largest-modulus when `previous_phys === nothing` (the first rung of a ladder, nothing to anchor to).
-Returns the index `i0`.
+Select the physical eigenvalue λ0 = the DOMINANT (largest-modulus) member of `theta`. The physical
+branch is the leading eigenvalue of the transfer matrix; its ±π partner sits at *slightly smaller*
+modulus for the resolvable frustration range (p≲1), so modulus-dominance is the robust discriminant.
+`previous_phys` is used ONLY to break a genuine modulus TIE (top two within 1%, the exact ±π
+near-degeneracy), where the physical branch is the closer of the pair in the complex plane.
+
+This deliberately does NOT anchor on the previous complex value in general: because Im(λ0)≈a·v·T the
+phase winds ~a·v per T-step, so a nearest-complex-value rule drifts onto a stationary partner and
+that slip CASCADES down the ladder (see section note (A) above; the p≥0.5 cluster failure). Pass
+`previous_phys=nothing` on the first rung. Returns the index `i0`.
 """
 function pick_phys_continuity(theta, previous_phys)
-    previous_phys === nothing && return argmax(abs.(theta))
-    return argmin([abs(t - previous_phys) for t in theta])
+    mags  = abs.(theta)
+    order = sortperm(mags, rev=true)
+    i1    = order[1]                                   # dominant eigenvalue = physical λ0
+    (previous_phys === nothing || length(order) < 2) && return i1
+    i2 = order[2]
+    if abs(mags[i1] - mags[i2]) / mags[i1] < 0.01     # genuine ±π near-degeneracy → continuity tiebreak
+        return abs(theta[i1] - previous_phys) <= abs(theta[i2] - previous_phys) ? i1 : i2
+    end
+    return i1
 end
 
 """
-    block_transfer_eigs_adaptive(mpo, scaffold; k=4, k_retry=6, anchor=nothing,
+    phys_lambda0_suspect(theta, i0, previous_phys; tol=0.30) -> Bool
+
+`true` if the selected |λ0| deviates by more than fractional `tol` from the previous rung's — a
+non-convergence / wrong-branch red flag (e.g. the p=0.8, T=4 blow-up to |θ0|≈8.5, or a collapse
+toward 0). Callers can use it to re-run that point with more iterations / a larger k rather than
+trust it. Returns `false` on the first rung (`previous_phys === nothing`).
+"""
+function phys_lambda0_suspect(theta, i0, previous_phys; tol::Float64=0.30)
+    previous_phys === nothing && return false
+    return abs(abs(theta[i0]) - abs(previous_phys)) / abs(previous_phys) > tol
+end
+
+"""
+    block_transfer_eigs_adaptive(mpo, scaffold; k=4, k_retry=8, anchor=nothing,
                                   seedL=nothing, seedR=nothing, kwargs...)
 
-Thin k-adaptive wrapper around `block_transfer_eigs`. Runs at `k` first (optionally warm-started
-between T-rungs via `seedL`/`seedR`, exactly as a direct `block_transfer_eigs` call would be); if
-the resulting block has no tower member besides the physical one (`tower_gap` returns `NaN` — λ1
-missing from the block, the p≥0.3 failure mode found in NB5), escalates to `k_retry`, warm-seeded
-with the just-converged `k`-block (`block_transfer_eigs`'s own `seed_block` pads the extra slots
-with random vectors, so this retry is far cheaper than a cold `k_retry` run). Escalation is decided
-fresh every call, so a later, better-conditioned rung can drop back to the cheap `k` on its own.
-Returns `(theta, L, R, info)` exactly like `block_transfer_eigs`, with `info[:k_used]` and
-`info[:escalated]` added.
+k-adaptive wrapper around `block_transfer_eigs`. Runs at `k` first (optionally warm-started between
+T-rungs via `seedL`/`seedR`); while the leading block has no tower member besides the physical λ0
+(`tower_gap` returns `NaN` — λ1 absent, only ±π partners present), it **escalates k in steps of 2**
+(k→6→8…) up to `k_retry`, warm-seeding each bump with the just-converged block (cheap: the extra
+slots are padded with random vectors). A single k=4→6 bump is not always enough at larger frustration
+(p≈0.8 needs k=8), which is why this loops rather than doing one retry. Escalation is decided fresh
+every call, so a better-conditioned rung drops back to the cheap `k` on its own. Returns
+`(theta, L, R, info)` like `block_transfer_eigs`, with `info[:k_used]` and `info[:escalated]` added.
 """
 function block_transfer_eigs_adaptive(mpo::MPO, scaffold::MPS;
-        k::Int=4, k_retry::Int=6, anchor=nothing,
+        k::Int=4, k_retry::Int=8, anchor=nothing,
         seedL::Union{Nothing,AbstractVector{MPS}}=nothing,
         seedR::Union{Nothing,AbstractVector{MPS}}=nothing,
         kwargs...)
     theta, L, R, info = block_transfer_eigs(mpo, scaffold; k=k, seedL=seedL, seedR=seedR, kwargs...)
-    i0 = pick_phys_continuity(theta, anchor)
+    k_used = k
 
-    if k_retry > k && isnan(tower_gap(theta; i0=i0))
-        @info "block_transfer_eigs_adaptive: λ1 missing at k=$k, escalating to k=$k_retry (warm-seeded)"
-        theta2, L2, R2, info2 = block_transfer_eigs(mpo, scaffold; k=k_retry,
-            seedL=L, seedR=R, kwargs...)
-        info2 = merge(info2, Dict(:k_used => k_retry, :escalated => true))
-        return theta2, L2, R2, info2
+    while k_used < k_retry && isnan(tower_gap(theta; i0=pick_phys_continuity(theta, anchor)))
+        k_new = min(k_used + 2, k_retry)
+        @info "block_transfer_eigs_adaptive: no tower member at k=$k_used, escalating to k=$k_new (warm-seeded)"
+        theta, L, R, info = block_transfer_eigs(mpo, scaffold; k=k_new, seedL=L, seedR=R, kwargs...)
+        k_used = k_new
     end
 
-    info = merge(info, Dict(:k_used => k, :escalated => false))
+    info = merge(info, Dict(:k_used => k_used, :escalated => k_used > k))
     return theta, L, R, info
 end
