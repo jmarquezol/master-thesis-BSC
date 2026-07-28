@@ -9,17 +9,11 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
 
-# Warm-started, checkpointed tighter cutoff (1e-10/1e-12 instead of the production 1e-8/1e-10) at
-# χ=64, full T=2..14 ladder — the other ε knob besides χ itself. Run alongside submit_rtm.slurm and
-# submit_rdm.slurm. If this job hits the walltime cap, just `sbatch` it again: it resumes from the
-# last checkpointed T, truly warm (not just continuity-anchored).
+# RTM at p=0.1 with a tighter cutoff, T up to 14. Truncation comparison.
 
 cd "$(dirname "$0")" || exit 1
 mkdir -p logs
-
 module load julia/1.12.0
-
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
-
 julia --project=.. wall_scan_cluster.jl cutoff

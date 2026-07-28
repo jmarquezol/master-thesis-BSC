@@ -9,18 +9,13 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
 
-# Warm-started, checkpointed :rdm truncation mode, T=2..12 ladder (the cold array run showed T=9
-# alone takes ~20.6h under :rdm; extend Ts in wall_scan_cluster.jl + resubmit if more T is needed
-# later — the cache/checkpoint machinery makes that incremental). Run alongside submit_rtm.slurm
-# and submit_cutoff.slurm. If this job hits the walltime cap, just `sbatch` it again: it resumes
-# from the last checkpointed T, truly warm (not just continuity-anchored).
+# RDM at p=0.1, T up to 12 (about where the RTM p=0.1 run reached). One job: does switching the
+# truncation from RTM to RDM move the wall at a frustrated point? Compare vs sweep_rtm_p0.1.jld2.
+# RDM is a few times slower than RTM. Writes to results/data/cluster/sweep_rdm_p0.1.jld2.
 
 cd "$(dirname "$0")" || exit 1
 mkdir -p logs
-
 module load julia/1.12.0
-
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
-
 julia --project=.. wall_scan_cluster.jl rdm

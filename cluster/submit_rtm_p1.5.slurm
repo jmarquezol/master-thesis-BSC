@@ -9,17 +9,11 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
 
-# p-sweep arm: p=1.5, RTM route, warm-started and checkpointed, all the way to T=20. See
-# submit_rtm_p0.0.slurm for the full explanation — same design, just a different NNN coupling.
-# p=1.5 is the largest NNN coupling in this campaign (CLAUDE.md's DMRG sweep covers p<=~2 as the
-# confirmed Ising-class window) — the one most likely to need the k=4->6 escalation.
+# Full run (with entropy) at p=1.5, RTM, T up to 20. Resubmit if it times out — it resumes.
 
 cd "$(dirname "$0")" || exit 1
 mkdir -p logs
-
 module load julia/1.12.0
-
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
-
 julia --project=.. wall_scan_cluster.jl psweep 1.5 20

@@ -1,31 +1,16 @@
-# cluster/wall_scan_cluster.jl — headless batch driver for the BSC master sweep.
+# Batch driver for the wall-scan sweeps. One process walks a ladder of evolution times T for a given
+# (mode, p), warm-starting each T from the last and checkpointing as it goes, so a walltime-killed
+# job resumes where it stopped when resubmitted.
 #
-# Usage:  julia --project=. cluster/wall_scan_cluster.jl <mode> [p] [Tmax]
-#   <mode> ∈ {"rtm", "rdm", "cutoff", "psweep"}
-#   "rtm"/"rdm"/"cutoff" take no extra args — they reproduce the original p=0.1 triple exactly
-#   (T up to 14, or 12 for rdm). "psweep" takes two required extra args, <p> <Tmax>, and always
-#   uses the RTM truncation route (the only one worth the cost of a p-sweep — see the RTM-vs-RDM
-#   cost comparison in NB9): julia wall_scan_cluster.jl psweep 0.3 20
+#   julia --project=. cluster/wall_scan_cluster.jl <mode> [p] [Tmax]
 #
-# Runs ONE full, WARM-STARTED T ladder for the requested (mode, p) configuration and writes
-# crash-safe, per-T results to results/data/cluster/warm_sweep.jld2 (keyed by (label, T), so every
-# job — the original p=0.1 triple plus any number of psweep jobs — accumulates into the same file
-# without clobbering each other).
+# modes:
+#   rtm / rdm / cutoff        the original p=0.1 truncation comparison (no extra args)
+#   psweep    <p> <Tmax>      full run (with entropy), RTM, at coupling p
+#   eigsweep  <p> <Tmax>      eigenvalues only (no entropy) — goes past the wall
 #
-# v2 (July 2026) changes from the first cluster pass, driven by what the cold-started array sweep
-# (cluster/{rtm,rdm,cutoff}_array/, one independent SLURM task per T, no warm start at all) showed:
-# the dome/wall inflated at T≈6 instead of T≈10, and the naive rank-based selector picked the WRONG
-# eigenvalue branch at T=12/13 (|θ_phys| jumped to 1.78/1.98, then snapped back to 1.55 at T=14).
-# Two fixes, both load-bearing:
-#   1. Selection now uses `pick_phys_continuity` (src/transverse_tools.jl) — searches the WHOLE
-#      block for the closest-by-value member, not just the top-2 by modulus.
-#   2. The solver runs through `block_transfer_eigs_adaptive` (src), which escalates k=4→6 whenever
-#      the block has no tower member besides λ0 (NB5's finding: at larger p a k=4 block can be λ0
-#      plus three -λ0-type partners, with λ1 entirely absent).
-# And because cold RDM T=9 alone took 20.6h, a sequential warm ladder WILL outlive a single SLURM
-# walltime cap — so this version also checkpoints the converged blocks to disk after every T
-# (`cluster/checkpoint_<label>.jld2`, gitignored) and resumes truly warm (not just continuity-
-# anchored) if the process is killed and the same script is resubmitted.
+# Branch selection and the k=4→6 escalation live in src/transverse_tools.jl (pick_phys_continuity,
+# block_transfer_eigs_adaptive); both matter once the spectrum gets near-degenerate at larger p.
 
 ENV["GKSwstype"] = "100"   # headless GR backend (src/thesislib.jl unconditionally `using Plots`)
 
@@ -221,7 +206,8 @@ const RDM_LADDER     = collect(2.0:1.0:12.0)   # cold T=9 alone took 20.6h; two 
 if mode == "rtm"
     run_wall_scan(chi=64, label="rtm64_full", Ts=RTM_FULL_LADDER, p_nnn=P_NNN)
 elseif mode == "rdm"
-    run_wall_scan(chi=64, label="rdm64", trunc_mode=:rdm, Ts=RDM_LADDER, p_nnn=P_NNN)
+    run_wall_scan(chi=64, label="rdm_p0.1", trunc_mode=:rdm, Ts=RDM_LADDER, p_nnn=P_NNN,
+        cachefile=joinpath(CLUSTER_DIR, "sweep_rdm_p0.1.jld2"))
 elseif mode == "cutoff"
     run_wall_scan(chi=64, label="cut_tight", cutoffs=[fill(1e-10, 40); 1e-12], Ts=FULL_LADDER, p_nnn=P_NNN)
 elseif mode == "psweep"

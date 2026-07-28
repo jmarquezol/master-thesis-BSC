@@ -1,174 +1,72 @@
-# Master wall-scan sweep — BSC cluster rerun (v2, warm-started)
+# Wall-scan sweeps on the cluster
 
-## What's in this master job
+This folder runs the transfer-matrix sweeps that feed the temporal-CFT analysis (NB7, NB9). Each
+job is a single Julia process that walks a ladder of evolution times `T`, warm-starting each `T`
+from the previous one and checkpointing as it goes, so a job that hits the walltime just needs to be
+resubmitted — it resumes where it stopped.
 
-**8 independent SLURM jobs, all running in parallel**, each a self-contained warm-started T ladder:
+The driver is `wall_scan_cluster.jl`; the `submit_*.slurm` files are thin wrappers around it.
 
-| job | truncation | p (NNN coupling) | T range |
-|---|---|---|---|
-| `submit_rtm.slurm` | RTM | 0.1 | 2..**20** |
-| `submit_rdm.slurm` | RDM | 0.1 | 2..12 |
-| `submit_cutoff.slurm` | RTM, tighter cutoff | 0.1 | 2..14 |
-| `submit_rtm_p0.0.slurm` | RTM | 0.0 | 2..20 |
-| `submit_rtm_p0.3.slurm` | RTM | 0.3 | 2..20 |
-| `submit_rtm_p0.5.slurm` | RTM | 0.5 | 2..20 |
-| `submit_rtm_p1.0.slurm` | RTM | 1.0 | 2..20 |
-| `submit_rtm_p1.5.slurm` | RTM | 1.5 | 2..20 |
+## What to run now
 
-The first three are the original ε-scan (bond dimension/cutoff/truncation-algorithm independence,
-see NB9) — `submit_rtm.slurm`'s ladder was extended from T=14 to T=20 so it now doubles as the
-p=0.1 reference for the p-sweep arms below it. The five `submit_rtm_p*.slurm` jobs are new: a
-p-sweep at fixed χ=64, always through the RTM route (NB9 found RDM buys no physical improvement
-for 4-11x the cost, so it's not worth the p-sweep's extra jobs), reaching T=20 to see well past the
-wall for every p. All eight write into the same `results/data/cluster/warm_sweep.jld2`, keyed by
-`(label, T)` (labels: `rtm64_full`, `rdm64`, `cut_tight`, `rtm_p0.0`, `rtm_p0.3`, `rtm_p0.5`,
-`rtm_p1.0`, `rtm_p1.5`), so nothing clobbers anything else — submit all eight at once.
+Two things, in parallel:
 
-The driver (`wall_scan_cluster.jl`) takes the p-sweep's `p` and `Tmax` as command-line args now
-(`julia wall_scan_cluster.jl psweep <p> <Tmax>`); the three original modes (`rtm`/`rdm`/`cutoff`)
-are unchanged and need no extra args. **The checkpoint/resume mechanism was verified locally this
-session** with an explicit kill-mid-ladder-then-resubmit test: the resumed process logged
-`warm-resumed from checkpoint at T=2.0` and continued correctly from there — this matters a lot
-here, since T=20 is far enough that several of these jobs (especially the higher-p arms, which may
-also trigger the k=4→6 escalation) will very likely need more than one 48h walltime window.
+**1. Eigenvalues-only sweeps, `p = 0, 0.1, 0.3, 0.5`, up to `T = 20`.** These skip the eigenvectors
+(so no entropy), which is what lets them run far past the wall — we only need the spectrum here (dual
+unitarity, the Eq. 3 central charge, the boundary exponent, the tower gaps).
 
-## Weekend rerun — eigenvalue-only spectral sweep (Schur basis, NEW)
-
-**4 new SLURM jobs to submit this weekend**, one per coupling:
-
-| job | truncation | p | T range | mode |
-|---|---|---|---|---|
-| `submit_rtm_eigs_p0.0.slurm` | RTM | 0.0 | 2..14 | eigenvalues only |
-| `submit_rtm_eigs_p0.1.slurm` | RTM | 0.1 | 2..14 | eigenvalues only |
-| `submit_rtm_eigs_p0.3.slurm` | RTM | 0.3 | 2..14 | eigenvalues only |
-| `submit_rtm_eigs_p0.5.slurm` | RTM | 0.5 | 2..14 | eigenvalues only |
-
-These rerun the four low-frustration arms in the driver's new **`eigsweep`** mode
-(`julia wall_scan_cluster.jl eigsweep <p> <Tmax>`). Everything is identical to the full
-`submit_rtm_p*.slurm` runs — χ=64, the same strict cutoff schedule, the same warm-start +
-checkpoint machinery — **except** the block solver runs in the Schur / eigenvalues-only basis: it
-computes only the leading transfer spectrum and **skips the eigenVECTOR work** (the temporal
-entropy and the phase rigidity). This is deliberate. The spectral observables the thesis needs from
-these arms — the dual-unitarity circle, the Eq.(3) central charge from the phase curvature of λ₀,
-the Eq.(4) boundary exponent, and the tower gaps — are all Rayleigh-quotient-like and survive the
-entanglement-barrier wall, whereas the entropy needs the eigenvectors and does not. So the
-eigenvalue-only arms are cheaper per T and reach the full T=14 cleanly, where the earlier
-full-eigenvector runs (`sweep_rtm_p{0.1,0.3,0.5}.jld2`) stalled at T=8/7/7 once the eigenvector
-conditioning collapsed.
-
-Each writes to its **own** per-p cache, `results/data/cluster/sweep_rtm_eigs_p<p>.jld2` (labels
-`rtm_eigs_p0.0`, …), so they never touch the full-eigenvector `sweep_rtm_p<p>.jld2` files already
-pushed. In the output named tuple, `s2_base`/`rigidity` are empty and `peak` is `NaN` for these runs
-(no eigenvectors) — everything eigenvalue-derived (`theta`, `theta_phys`, `dphi`/`cls`, `tower_gap`,
-`k_used`/`escalated`) is present and valid.
-
-Submit all four (resume the same way as the other jobs if any hits the 48h cap — warm from the last
-checkpoint):
 ```
-git checkout main && git pull            # picks up the new eigsweep mode + these 4 scripts
-sbatch cluster/submit_rtm_eigs_p0.0.slurm
-sbatch cluster/submit_rtm_eigs_p0.1.slurm
-sbatch cluster/submit_rtm_eigs_p0.3.slurm
-sbatch cluster/submit_rtm_eigs_p0.5.slurm
+sbatch submit_rtm_eigs_p0.0.slurm
+sbatch submit_rtm_eigs_p0.1.slurm
+sbatch submit_rtm_eigs_p0.3.slurm
+sbatch submit_rtm_eigs_p0.5.slurm
 ```
-Push results back with `git add results/data/cluster/sweep_rtm_eigs_p*.jld2 && git commit && git push`.
 
-## Why a rerun (background — the original 3-job ε-scan)
+**2. One RDM check.** A single full run (with entropy) at `p = 0.1`, up to `T = 12` (about where the
+RTM `p = 0.1` run reached), using RDM truncation instead of RTM. The question is just whether the wall
+moves when we switch truncation at a frustrated point — compare against `sweep_rtm_p0.1.jld2`. RDM is a
+few times slower than RTM.
 
-Your first pass (`cluster/{rtm,rdm,cutoff}_array/`, one independent SLURM task per T, no warm
-start between T's) got real, useful data — but analyzing it turned up two things worth fixing
-before we treat the dome/wall-location numbers as final:
+```
+sbatch submit_rdm.slurm
+```
 
-1. **No warm start ⇒ the dome inflated at T≈6 instead of T≈10.** Phase rigidity (the eigenvector-
-   conditioning number) was identical to our warm-started local baseline at every T — so the
-   *physics* conclusion (RDM doesn't help; the wall is truncation-independent) survives — but the
-   entropy/dome broke ~4 steps earlier than it should, because a cold random restart at each T has
-   nothing biasing it onto the same physical branch as the near-degenerate cluster tightens.
-2. **The rank-based selector picked the wrong eigenvalue** at T=12/13 in the `rtm` array (`|θ_phys|`
-   jumped to 1.78/1.98, then snapped back to 1.55 at T=14) — a selection failure, not physics.
+Everything writes to `results/data/cluster/` under its own filename, so nothing overwrites anything.
 
-Both are fixed in `cluster/wall_scan_cluster.jl` now: it warm-starts every T from the previous one
-(seeding **and** continuity-anchoring), it checkpoints the converged blocks to disk after every T
-so a walltime-killed job resumes truly warm on resubmission (not just cold-with-an-anchor), and the
-selector (`pick_phys_continuity`, from `src/transverse_tools.jl`) searches the *whole* block instead
-of only the top-2 by modulus. It also auto-escalates k=4→6 whenever a block has no tower member
-besides λ0 (the `p≥0.3` failure mode found separately in NB5) — not needed at p=0.1, but free
-insurance. **Nothing from your first pass is discarded** — it's valuable data for exactly the
-comparison in point 1 above, and stays where it is.
+## Running it
 
-## Steps
+```
+git checkout main && git pull
+julia --project=. -e 'using Pkg; Pkg.instantiate()'   # from the repo root, once
+# then sbatch the jobs above from inside cluster/
+```
 
-1. **Push anything not yet pushed** from your current cold-array run first — nothing already
-   computed should be lost:
-   ```
-   git add cluster/*_array/worker_results_T*.jld2
-   git commit -m "cold array sweep: whatever finished"
-   git push
-   ```
+Check progress with `squeue -u $USER` and `tail -f logs/eigs_p0.1-<jobid>.out`. Each finished `T`
+logs a line like `[rtm_eigs_p0.1] T=9.0 converged@61 k=4 |θ0|=1.5443 gap=0.731 ...`.
 
-2. **Cancel the remaining cold jobs** (workers and their pending `_collect` dependency jobs):
-   ```
-   squeue -u $USER | grep wallscan
-   scancel <job-ids>
-   ```
+If a job stops at the walltime, just `sbatch` the same script again — it resumes from the last
+checkpoint. Expect the `T = 20` arms to need a couple of resubmissions.
 
-3. **Pull the updated repo** (new `cluster/wall_scan_cluster.jl`, ready-to-run `submit_*.slurm`
-   with your account/qos/module already filled in, plus the `src/transverse_tools.jl` additions the
-   driver depends on) and re-instantiate — the Manifest changed (your MKL addition is already
-   merged in, this just re-syncs the lock to it):
-   ```
-   git checkout main && git pull
-   julia --project=. -e 'using Pkg; Pkg.instantiate()'
-   ```
+Push results back whenever, it's safe at any point:
+```
+git add results/data/cluster/*.jld2 && git commit -m "cluster sweep progress" && git push
+```
 
-4. **Submit all eight** (parameters are already filled in from your working `*_array/submit.sh` —
-   `--account=bsc21`, `--qos=gp_bsccase`, `--cpus-per-task=16`, `julia/1.12.0` — only touch them if
-   anything about your allocation has changed):
-   ```
-   sbatch cluster/submit_rtm.slurm
-   sbatch cluster/submit_rdm.slurm
-   sbatch cluster/submit_cutoff.slurm
-   sbatch cluster/submit_rtm_p0.0.slurm
-   sbatch cluster/submit_rtm_p0.3.slurm
-   sbatch cluster/submit_rtm_p0.5.slurm
-   sbatch cluster/submit_rtm_p1.0.slurm
-   sbatch cluster/submit_rtm_p1.5.slurm
-   ```
-   These are single sequential jobs (not job arrays) — one per (truncation, p) configuration, each
-   running its own warm-started T ladder internally. `rdm` is capped at T=12 (cold T=9 alone took
-   ~20.6h under `:rdm`); `cutoff` stays at T=14; `rtm` and all five `rtm_p*` arms go to T=20.
+## What's already done
 
-5. **Monitor:**
-   ```
-   squeue -u $USER
-   tail -f cluster/logs/wallscan_rtm-<jobid>.out           # etc. for rdm / cutoff
-   tail -f cluster/logs/wallscan_rtm_p0.3-<jobid>.out       # etc. for the other p-sweep arms
-   ```
-   Each completed T logs a line like
-   `[rtm64_full] T=9.0  stuck@1069  k=4  |θ0|=1.5443  gap=0.731  peak=0.3331  r=[...]  4533s`
-   The p-sweep arms' label includes p, e.g. `[rtm_p0.3] T=9.0  ...`.
+The full-eigenvector RTM runs (`p = 0 … 1.5`) finished earlier and are saved in `cluster/data/` and
+`results/data/cluster/sweep_rtm_p*.jld2`. They stop at different `T` per `p` because the eigenvector
+route hits the wall at different times (`p=0.1` at `T≈8`, `p=0.3` at `T≈7`, …) — that's the physics,
+not a failed job. The eigenvalues-only reruns above are the follow-up that pushes past those walls.
 
-6. **If a job hits its walltime cap (2 days)**, it stops mid-ladder — no data is lost (every
-   completed T is cached, and the last converged blocks are checkpointed to
-   `cluster/checkpoint_<label>.jld2`, gitignored). Just resubmit the **same** `sbatch` command: it
-   picks up from the last checkpoint, truly warm, not a cold restart. **Expect this to happen at
-   least once** for the T=20 arms (`rtm` and all five `rtm_p*`) — reaching T=20 is a lot further
-   than the original T=14, and this exact resume path was verified locally before this rerun (a
-   kill-mid-ladder test produced the log line `warm-resumed from checkpoint at T=2.0` and then
-   continued correctly).
+## The other jobs
 
-7. **Push results back periodically** (safe at any point — the cache is always internally
-   consistent):
-   ```
-   git add results/data/cluster/warm_sweep.jld2
-   git commit -m "warm cluster sweep: progress update"
-   git push
-   ```
+`submit_rtm.slurm` and `submit_cutoff.slurm` are the original `p=0.1` truncation comparison (bond
+dimension / cutoff); `submit_rtm_p*.slurm` are the full-eigenvector p-sweep. Those are all run and
+archived — leave them unless you want to regenerate something.
 
-## What the output looks like
+## Output format
 
-`results/data/cluster/warm_sweep.jld2` holds a `Dict` keyed by `(label, T)` — e.g.
-`("rdm64", 9.0)` — where each value is a named tuple with `theta`, `theta_phys`, `i0`, `dphi`/`cls`
-(the phase classification per spectrum member), `tower_gap`, `k_used`/`escalated` (did this T need
-the k=4→6 retry?), `s2_base` (the trimmed Rényi-2 dome), `peak`, `rigidity`, `reason`
-(`"converged"` or `"stuck"`), `niters`, and `elapsed`. Loadable with `JLD2.load(path, "done")`.
+`JLD2.load(path, "done")` gives a `Dict` keyed by `(label, T)`. Each entry is a named tuple with
+`theta` (the spectrum), `theta_phys`/`i0` (the physical eigenvalue and its index), `tower_gap`,
+`k_used`, and — for the full runs only — `s2_base` (the Rényi-2 dome) and `rigidity`.
