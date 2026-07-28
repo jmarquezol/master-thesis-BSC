@@ -11,7 +11,7 @@
 
 # Full run (with entropy) at p=1.5, RTM, T up to 20. Resubmit if it times out — it resumes.
 
-cd "$(dirname "$0")" || exit 1
+cd "${SLURM_SUBMIT_DIR:-.}" || exit 1
 mkdir -p logs
 module load julia/1.12.0
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK

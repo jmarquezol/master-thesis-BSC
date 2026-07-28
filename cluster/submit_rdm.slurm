@@ -13,7 +13,7 @@
 # truncation from RTM to RDM move the wall at a frustrated point? Compare vs sweep_rtm_p0.1.jld2.
 # RDM is a few times slower than RTM. Writes to results/data/cluster/sweep_rdm_p0.1.jld2.
 
-cd "$(dirname "$0")" || exit 1
+cd "${SLURM_SUBMIT_DIR:-.}" || exit 1
 mkdir -p logs
 module load julia/1.12.0
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK

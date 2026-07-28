@@ -11,7 +11,7 @@
 
 # RTM at p=0.1 with a tighter cutoff, T up to 14. Truncation comparison.
 
-cd "$(dirname "$0")" || exit 1
+cd "${SLURM_SUBMIT_DIR:-.}" || exit 1
 mkdir -p logs
 module load julia/1.12.0
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK
