@@ -8,6 +8,7 @@
 #   rtm / rdm / cutoff        the original p=0.1 truncation comparison (no extra args)
 #   psweep    <p> <Tmax>      full run (with entropy), RTM, at coupling p
 #   eigsweep  <p> <Tmax>      eigenvalues only (no entropy) — goes past the wall
+#   betascan  <p> <Tmax>      full run, repeated over nbeta=2..16 — the β0 regulator scan
 #
 # Branch selection and the k=4→6 escalation live in src/transverse_tools.jl (pick_phys_continuity,
 # block_transfer_eigs_adaptive); both matter once the spectrum gets near-degenerate at larger p.
@@ -48,6 +49,7 @@ end
 function run_wall_scan(; chi::Int, label::String,
         Ts=collect(2.0:1.0:14.0),
         p_nnn::Float64=P_NNN,
+        nbeta::Int=NBETA,
         cutoff=1e-12, cutoffs=[fill(1e-8, 40); 1e-10],
         trunc_mode=:rtm, basis=:eig,
         eigvals_only::Bool=false,
@@ -99,7 +101,7 @@ function run_wall_scan(; chi::Int, label::String,
 
         try
             elapsed = @elapsed begin
-            mpo, scaffold = build_alcaraz_tmpo(T; p=p_nnn, lambda=LAMBDA, dt=DT, nbeta=NBETA, MPO_alg="VD2")
+            mpo, scaffold = build_alcaraz_tmpo(T; p=p_nnn, lambda=LAMBDA, dt=DT, nbeta=nbeta, MPO_alg="VD2")
             site_list = siteinds(scaffold)
 
             if previous_L === nothing
@@ -138,7 +140,7 @@ function run_wall_scan(; chi::Int, label::String,
                 s2_base = Float64[]
                 rigidity = Float64[]
             else
-                s2_base = trim_dome(ITransverse.gen_renyi2(L[i0], R[i0]), NBETA)
+                s2_base = trim_dome(ITransverse.gen_renyi2(L[i0], R[i0]), nbeta)
                 rigidity = Float64[]
                 for j in 1:k_actual
                     push!(rigidity, phase_rigidity(L[j], R[j]))
@@ -196,7 +198,7 @@ function run_wall_scan(; chi::Int, label::String,
 end
 
 # ── entry point: dispatch on the command-line mode ──────────────────────────────────────────────
-mode = length(ARGS) >= 1 ? ARGS[1] : error("usage: julia wall_scan_cluster.jl <rtm|rdm|cutoff|psweep|eigsweep> [p] [Tmax]")
+mode = length(ARGS) >= 1 ? ARGS[1] : error("usage: julia wall_scan_cluster.jl <rtm|rdm|cutoff|psweep|eigsweep|betascan> [p] [Tmax]")
 
 const FULL_LADDER    = collect(2.0:1.0:14.0)
 const RTM_FULL_LADDER = collect(2.0:1.0:20.0)  # rtm alone now matches the psweep arms' T=20 reach
@@ -234,6 +236,19 @@ elseif mode == "eigsweep"
     run_wall_scan(chi=64, label="rtm_eigs_p$(p_val)", Ts=collect(2.0:1.0:Tmax),
         trunc_mode=:rtm, p_nnn=p_val, eigvals_only=true,
         cachefile=joinpath(CLUSTER_DIR, "sweep_rtm_eigs_p$(p_val).jld2"))
+elseif mode == "betascan"
+    # Regulator scan: same full RTM run, repeated for a few values of the imaginary-time cooling
+    # nbeta (β0 = nbeta·dt/2 = 0.1, 0.2, 0.3, 0.4 at dt=0.1). Lets us see how the CFT read depends on
+    # β0 — too small dirties the boundary, too large inflates the finite-time correction (ε2=2β0/T).
+    # Modest T, so it finishes. Usage: julia wall_scan_cluster.jl betascan <p> <Tmax>
+    length(ARGS) >= 3 || error("betascan needs two extra args: julia wall_scan_cluster.jl betascan <p> <Tmax>")
+    p_val = parse(Float64, ARGS[2])
+    Tmax  = parse(Float64, ARGS[3])
+    betacache = joinpath(CLUSTER_DIR, "sweep_beta_p$(p_val).jld2")
+    for nb in (2, 4, 6, 8, 10, 12, 14, 16)   # β0 = 0.1 … 0.8; cached rungs are skipped on rerun
+        run_wall_scan(chi=64, label="beta_p$(p_val)_nb$(nb)", Ts=collect(2.0:1.0:Tmax),
+            trunc_mode=:rtm, p_nnn=p_val, nbeta=nb, cachefile=betacache)
+    end
 else
-    error("unknown mode \"$mode\" — expected one of: rtm, rdm, cutoff, psweep, eigsweep")
+    error("unknown mode \"$mode\" — expected one of: rtm, rdm, cutoff, psweep, eigsweep, betascan")
 end

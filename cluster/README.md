@@ -31,6 +31,15 @@ few times slower than RTM.
 sbatch submit_rdm.slurm
 ```
 
+**3. β₀ regulator scan, `p = 0` and `0.1`.** Each job reruns the same full sweep for a few amounts of
+imaginary-time cooling (`nbeta = 2,4,…,16`, i.e. `β₀ = 0.1 … 0.8`), up to `T = 10` — to check how
+much the extracted central charge and boundary exponent depend on that regulator. Short jobs.
+
+```
+sbatch submit_beta_p0.0.slurm
+sbatch submit_beta_p0.1.slurm
+```
+
 Everything writes to `results/data/cluster/` under its own filename, so nothing overwrites anything.
 
 ## Running it
