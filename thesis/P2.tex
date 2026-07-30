@@ -30,12 +30,12 @@ where $c$ is the central charge of the underlying CFT and $k$ is a non-universal
         = \frac{c}{6}\,\ln L + k'.
     \label{eq:cft_mid}
 \end{equation}
-Thus, if we run DMRG for a range of system sizes, extract the mid-bond von Neumann entropy, and plot it against $\ln L$, criticality manifests as a straight line whose slope is exactly $c/6$.
+Thus, if we run DMRG for a range of system sizes, extract the mid-bond von Neumann entropy, and plot it against $\ln L$, criticality manifests as a straight line whose slope is exactly $c/6$. As a consistency check for the rest of the thesis, which works with the R\'enyi-2 entropy, we also read $c$ from the R\'enyi-2 mid-bond entropy (open-chain slope $c/8$), computed from the same ground states. It gives $c\approx0.58$: consistent with the Ising value, but biased upward by the stronger corrections to scaling that R\'enyi-$n>1$ entropies carry---the equilibrium counterpart of the finite-time bias affecting the temporal R\'enyi-2 read (Section~\ref{sec:results}). The von Neumann entropy therefore remains our primary equilibrium estimator, and the R\'enyi-2 one confirms the same universality class.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\textwidth]{imgs/cft_L.png}
-    \caption{Finite-size scaling of the mid-chain von Neumann entropy for the ANNNI-type model at $p=0.5$. The linear dependence on $\ln L$ is consistent with the CFT prediction of Eq.~\eqref{eq:cft_mid}, and from the slope we obtain the central charge $c$.}
+    \caption{Finite-size scaling of the mid-chain entropy for the ANNNI-type model at $p=0.1$ and $p=0.5$. The von Neumann entropy (solid, slope $c/6$) gives $c\approx0.51$; the R\'enyi-2 entropy (dashed, slope $c/8$), computed from the same ground states as a cross-check, gives $c\approx0.58$---consistent with the Ising value, with the larger corrections to scaling characteristic of R\'enyi-$n>1$ entropies. The linear dependence on $\ln L$ confirms the CFT prediction of Eq.~\eqref{eq:cft_mid}.}
     \label{fig:cft_L}
 \end{figure}
 
