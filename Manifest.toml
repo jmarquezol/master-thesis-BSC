@@ -796,7 +796,7 @@ version = "0.9.27"
 [[deps.ITransverse]]
 deps = ["Adapt", "ITensorMPS", "ITensors", "JLD2", "LinearAlgebra", "NDTensors", "ProgressMeter", "Statistics"]
 git-tree-sha1 = "633035e81b919830a9248cc6a59fb24d4ca2d69e"
-repo-rev = "main"
+repo-rev = "f10aee05221ec267bf3ca96b3a3e777568155539"
 repo-url = "https://github.com/starsfordummies/ITransverse.jl"
 uuid = "0b04ad49-86dd-4710-99cf-a56925ebcbe5"
 version = "0.56.3"
