@@ -9,9 +9,10 @@
 #   psweep    <p> <Tmax>      full run (with entropy), RTM, at coupling p
 #   eigsweep  <p> <Tmax>      eigenvalues only (no entropy) — goes past the wall
 #   betascan  <p> <Tmax>      full run, repeated over nbeta=2..16 — the β0 regulator scan
+#   betawall  <p> <nbeta> <Tmax>   full run at ONE β0 on a long ladder — does β0 move the wall?
 #
-# Branch selection and the k=4→6 escalation live in src/transverse_tools.jl (pick_phys_continuity,
-# block_transfer_eigs_adaptive); both matter once the spectrum gets near-degenerate at larger p.
+# Branch selection and the k escalation live in src/transverse_tools.jl; both matter once the
+# spectrum gets near-degenerate at larger p.
 
 ENV["GKSwstype"] = "100"   # headless GR backend (src/thesislib.jl unconditionally `using Plots`)
 
@@ -20,7 +21,7 @@ include(joinpath(@__DIR__, "..", "src", "thesislib.jl"))
 using LinearAlgebra, Printf
 BLAS.set_num_threads(Sys.CPU_THREADS)   # BLAS-bound workload; SLURM also sets OPENBLAS_NUM_THREADS
 
-# Model / sweep constants — MUST match NB7's master sweep and the desktop χ-scan.
+# Model / sweep constants — these match NB7's master sweep and the desktop χ-scan.
 const P_NNN  = 0.1
 const LAMBDA = 1.0
 const DT     = 0.1
@@ -29,8 +30,8 @@ const NBETA  = 4
 const CLUSTER_DIR   = joinpath(@__DIR__, "..", "results", "data", "cluster")
 const CLUSTER_CACHE = joinpath(CLUSTER_DIR, "warm_sweep.jld2")
 
-# ── nbeta trimming (verbatim from NB7/NB8): the first/last nbeta/2 bonds of a gen_renyi2 profile
-#    are imaginary-time cooling, not physical real-time cuts.
+# ── the first/last nbeta/2 bonds of a gen_renyi2 profile are imaginary-time cooling, not
+#    physical real-time cuts, so trim them before reading a dome.
 function trim_dome(profile, nbeta)
     half = nbeta ÷ 2
     return collect(profile[(half + 1):(end - half)])
@@ -42,10 +43,8 @@ function phase_rigidity(Lj::MPS, Rj::MPS)
     return 1.0 / (norm(Lj) * norm(Rj))
 end
 
-# ── general χ/ε scan driver, warm-started and checkpointed. `pick_phys_continuity`,
-#    `classify_tower`, `tower_gap`, and `block_transfer_eigs_adaptive` all come from
-#    src/transverse_tools.jl (included above via thesislib.jl) — the promoted, authoritative
-#    versions, not local copies.
+# ── general χ/ε scan driver, warm-started and checkpointed. The selector and escalation helpers
+#    come from src/transverse_tools.jl.
 function run_wall_scan(; chi::Int, label::String,
         Ts=collect(2.0:1.0:14.0),
         p_nnn::Float64=P_NNN,
@@ -58,12 +57,8 @@ function run_wall_scan(; chi::Int, label::String,
         cachefile=CLUSTER_CACHE,
         checkpointfile=joinpath(@__DIR__, "checkpoint_$(label).jld2"))
 
-    # Eigenvalue-only mode (basis=:schur, no eigenvector post-processing): the leading spectrum
-    # (dual-unitarity circle, Eq.(3) c, Eq.(4) x1, tower gaps) is a Rayleigh-quotient-like quantity
-    # that survives the entanglement-barrier wall, whereas the entropy needs the eigenVECTORS and
-    # does not. Skipping the vector work (gen_renyi2 + phase rigidity, both of which require the
-    # bi-normalized pairs that :schur/eigvals_only do NOT return) makes each T cheaper and well-
-    # conditioned, so the spectral ladder reaches larger T than the full-eigenvector runs do.
+    # Spectrum-only mode: de-mix on the Schur basis and skip the eigenvector work. θ is a Rayleigh
+    # quotient so it survives the wall even where the vectors do not.
     if eigvals_only
         basis = :schur
     end
@@ -84,10 +79,8 @@ function run_wall_scan(; chi::Int, label::String,
             continue
         end
 
-        # About to do real work with no warm blocks in memory yet: this is either the very first
-        # T of a fresh process, or the first T after skipping past everything already cached on a
-        # resubmission. Either way, try to recover the last checkpoint written for this label so
-        # the warm start survives a SLURM walltime kill, not just the continuity anchor.
+        # No warm blocks in memory: either a fresh process, or the first T after skipping the
+        # cached ones on a resubmission. Recover the last checkpoint so the warm start survives.
         if previous_L === nothing && isfile(checkpointfile)
             ckpt = load(checkpointfile, "checkpoint")
             if ckpt.label == label && haskey(done, (label, ckpt.T)) &&
@@ -132,10 +125,7 @@ function run_wall_scan(; chi::Int, label::String,
             dphi, cls = classify_tower(theta; i0=i0)
             gap = tower_gap(theta; i0=i0)
 
-            # The entropy (gen_renyi2) and phase rigidity both need the bi-normalized eigenVECTOR
-            # pairs, which eigvals_only=:schur does NOT return — so skip them entirely in that mode
-            # and store empty placeholders. Everything above (theta, tower classification, gap) needs
-            # only the eigenvalues and is valid.
+            # Entropy and rigidity both need the bi-normalized pairs, which :schur does not return.
             if eigvals_only
                 s2_base = Float64[]
                 rigidity = Float64[]
@@ -160,8 +150,7 @@ function run_wall_scan(; chi::Int, label::String,
             previous_L = L
             previous_R = R
 
-            # Overwrite the (single, per-label) checkpoint with this T's converged blocks. Only
-            # the most recent rung is ever needed to resume, so disk usage stays bounded.
+            # Only the most recent rung is needed to resume, so one file per label is enough.
             jldsave(checkpointfile; checkpoint=(label=label, T=T, L=L, R=R))
 
             rigidity_strings = String[]
@@ -189,16 +178,20 @@ function run_wall_scan(; chi::Int, label::String,
             n_ok += 1
         end
     end
+    # Keep the checkpoint even when the ladder finishes, so resubmitting with a larger Tmax later
+    # resumes warm instead of cold-starting the first new T (a cold restart is what broke the dome
+    # at T≈6 in the first array sweep). One file per label, overwritten each rung. A stale one is
+    # harmless: the resume above also checks the label and that the rung is in this cache.
     if n_ok == length(Ts) && isfile(checkpointfile)
-        rm(checkpointfile)
-        @info "[$label] ladder complete — checkpoint removed"
+        ckpt_T = load(checkpointfile, "checkpoint").T
+        @info "[$label] ladder complete — checkpoint kept at T=$(ckpt_T) for a later extension"
     end
     println("[$label] cache: $cachefile  ($n_ok/$(length(Ts)) points done)")
     return done
 end
 
 # ── entry point: dispatch on the command-line mode ──────────────────────────────────────────────
-mode = length(ARGS) >= 1 ? ARGS[1] : error("usage: julia wall_scan_cluster.jl <rtm|rdm|cutoff|psweep|eigsweep|betascan> [p] [Tmax]")
+mode = length(ARGS) >= 1 ? ARGS[1] : error("usage: julia wall_scan_cluster.jl <rtm|rdm|cutoff|psweep|eigsweep|betascan|betawall> [p] [nbeta] [Tmax]")
 
 const FULL_LADDER    = collect(2.0:1.0:14.0)
 const RTM_FULL_LADDER = collect(2.0:1.0:20.0)  # rtm alone now matches the psweep arms' T=20 reach
@@ -221,14 +214,10 @@ elseif mode == "psweep"
     Tmax  = parse(Float64, ARGS[3])
     run_wall_scan(chi=64, label="rtm_p$(p_val)", Ts=collect(2.0:1.0:Tmax), trunc_mode=:rtm, p_nnn=p_val)
 elseif mode == "eigsweep"
-    # EIGENVALUE-ONLY p-sweep arm: identical configuration to `psweep` (RTM route, χ=64, same strict
-    # cutoff schedule, warm-started + checkpointed) EXCEPT it runs the block solver in Schur /
-    # eigvals-only mode — it computes only the leading spectrum and skips the eigenVECTOR work
-    # (entropy + phase rigidity). This is the right tool for the spectral route (dual unitarity, the
-    # Eq.(3) central charge, the Eq.(4) boundary exponent, and the tower gaps), all of which are
-    # Rayleigh-quotient-like and survive the entanglement-barrier wall — so this arm reaches larger T
-    # than the full-eigenvector `psweep` runs, which stall once the eigenvector conditioning collapses.
-    # Written to its OWN per-p cache (sweep_rtm_eigs_p<p>.jld2) so it never clobbers the full runs.
+    # Eigenvalues only: same configuration as `psweep` but in Schur/eigvals-only mode, skipping the
+    # eigenvector work (entropy, rigidity). The spectrum is Rayleigh-quotient-like and survives the
+    # wall, so this arm reaches larger T than the full runs — it is the right tool for dual
+    # unitarity, the Eq.(3) central charge, Eq.(4), and the tower gaps. Own cache per p.
     # Usage: julia wall_scan_cluster.jl eigsweep <p> <Tmax>
     length(ARGS) >= 3 || error("eigsweep needs two extra args: julia wall_scan_cluster.jl eigsweep <p> <Tmax>")
     p_val = parse(Float64, ARGS[2])
@@ -249,6 +238,24 @@ elseif mode == "betascan"
         run_wall_scan(chi=64, label="beta_p$(p_val)_nb$(nb)", Ts=collect(2.0:1.0:Tmax),
             trunc_mode=:rtm, p_nnn=p_val, nbeta=nb, cachefile=betacache)
     end
+elseif mode == "betawall"
+    # Does the regulator move the wall? The β0 scan showed the modulus gaps grow linearly with β0
+    # (Eq. 14 of the 2026 paper, confirmed at R²≈0.99), and it is those gaps closing that ends the
+    # eigenvector route — so a larger β0 might buy reach. One β0 per job, long ladder (the opposite
+    # shape to betascan). Expect a modest shift at best: the enhancement carries a 1/T².
+    #
+    # Full eigenvector run on purpose — the wall is the entropy dome inflating, so eigvals_only
+    # would answer a different question. Own cache, and the ladder starts at T=2 rather than
+    # resuming betascan at T=7, because that ladder is finished and its first new rung would start
+    # cold — which is what corrupted the dome in the first array sweep.
+    # Usage: julia wall_scan_cluster.jl betawall <p> <nbeta> <Tmax>
+    length(ARGS) >= 4 || error("betawall needs three extra args: julia wall_scan_cluster.jl betawall <p> <nbeta> <Tmax>")
+    p_val = parse(Float64, ARGS[2])
+    nb    = parse(Int, ARGS[3])
+    Tmax  = parse(Float64, ARGS[4])
+    run_wall_scan(chi=64, label="betawall_p$(p_val)_nb$(nb)", Ts=collect(2.0:1.0:Tmax),
+        trunc_mode=:rtm, p_nnn=p_val, nbeta=nb,
+        cachefile=joinpath(CLUSTER_DIR, "sweep_betawall_p$(p_val).jld2"))
 else
-    error("unknown mode \"$mode\" — expected one of: rtm, rdm, cutoff, psweep, eigsweep, betascan")
+    error("unknown mode \"$mode\" — expected one of: rtm, rdm, cutoff, psweep, eigsweep, betascan, betawall")
 end

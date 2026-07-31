@@ -40,6 +40,19 @@ sbatch submit_beta_p0.0.slurm
 sbatch submit_beta_p0.1.slurm
 ```
 
+**4. Does β₀ move the wall?** The β₀ scan above showed the modulus gaps between the leading
+eigenvalues grow *linearly* with β₀ — and it's those gaps closing that ends the eigenvector route
+(the "wall"). So a bigger β₀ should, in principle, buy more reach. These two jobs test it directly:
+the same long ladder (`T` up to 14) run at `nbeta = 12` (β₀ = 0.6) and at our usual `nbeta = 4`
+(β₀ = 0.2) as the control, so the only difference between them is the regulator. Compare where the
+entropy dome breaks in each. Worth knowing: the gap enhancement falls off as β₀/T², so the honest
+expectation is a modest shift rather than an escape — a null result is still a useful answer.
+
+```
+sbatch submit_betawall_nb12.slurm
+sbatch submit_betawall_nb4.slurm
+```
+
 Everything writes to `results/data/cluster/` under its own filename, so nothing overwrites anything.
 
 ## Running it
