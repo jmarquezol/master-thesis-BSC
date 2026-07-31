@@ -1,8 +1,6 @@
-# ══════════════════════════════════════════════════════════════════════════════
-# ALCARAZ (ANNNI-type) MODEL
-#   H = -Σ_i [ Z_i Z_{i+1} + p λ X_i X_{i+1} + p Z_i Z_{i+2} + λ X_i ]
-#   self-dual; p=0 recovers the integrable TFIM. Field on sigma_x, coupling on sigma_z
-# ══════════════════════════════════════════════════════════════════════════════
+# ── Alcaraz (ANNNI-type) ────────────────────────────────────────────────────────────────────
+# H = -Σ_i [ Z_i Z_{i+1} + p λ X_i X_{i+1} + p Z_i Z_{i+2} + λ X_i ]
+# Self-dual; p=0 is the integrable TFIM. Field on σx, coupling on σz.
 
 abstract type AbstractAlcarazRecipe <: ExpHRecipe end
 struct AlcarazWI  <: AbstractAlcarazRecipe end
@@ -52,14 +50,11 @@ function ITransverse.expH(sites::Vector{<:Index}, mp::AlcarazParams, recipe::Abs
     return expmpo(os, sites, -im * dt; alg=Algorithm(_alg_string(recipe)))
 end
 
-# ══════════════════════════════════════════════════════════════════════════════
-# ANISOTROPIC XY MODEL (velocity-control family; July 2026 velocity investigation)
-#   H = -Σ_i [ (1+γ)/2 X_i X_{i+1} + (1-γ)/2 Y_i Y_{i+1} + λ Z_i ]
-#   ITransverse Ising convention (coupling on X, field on Z); γ=1 recovers the TFIM.
-#   Critical at λ=1 for all γ>0, Ising class c=1/2, with EXACTLY known velocity v = 2γ
-#   (dispersion ε(k) = 2√[(λ-cos k)² + γ² sin²k] → 2γ|k| at λ=1). Used to test whether the
-#   temporal pipeline reads a genuinely different v at fixed c and fixed conventions.
-# ══════════════════════════════════════════════════════════════════════════════
+# ── Anisotropic XY ──────────────────────────────────────────────────────────────────────────
+# H = -Σ_i [ (1+γ)/2 X_i X_{i+1} + (1-γ)/2 Y_i Y_{i+1} + λ Z_i ]
+# ITransverse Ising convention (coupling on X, field on Z); γ=1 is the TFIM. Critical at λ=1 for
+# any γ>0, Ising class, and the velocity is exactly v = 2γ — which is why we use it to check the
+# temporal pipeline really does read a different v at fixed c.
 
 abstract type AbstractXYRecipe <: ExpHRecipe end
 struct XYWI  <: AbstractXYRecipe end
@@ -103,10 +98,8 @@ function ITransverse.expH(sites::Vector{<:Index}, mp::XYParams, recipe::Abstract
     return expmpo(os, sites, -im * dt; alg=Algorithm(_alg_string(recipe)))
 end
 
-# ══════════════════════════════════════════════════════════════════════════════
-# TRICRITICAL-ISING MODEL (optional variant)
-#   H = -Σ X_i - Σ Z_i Z_{i+1} + λ Σ ( Z_i Z_{i+1} X_{i+2} + X_i Z_{i+1} Z_{i+2} )
-# ══════════════════════════════════════════════════════════════════════════════
+# ── Tricritical Ising (optional variant) ────────────────────────────────────────────────────
+# H = -Σ X_i - Σ Z_i Z_{i+1} + λ Σ ( Z_i Z_{i+1} X_{i+2} + X_i Z_{i+1} Z_{i+2} )
 
 abstract type AbstractTricriticalRecipe <: ExpHRecipe end
 struct TricriticalWI  <: AbstractTricriticalRecipe end
@@ -152,16 +145,11 @@ function ITransverse.expH(sites::Vector{<:Index}, mp::TricriticalParams, recipe:
     return expmpo(os, sites, -im * dt; alg=Algorithm(_alg_string(recipe)))
 end
 
-# ══════════════════════════════════════════════════════════════════════════════
-# XXZ MODEL — our asymmetric exp-MPO (VD2) path
-#   Reuses ITransverse's XXZParams (J_XY, J_ZZ, hz) with convention
-#     H = -( J_XY (XX+YY + J_ZZ ZZ) + 2 hz Z ),   J_ZZ = Δ.
-#   The supervisor's  H_Δ = Σ_x [½(S+S- + S-S+) + Δ Sz Sz]  ⇒  XXZParams(-1.0, Δ, 0.0)
-#   (overall sign of H is immaterial to |L| and the temporal entropy).
-#   ITransverse already provides the SYMMETRIC SymSVD builder; THIS adds the 2nd-order
-#   asymmetric VD2 builder (like Alcaraz) for the gap-vs-Alcaraz comparison and a
-#   higher-Trotter-order cross-check.
-# ══════════════════════════════════════════════════════════════════════════════
+# ── XXZ, asymmetric exp-MPO (VD2) path ──────────────────────────────────────────────────────
+# Reuses ITransverse's XXZParams (J_XY, J_ZZ, hz): H = -( J_XY (XX+YY + J_ZZ ZZ) + 2 hz Z ), so
+# H_Δ = Σ_x [½(S+S- + S-S+) + Δ Sz Sz] is XXZParams(-1.0, Δ, 0.0). The overall sign of H does not
+# matter for |L| or the temporal entropy. ITransverse ships a symmetric SymSVD builder; this is
+# the 2nd-order asymmetric one, for the comparison against Alcaraz.
 
 abstract type AbstractXXZRecipe <: ExpHRecipe end
 struct XXZWI  <: AbstractXXZRecipe end
@@ -201,21 +189,14 @@ function ITransverse.expH(sites::Vector{<:Index}, mp::XXZParams, recipe::Abstrac
     return expmpo(os, sites, -im * dt; alg=Algorithm(_alg_string(recipe)))
 end
 
-# ══════════════════════════════════════════════════════════════════════════════
-# XXZ NÉEL QUENCH (sublattice-rotated frame) — the model we actually time-evolve
-#   Physical setup: quench the NÉEL state |↑↓↑↓…⟩ with the critical XXZ Hamiltonian
-#     H_Δ = Σ_x [ ½(S+_x S-_{x+1} + S-_x S+_{x+1}) + Δ Sz_x Sz_{x+1} ]   (supervisor's Eq. 2, +Δ)
-#   The single-site sublattice rotation R = ∏_{x even} exp(iπ Sx_x) maps
-#     |Néel⟩ → |↑↑↑…⟩ (uniform)  and
-#     H_Δ → H'_Δ = Σ_x [ ½(S+_x S+_{x+1} + S-_x S-_{x+1}) − Δ Sz_x Sz_{x+1} ].
-#   R is a product of single-site unitaries ⇒ the Loschmidt echo and the entire temporal-
-#   entropy structure are IDENTICAL, so we evolve the UNIFORM |↑⟩ state under H'_Δ and reuse
-#   the single-site transverse machinery (no 2-site unit cell needed).
-#   IMPORTANT: `Delta` is the PHYSICAL XXZ anisotropy (supervisor's +Δ convention); the ZZ
-#   sign necessarily flips to −Δ in the rotated frame (any Néel→ferromagnet rotation is a
-#   π-rotation in the XY plane, which flips Sz). Verified: |↑⟩-under-H'_Δ echo == direct
-#   Néel-under-H_Δ TDVP echo to 4 digits. Critical regime |Δ| ≤ 1 (c = 1 Luttinger liquid).
-# ══════════════════════════════════════════════════════════════════════════════
+# ── XXZ Néel quench, in the sublattice-rotated frame ────────────────────────────────────────
+# We want to quench |↑↓↑↓…⟩ with H_Δ = Σ_x [½(S+S- + S-S+) + Δ Sz Sz]. The rotation
+# R = ∏_{x even} exp(iπ Sx) sends |Néel⟩ → |↑↑↑…⟩ and H_Δ → H'_Δ, with S+S- → S+S+ and −Δ on the
+# ZZ term. R is a product of single-site unitaries, so the echo and the whole temporal-entropy
+# structure are unchanged — we evolve the uniform |↑⟩ under H'_Δ and keep the single-site
+# machinery. Note `Delta` stores the PHYSICAL +Δ; the sign flip in the rotated frame is forced,
+# not a typo (a Néel→ferromagnet rotation is a π-rotation in the XY plane, which flips Sz).
+# Checked against a direct Néel TDVP echo to 4 digits. Critical for |Δ| ≤ 1.
 
 abstract type AbstractXXZNeelRecipe <: ExpHRecipe end
 struct XXZNeelWI  <: AbstractXXZNeelRecipe end
@@ -257,21 +238,16 @@ function ITransverse.expH(sites::Vector{<:Index}, mp::XXZNeelParams, recipe::Abs
     return expmpo(os, sites, -im * dt; alg=Algorithm(_alg_string(recipe)))
 end
 
-# ── symmetric (Murg-type) propagator for the rotated XXZ-Néel chain (July 2026, NB12) ─────────
-# In Pauli form H'_Δ = Σ_j ¼(σx σx − σy σy − Δ σz σz). Each layer Σ_j σᵃ_j σᵃ_{j+1} is internally
-# commuting, so its exponential is an EXACT bond-2 LEFT-RIGHT-SYMMETRIC MPO (the Murg cos/sin
-# splitting — same construction as ITransverse's expXX_murg, generalized to any Pauli a).
-# This opens the SYMMETRIC route (powermethod_sym + Autonne–Takagi) for XXZ — the asymmetry
-# experiment: is the XXZ wall at T≈4 the MPO's asymmetry, or the exact Z₂ quench degeneracy?
+# ── symmetric (Murg-type) propagator for the rotated XXZ-Néel chain ─────────────────────────
+# In Pauli form H'_Δ = Σ_j ¼(σx σx − σy σy − Δ σz σz). Each layer Σ_j σᵃ_j σᵃ_{j+1} commutes with
+# itself, so its exponential is an exact bond-2 left-right-symmetric MPO (the Murg cos/sin split,
+# as in ITransverse's expXX_murg but for any Pauli a). That is what opens the symmetric route
+# (powermethod_sym + Takagi) for XXZ, which the asymmetry experiment needed.
 #
-# TWO KERNELS, both exactly reflection-symmetric (reflection acts site-wise, so ANY product of
-# per-layer-symmetric factors stays symmetric — the palindrome buys TROTTER ORDER, not symmetry):
-#   order=2 (default): palindromic sandwich e^{ZZ/2}e^{YY/2}e^{XX}e^{YY/2}e^{ZZ/2}, 2nd order in
-#     dt, temporal physical dim d_t=32 (4 chained applyn's of bond-2 factors: 2*2*2*2*2=32).
-#   order=1: single sandwich e^{ZZ}e^{YY}e^{XX} (full, not half, steps), 1st order in dt, but
-#     d_t=8 (2 chained applyn's: 2*2*2=8) — ≈16x cheaper per apply, comparable to the asymmetric
-#     WII/VD2 runs. Must be accuracy-validated per dt (NB12 §1); use if the O(dt) error is small
-#     enough at the dt already in use, or drop dt to compensate.
+# Two kernels, both reflection-symmetric — the palindrome buys Trotter order, not symmetry:
+#   order=2 (default): e^{ZZ/2}e^{YY/2}e^{XX}e^{YY/2}e^{ZZ/2}, 2nd order, temporal dim d_t=32.
+#   order=1: e^{ZZ}e^{YY}e^{XX}, 1st order but d_t=8, so ~16x cheaper per apply. Validate the
+#     O(dt) error at your dt before using it (NB12 §1).
 
 struct XXZNeelMurg <: AbstractXXZNeelRecipe
     order::Int

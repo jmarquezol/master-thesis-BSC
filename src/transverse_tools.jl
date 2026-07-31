@@ -43,10 +43,8 @@ function build_alcaraz_tmpo(target_T::Float64;
     return build_tmpo(AlcarazParams(lambda=lambda, p=p), recipe, target_T; dt=dt, nbeta=nbeta)
 end
 
-# Weighted sum of several MPS:  result = Σ_i coeffs[i] * vecs[i]
-#   adding two MPS exactly GROWS the bond dimension (it stacks them), so we
-#   add them with the exact "directsum" algorithm and only THEN compress once with an SVD-truncation.
-#   `do_truncate=false` skips that final compression and returns the RAW (uncompressed) directsum
+# Weighted sum Σ coeffs[i]*vecs[i]. Exact MPS addition stacks bond dimensions, so we directsum
+# first and compress once at the end; do_truncate=false returns the uncompressed sum.
 function lincomb_mps(coeffs::AbstractVector, vecs::AbstractVector{MPS};
                      cutoff::Float64=1e-12, maxdim::Int=256, do_truncate::Bool=true)
     acc = coeffs[1] * vecs[1]
@@ -98,46 +96,23 @@ end
     block_transfer_eigs(mpo, scaffold; k, maxdim, cutoff, itermax, eps_conv,
                         n_track, cond_thresh, maxdims) → (theta, L, R, info)
 
-Block (subspace) power method for the leading `k` eigenvalues of the non-Hermitian
-transfer operator `mpo`, with separate left/right bases and a fully non-conjugating
-(overlap_noconj) oblique Rayleigh-Ritz.
+Block power method for the leading `k` eigenvalues of the non-Hermitian transfer operator `mpo`,
+with separate left/right bases and a non-conjugating (overlap_noconj) oblique Rayleigh-Ritz.
 
-`maxdims` is an OPTIONAL bond-dim ramp: when given a vector, iteration `it` truncates to
-`maxdims[min(it,end)]` (cheap early iterations, then grow to the cap); when `nothing`
-(default) the fixed `maxdim` is used at every iteration. 
+Options worth knowing:
+  • `maxdims`/`cutoffs` — optional per-iteration schedules (cheap early, tight later); `nothing`
+    uses the fixed `maxdim`/`cutoff` throughout.
+  • `trunc_mode` — `:rtm` truncates each (L,R) pair jointly on |R⟩⟨L|: fewer states, but its
+    non-Hermitian SVD suffers at the gap closing. `:rdm` (alias `:naive`) truncates L and R
+    separately on their own density matrices: loses the L–R coupling, stays well conditioned.
+  • `basis` — `:eig` de-mixes onto the Ritz eigenvectors (cond ~ 1/gap); `:schur` uses an
+    orthonormalised basis instead, which survives a near-degenerate cluster.
+  • `seedL`/`seedR` — warm starts on `siteinds(scaffold)`, padded with random vectors if short.
+    See `pad_tmps` for reusing a converged pair across T.
+  • `eigvals_only` — spectrum only; forces `:schur` and skips the bi-normalisation.
 
-`cutoffs` is the analogous OPTIONAL per-iteration cutoff schedule (looser early, 
-tighter late); `nothing` (default) ⇒ fixed `cutoff`.
-
-`trunc_mode` selects how each de-mixed Ritz pair is truncated — the block analogues of the two
-truncations `powermethod_lr` offers via `truncp.alg`:
-  • `:rtm` (DEFAULT): RTM truncation. Combine exactly (directsum), then truncate each matched (L,R)
-    pair JOINTLY on its bilinear transition matrix |R⟩⟨L| via `truncate_sweep` — the same
-    non-conjugating RTM route as `truncp.alg="RTM"`. Optimal for the ⟨L|R⟩ overlap and keeps fewer
-    states, but its SVD of a non-Hermitian object is ill-conditioned exactly at the gap closing.
-  • `:rdm` (= `:naive`, historical alias): RDM truncation. Truncate each L and R INDEPENDENTLY, each
-    on its own Hermitian reduced density matrix |v⟩⟨v*| (the conjugating SVD inside `truncate!`) —
-    the block analogue of `truncp.alg="densitymatrix"`. Discards the L–R coupling but stays
-    well-conditioned (a positive Hermitian spectrum) through the near-degeneracy.
-
-`itermin`/`stuck_after` give an early-stop: after `itermin` iters, break with `reason="stuck"`
-once the tracked Δθ fails to improve for `stuck_after` consecutive iters
-
-`eps_conv` gives the strict `reason="converged"` break.
-
-`seedL`/`seedR` are OPTIONAL warm starts: vectors of MPS on `siteinds(scaffold)` used as the
-initial left/right bases (any shorter than `k` is padded with random vectors). Defaults `nothing`
-generates fully random seeds. A converged pair reused here (see `pad_tmps` for cross-T) converges fast.
-
-`basis` selects the coefficient basis the block is de-mixed onto each iteration:
-  • `:eig` (DEFAULT): the Ritz EIGENVECTOR basis — each (L_j,R_j) is an approximate eigenpair.
-    Ill-conditioned when eigenvalues cluster (cond of the eigenvector matrix ~ 1/gap).
-  • `:schur`: an ordered SCHUR-like basis (QR-orthonormalized eigen coefficients, leading-|θ|
-    first). The coefficient rotations are unitary, so the block stays well-conditioned through a
-    near-degenerate cluster; the leading pair still spans the dominant eigenvector, and θ is read
-    from the projected pencil as usual.
-
-info keys: :niters, :reason, :condS (final), :condS_hist, :dtheta, :theta, :theta_eigen.
+Stops at `eps_conv` (`reason="converged"`), or after `stuck_after` iterations without improvement
+(`reason="stuck"`). info keys: :niters, :reason, :condS, :condS_hist, :dtheta, :theta, :theta_eigen.
 """
 function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         k::Int=4, maxdim::Int=256, cutoff::Float64=1e-12,
@@ -151,27 +126,12 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         basis::Symbol=:eig,
         eigvals_only::Bool=false)
 
-    # EIGENVALUES-ONLY FAST PATH (opt-in; default false keeps the full behaviour, byte-for-byte).
-    #
-    # Why this is safe and useful: the transfer matrix here is strongly non-normal, so near the
-    # entanglement-barrier wall the individual eigenVECTORS become ill-defined (their phase rigidity
-    # ⟨L|R⟩/‖L‖‖R‖ → 0). The eigenVALUES do NOT: an eigenvalue read off a Rayleigh quotient
-    # θ = ⟨L|E|R⟩/⟨L|R⟩ has error O(δ²) in the eigenvector error δ (it is quadratically insensitive),
-    # which is exactly why θ stays accurate to ~1e-8 while the vectors scramble. So a caller who wants
-    # ONLY the spectrum — the λ0 circle / dual-unitarity plots, the gap-closing sweeps, the Eq.(3)/(4)
-    # eigenvalue c-extractions, none of which need entropy-quality vectors — can afford a coarser
-    # truncation and still get trustworthy θ's.
-    #
-    # This flag does NOT invent a cheaper algorithm (the cost is the 2k MPO applications + the block
-    # de-mixing, both unavoidable for the eigenvalues too). It just bundles the two settings that make
-    # a coarse run well-conditioned, and nothing else:
-    #   • it de-mixes on the ORTHONORMAL (Schur) block basis rather than the eigenvector basis (whose
-    #     conditioning ~1/gap blows up as the cluster closes), so the iteration never amplifies noise;
-    #   • it skips the final ⟨L_j|R_j⟩ = 1 bi-normalisation below, which only prepares the VECTORS for
-    #     entropy use — work this path does not need.
-    # The realised speed-up is the CALLER's to take, by ALSO passing a smaller `maxdim`/`cutoff` (or a
-    # `maxdims` ramp) than an entropy run would need; the flag simply makes doing so safe and
-    # self-documenting. The returned `theta` is computed by the identical Rayleigh–Ritz step as always.
+    # Spectrum-only mode. The eigenvalues survive the wall even when the eigenvectors do not: θ is a
+    # Rayleigh quotient, so its error is O(δ²) in the vector error δ. Callers who only want θ (the λ0
+    # circle, gap sweeps, the Eq.(3)/(4) reads) can therefore run much coarser. This flag is not a
+    # cheaper algorithm — it just de-mixes on the orthonormal Schur basis instead of the 1/gap-
+    # conditioned eigenvector one, and skips the bi-normalisation that only the entropy needs. Pass a
+    # smaller maxdim/cutoff yourself to actually get the speed-up.
     if eigvals_only
         basis = :schur
     end
@@ -207,11 +167,9 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
     best_dtheta = Inf                  # best Δθ seen so far (for the "stuck" early-stop)
     iters_noimp = 0                    # consecutive iterations with no improvement
 
-    # MAIN LOOP
-    # The idea (like the ordinary power method, but for k vectors at once): repeatedly apply the
-    # transfer matrix to a block of k vectors; the block rotates toward the k LARGEST eigenvectors.
-    # Each step we project the operator onto our small k-dim subspace and solve a tiny k×k eigenproblem
-    # (the "Rayleigh-Ritz" step) to read off eigenvalue estimates and re-mix the block cleanly.
+    # The power method on k vectors at once: apply the transfer matrix to the block, then project
+    # onto that k-dimensional subspace and solve a small k×k eigenproblem (Rayleigh-Ritz) to read
+    # the eigenvalues and re-mix the block.
     for it in 1:itermax
         niters = it
         md  = md_at(it)                                 # per-iteration bond-dim cap (ramp or fixed)
@@ -234,9 +192,8 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         condS_last = cond(S)                            # condition number: how close S is to singular
         push!(condS_hist, condS_last)                   # (IF large => two vectors nearly parallel => trouble)
 
-        # Solve the generalised eigenproblem: M v = θ S v 
-        # we map it to the ordinary problem (S⁻¹M) v = θ v
-        # and we use the PSEUDO-inverse pinv(S) which behaves well even when S is near-singular (gap closing) 
+        # M v = θ S v, mapped to the ordinary problem (S⁻¹M) v = θ v. pinv, not inv: S goes
+        # near-singular as the gap closes.
         pS = pinv(S; rtol=1e-12)
         W  = pS * M
         Fr = eigen(W)                                   # Fr.values = θ's, Fr.vectors = right coeffs
@@ -244,20 +201,15 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         theta = Fr.values[permr]                        # the eigenvalue estimates this iteration
         VR    = Fr.vectors[:, permr]                    # matching right mixing-coefficients (columns)
 
-        # LEFT coefficients from the SAME decomposition (no second eigen, no matching heuristic):
-        # a left pencil eigenvector obeys uᵀM = θ uᵀS ⇔ (uᵀS) W = θ (uᵀS), i.e. uᵀS is a left
-        # eigenvector of W = the matching ROW of VR⁻¹. Hence u_j = pinv(S)ᵀ (VR⁻¹)ᵀ[:,j] — paired
-        # with theta[j] EXACTLY and bi-orthogonal (uᵢᵀ S vⱼ = δᵢⱼ) by construction, where the old
-        # nearest-value matching of a second independent eigen() could mispair the left/right
-        # vectors inside a near-degenerate cluster (the tricritical failure mode).
+        # Left coefficients from the same decomposition: uᵀM = θ uᵀS means uᵀS is a row of VR⁻¹,
+        # so u_j = pinv(S)ᵀ(VR⁻¹)ᵀ[:,j] — exactly paired with theta[j] and bi-orthogonal by
+        # construction. A second eigen() with nearest-value matching mispairs inside a cluster.
         VL = transpose(pS) * transpose(pinv(VR; rtol=1e-12))
 
         if basis === :schur
-            # Near a degenerate cluster the eigenvector basis itself is ill-conditioned
-            # (cond(VR) ~ 1/gap), so de-mixing onto it amplifies noise. Instead rotate the block
-            # onto ordered-Schur-like bases: QR-orthonormalize the |θ|-sorted eigen coefficients.
-            # The rotations are unitary (well-conditioned always); the leading j columns span the
-            # same leading-j eigenvector subspaces, and column 1 is still the dominant eigenvector.
+            # cond(VR) ~ 1/gap near a degenerate cluster, so de-mixing onto the eigenvector basis
+            # amplifies noise. QR-orthonormalise the |θ|-sorted coefficients instead: unitary, and
+            # the leading columns still span the same subspaces.
             VR = Matrix(qr(VR).Q)
             VL = Matrix(qr(VL).Q)
         elseif basis !== :eig
@@ -268,13 +220,10 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         # taking those linear combinations of the applied vectors AR / ATL. This replaces the old
         # block with k cleanly-separated (approximate) eigenvectors, ready for the next iteration.
         if trunc_mode === :rtm
-            # :rtm — RTM truncation: the block analogue of powermethod_lr's truncp.alg="RTM"
-            # (tlrcontract(::Algorithm"RTM")). Truncate each matched (L_j,R_j) pair JOINTLY on its
-            # bilinear transition matrix |R_j⟩⟨L_j| (NO conjugation) via `truncate_sweep`. Keeps only
-            # the states that matter for the physical ⟨L|R⟩ structure (fewer states, cleaner), but the
-            # non-Hermitian SVD is ill-conditioned right at the gap closing.
-            # De-mix with the EXACT directsum (do_truncate=false): truncate_sweep orthogonalizes its
-            # inputs itself, so a pre-truncate! here would be redundant.
+            # Truncate each (L_j,R_j) pair jointly on the transition matrix |R_j⟩⟨L_j| — no
+            # conjugation. Fewer, cleaner states, but the non-Hermitian SVD is ill-conditioned
+            # right at the gap closing. Directsum without truncating: truncate_sweep
+            # orthogonalises its own inputs.
             Rnew = MPS[lincomb_mps(VR[:, j], AR;  do_truncate=false) for j in 1:k]
             Lnew = MPS[lincomb_mps(VL[:, j], ATL; do_truncate=false) for j in 1:k]
             for j in 1:k
@@ -282,12 +231,9 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
                 Lnew[j], Rnew[j] = res.L, res.R
             end
         elseif trunc_mode === :rdm || trunc_mode === :naive
-            # :rdm — RDM truncation: the block analogue of powermethod_lr's truncp.alg="densitymatrix"
-            # (the generic tlrcontract fallback → tcontract(::Algorithm"densitymatrix")). Truncate every
-            # L_j and R_j INDEPENDENTLY, each on its own Hermitian reduced density matrix |v⟩⟨v*| (the
-            # conjugating SVD inside `truncate!`). Discards the L–R coupling, but it is a positive
-            # Hermitian eigenproblem, so it stays well-conditioned through the near-degeneracy where the
-            # RTM SVD scatters. (:naive is the historical alias for this same per-vector route.)
+            # Truncate every L_j and R_j independently on its own density matrix |v⟩⟨v*|. Throws
+            # away the L–R coupling, but it is Hermitian and positive, so it stays well conditioned
+            # where the RTM SVD scatters. (:naive is the old alias for this route.)
             Rnew = MPS[lincomb_mps(VR[:, j], AR;  cutoff=cut, maxdim=md) for j in 1:k]
             Lnew = MPS[lincomb_mps(VL[:, j], ATL; cutoff=cut, maxdim=md) for j in 1:k]
         else
@@ -303,11 +249,9 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         # Convergence / stopping checks (only tracking the leading n_track eigenvalues)
         ntr = min(n_track, k)
         if it > 1 && all(isfinite, theta_prev[1:ntr])
-            # How much did the tracked eigenvalues move since last step? Match each tracked
-            # PREVIOUS θ to its nearest CURRENT θ (continuity) before differencing: members of a
-            # ±pair or a near-degenerate cluster swap |θ|-sort order between iterations, and a
-            # raw index-wise difference would register that swap as a spurious Δθ jump
-            # (fake non-convergence → premature "stuck").
+            # Match each previous θ to its nearest current one before differencing: near-degenerate
+            # values swap |θ|-sort order between iterations, and an index-wise difference would read
+            # that swap as a jump and call it stuck too early.
             dtheta = 0.0
             usedc  = falses(k)
             for j in 1:ntr
@@ -348,7 +292,7 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
             jb = k
             r = rand_mps(); l = rand_mps()
             for a in 1:(k-1)    # take random vector r (l) and subtract away any component it shared with R[1], ..., R[k-1] (L[1], ..., L[k-1])
-                # bi-orthogonal projection: the (L_a,R_a) pairs are NOT bi-normalized during the
+                # bi-orthogonal projection: the (L_a,R_a) pairs are not bi-normalized during the
                 # iteration, so the projection coefficient must be divided by ⟨L_a|R_a⟩
                 den = overlap_noconj(L[a], R[a])
                 abs(den) < 1e-14 && continue
@@ -363,10 +307,8 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
 
     theta_eigen = copy(theta)         # keep the raw eigenvalues
 
-    # Bi-orthonormalise each pair so that ⟨L_j|R_j⟩ = 1 exactly.
-    # Skipped on the eigenvalues-only path: this step only conditions the VECTORS for entropy use
-    # (e.g. so the phase rigidity reads r_j = 1/‖L_j‖‖R_j‖); the eigenvalues in `theta` are final
-    # already, so an eigenvalues-only caller pays nothing for a normalisation it will not read.
+    # Bi-orthonormalise each pair to ⟨L_j|R_j⟩ = 1. Only the vectors need this (it is what makes
+    # the phase rigidity read r_j = 1/‖L_j‖‖R_j‖), so the spectrum-only path skips it.
     if !eigvals_only
         for j in 1:k
             ov = overlap_noconj(L[j], R[j])
@@ -675,36 +617,18 @@ function plot_panels(panels...; filename::String, title::String="",
     return plt
 end
 
-# ────────────────────────────────────────────────────────────────────────────────────────────────
-# PHASE-BASED SPECTRUM CLASSIFICATION AND CONTINUITY (added July 2026, promoted from NB3/NB5/NB8)
+# ── towers, partners, and picking the physical λ0 ───────────────────────────────────────────────
 #
-# The transfer-matrix spectrum comes in ± pairs: a physical eigenvalue λ0 and a "-λ0 partner" at
-# nearly the same modulus but phase shifted by ≈π. Selecting "the physical branch" or "the gap" by
-# MODULUS RANK ALONE (comparing only the two largest-|θ| values) silently breaks once frustration
-# grows: extra partners crowd into the leading k-block and a rank-based pick can grab a partner
-# instead of the genuine λ1 (NB5: at p=0.3, T=4 the whole k=4 block is λ0 plus three partners, with
-# λ1 entirely absent), or lose continuity across a cold-started T-ladder (NB9). The fix is to
-# classify by PHASE relative to λ0: the "tower" is every eigenvalue within π/2 of λ0's phase (its
-# own CFT descendants), the "partners" are everything else (the π-shifted copies). This is exactly
-# NB3/NB5's finding and NB8's `classify_block`, promoted here as the one authoritative
-# implementation — new drivers should use this, not re-derive a modulus-rank selector.
+# The spectrum comes in ± pairs: λ0 and a partner at nearly the same modulus, about π away in phase.
+# So we classify by phase rather than by modulus rank — the tower is everything within π/2 of λ0
+# (its own descendants), the partners are the rest.
 #
-# TWO REFINEMENTS from the July-2026 cluster p-sweep (NB9), both baked into the functions below:
-#
-#  (A) SELECT λ0 BY MODULUS-DOMINANCE, NOT COMPLEX CONTINUITY.  An earlier version of
-#      `pick_phys_continuity` searched the WHOLE block for the member closest in the COMPLEX PLANE to
-#      the previous rung's λ0. That drifts and then CASCADES: Im(λ0)≈a·v·T, so the physical λ0's phase
-#      winds by ~a·v every T-step (faster at larger v, i.e. larger p). A nearest-complex-value rule
-#      then latches onto a stationary near-modulus partner, and because the next rung re-anchors on
-#      that slip, one wrong pick corrupts the ENTIRE ladder below it (observed p≥0.5: |λ0| collapsing
-#      to 0.16 at T=4, then partners for all T>4). Modulus is the STABLE quantity — the physical λ0 is
-#      the dominant (largest-|θ|) eigenvalue and its ±π partner is subdominant for the resolvable
-#      range (p≲1) — so we pick by |θ| and use continuity ONLY to break a genuine <1% modulus tie
-#      (the exact ±π near-degeneracy). `phys_lambda0_suspect` flags a non-convergence blow-up/collapse.
-#  (B) ESCALATE k UNTIL A TOWER MEMBER IS CAPTURED.  At larger p the leading block can be λ0 + ONLY
-#      π-partners (tower_gap=NaN, λ1 absent). One bump k=4→6 is not always enough (p≈0.8), so
-#      `block_transfer_eigs_adaptive` now steps k→6→8 (warm-seeded) until λ1 appears or k_retry is hit.
-# ────────────────────────────────────────────────────────────────────────────────────────────────
+# Two things we got wrong first and fixed (NB5, NB9):
+#   - Pick λ0 by largest modulus. Tracking it by nearest complex value looks natural but cascades:
+#     the phase winds as ~a·v·T, so the rule latches onto a stationary partner and every later rung
+#     re-anchors on that mistake. Continuity is only used to break a sub-percent modulus tie.
+#   - The leading block can be λ0 plus nothing but partners, λ1 missing entirely (p≳0.3). Hence the
+#     k→6→8 escalation in block_transfer_eigs_adaptive.
 
 # Phase convention used throughout this project: Im(λ) = arg(-τ), i.e. phase measured from -θ.
 phase_of(z) = angle(-z)
