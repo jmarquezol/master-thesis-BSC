@@ -12,7 +12,7 @@ At $p=0$ the model is the transverse-field Ising chain and every conformal predi
 
 The entropy route comes first. Figure~\ref{fig:val_profiles}(a) shows the real part of the R\'enyi-2 temporal entropy for several evolution times, collapsed onto the conformal chord of Equation~\eqref{eq:cft:chord}: the dome grows logarithmically with $T$ and follows the predicted profile. A log-only fit of the slope returns $c=0.69$, above $\tfrac12$ because at accessible times the leading logarithm is inflated by the finite-time correction (Section~\ref{sec:cft:universal}). Restoring that correction turns the imaginary plateau into an absolute read of $c$ that descends towards $\tfrac12$ as the fit window lengthens, reaching $0.57$ over $T\le12$ (Figure~\ref{fig:val_profiles}(b)). At the integrable point there is no lower coupling to calibrate against, so the precise central charge here comes from the spectral route below; the entropy route establishes that the R\'enyi-2 dome is conformal and that its corrected read is consistent with $c=\tfrac12$.
 
-\begin{figure}[h!]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.95\textwidth]{imgs/cft_ising_validation.png}
     \caption{\textbf{The R\'enyi-2 temporal entropy of the critical Ising chain follows the CFT prediction.} Computed with the same Alcaraz construction used at every $p$. (a) Real part against the chord variable $W(t,T)$ of Equation~\eqref{eq:chord}, for the available evolution times (free boundary condition, $\beta_0=0.2$); the points collapse onto the conformal chord and a log-only slope fit gives $c\approx0.69$, inflated by the finite-time correction. (b) The absolute central charge from the imaginary plateau's finite-time drift, $\mathrm{Im}=\pi c/16 + B'T^{-1/2}$, converging towards $c=\tfrac12$ as the fit window grows.}
@@ -21,7 +21,7 @@ The entropy route comes first. Figure~\ref{fig:val_profiles}(a) shows the real p
 
 The spectral route reproduces the remaining predictions. Figure~\ref{fig:val_circle} (left) traces the leading eigenvalue $\mu_0(T)$ in the complex plane: the points sit on a circle of near-constant radius while the phase winds---emergent dual unitarity, prediction 4. The radius is $|\mu_0|\approx1.489$ rather than one because its absolute value depends on the per-column normalization of the transfer matrix (through it, $|\mu_0|$ sets the Loschmidt rate of Equation~\eqref{eq:rate}); the dual-unitarity signature is that this radius becomes constant in $T$, while only the phase keeps evolving. Figure~\ref{fig:val_circle} (right) shows the central-charge extraction from the same eigenvalue, Equation~\eqref{eq:cft:eq3}: after removing the constant branch offset $B=-\pi$ (the subtlety discussed in Appendix~\ref{app:eq3}), the de-biased phase divided by $T$ exposes the Casimir curvature, and the fit returns $c=0.481$. Finally, Figure~\ref{fig:val_x1} shows the boundary-exponent measurement, Equation~\eqref{eq:cft:eq4}, for the two boundary conditions of Section~\ref{sec:cft:temporal}: the free boundary ($\ket{X+}$) gives $x_1=0.493$, the fixed boundary ($\ket{Up}$) gives $x_1=1.977$---both within a couple of percent of the exact boundary-CFT values $\tfrac12$ and $2$. Every prediction of Section~\ref{sec:cft:temporal} is thus recovered at the integrable point, and the pipeline is calibrated.
 
-\begin{figure}[h!]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.46\textwidth]{imgs/val_circle_p0.png}
     \includegraphics[width=0.52\textwidth]{imgs/val_eq3_p0.png}
@@ -29,7 +29,7 @@ The spectral route reproduces the remaining predictions. Figure~\ref{fig:val_cir
     \label{fig:val_circle}
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.7\textwidth]{imgs/val_x1_p0.png}
     \caption{\textbf{The boundary exponent distinguishes free from fixed boundary conditions.} The first spectral gap $\mathrm{Im}(\lambda_1-\lambda_0)$ against $T$ for the free ($\ket{X+}$) and fixed ($\ket{Up}$) boundary states, with the fits of Equation~\eqref{eq:cft:eq4}. The extracted exponents, $x_1=0.493$ and $x_1=1.977$, match the exact boundary-CFT values $\tfrac12$ and $2$.}
@@ -48,7 +48,7 @@ with per-time values $0.43,\,0.46,\,0.56,\,0.48,\,0.46,\,0.42$---consistent with
 
 The same verification extends to stronger frustration. The warm-started cluster sweep provides converged boundary states at $p=0.3$ and $p=0.5$ within their own clean windows---windows that shrink as $p$ grows, for the reasons quantified in Section~\ref{sec:results:limits}---and their domes and calibrated slopes are analyzed in exactly the same way as at $p=0.1$. \textit{[OPEN: Figure~\ref{fig:frust_domes} is reserved for the $p=0.3$ and $p=0.5$ domes and their calibrated central charges; the analysis pipeline is in place and the figure fills in once the cluster arms complete.]}
 
-\begin{figure}[h!]
+\begin{figure}[!htbp]
     \centering
     \fbox{\parbox[c][5.5cm][c]{0.85\textwidth}{\centering \textit{[OPEN: R\'enyi-2 domes and calibrated entropy slopes at $p=0.3$ and $p=0.5$ --- pending the cluster arms.]}}}
     \caption{\textbf{The entropy route at stronger frustration.} Generalized R\'enyi-2 domes and calibrated chord slopes at $p=0.3$ and $p=0.5$ inside their clean windows, verifying that the entropy route reads $c\approx\tfrac12$ across the frustrated range before each arm meets its own wall. \textit{[OPEN: to be produced from the cluster data.]}}
@@ -57,7 +57,7 @@ The same verification extends to stronger frustration. The warm-started cluster 
 
 The entropy route, however, has a hard ceiling, and Figure~\ref{fig:wall} shows it from both sides. The left panel shows the dome itself: conformal at $T=6$ and $T=8$, and then inflated discontinuously at $T=10$, its peak jumping by more than a third in a single step. The right panel shows why, using the figure of merit introduced in Section~\ref{sec:reach}: the phase rigidity $r$ of the dominant eigenvector pair (Equation~\eqref{eq:rigidity}) collapses geometrically---five orders of magnitude across the sweep---and reaches its floor exactly where the dome breaks. The transfer matrix is approaching an exceptional point: the left and right dominant eigenvectors are coalescing, the individual eigenvector is becoming ill-conditioned at the rate $1/\mathrm{gap}$ anticipated by Equation~\eqref{eq:reach}, and any entropy built from it loses meaning. The eigenvalues, tellingly, remain accurate through the wall---checked against exact diagonalization to $10^{-8}$--$10^{-13}$---so this is not a failure of the solver but of the object being asked for. Appendix~\ref{app:wall} collects the checks behind this diagnosis: a short account of what an exceptional point is and how it degrades the eigenvectors, the verification that no post-processing of the converged subspace rescues the entropy past this point, and the demonstration that the wall is gap-limited rather than resolution-limited---halving the bond dimension, tightening the truncation cutoff, and switching from RTM to RDM truncation all leave its onset at the same $T$. Past the wall, the physics must be read from the eigenvalues, which is exactly what the next subsection does.
 
-\begin{figure}[h!]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.48\textwidth]{imgs/gap_closing_wall.png}
     \includegraphics[width=0.50\textwidth]{imgs/nb13_rigidity.png}
@@ -72,7 +72,7 @@ The eigenvalue measurements survive frustration, and reading them carefully turn
 
 Emergent dual unitarity persists at $p\neq0$. Figure~\ref{fig:frust_circle} traces $\mu_0(T)$ for both couplings: each sits on its own circle of near-constant radius ($|\mu_0|\approx1.489$ at $p=0$, $1.549$ at $p=0.1$) with a winding phase. The transfer matrix still becomes effectively unitary; frustration does not spoil the conformal structure, exactly as prediction 4 requires for a critical quench.
 
-\begin{figure}[h!]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.62\textwidth]{imgs/alcaraz_lambda0_circle.png}
     \caption{\textbf{Emergent dual unitarity survives frustration.} The leading eigenvalue $\mu_0(T)$ for $p=0$ and $p=0.1$, each on its own constant-radius circle. The value of each radius reflects the per-column normalization and the Loschmidt rate; the dual-unitarity signature is that both radii stay constant in $T$ while the phases wind.}
@@ -81,7 +81,7 @@ Emergent dual unitarity persists at $p\neq0$. Figure~\ref{fig:frust_circle} trac
 
 The central charge from the eigenvalue route confirms the entropy result. Figure~\ref{fig:frust_eq3} shows the corrected Equation~\eqref{eq:cft:eq3} fit for both couplings on the pre-wall window: calibrating the $1/T$ coefficient against $p=0$---the same ratio construction as the entropy, cancelling the velocity and every shared prefactor---returns $c=0.52$ at $p=0.1$. The absolute (uncalibrated) read at $p=0.1$ is not yet stable, and the reason is worth recording. \textit{[Working-draft note, pending the longer cluster windows: the corrected fit takes the form $\mathrm{Im}\,\lambda_0 = A\,T + B + C/T + D/T^3$, where $B$ is the constant branch offset and $C$ carries the Casimir term that measures $c$. Over a short window in $T$, a constant and a slowly varying $1/T$ term are nearly indistinguishable: the fit can trade $B$ against $C$ at almost no cost in the residual, so the absolute value of $C$ is poorly determined even though the calibrated ratio---in which the bias cancels---remains stable. Pinning $B=-\pi$ (Appendix~\ref{app:eq3}) removes the degeneracy exactly at the integrable point, but at $p\neq0$ a residual freedom still biases $|C|$ on windows limited to $T\lesssim9$. The longer ladders of the running cluster campaign, reaching $T\approx14$--$20$, separate the two directions of the fit and will allow an absolute read of $c(p)$.]}
 
-\begin{figure}[h!]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.7\textwidth]{imgs/eq3_kappa_fit.png}
     \caption{\textbf{The eigenvalue route to the central charge under frustration.} The de-biased phase of $\lambda_0$ divided by $T$, for $p=0$ and $p=0.1$, with the corrected three-term fits of Equation~\eqref{eq:cft:eq3}. The calibrated ratio of the Casimir coefficients gives $c(p{=}0.1)=0.52$.}
@@ -98,14 +98,14 @@ Figure~\ref{fig:tower} makes this structure visible directly. It shows the deep 
 \end{equation}
 the free-boundary value at both couplings. The $x_1\approx\tfrac32$ of the naive reading was the even module's first excited state, measured in place of the displaced $\tfrac12$.
 
-\begin{figure}[h!]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.8\textwidth]{imgs/alcaraz_tower_spectrum.png}
     \caption{\textbf{The odd boundary ladder is displaced by momentum $\pi$.} The deep $k=8$ transfer block at $p=0.1$, $T=4$, in the plane of phase gap to $\mu_0$ versus relative modulus. Blue guides: the CFT positions of the even (identity-module) ladder $x=2,3,4$; red guides: the odd (boundary-fermion) ladder $x=\tfrac12,\tfrac32,\tfrac52$ entering from the $\pi$ side. The eigenvalues populate both ladders; the lightest operator $x=\tfrac12$ sits at phase $\approx\pi$ at nearly full modulus.}
     \label{fig:tower}
 \end{figure}
 
-\begin{table}[h!]
+\begin{table}[!htbp]
     \centering
     \begin{tabular}{c|c|c}
     \hline
@@ -122,7 +122,7 @@ the free-boundary value at both couplings. The $x_1\approx\tfrac32$ of the naive
 
 The same structure is recovered across the frustrated range, and its onset with $p$ is itself the cleanest evidence for the displacement. Figure~\ref{fig:tower_p} follows the extracted boundary dimensions against $T$ for $p=0,0.1,0.3,0.5$, reading each captured eigenvalue as a near-$\mu_0$ (identity) state or a momentum-$\pi$-displaced (odd) one. At $p=0$ the entire free-boundary ladder $\{\tfrac12,\tfrac32,2\}$ sits near $\mu_0$, with nothing on the $\pi$ side---the free-fermion chain has no displaced tower. At $p=0.1$ the picture splits: the identity operator $x=2$ stays near $\mu_0$ while the odd ladder $\{\tfrac12,\tfrac32\}$ moves to the $\pi$ side, and both hold flat in $T$. Turning on the interaction is precisely what promotes the light operators from the identity side to the displaced side. At stronger frustration the pre-wall $k=4$ reads grow noisier, because the larger velocity $v(p)$ compresses the phase ladder and the wall arrives earlier: $p=0.3$ is recovered only approximately and $p=0.5$ only at its lightest operators. Sharpening these arms is exactly what the eigenvalues-only cluster sweep is for---it reaches well past the wall, where the spectrum survives even though the entropy does not (Section~\ref{sec:results:limits}).
 
-\begin{figure}[h!]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.95\textwidth]{imgs/alcaraz_tower_across_p.png}
     \caption{\textbf{The identity tower and the momentum-$\pi$-displaced odd tower, across frustration.} Extracted boundary dimensions against evolution time for $p=0,0.1,0.3,0.5$, from the $k=4$ transfer block with the measured $v(p)$. Blue circles: states near $\mu_0$ (the identity module); red diamonds: states displaced to phase $\approx\pi$ (the odd boundary-fermion ladder); dashed lines mark the CFT values $x=\tfrac12,\tfrac32,2,3$. At $p=0$ the whole ladder sits near $\mu_0$ (no displacement); at $p=0.1$ the odd operators have moved cleanly to the $\pi$ side and stay put in $T$. The $p=0.3,0.5$ panels use the noisier pre-wall data and sharpen once the higher-$T$ cluster sweep lands.}
@@ -136,7 +136,7 @@ The displaced tower also reshapes how the numerical convergence degrades with fr
 \end{equation}
 excluding the displaced states; the naive ratio of the two largest moduli instead measures the near-degeneracy of $\mu_0$ with its nearest displaced partner, which approaches one much earlier. This distinction is also what dictated the branch-selection rule of Section~\ref{sec:numerics:practical}: the displaced partner sits at nearly the same modulus as $\mu_0$ but far away in phase, so a selector anchored on complex-plane proximity drifts onto it as the phase of $\mu_0$ winds---the failure that modulus dominance repairs. Figure~\ref{fig:pgap} shows the tower gap of Equation~\eqref{eq:physgap} against $T$ for every frustration in the sweep: at each $p$ the gap closes monotonically toward one---the conformal degeneracy building up---and it does so at ever smaller $T$ as $p$ grows, both because the larger $v(p)$ compresses the phase ladder (Section~\ref{sec:annni:velocity}) and because the displaced tower crowds the leading block. The reach of the method shrinks accordingly, which is the subject of the final subsection.
 
-\begin{figure}[h!]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.75\textwidth]{imgs/nb9_psweep_gap.png}
     \caption{\textbf{The physical gap closes earlier as frustration grows.} The tower gap of Equation~\eqref{eq:physgap} against $T$ for $p=0$ to $1$, from the warm-started cluster sweep. Each curve rises monotonically toward the degenerate limit (dashed); the closing accelerates with $p$, compressing the window in which the spectrum---and, before its own wall, the entropy---can be resolved. \textit{[OPEN: the higher-$p$ arms fill in as the cluster campaign completes.]}}
@@ -152,7 +152,7 @@ The provisional picture separates two statements that the sweep will finish quan
 
 Two further checks complete the map of the limits. First, the wall of Section~\ref{sec:results:wall} is set by the physics, not the resolution: the bond dimension, the truncation cutoff, and the truncation scheme all leave its onset unchanged, and the phase rigidity collapses at the same rate under all of them. Second, the RTM-versus-RDM comparison of Section~\ref{sec:transverse:truncation} is settled empirically: where both converge they agree on every eigenvalue and on the rigidity to four to five digits, so the two schemes are physically equivalent---and since the RDM truncation costs several times more (up to an order of magnitude at large $T$) for no gain in reach, the gauge-invariant RTM truncation is the right production choice, with its milder convergence monitored rather than feared.
 
-\begin{table}[h!]
+\begin{table}[!htbp]
     \centering
     \begin{tabular}{lccc}
     \hline

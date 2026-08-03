@@ -25,7 +25,7 @@ where $W$ is the chord variable of Equation~\eqref{eq:chord} and $k$ is a non-un
 
 For each value of $p$, we obtain the ground state of a chain with $N=100$ sites and evaluate the entropy across every bond. Equation~\eqref{eq:cft_obc} predicts a linear dependence on $W(l,L)$, with slope $c/6$. The complete entanglement profile of a single ground state therefore provides an estimate of the central charge. We fit the central half of the chain, where boundary corrections are smallest; the resulting profiles are shown in Figure~\ref{fig:cft_chord}.
 
-\begin{figure}[h!]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.75\textwidth]{imgs/cft_chord_equilibrium.png}
     \caption{Ground-state entanglement profiles of the ANNNI-type chain at $\lambda=1$ and $N=100$ for $p=0$ to $0.5$ in steps of $0.1$. Each profile is linear in the chord variable $W$ of Equation~\eqref{eq:chord}, with slope $c/6$ as predicted by Equation~\eqref{eq:cft_obc}. The fitted central charge ranges from $0.5070$ to $0.5081$. Its small offset from $1/2$ is already present at $p=0$ and is attributed to finite-size corrections.}
@@ -48,7 +48,7 @@ The effect of the additional interactions becomes explicit after mapping the spi
 \end{equation}
 where $c_j$ annihilates a spinless fermion, $n_j=c^\dagger_j c_j$, and the string $K_j$ enforces the fermionic anticommutation relations.
 
-The two Ising terms remain quadratic under this transformation. The transverse field becomes a chemical-potential term, while the strings associated with the nearest-neighbour bond cancel and leave ordinary hopping and pairing. The $p=0$ chain is therefore a free-fermion model and can be diagonalised exactly~\cite{pfeuty1970}. At criticality, its continuum limit is the free Majorana \ac{CFT} with $c=\tfrac12$~\cite{difrancesco1997}.
+The two Ising terms remain quadratic under this transformation. The transverse field becomes a chemical-potential term, while the strings associated with the \ac{NN} bond cancel and leave ordinary hopping and pairing. The $p=0$ chain is therefore a free-fermion model and can be diagonalised exactly~\cite{pfeuty1970}. At criticality, its continuum limit is the free Majorana \ac{CFT} with $c=\tfrac12$~\cite{difrancesco1997}.
 
 The terms proportional to $p$ introduce quartic fermionic contributions. The self-dual $\sigma^x_j\sigma^x_{j+1}$ term becomes the density--density factor $(1-2n_j)(1-2n_{j+1})$, which is diagonal in the occupation basis. For the \ac{NNN} bond, the Jordan--Wigner strings do not cancel completely: a parity factor remains on the intermediate site,
 \begin{equation}

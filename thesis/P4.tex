@@ -1,114 +1,54 @@
 \section{Building the Time-Evolution MPO}
 \label{sec:mporep}
 
-The transverse contraction of Section~\ref{sec:transverse} requires the time-evolution operator
-$U(\delta t)=e^{-iH\delta t}$ as a translation-invariant \ac{MPO}, since only then is every column of
-the rotated network the same transfer matrix, and the contraction an eigenvalue problem. Any site
-dependence would produce a different operator at each site and remove that structure.
+The transverse contraction framework introduced in Section~\ref{sec:transverse} requires the short-time evolution operator $U(\delta t)=e^{-iH\delta t}$ to be represented as a translation-invariant \ac{MPO}. This ensures that every column of the rotated space-time network defines the same transfer matrix, effectively reducing the spatial contraction (which encodes the dynamics) to an eigenvalue problem. If the local tensors depended on the site, each column would instead define a different operator and this simple reduction would no longer apply.
 
-The standard way of building such an operator is a Trotter--Suzuki decomposition into layers of
-two-site gates, which for a nearest-neighbour chain gives a uniform sequence of identical tensors;
-Appendix~\ref{app:mpo:standard} summarizes the construction. This is no longer possible in a simple
-way once the Hamiltonian contains a term connecting sites $i$ and $i+2$, since such a term does not
-act on a single bond of that pattern, and the available workarounds do not yield a
-translation-invariant \ac{MPO}. We therefore build the operator by a different route, encoding the
-Hamiltonian as a finite-state machine.
+For \ac{NN} Hamiltonians, such an operator is usually constructed through a Trotter--Suzuki decomposition into layers of two-site gates, as summarized in Appendix~\ref{app:mpo:standard}. A term coupling sites $i$ and $i+2$ does not fit into this bond pattern, and the standard extensions do not preserve a one-site translation-invariant \ac{MPO}. We therefore represent the Hamiltonian as a \acf{FSM} and exponentiate this representation directly.
 
-\subsection{The Hamiltonian as a finite-state machine}
+\subsection{The Hamiltonian as a \texorpdfstring{\ac{FSM}}{FSM}}
 \label{sec:mporep:fsm}
 
-The alternative to spatial Trotterization is to write the Hamiltonian directly as a
-block-upper-triangular \ac{MPO}, in which the virtual index acts as the internal state of a
-\ac{FSM}: it records whether an interaction has been started, is being propagated, or has been
-completed. For a generic extensive Hamiltonian the local tensor takes the block form
-$W_H=\big(\begin{smallmatrix}\mathbb{I}&C&D\\ 0&A&B\\ 0&0&\mathbb{I}\end{smallmatrix}\big)$, where
-$D$ holds the on-site terms, $C$ and $B$ initiate and terminate interactions, and $A$ propagates
-them across intermediate sites. For the ANNNI-type model these blocks must accommodate the
-transverse field $-\lambda\sigma^x$, the two nearest-neighbour terms $-\sigma^z\sigma^z$ and
-$-p\lambda\,\sigma^x\sigma^x$, and the \ac{NNN} coupling $-p\,\sigma^z\sigma^z$, giving a tensor of
-bond dimension $D_W=5$,
-\begin{equation}
-  W_H =
+In the \ac{FSM} representation, the Hamiltonian is encoded as an \ac{MPO} whose local tensor has a block-upper-triangular form. This tensor is composed of two identity blocks, which propagate the initial and final states; an on-site block $D$; a block row $C$, which initiates interactions; a block column $B$, which terminates them; and a memory block $A$, which propagates unfinished interactions between their endpoints. The virtual index therefore records whether an interaction has not yet begun, is being propagated, or has terminated. For the ANNNI-type model, the local tensor has bond dimension $D_W=5$ and takes the form
+\begin{align}
+  W_H & =
   \begin{pmatrix}
-    \mathbb{I} & -\sigma^z & -p\lambda\,\sigma^x & -p\,\sigma^z & -\lambda\,\sigma^x \\
+    \mathbbm{1} & C & D \\
+    0 & A & B \\
+    0 & 0 & \mathbbm{1}
+  \end{pmatrix}=
+  \begin{pmatrix}
+    \mathbbm{1} & -\sigma^z & -p\lambda\,\sigma^x & -p\,\sigma^z & -\lambda\,\sigma^x \\
     0 & 0 & 0 & 0 & \sigma^z \\
     0 & 0 & 0 & 0 & \sigma^x \\
-    0 & \mathbb{I} & 0 & 0 & 0 \\
-    0 & 0 & 0 & 0 & \mathbb{I}
-  \end{pmatrix},
+    0 & \mathbbm{1} & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 & \mathbbm{1}
+  \end{pmatrix}.
   \label{eq:Wannni}
-\end{equation}
-whose first row contains the initiators, whose last column contains the terminators, and whose
-fourth row is the memory channel carrying the unfinished \ac{NNN} interaction.
+\end{align}
 
-The tensor is best read as a machine that scans the chain from left to right, using the virtual bond
-as its memory. It starts in the identity state, the first row. From there it either applies an
-on-site operator through $D$ and jumps to the final state, or opens a multi-site interaction through
-$C$ and enters the memory block $A$. For a nearest-neighbour term it waits a single site and
-terminates through $B$. The \ac{NNN} term is where the construction earns its place: initiating it
-places the machine in a dedicated memory state, the fourth row of Equation~\eqref{eq:Wannni}, which
-applies the identity at the intermediate site $i+1$ and carries the pending $\sigma^z$ operator
-unchanged until the interaction terminates at site $i+2$. Once an interaction is complete the
-machine moves to the absorbing final state and applies identities along the rest of the chain.
-Because the matrix is upper triangular, the contraction can only advance through this sequence and
-never run an interaction backwards. The bond dimension is simply the number of internal states: the
-initial state, the final state, and one memory channel per propagating interaction.
+Figure~\ref{fig:fsm} represents Equation~\eqref{eq:Wannni} as the allowed paths through the five virtual states. Each node denotes a value of the virtual index, while an arrow from state $a$ to state $b$, labelled by an operator $O$, represents the tensor entry $(W_H)_{ab}=O$. The machine scans the chain from left to right, beginning in state $1$ and ending in state $5$.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\linewidth]{imgs/fsm.pdf}%
+  \caption{\ac{FSM} representation of the Hamiltonian \ac{MPO}. The nodes are the five virtual states of Equation~\eqref{eq:Wannni}, and each arrow is labelled by the physical operator applied during the corresponding transition. The machine starts in state $1$ and closes a term on reaching state $5$, drawn with a double circle; every path between them generates one term of the Hamiltonian. Arrows are coloured by the term they build: the transverse field in teal, the two nearest-neighbour couplings in blue ($\sigma^z\sigma^z$) and orange ($\sigma^x\sigma^x$), and the \ac{NNN} coupling in purple. The grey loops are the identities applied before the first term starts and after the last one closes. State $2$ is shared by the blue and purple paths because both terminate on a $\sigma^z$, which is what keeps the bond dimension at $D_W=5$.}
+  \label{fig:fsm}
+\end{figure}
+The loop $1\to1$ applies identities until a Hamiltonian term is initiated. A direct transition $1\to5$ applies the on-site field and completes the term at the same site. For an \ac{NN} interaction, the machine instead follows either $1\to2\to5$ or $1\to3\to5$. The first transition applies the operator at site $i$ and stores in the virtual state whether a $\sigma^z$ or $\sigma^x$ endpoint is pending; the second applies the matching operator at site $i+1$ and completes the interaction. The \ac{NNN} term follows the path $1\to4\to2\to5$: the transition to state $4$ applies the first $\sigma^z$ at site $i$, the transition $4\to2$ inserts an identity at site $i+1$, and the transition $2\to5$ applies the final $\sigma^z$ at site $i+2$. Once state $5$ is reached, the loop $5\to5$ applies identities along the remainder of the chain. The zero entries of $W_H$ correspond to absent arrows, so no other transitions are allowed.
 
-This directionality has a consequence that carries through the rest of the work. Since the machine
-reads the chain in one direction only, the tensor is asymmetric in its virtual space, and the
-transfer matrix obtained after the $90^\circ$ rotation is correspondingly non-Hermitian and
-non-normal. A symmetric \ac{MPO} would allow the right temporal state to be obtained by transposing
-the left one; ours does not, so the two boundary states must be computed independently, which is the
-setting of Section~\ref{sec:nonhermitian}.
+This directional construction makes the tensor asymmetric in its virtual indices. After the $90^\circ$ rotation, the corresponding spatial transfer matrix is consequently non-Hermitian and non-normal. The left and right temporal boundary states are therefore independent and must be computed separately. Section~\ref{sec:nonhermitian} introduces the resulting notation.
 
-\subsection{Exponentiating the finite-state machine}
+\subsection{Exponentiating the \texorpdfstring{\ac{FSM}}{FSM}}
 \label{sec:mporep:exp}
 
-What remains is to turn $W_H$ into an operator $W(\tau)\approx e^{\tau H}$ with $\tau=-i\delta t$.
-This is not a simple matrix exponential. Powers of an upper-triangular block matrix mix the blocks,
-producing cross terms such as $CD$, $BC$ and $AD$, each of which has to appear with exactly the
-coefficient the Taylor series prescribes if the operator is to match it to the intended order. A
-truncated Taylor series is not an option either, since $H^n$ is a sum of $\mathcal{O}(N^n)$ local
-terms and the result is not size-extensive~\cite{vandamme2024}. The constructions used here avoid
-both problems by organizing the expansion according to how the local terms overlap: terms on
-disjoint regions commute and factorize, and are kept to all orders at no cost, so that only the
-connected clusters of overlapping terms need to be captured, up to a controlled size. The machinery
-is given in Appendix~\ref{app:mpo}.
+We next construct an approximation $W(\tau)\approx e^{\tau H}$, with $\tau=-i\delta t$, from the blocks of $W_H$. This operation is not equivalent to exponentiating the local block matrix: powers of an upper-triangular matrix mix its blocks and generate products such as $CD$, $BC$, and $AD$, whose coefficients must reproduce the Taylor expansion to the required order. Directly truncating the Taylor series of the many-body operator is also unsuitable because $H^n$ contains $\mathcal{O}(N^n)$ local contributions, so the resulting approximation is not size-extensive~\cite{vandamme2024}. The constructions used here instead organize the expansion by the spatial overlap of the local terms. Contributions with disjoint support commute and factorize, allowing them to be retained to all orders, while only connected clusters of overlapping terms need to be reproduced up to a prescribed size. Appendix~\ref{app:mpo} gives the detailed construction.
 
-Two constructions matter here, both built from the blocks of $W_H$. The operators $W^{\mathrm{I}}$
-and $W^{\mathrm{II}}$ of Zaletel et al.~\cite{zaletel2015} have virtual bond $1+\chi$, with $\chi=3$
-memory channels for our model, and $W^{\mathrm{II}}$ is the common choice in the literature. For a
-strictly nearest-neighbour Hamiltonian it behaves as second order, because the overlaps it fails to
-capture involve clusters that do not occur. The \ac{NNN} bridge produces exactly those clusters, so
-for our model the same operator is genuinely first order. We therefore use the higher-order
-construction of Van Damme et al.~\cite{vandamme2024}, whose order-$n$ member reproduces all
-connected clusters up to a controlled size with a one-step error $\mathcal{O}(\delta t^{n+1})$. Its
-order-1 member coincides with $W^{\mathrm{II}}$; we use the order-2 one, denoted VD2.
+We consider two families of approximations built from these blocks. The operators $W^{\mathrm{I}}$ and $W^{\mathrm{II}}$ introduced in Ref.~\cite{zaletel2015} have virtual bond dimension $1+\chi$, where $\chi=3$ is the number of memory channels in the present model. Although $W^{\mathrm{II}}$ is effectively second order for a strictly \ac{NN} Hamiltonian, it omits connected clusters that arise once the \ac{NNN} interaction is included and is therefore only first order for our model. We instead use the higher-order construction of Ref.~\cite{vandamme2024}, whose order-$n$ approximation includes the connected clusters required to produce a one-step error $\mathcal{O}(\delta t^{n+1})$. The order-1 approximation coincides with $W^{\mathrm{II}}$, while the order-2 approximation used throughout this work is denoted VD2.
 
-The choice has a cost and a benefit, and both propagate to the rest of the calculation. The cost is
-a larger virtual bond, $1+\chi+\chi^2$ instead of $1+\chi$, which for our model means $13$ rather
-than $4$. Under the $90^\circ$ rotation this becomes the physical dimension of the temporal sites,
-so the tMPS carries a correspondingly larger local dimension than it would with $W^{\mathrm{II}}$. The benefit is that genuine second-order accuracy permits a
-comparatively large time step at controlled Trotter error. This matters more than it might appear:
-a smaller $\delta t$ means more temporal sites for the same physical time, hence a longer temporal
-chain and more truncation steps, each contributing its own error. Working at $\delta t=0.05$ with a
-second-order operator is what makes the long temporal networks of Section~\ref{sec:results}
-accessible. Appendix~\ref{app:mpo:comparison} compares the two constructions directly and shows
-the first-order behaviour of $W^{\mathrm{II}}$ for this model.
+VD2 increases the virtual bond dimension from $1+\chi$ to $1+\chi+\chi^2$, which gives $13$ rather than $4$ for this model. After rotating the network, this bond index becomes the physical index of each temporal site, so the \ac{tMPS} has a larger local dimension than it would with $W^{\mathrm{II}}$. In return, second-order accuracy allows us to use the comparatively large time step $\delta t=0.05$ while controlling the discretization error. This trade-off is important because reducing $\delta t$ increases the number of temporal sites required to reach a fixed physical time, lengthening the temporal chain and introducing additional truncation steps. The second-order operator therefore makes the long-time calculations of Section~\ref{sec:results} computationally accessible despite its larger local dimension. Appendix~\ref{app:mpo:comparison} compares the two constructions and verifies the first-order convergence of $W^{\mathrm{II}}$ for the ANNNI-type model.
 
 \subsection{The non-Hermitian transfer matrix}
 \label{sec:nonhermitian}
 
-Rotating the network turns the operator just constructed into the spatial transfer matrix
-$\mathcal{E}$, which inherits the asymmetry of the finite-state machine and is therefore
-non-Hermitian and non-normal, $\mathcal{E}\mathcal{E}^\dagger\neq\mathcal{E}^\dagger\mathcal{E}$.
-Section~\ref{sec:transverse} already used these properties; what is needed before the numerical
-treatment is the notation they impose.
+Rotating the space-time network turns the evolution operator into the spatial transfer matrix $\mathcal{E}$. Because it inherits the virtual asymmetry of the \ac{FSM}, this matrix is non-Hermitian and non-normal, $\mathcal{E}\mathcal{E}^\dagger\neq\mathcal{E}^\dagger\mathcal{E}$. These properties were used in Section~\ref{sec:transverse}; here we define the notation needed for their numerical treatment.
 
-Such an operator has two eigenbases rather than one: right eigenvectors defined by
-$\mathcal{E}\ket{R_i}=\mu_i\ket{R_i}$, and left eigenvectors by $\bra{L_i}\mathcal{E}=\mu_i\bra{L_i}$,
-which in general are unrelated. Neither set is orthonormal on its own. The two are paired instead by
-the biorthogonality relation $\braket{L_i}{R_j}\propto\delta_{ij}$, in which the pairing is the
-bilinear overlap the network itself contracts, with no complex conjugation involved. Since the
-eigenvalues $\mu_i$ are complex, we order them by modulus and write $\mu_0$ for the dominant one.
-This is the notation used throughout Sections~\ref{sec:numerics} and~\ref{sec:results}.
+The right and left eigenvectors satisfy $\mathcal{E}\ket{R_i}=\mu_i\ket{R_i}$ and $\bra{L_i}\mathcal{E}=\mu_i\bra{L_i}$, respectively, and are generally unrelated. Neither eigenbasis is orthonormal by itself. Instead, the two sets are paired through the biorthogonality relation $\braket{L_i}{R_j}\propto\delta_{ij}$, where the relevant pairing is the bilinear contraction defined by the tensor network rather than the usual Hermitian inner product. We order the generally complex eigenvalues $\mu_i$ by modulus and denote the dominant one by $\mu_0$. This convention is used throughout Sections~\ref{sec:numerics} and~\ref{sec:results}.

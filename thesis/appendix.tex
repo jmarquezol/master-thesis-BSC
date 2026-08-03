@@ -149,6 +149,21 @@ The criterion is therefore direct: if the discarded Schmidt values are small, so
 ground states of local gapped Hamiltonians the Schmidt values decay quickly, which is why a modest
 bond dimension usually suffices.
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{imgs/truncation.pdf}
+  \caption{Why the \ac{RDM} truncation is a local operation. (a) The canonical condition: a tensor
+  contracted with its own conjugate over the physical index and one virtual index reduces to the
+  identity on the remaining one. A tensor and its conjugate are drawn as the same shape in a lighter
+  and a darker shade. (b) The reduced density matrix at a cut, with the left block left open and the
+  right block traced. In mixed canonical form the isometries either side of the orthogonality centre
+  collapse by (a), so the eigenvalues of the whole object are the squared singular values of the
+  single tensor $M$. Truncating optimally therefore never requires touching the rest of the chain.
+  The step relies on the object being Hermitian and positive, which is exactly what fails once the
+  two boundaries are distinct.}
+  \label{fig:truncation}
+\end{figure}
+
 Two features of this scheme matter later, because the transverse picture keeps one and loses the
 other. First, the truncated object is Hermitian and positive, so its eigenvalues are the squared
 Schmidt values and dropping the smallest is unambiguous. Second, the Eckart--Young--Mirsky theorem
@@ -163,20 +178,74 @@ natural object. The transverse picture is different. The transfer matrix is non-
 dominant left and right fixed points are distinct states, a left tMPS $\bra L$ and a right tMPS
 $\ket R$. What has to be truncated is built from both.
 
-For a temporal cut separating the steps up to $j$ from those after it, the \ac{RTM} is
+For a temporal cut at $t$, separating the steps before it from those after, the \ac{RTM} is
 \begin{equation}
-  T_j = \frac{\mathrm{Tr}_{\text{future}}\,\ket R\bra L}{\braket{L}{R}}.
+  \mathcal{T}_t = \frac{\mathrm{Tr}_{T-t}\,\ket R\bra L}{\braket{L}{R}}.
 \end{equation}
 Since $\bra L$ is not the conjugate of $\ket R$, this object is non-Hermitian and its eigenvalues can
 be complex. They still sum to one, but they are not probabilities, so the Schmidt interpretation of
 the previous subsections does not carry over.
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.78\textwidth]{imgs/rdm_rtm.pdf}
+  \caption{The two candidate objects at a temporal cut. Sites after the cut are traced over, so their
+  physical legs are contracted between the two rows; the legs before the cut stay open and carry the
+  indices of the resulting matrix. (a) The reduced density matrix of a single temporal boundary pairs
+  $\ket{L}$ with its own conjugate, and is Hermitian and positive. (b) The \ac{RTM} instead pairs the
+  two distinct fixed points of the non-Hermitian transfer matrix, $\ket{R}$ against $\bra{L}$. It is
+  the second object that the Loschmidt echo depends on, and being built from two different states it
+  is not Hermitian, so its eigenvalues need not be real or positive.}
+  \label{fig:rdm_rtm}
+\end{figure}
+
 This is where the gauge argument becomes decisive. Insert a gauge transformation $X$ on the cut bond
 and the two candidate objects respond in opposite ways. The boundary RDM transforms by a congruence,
 $\rho_L\to X^\dagger\rho_L X$, which for the non-unitary $X$ generic here distorts its spectrum. The
-transition matrix transforms by a similarity, $T_j\to X^{-1}T_j X$, which leaves its eigenvalues
-untouched. The Schmidt values of a single temporal boundary are therefore not physical, while the
-RTM spectrum is, and truncating on the former can discard exactly the weight the overlap needs.
+transition matrix transforms by a similarity, $\mathcal{T}_t\to X^{-1}\mathcal{T}_t X$, which leaves its eigenvalues
+untouched. Figure~\ref{fig:gauge} shows the difference at the level of the network. The Schmidt
+values of a single temporal boundary are therefore not physical, while the RTM spectrum is, and
+truncating on the former can discard exactly the weight the overlap needs.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.62\textwidth]{imgs/gauge.pdf}
+  \caption{Why the \ac{RTM} spectrum is the gauge-invariant one. (a) A pair $X^{-1}X$ may be inserted
+  on every bond of the network at no cost: the two factors cancel, so the contraction equals the
+  ungauged one on the right, and the Loschmidt echo is untouched. What the insertion does change
+  is the individual tensors, and the two candidate objects inherit that change differently. In (b)
+  and (c) only the lower time site is contracted; the upper one carries the open indices of the
+  resulting matrix, which is why the two columns are joined at the bottom alone. Since the insertion
+  sits on every bond, each open index keeps one factor and the contracted bond receives both.
+  (b) The reduced density matrix pairs $\ket{R}$ with its own conjugate, so the two factors meet on
+  that bond as $XX^{\dagger}$ and the object is taken to $X\rho X^{\dagger}$, a congruence. For the
+  non-unitary $X$ generic here $XX^{\dagger}\neq\mathbb{1}$ and the spectrum moves. (c) The \ac{RTM}
+  pairs $\ket{R}$ with $\bra{L}$ instead, so the factors meet as $XX^{-1}=\mathbb{1}$ and the object
+  is taken to $X\mathcal{T}_t X^{-1}$, a similarity, whose spectrum is unchanged. The Schmidt values of a single temporal boundary are therefore a
+  property of the gauge that was chosen, not of the physics, which is what disqualifies them as a
+  truncation criterion.}
+  \label{fig:gauge}
+\end{figure}
+
+The canonical form still helps, but in a generalized version, shown in
+Figure~\ref{fig:rtm_truncation}: the condition of Figure~\ref{fig:truncation}(a) is imposed on the
+pair $\bra{L},\ket{R}$ rather than on a state and its own conjugate. The tensors away from the cut
+then contract away exactly as before, and the singular values of the \ac{RTM} again follow from a
+local decomposition, so the two routes cost the same to evaluate and differ only in which object
+they compress.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{imgs/rtm_truncation.pdf}
+  \caption{The \ac{RTM} counterpart of Figure~\ref{fig:truncation}. (a) The generalized canonical
+  condition. The contraction pairs a tensor of $\bra{L}$ with the corresponding tensor of $\ket{R}$,
+  not with its own conjugate, and it is this pairing that is required to reduce to the identity.
+  (b) Imposed along the chain, that condition makes everything before the cut contract away, so the
+  singular values of the reduced transition matrix are those of the two tensors sitting at the cut
+  alone. The construction is therefore as local as the \ac{RDM} one; what it loses is the variational
+  guarantee, since the object being decomposed is no longer Hermitian.}
+  \label{fig:rtm_truncation}
+\end{figure}
 
 The logic of truncation changes accordingly. In the ordinary case one keeps the directions that best
 preserve the norm of a state. Here the relevant quantities are bilinear matrix elements
@@ -191,7 +260,7 @@ states than an RDM truncation at the same accuracy.
 There is a price, and it is why the ordinary scheme is kept as a fallback. Standard truncation rests
 on a variational bound: the reduced density matrix is Hermitian and positive, its singular values
 coincide with its eigenvalues, and discarding the smallest removes the least weight from the norm.
-None of this survives for a non-Hermitian object. The singular values of $T_j$ and its eigenvalues
+None of this survives for a non-Hermitian object. The singular values of $\mathcal{T}_t$ and its eigenvalues
 are different quantities, and it is the eigenvalues that enter the contraction, since the trace is
 their sum. A component with a large singular value can therefore still fail to contribute. The
 clearest illustration is an operator with eigenvalues $+1$ and $-1$: both have unit modulus, so an
@@ -208,7 +277,7 @@ predictably when the RTM output turns noisy.
 
 The cost of the whole scheme is measured by the generalized R\'enyi-2 temporal entropy,
 \begin{equation}
-  S_2^{\text{gen}}(j) = -\log \mathrm{Tr}\, T_j^{\,2},
+  S_2^{\text{gen}}(t) = -\log \mathrm{Tr}\, \mathcal{T}_t^{\,2},
 \end{equation}
 which is the quantity used throughout this thesis to quantify the temporal entanglement.
 
@@ -318,7 +387,7 @@ bonds. Within each group the terms commute, so each group exponentiates exactly.
 from the non-commutation between groups: $\mathcal{O}(\delta t^2)$ per step for the first-order
 splitting, and $\mathcal{O}(\delta t^3)$ for the symmetric second-order one.
 
-For a nearest-neighbour chain this gives the brick-wall circuit of alternating two-site gate layers.
+For an \ac{NN} chain this gives the brick-wall circuit of alternating two-site gate layers.
 Each gate is split by an SVD into two tensors joined by a virtual bond, and the tensors on the same
 site are contracted together, so a layer becomes a sequence of identical local tensors, that is, an
 MPO. The sequence is uniform because every gate has the same structure and acts on adjacent sites,
@@ -327,12 +396,12 @@ reviews these and other time-evolution schemes for matrix product states.
 
 The construction fails as soon as an interaction connects sites that are not adjacent, since such a
 term does not act on a single bond of the pattern and cannot be written as one of its gates. That is
-the situation here, and the reason for the finite-state-machine route.
+the situation here, and the reason for the \ac{FSM} route.
 
 \subsection{Size-extensivity and the connected/disconnected organization}
 \label{app:mpo:extensive}
 
-A truncated Taylor series $e^{\tau H}=\mathbb{I}+\tau H+\tfrac{\tau^2}{2!}H^2+\cdots$ cannot be used
+A truncated Taylor series $e^{\tau H}=\mathbbm{1}+\tau H+\tfrac{\tau^2}{2!}H^2+\cdots$ cannot be used
 in the thermodynamic limit. Each power $H^n$ is a sum of $\mathcal{O}(N^n)$ local terms, so
 successive orders scale with different powers of the chain length and the result cannot be
 normalized as $N\to\infty$~\cite{vandamme2024}. An acceptable construction must be size-extensive:
@@ -373,7 +442,7 @@ the correct factor while the intermediate memory channels stay well behaved.
 \subsection{The second-order VD2 blocks}
 \label{app:mpo:vd2}
 
-We record the explicit local tensor of the second-order MPO (VD2) used throughout this work. These are the closed-form expressions of Van Damme et al.~\cite{vandamme2024}, specialized to our finite-state-machine blocks; they are what the exponentiation routine assembles for a given memory dimension $\chi$.
+We record the explicit local tensor of the second-order MPO (VD2) used throughout this work. These are the closed-form expressions of Van Damme et al.~\cite{vandamme2024}, specialized to our \ac{FSM} blocks; they are what the exponentiation routine assembles for a given memory dimension $\chi$.
 
 We start from the four blocks $A,B,C,D$ of the Hamiltonian MPO $W_H$ (Equation~\eqref{eq:Wannni}): $D$ is the on-site term, $C$ initiates an interaction, $B$ terminates one, and $A$ propagates it. Following the time-step split above, we scale them as
 \begin{equation}
@@ -393,7 +462,7 @@ The resulting local tensor is a $3\times3$ block object (indices $1,2,3$ label t
 \end{equation}
 with
 \begin{align}
-  W_{11} &= \mathbb{I} + \tilde D + \tfrac12\{\tilde D\tilde D\} + \tfrac16\{\tilde D\tilde D\tilde D\}, \\
+  W_{11} &= \mathbbm{1} + \tilde D + \tfrac12\{\tilde D\tilde D\} + \tfrac16\{\tilde D\tilde D\tilde D\}, \\
   W_{12} &= \tilde C + \tfrac12\{\tilde C\tilde D\} + \tfrac16\{\tilde C\tilde D\tilde D\}, \qquad
   W_{13} = \{\tilde C\tilde C\} + \tfrac13\{\tilde C\tilde C\tilde D\}, \\
   W_{21} &= \tilde B + \tfrac12\{\tilde B\tilde D\} + \tfrac16\{\tilde B\tilde D\tilde D\}, \qquad
@@ -427,7 +496,7 @@ $\lVert\psi\rVert$ after 8 layers & $12.6146$ & $3.0181$ & $0.99923$ \\
 \end{tabular}
 \end{center}
 
-The separation is unambiguous. The first-order $W^{\mathrm{I}}$ inflates the norm by an order of magnitude within eight steps, and $W^{\mathrm{II}}$, which would be effectively second order for a strictly nearest-neighbour chain, still triples it: the connected clusters generated by the \ac{NNN} bridge are precisely the ones it fails to capture. VD2 holds the norm to within $8\times10^{-4}$ over the same interval. The same ordering appears in the Schr\"odinger-picture benchmark of the notebooks, where VD2 reproduces the TDVP evolution at every time while $W^{\mathrm{II}}$ agrees only at short times before drifting.
+The separation is unambiguous. The first-order $W^{\mathrm{I}}$ inflates the norm by an order of magnitude within eight steps, and $W^{\mathrm{II}}$, which would be effectively second order for a strictly \ac{NN} chain, still triples it: the connected clusters generated by the \ac{NNN} bridge are precisely the ones it fails to capture. VD2 holds the norm to within $8\times10^{-4}$ over the same interval. The same ordering appears in the Schr\"odinger-picture benchmark of the notebooks, where VD2 reproduces the TDVP evolution at every time while $W^{\mathrm{II}}$ agrees only at short times before drifting.
 
 This is what justifies paying for the larger virtual bond. Since the transverse contraction needs long temporal chains, and reducing $\delta t$ to compensate a first-order error would lengthen them further and add truncation error at every extra site, a genuinely second-order operator at a moderate time step is the configuration that makes the calculation feasible at all.
 
@@ -450,13 +519,13 @@ numbers are local, (B1)--(B6).
 We keep $k$ right vectors and, independently, $k$ left vectors, all temporal MPS on the same time
 sites, seeded with random complex tensors. One iteration applies the transfer matrix to every member
 of the right block and its transpose to every member of the left block,
-\begin{equation}
+\begin{equation*}
   |\tilde R_j\rangle = \mathcal{E}\,|R_j\rangle, \qquad
   \langle \tilde L_j| = \langle L_j|\,\mathcal{E}
   \quad\Longleftrightarrow\quad
   |\tilde L_j\rangle = \mathcal{E}^{\mathsf T}|L_j\rangle .
   \tag{B1}
-\end{equation}
+\end{equation*}
 The transpose is implemented as a prime-level swap of the MPO legs, with no complex conjugation. It
 is the adjoint with respect to the bilinear form, defined by
 $(\mathcal{E}^{\mathsf T}L)^{\mathsf T}R = L^{\mathsf T}(\mathcal{E}R)$, so left overlaps computed
@@ -718,7 +787,7 @@ to our model,
 with $n_j=c_j^\dagger c_j$, and the string $K_j$ supplying the signs that make the $c$ anticommute.
 
 Using $(c+c^\dagger)(1-2n)=c^\dagger-c$ and $K_j^2=1$, the terms fermionize as follows. The
-transverse field becomes a chemical potential. The nearest-neighbour Ising bond telescopes its
+transverse field becomes a chemical potential. The \ac{NN} Ising bond telescopes its
 strings away and leaves a quadratic hopping-and-pairing term,
 \begin{equation}
     \sigma^z_j\sigma^z_{j+1} = (c_j^\dagger-c_j)(c_{j+1}+c_{j+1}^\dagger).
