@@ -1,0 +1,32 @@
+load JULIA/1.12.0 (PATH, LD_LIBRARY_PATH, LIBRARY_PATH, C_INCLUDE_PATH,
+CPLUS_INCLUDE_PATH, MANPATH) 
+┌ Warning: Module MKL_jll with build ID fafbfcfd-0d77-0271-e116-447e41d0e91e is missing from the cache.
+│ This may mean MKL_jll [856f044c-d86e-5d09-b602-aeab76dc8ba7] does not support precompilation but is imported by a module that does.
+└ @ Base loading.jl:2643
+Precompiling packages...
+    MKL Being precompiled by another machine (hostname: gs03r3b12, pid: 1522806, pidfile: /home/bsc/bsc948371/.julia/compiled/v1.12/MKL/tDGGv_3NBx9.ji.pidfile)
+Info Given MKL was explicitly requested, output will be shown live [0K
+[0K┌ Warning: Module MKL_jll with build ID fafbfcfd-0d77-0271-e116-447e41d0e91e is missing from the cache.
+[0K│ This may mean MKL_jll [856f044c-d86e-5d09-b602-aeab76dc8ba7] does not support precompilation but is imported by a module that does.
+[0K└ @ Base loading.jl:2643
+  11382.3 ms  ✓ MKL
+  1 dependency successfully precompiled in 12 seconds. 32 already precompiled.
+  1 dependency had output during precompilation:
+┌ MKL
+│  [Output was shown above]
+└  
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=598|"S=1/2,Site") <-> (dim=2|id=598|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=575|"Link,l=1") <-> (dim=7|id=86|"Link,l=2"), normdiff = 1.1566412865695994
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=981|"S=1/2,Site") <-> (dim=2|id=981|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=63|"Link,l=1") <-> (dim=7|id=411|"Link,l=2"), normdiff = 1.4350175351861996
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+┌ Warning: norm² is 533853.1543072887 + 1.2044253493505287e-9im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+[ Info: [rtm64_full] T=5.0  stuck@491  |θ0|=1.5489  peak=0.2836  r=[0.0021,0.0024,0.0022,0.0024]  3651s

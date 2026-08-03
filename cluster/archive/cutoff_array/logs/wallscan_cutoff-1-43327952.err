@@ -1,0 +1,24 @@
+load JULIA/1.12.0 (PATH, LD_LIBRARY_PATH, LIBRARY_PATH, C_INCLUDE_PATH,
+CPLUS_INCLUDE_PATH, MANPATH) 
+Precompiling packages...
+    IntelOpenMP_jll Being precompiled by another machine (hostname: gs03r2b16, pid: 3364624, pidfile: /home/bsc/bsc948371/.julia/compiled/v1.12/IntelOpenMP_jll/3Hg0P_3NBx9.ji.pidfile)
+    oneTBB_jll Being precompiled by another machine (hostname: gs03r2b16, pid: 3364624, pidfile: /home/bsc/bsc948371/.julia/compiled/v1.12/oneTBB_jll/S2snd_3NBx9.ji.pidfile)
+  10051.9 ms  ✓ oneTBB_jll
+  11029.3 ms  ✓ IntelOpenMP_jll
+    MKL_jll Being precompiled by another machine (hostname: gs24r3b48, pid: 1227286, pidfile: /home/bsc/bsc948371/.julia/compiled/v1.12/MKL_jll/DHEix_3NBx9.ji.pidfile)
+  10024.7 ms  ✓ MKL_jll
+   1276.7 ms  ✓ MKL
+  4 dependencies successfully precompiled in 23 seconds. 29 already precompiled.
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=218|"S=1/2,Site") <-> (dim=2|id=218|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=543|"Link,l=1") <-> (dim=7|id=811|"Link,l=2"), normdiff = 1.1566412865695994
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=818|"S=1/2,Site") <-> (dim=2|id=818|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=291|"Link,l=1") <-> (dim=7|id=497|"Link,l=2"), normdiff = 1.4350175351861996
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: [cut_tight] T=2.0  converged@14  |θ0|=1.5569  peak=0.2020  r=[0.084,0.089,0.071,0.067]  50s
