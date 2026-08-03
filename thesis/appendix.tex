@@ -3,136 +3,214 @@
 \section{Fundamentals of Tensor Networks and Optimal Truncation}
 \label{app:tensor_networks}
 
-The simulation of a quantum many-body system is fundamentally bottlenecked by the ``curse of dimensionality'': for $N$ spin-$1/2$ particles the Hilbert space has dimension $2^N$, so a completely general wavefunction requires an exponentially large number of coefficients. Tensor networks exploit the fact that nature rarely uses all of that space: physically relevant states typically carry little entanglement---the ground states of local gapped Hamiltonians obey an area law, in which the entanglement across a cut grows only with the boundary of the subsystem rather than its volume---and such states can be represented faithfully by a network of small tensors joined by internal bonds of controlled dimension. This appendix collects the foundations of that ansatz for readers who want them, but it is written with a specific destination in mind, and it is worth stating that destination up front, because it is what makes the appendix relevant to this thesis rather than a generic primer.
+For $N$ spin-$1/2$ particles the Hilbert space has dimension $2^N$, so a general wavefunction needs
+exponentially many coefficients. Tensor networks work because physically relevant states rarely use
+all of that space. The ground states of local gapped Hamiltonians obey an area law, in which the
+entanglement across a cut grows with the boundary of the subsystem rather than its volume, and such
+states are well represented by a network of small tensors joined by bonds of controlled dimension.
 
-Everything the main text does---the transverse contraction of Section~\ref{sec:transverse}, the block power method of Section~\ref{sec:nonhermitian}---rests on repeatedly truncating a tensor network, and the decisive question is which object one truncates. In the ordinary Schr\"odinger picture that object is the reduced density matrix (RDM) of a single state; in the transverse picture, where the transfer matrix is non-Hermitian and its left and right fixed points differ, it is instead a reduced transition matrix (RTM) built from both. The property that decides which of these gives a stable truncation is gauge freedom: the RTM spectrum is gauge-invariant, the RDM spectrum is not. The subsections below build only what is needed to reach that statement---the singular value decomposition, matrix product states and operators, gauge freedom and canonical forms, the Schmidt decomposition and the RDM, optimal truncation and its variational bound, and finally the RTM itself.
+This appendix builds only what is needed for one specific question. Every method in this thesis
+repeatedly truncates a tensor network, and the decisive choice is which object to truncate. In the
+Schr\"odinger picture it is the reduced density matrix of a single state. In the transverse picture,
+where the left and right fixed points of the transfer matrix differ, it is a reduced transition
+matrix built from both. What separates them is gauge freedom, and the last subsection shows why.
 
 \subsection{Notation and basic operations}
 \label{app:sub:graphical_notation}
 
-Two conventions are used without comment in the main text. The first is the diagrammatic notation, in which a tensor is a shape with one leg per index (a scalar has none, a vector one, a matrix two), and a contraction---a sum over a shared index---joins the two corresponding legs, the open legs becoming the free indices of the result. The picture makes the connectivity of a network, and the order in which its tensors are best contracted, immediate. The second is reshaping: since linear-algebra routines act on matrices, a higher-rank tensor is grouped into a matrix by treating several indices as one composite index---for example $A_{i,\alpha,\beta}\to M_{(i\alpha),\beta}$---which relabels the same entries without changing them. This is what lets us apply matrix tools, above all the singular value decomposition, directly inside a tensor network.
+Two conventions are used without comment in the main text. The first is the diagrammatic notation. A
+tensor is drawn as a shape with one leg per index, so a scalar has none, a vector one and a matrix
+two. A contraction, meaning a sum over a shared index, joins the two corresponding legs, and the
+legs left open are the free indices of the result. The picture makes the connectivity of a network
+immediate, and with it the order in which the tensors are best contracted.
+
+The second is reshaping. Linear-algebra routines act on matrices, so a higher-rank tensor is grouped
+into one by treating several indices as a single composite index, for instance
+$A_{i,\alpha,\beta}\to M_{(i\alpha),\beta}$. This relabels the entries without changing them, and it
+is what allows matrix tools to be used inside a tensor network.
 
 \subsection{The singular value decomposition}
 \label{app:sub:svd}
 
-One of the central tools in tensor-network algorithms is the \ac{SVD}. Any matrix $M$ of dimension $D_A \times D_B$ can be written as
+The \ac{SVD} is the central tool of tensor-network algorithms. Any matrix $M$ of dimension
+$D_A \times D_B$ can be written as
 \begin{equation}
     M = U S V^\dagger,
 \end{equation}
-where $U$ has orthonormal columns ($U^\dagger U=\mathbb{1}$), $V^\dagger$ has orthonormal rows ($V^\dagger V=\mathbb{1}$), and $S$ is a diagonal matrix whose entries are non-negative singular values, ordered as $\lambda_1 \ge \lambda_2 \ge \dots \ge 0$.
+where $U$ has orthonormal columns, $V^\dagger$ has orthonormal rows, and $S$ is diagonal with
+non-negative entries ordered as $\lambda_1 \ge \lambda_2 \ge \dots \ge 0$.
 
-In tensor-network language, an SVD is the operation that splits one tensor into two. The two new tensors are connected by a new internal index, and the dimension of this index is set by the number of nonzero singular values. In this sense, the SVD not only factorizes an object, but also tells us how large the new bond has to be in order to represent the original tensor exactly.
+In tensor-network language the SVD splits one tensor into two, joined by a new internal index whose
+dimension is the number of non-zero singular values. It therefore does two things at once: it
+factorizes the tensor, and it says how large the new bond must be to represent it exactly.
 
-The ordering of the singular values is what makes the SVD especially useful. Large singular values correspond to the most important components across the chosen bipartition, while small singular values carry less weight. This gives a controlled way to compress a tensor: by discarding the smallest singular values, we reduce the dimension of the new bond while keeping the dominant correlations. This is the basic idea behind truncation.
-
-We will use this mechanism repeatedly. First, it allows us to build matrix product states by splitting a many-body wavefunction site by site. Later, in Section~\ref{app:sub:truncation}, it provides the practical rule for reducing bond dimensions after operations that make them grow too large. The important point is that the SVD gives a systematic way to decide what to keep and what can be safely discarded.
-
+The ordering of the singular values is what makes this useful. Large values carry the most important
+components across the chosen bipartition and small ones carry little weight, so discarding the
+smallest reduces the bond dimension while keeping the dominant correlations. This is the basis of
+every truncation in this work.
 
 \subsection{Matrix product states and operators}
 \label{app:sub:mps_mpo}
 
-A matrix product state (MPS) is obtained by applying the SVD idea repeatedly along a one-dimensional chain. A completely general state on $N$ sites can be written as
+An \ac{MPS} follows from applying the SVD repeatedly along a chain. A general state on $N$ sites is
 \begin{equation}
     |\Psi\rangle = \sum_{i_1,\dots,i_N} C_{i_1\dots i_N}\,|i_1,\dots,i_N\rangle,
 \end{equation}
-where the coefficient tensor $C$ contains $d^N$ entries. A direct representation is then impossible for large systems. But by sweeping an SVD through the chain, this large tensor can be factorized exactly into a product of smaller tensors,
+whose coefficient tensor has $d^N$ entries and cannot be stored directly for large $N$. Sweeping an
+SVD through the chain factorizes it exactly into
 \begin{equation}
     C_{i_1\dots i_N} = \sum_{\alpha_1,\dots,\alpha_{N-1}}
         A^{[1]}_{i_1,\alpha_1} A^{[2]}_{i_2,\alpha_1,\alpha_2}
         \cdots A^{[N]}_{i_N,\alpha_{N-1}},
 \end{equation}
-where each tensor carries one physical index $i_n$ and, except at the boundaries, two virtual indices connecting it to its neighbours.
+where each tensor carries one physical index and, away from the boundaries, two virtual indices.
 
-The dimensions of the virtual indices are the bond dimensions. They determine how much correlation the MPS can carry across each cut. If the bond dimension is $\chi=1$, the state is simply a product state with no entanglement between the two sides of any cut. Increasing $\chi$ allows the ansatz to represent more entangled states. The factorization itself is exact if the bond dimensions are allowed to grow as needed; the approximation enters only when we impose a maximum bond dimension and truncate the smaller singular values, as discussed in Section~\ref{app:sub:truncation}.
+The dimensions of the virtual indices are the bond dimensions, and they fix how much correlation the
+state can carry across each cut. At $\chi=1$ the state is a product state with no entanglement;
+larger $\chi$ allows more entangled states. The factorization is exact if the bonds may grow freely,
+and the approximation enters only when a maximum is imposed and the smaller singular values are
+discarded.
 
-Matrix product operators (MPOs) use the same idea but for operators instead of states. An MPO is a chain of local tensors with two physical indices, one incoming and one outgoing, together with virtual indices that connect neighbouring tensors. Applying an MPO to an MPS generally increases the bond dimension, because the virtual spaces of the operator and the state combine. This growth is one of the main reasons truncation is needed in practical tensor-network algorithms.
-
+An \ac{MPO} applies the same idea to operators: a chain of tensors with two physical indices, one
+incoming and one outgoing, joined by virtual indices. Applying an MPO to an MPS multiplies the bond
+dimensions of the two, which is the main reason truncation is needed at all.
 
 \subsection{Gauge freedom and canonical forms}
 \label{app:sub:canonical_forms}
 
-The MPS representation is not unique. On any virtual bond we can insert the identity in the form $\mathbb{1}=XX^{-1}$ and absorb the two factors into the neighbouring tensors,
+The MPS representation is not unique. On any virtual bond we may insert $\mathbb{1}=XX^{-1}$ and
+absorb the factors into the neighbouring tensors,
 \begin{equation}
     A^{[n]} \to A^{[n]}X, \qquad A^{[n+1]} \to X^{-1}A^{[n+1]}.
 \end{equation}
-This transformation changes the individual tensors but leaves the physical state $|\Psi\rangle$ unchanged. This freedom is called gauge freedom. It is extremely useful because it allows us to choose the tensor representation that is best suited to a given calculation.
+This changes the tensors but leaves the physical state untouched. The freedom is called gauge
+freedom, and it lets us pick whichever representation suits the calculation.
 
-The most important choice is the canonical form. By sweeping QR or SVD decompositions from left to right, tensors can be brought into left-canonical form, meaning that they satisfy $A^\dagger A=\mathbb{1}$ when contracted over their physical and left virtual indices. Similarly, a right-to-left sweep gives right-canonical tensors satisfying $BB^\dagger=\mathbb{1}$. If the two sweeps meet at a chosen site or bond, the MPS is in mixed canonical form: tensors on the left are left-canonical, tensors on the right are right-canonical, and the center tensor carries the nontrivial weight of the state.
+The standard choice is the canonical form. Sweeping QR or SVD decompositions from the left produces
+left-canonical tensors, satisfying $A^\dagger A=\mathbb{1}$ when contracted over the physical and
+left virtual indices; sweeping from the right gives right-canonical tensors with
+$BB^\dagger=\mathbb{1}$. If the two sweeps meet at one site, the state is in mixed canonical form,
+with the centre tensor carrying all the non-trivial weight.
 
-This form is especially useful for local expectation values. If the orthogonality center is placed at site $n$, the tensors to the left and right contract with their conjugates to identities. The full network for $\langle\Psi|\hat O_n|\Psi\rangle$ then collapses to a local contraction at the center,
+This form makes local expectation values cheap. With the orthogonality centre at site $n$, every
+tensor to its left and right contracts with its conjugate to the identity, and the whole network
+collapses to
 \begin{equation}
     \langle\Psi|\hat O_n|\Psi\rangle =
         \mathrm{Tr}\!\left[ \Lambda^{[n]\dagger}\, \hat O_n\, \Lambda^{[n]} \right].
 \end{equation}
-Thus, instead of contracting the entire chain, we only need the local tensor carrying the orthogonality center. This is why canonical forms are so central in tensor-network algorithms: they turn many global-looking operations into local ones.
+Canonical forms are central to tensor-network algorithms for exactly this reason: they turn
+global-looking operations into local ones.
 
-The deeper point, and the one this thesis rests on, is that gauge freedom draws a sharp line between quantities that are physical and quantities that are merely representational. Any object that depends on the individual tensors---rather than on the physical state they encode---can be moved around at will by a gauge transformation, and is therefore not, by itself, a meaningful thing to truncate on. A truncation scheme is only trustworthy if it targets a gauge-invariant object. In the ordinary single-state setting this subtlety is invisible, because the canonical form fixes the gauge and the Schmidt values of the next subsection are automatically the physical ones. In the transverse picture it becomes decisive: as we will see in Section~\ref{app:sub:rtm_truncation}, the reduced density matrix of a boundary state is not gauge-invariant there, whereas the reduced transition matrix built from both boundaries is---and that single fact is what selects the correct truncation for the whole method (Section~\ref{sec:transverse}).
-
-
+Gauge freedom also draws the line between physical and representational quantities. Anything that
+depends on the individual tensors, rather than on the state they encode, can be changed at will by a
+gauge transformation, and is therefore not meaningful to truncate on. In the ordinary single-state
+setting this never causes trouble, because the canonical form fixes the gauge and the Schmidt values
+below are automatically the physical ones. In the transverse picture it becomes the deciding issue,
+as Section~\ref{app:sub:rtm_truncation} shows.
 
 \subsection{Schmidt decomposition and the reduced density matrix}
 \label{app:sub:schmidt}
 
-Consider a bipartition cut that divides the chain into two parts: a block $\mathcal{A}=\{1,\dots,j\}$ and its complement $\mathcal{B}=\{j+1,\dots,N\}$. If we group all physical indices in $\mathcal A$ into one composite index and all physical indices in $\mathcal B$ into another, the wavefunction becomes a matrix $\Psi_{(\mathcal A),(\mathcal B)}$. Performing an SVD of this matrix gives the Schmidt decomposition,
+Consider a cut dividing the chain into a block $\mathcal{A}=\{1,\dots,j\}$ and its complement
+$\mathcal{B}$. Grouping the physical indices on each side into one composite index turns the
+wavefunction into a matrix, whose SVD gives the Schmidt decomposition
 \begin{equation}
   \ket\psi = \sum_{\alpha=1}^{\chi} s_\alpha\,
     \ket{\alpha}_{\mathcal A}\otimes\ket{\alpha}_{\mathcal B},
   \qquad s_\alpha\ge0,\quad \sum_\alpha s_\alpha^2=1,
 \end{equation}
-where the states $\ket{\alpha}_{\mathcal A}$ and $\ket{\alpha}_{\mathcal B}$ form orthonormal bases on the two sides of the cut. The numbers $s_\alpha$ are the Schmidt coefficients, and they are exactly the singular values of the reshaped wavefunction.
+with orthonormal bases on the two sides. The $s_\alpha$ are the Schmidt coefficients, and they are
+the singular values of the reshaped wavefunction.
 
-In an MPS, this structure is already built into the bonds. If the state is brought into mixed canonical form with the center placed on bond $j$, the center object is precisely the diagonal matrix of Schmidt coefficients across that cut. The MPS bond dimension $\chi$ is therefore the number of Schmidt values kept on that bond. In this sense, the canonical form makes the entanglement structure of every cut explicit.
-
-The reduced density matrix of the block $\mathcal A$ is diagonal in the Schmidt basis,
+In an MPS this structure sits on the bonds. In mixed canonical form with the centre on bond $j$, the
+centre object is the diagonal matrix of Schmidt coefficients across that cut, so the bond dimension
+is the number of Schmidt values kept there. The reduced density matrix of the block is diagonal in
+the same basis,
 \begin{equation}
   \rho_{\mathcal A} = \mathrm{Tr}_{\mathcal B}\,\ket\psi\bra\psi
     = \sum_\alpha s_\alpha^2\, \ket\alpha_{\mathcal A}\bra\alpha_{\mathcal A},
 \end{equation}
-so its eigenvalues are simply $p_\alpha=s_\alpha^2$. These probabilities determine the entanglement across the cut, for example through the von Neumann entropy or the R\'enyi entropies.
-
+with eigenvalues $p_\alpha=s_\alpha^2$. These are the probabilities that fix the entanglement across
+the cut.
 
 \subsection{Optimal truncation}
 \label{app:sub:truncation}
 
-Truncating a tensor network means reducing some or all of their bond dimensions from $\chi$ to a smaller value $\chi'<\chi$. In the Schmidt basis, the natural way to do this is to keep the $\chi'$ largest Schmidt coefficients and discard the rest. This choice is optimal in a precise sense, given by the Eckart--Young--Mirsky theorem: among all states $\ket{\tilde\psi}$ with Schmidt rank at most $\chi'$, the truncated state is the closest one to $\ket\psi$ in norm. The corresponding error is simply the discarded weight,
+Truncating means reducing a bond dimension from $\chi$ to some $\chi'<\chi$. In the Schmidt basis one
+keeps the $\chi'$ largest coefficients and discards the rest. This is optimal in a precise sense: by
+the Eckart--Young--Mirsky theorem, among all states of Schmidt rank at most $\chi'$ the truncated
+state is the closest to $\ket\psi$ in norm, with an error equal to the discarded weight,
 \begin{equation}
   \varepsilon = \big\lVert \ket\psi - \ket{\tilde\psi}\big\rVert_2^2
     = \sum_{\alpha>\chi'} s_\alpha^2.
 \end{equation}
-This gives a direct and practical criterion for compression: if the discarded Schmidt values are small, the truncation error is small.
+The criterion is therefore direct: if the discarded Schmidt values are small, so is the error. For
+ground states of local gapped Hamiltonians the Schmidt values decay quickly, which is why a modest
+bond dimension usually suffices.
 
-For the states of local gapped Hamiltonians, for instance, the Schmidt values typically decay rapidly, reflecting the limited entanglement expected from the area-law structure discussed above. As a result, keeping only the largest singular values often gives an accurate representation with a much smaller bond dimension. In practice, every truncation step follows this logic. Whenever an operation increases the bond dimension, for example when applying an MPO to an MPS, we perform an SVD and keep only the leading singular values. This trades a controlled and usually very small loss of accuracy for a representation that remains computationally manageable.
-
-Two features of this scheme are worth isolating, because the transverse picture keeps one and loses the other. The first is that the object being truncated, the reduced density matrix, is Hermitian and positive, so its eigenvalues are the (squared) Schmidt values and dropping the smallest of them is unambiguous. The second is the variational guarantee stated above: the Eckart--Young--Mirsky theorem certifies that this truncation is the best rank-$\chi'$ approximation and bounds its error by the discarded weight. Both features are special to the Hermitian, single-state setting. When we move to the non-Hermitian transition matrix of the next subsection, the eigenvalue--singular-value coincidence and the variational bound are both lost, and the truncation becomes a physically-motivated heuristic rather than a theorem---a trade we make deliberately, and monitor, because of the large gain in efficiency it brings.
+Two features of this scheme matter later, because the transverse picture keeps one and loses the
+other. First, the truncated object is Hermitian and positive, so its eigenvalues are the squared
+Schmidt values and dropping the smallest is unambiguous. Second, the Eckart--Young--Mirsky theorem
+provides a variational guarantee and bounds the error. Both are properties of the Hermitian,
+single-state setting, and neither survives the move to a non-Hermitian transition matrix.
 
 \subsection{The reduced transition matrix and its truncation}
 \label{app:sub:rtm_truncation}
 
-The discussion so far concerned the truncation of a single state $\ket\psi$, where the reduced density matrix (RDM) provides the natural object to diagonalize. In the transverse picture, the situation is different. The transfer matrix is non-Hermitian, so its dominant left and right fixed points are distinct: a left tMPS $\bra L$ and a right tMPS $\ket R$. The object that must be truncated is therefore not an ordinary reduced density matrix, but a reduced transition matrix (RTM) built from both fixed points.
+Everything so far concerned a single state $\ket\psi$, for which the reduced density matrix is the
+natural object. The transverse picture is different. The transfer matrix is non-Hermitian, so its
+dominant left and right fixed points are distinct states, a left tMPS $\bra L$ and a right tMPS
+$\ket R$. What has to be truncated is built from both.
 
-For a temporal cut that separates the ``past'' steps $\le j$ from the ``future'' steps $>j$, the RTM is defined as
+For a temporal cut separating the steps up to $j$ from those after it, the \ac{RTM} is
 \begin{equation}
-  T_j = \frac{\mathrm{Tr}_{\text{future}}\,\ket R\bra L}{\braket{L|R}}.
+  T_j = \frac{\mathrm{Tr}_{\text{future}}\,\ket R\bra L}{\braket{L}{R}}.
 \end{equation}
-Because $\bra L$ and $\ket R$ are generally not related by Hermitian conjugation, $T_j$ is itself non-Hermitian. Its eigenvalues can be complex. They still sum to one, but they are not probabilities, so the usual Schmidt-value interpretation of Section~\ref{app:sub:schmidt} no longer applies directly.
+Since $\bra L$ is not the conjugate of $\ket R$, this object is non-Hermitian and its eigenvalues can
+be complex. They still sum to one, but they are not probabilities, so the Schmidt interpretation of
+the previous subsections does not carry over.
 
-This is exactly the setting that the gauge discussion of Section~\ref{app:sub:canonical_forms} was pointing towards, and it is worth making the pivotal property explicit. Under a gauge transformation $X$ inserted on the cut bond, the two candidate objects behave completely differently. The isolated boundary RDM transforms by a congruence, $\rho_L\to X^\dagger\rho_L X$, which for a non-unitary $X$ ($X^\dagger X\neq\mathbb{1}$, the generic case here) distorts its spectrum---so the Schmidt values of a single boundary state are not physical in the transverse picture, and truncating on them can discard precisely the weight that the global overlap needs. The transition matrix, by contrast, transforms by a similarity, $T_j\to X^{-1}T_j X$, which leaves its eigenvalues untouched. The RTM spectrum, and therefore the generalized temporal entropies built from it, are thus gauge-invariant: they are properties of the physical contraction, not of the representation. This is the precise sense in which the RTM is the ``correct'' object to truncate on, and it is what the production scheme of Section~\ref{sec:transverse} exploits; the concrete cost comparison between the two schemes is carried out there.
+This is where the gauge argument becomes decisive. Insert a gauge transformation $X$ on the cut bond
+and the two candidate objects respond in opposite ways. The boundary RDM transforms by a congruence,
+$\rho_L\to X^\dagger\rho_L X$, which for the non-unitary $X$ generic here distorts its spectrum. The
+transition matrix transforms by a similarity, $T_j\to X^{-1}T_j X$, which leaves its eigenvalues
+untouched. The Schmidt values of a single temporal boundary are therefore not physical, while the
+RTM spectrum is, and truncating on the former can discard exactly the weight the overlap needs.
 
-This changes the logic of truncation. In the ordinary case, we keep the directions that best preserve the norm of a single state. Here, the physically relevant quantities are instead bilinear overlaps of the form $\braket{L|\mathcal O|R}$. A component of $\ket R$ that has little overlap with $\bra L$ does not contribute much to such observables, even if it looks important from the point of view of $\ket R$ alone. Conversely, a component with small weight in $\ket R$ can still matter if it has a large projection onto $\bra L$.
+The logic of truncation changes accordingly. In the ordinary case one keeps the directions that best
+preserve the norm of a state. Here the relevant quantities are bilinear matrix elements
+$\bra{L}\mathcal O\ket{R}$. A component of $\ket R$ with little overlap with $\bra L$ contributes
+little, however large it looks from $\ket R$ alone, and a component with small weight in $\ket R$ can
+still matter if its projection onto $\bra L$ is large. The scheme of
+Ref.~\cite{carignano_marimon_tagliacozzo2024} therefore performs a biorthogonal decomposition of
+$\ket R\bra L$ and keeps the eigenvalues of largest modulus, which are the directions that dominate
+the physical contraction. Because relevance is measured through the overlap, this can retain fewer
+states than an RDM truncation at the same accuracy.
 
-The appropriate truncation must therefore use the transition matrix itself. The method introduced by Carignano, Marim\'on and Tagliacozzo~\cite{carignano_marimon_tagliacozzo2024} performs a biorthogonal decomposition of $\ket R\bra L$ and keeps the eigenvalues of largest modulus. These are the directions that dominate the bilinear form and therefore the physical contractions. Since relevance is measured through the overlap between left and right fixed points, this procedure can retain fewer states than a standard reduced-density-matrix truncation at the same accuracy.
+There is a price, and it is why the ordinary scheme is kept as a fallback. Standard truncation rests
+on a variational bound: the reduced density matrix is Hermitian and positive, its singular values
+coincide with its eigenvalues, and discarding the smallest removes the least weight from the norm.
+None of this survives for a non-Hermitian object. The singular values of $T_j$ and its eigenvalues
+are different quantities, and it is the eigenvalues that enter the contraction, since the trace is
+their sum. A component with a large singular value can therefore still fail to contribute. The
+clearest illustration is an operator with eigenvalues $+1$ and $-1$: both have unit modulus, so an
+SVD-based truncation keeps both, yet they cancel exactly in the trace. Truncating the RTM on
+singular values is thus a motivated heuristic rather than a bound, and its convergence can be less
+smooth.
 
-There is a price for this, and it is worth stating precisely, since it is the reason the ordinary scheme is kept as a fallback. Standard truncation of a single state rests on a variational bound: the reduced density matrix is Hermitian and positive, its singular values coincide with its eigenvalues, and discarding the smallest ones removes exactly the least weight from the norm. The error is controlled and the convergence is monotone.
+A second approximation enters through the environment. The truncation at each step uses the local
+environment available at that point of the sweep, not the full remaining network, because the
+contraction is built column by column. For a translation-invariant problem this is benign, since
+every bulk column is the same operator and weight discarded too early is regenerated by the next
+application. It remains an approximation, and it is one reason the RDM route behaves more
+predictably when the RTM output turns noisy.
 
-None of that survives for a non-Hermitian object. The singular values of $T_j$ and its eigenvalues are different quantities, and it is the eigenvalues that enter the physical contraction, since the trace is their sum. A component with a large singular value can therefore still fail to contribute. The simplest illustration is an operator with eigenvalues $+1$ and $-1$: both have unit modulus, so an SVD-based truncation keeps both, yet they cancel exactly in the trace. Truncating the RTM on singular values is consequently a well-motivated heuristic rather than a bound, and its convergence can be less smooth than the Hermitian case.
-
-A second approximation enters through the environment. The truncation at each step is performed on the local environment available at that point of the sweep, not on the full remaining network, since the contraction is built up column by column. For a translation-invariant problem this is benign, because every bulk column is the same operator and weight discarded prematurely is regenerated by the next application. It is nevertheless an approximation, and it is one of the places where the RDM route, being variationally controlled, behaves more predictably when the RTM output turns noisy.
-
-The corresponding cost is naturally measured by the generalized R\'enyi-2 temporal entropy,
+The cost of the whole scheme is measured by the generalized R\'enyi-2 temporal entropy,
 \begin{equation}
-  S_2^{\text{gen}}(j) = -\log \mathrm{Tr}\, T_j^{\,2}.
+  S_2^{\text{gen}}(j) = -\log \mathrm{Tr}\, T_j^{\,2},
 \end{equation}
-This is the entropy we use throughout the thesis to quantify the temporal entanglement that controls the difficulty of the transverse contraction.
+which is the quantity used throughout this thesis to quantify the temporal entanglement.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -140,47 +218,84 @@ This is the entropy we use throughout the thesis to quantify the temporal entang
 \section{Conformal-field-theory derivations}
 \label{app:cft}
 
-This appendix supplies the derivations behind the results quoted in Section~\ref{sec:cft}. It is not needed to follow the main line of the thesis---every formula it produces is stated, and used, in the main text---but it makes the conformal machinery self-contained for the interested reader.
+This appendix derives the results quoted in Section~\ref{sec:cft}. Every formula it produces is
+stated and used in the main text, so it is not needed to follow the argument there.
 
 \subsection{Conformal maps and holomorphic factorization}
 \label{app:cft:maps}
 
-In two dimensions one packages the Euclidean coordinates $(x,\tau)$ into $z=x+i\tau$ and $\bar z=x-i\tau$, and physical quantities factorize into a holomorphic piece (a function of $z$) and an antiholomorphic piece (a function of $\bar z$); this is the origin of the separate weights $h$ and $\bar h$. Because every analytic map $z\mapsto f(z)$ is a conformal symmetry, a correlation function known on the plane is known on any geometry an analytic map reaches, by substitution. The map we use repeatedly is the plane-to-cylinder (or strip) logarithm $\omega=\tfrac{\beta}{2\pi}\log z$, which wraps the plane onto a cylinder of circumference $\beta$; its time-like continuation ($\beta\to iT$, $\sinh\to\sin$) produces the strip geometry of the quench (Section~\ref{sec:cft:boundary}).
+In two dimensions the Euclidean coordinates are packaged into $z=x+i\tau$ and $\bar z=x-i\tau$.
+Physical quantities then factorize into a holomorphic piece, depending on $z$, and an
+antiholomorphic one depending on $\bar z$, which is where the separate weights $h$ and $\bar h$ come
+from. Since every analytic map $z\mapsto f(z)$ is a conformal symmetry, a correlation function known
+on the plane is known on any geometry such a map reaches, simply by substitution.
+
+The map used throughout is the plane-to-cylinder logarithm $\omega=\tfrac{\beta}{2\pi}\log z$, which
+wraps the plane onto a cylinder of circumference $\beta$. Continuing it to real time, with
+$\beta\to iT$ and $\sinh\to\sin$, produces the strip geometry of the quench.
 
 \subsection{Primary operators and their two-point functions}
 \label{app:cft:ops}
 
-A primary operator $\phi$ of weights $(h,\bar h)$ has, on the infinite plane, the pure power-law two-point function
+A primary operator $\phi$ of weights $(h,\bar h)$ has on the plane the two-point function
 \begin{equation}
     \langle \phi(z_1)\phi(z_2)\rangle
       = \frac{1}{(z_1-z_2)^{2h}\,(\bar z_1-\bar z_2)^{2\bar h}},
     \label{eq:cft:plane2pt}
 \end{equation}
-so the exponent is the scaling dimension $x=h+\bar h$ of Equation~\eqref{eq:cft:dim}. Under a conformal map $\omega=f(z)$ a primary transforms by Jacobian factors, $\langle\phi(\omega_1)\phi(\omega_2)\rangle=\prod_i f'(z_i)^{-h}\bar f'(\bar z_i)^{-\bar h}\,\langle\phi(z_1)\phi(z_2)\rangle$. Feeding in the plane-to-cylinder map turns Equation~\eqref{eq:cft:plane2pt} into the hyperbolic-sine form characteristic of a cylinder of circumference $\beta$,
+whose exponent is the scaling dimension $x=h+\bar h$ of Equation~\eqref{eq:cft:dim}. Under a map
+$\omega=f(z)$ a primary picks up Jacobian factors,
+$\langle\phi(\omega_1)\phi(\omega_2)\rangle=\prod_i f'(z_i)^{-h}\bar f'(\bar z_i)^{-\bar h}
+\langle\phi(z_1)\phi(z_2)\rangle$. Applying the plane-to-cylinder map turns
+Equation~\eqref{eq:cft:plane2pt} into the hyperbolic form characteristic of a cylinder,
 \begin{equation}
     \langle\phi(\omega_1)\phi(\omega_2)\rangle \;\propto\;
       \Big[\sinh\tfrac{\pi(\omega_1-\omega_2)}{\beta}\Big]^{-2h}
       \Big[\sinh\tfrac{\pi(\bar\omega_1-\bar\omega_2)}{\beta}\Big]^{-2\bar h}.
     \label{eq:cft:cyl2pt}
 \end{equation}
-The time-like version of this expression---a $\sin$ instead of a $\sinh$---is the origin of the chord variable of Equation~\eqref{eq:chord}.
+Its time-like version, with a $\sin$ in place of the $\sinh$, is the origin of the chord variable of
+Equation~\eqref{eq:chord}.
 
 \subsection{The transfer-matrix spectrum from the stress tensor}
 \label{app:cft:spectrum}
 
-The carrier of the central charge is the stress-energy tensor $T_{\mu\nu}$, the operator measuring the theory's response to a change of coordinates. Because coordinate changes are the symmetry in 2D, the stress tensor generates conformal transformations, and its modes generate the Virasoro algebra. One mode is special: $L_0$, the generator of scaling, whose eigenvalues on the primaries are their weights $h$---so $L_0$ is the ``dictionary operator'' whose spectrum is the operator content. Quantizing on a strip of transverse size $\beta$, the Hamiltonian generating translations along it is, up to the sound velocity $v$, an integral of the stress tensor, and the conformal map from the plane leaves behind one extra, purely geometric term---the Casimir anomaly proportional to $c$---giving Equation~\eqref{eq:cft:casimir}, $\hat H = \tfrac{\pi}{\beta}(L_0-\tfrac{c}{24})$. Since the transfer matrix is essentially $\mathcal{E}=e^{-\delta t\,\hat H}$, this hands over its entire spectrum in the form of Equation~\eqref{eq:cft:transfer}: a dominant eigenvalue whose modulus encodes the Casimir ($c$) term, and a tower of subleading eigenvalues whose ratios and phases encode the operator dimensions.
+The central charge is carried by the stress-energy tensor, the operator measuring the response of
+the theory to a change of coordinates. In two dimensions those changes are the symmetry, so the
+stress tensor generates the conformal transformations and its modes generate the Virasoro algebra.
+One mode is special: $L_0$ generates scaling, and its eigenvalues on the primaries are their weights.
+Its spectrum is therefore the operator content.
+
+Quantizing on a strip of transverse size $\beta$, the generator of translations along the strip is an
+integral of the stress tensor, up to the velocity $v$. The conformal map from the plane leaves behind
+one extra, purely geometric term, the Casimir anomaly proportional to $c$, which gives
+Equation~\eqref{eq:cft:casimir}. Since the transfer matrix is essentially
+$\mathcal{E}=e^{-\delta t\,\hat H}$, this fixes its whole spectrum in the form of
+Equation~\eqref{eq:cft:transfer}: a dominant eigenvalue carrying the Casimir term, and a tower of
+subleading ones whose ratios and phases carry the operator dimensions.
 
 \subsection{Twist fields and the entropy coefficients}
 \label{app:cft:twist}
 
-To obtain the entanglement entropy of an interval $\mathcal A$ one needs the R\'enyi moments $\mathrm{Tr}\,\rho_{\mathcal A}^{\,n}$, then continues $n\to1$. The replica trick~\cite{calabrese_cardy2004} computes $\mathrm{Tr}\,\rho_{\mathcal A}^{\,n}$ as a path integral on $n$ copies of the plane sewn cyclically along $\mathcal A$; that geometry is equivalent, on a single plane, to inserting a pair of twist operators $\sigma_n$ at the endpoints of $\mathcal A$. The twist operator is a primary of dimension $\Delta_n=\tfrac{c}{12}(n-1/n)$ (Equation~\eqref{eq:cft:twist}), and its two-point function, a power law of the form~\eqref{eq:cft:plane2pt}, gives $\mathrm{Tr}\,\rho_{\mathcal A}^{\,n}\sim\ell^{-4\Delta_n}$ for an interval of length $\ell$, hence the logarithm
+The entanglement entropy of an interval $\mathcal A$ follows from the R\'enyi moments
+$\mathrm{Tr}\,\rho_{\mathcal A}^{\,n}$, continued to $n\to1$. The replica
+trick~\cite{calabrese_cardy2004} computes those moments as a path integral on $n$ copies of the plane
+sewn cyclically along $\mathcal A$. On a single plane, that geometry is equivalent to inserting a
+pair of twist operators at the endpoints of $\mathcal A$.
+
+The twist operator is a primary of dimension $\Delta_n=\tfrac{c}{12}(n-1/n)$, so its two-point
+function is a power law of the form~\eqref{eq:cft:plane2pt}. This gives
+$\mathrm{Tr}\,\rho_{\mathcal A}^{\,n}\sim\ell^{-4\Delta_n}$ for an interval of length $\ell$, and
+hence the logarithm
 \begin{equation}
     S_n = \frac{c}{6}\Big(1+\frac1n\Big)\log\ell + \text{const},
     \qquad
     S_{n\to1} = \frac{c}{3}\log\ell + \text{const}.
     \label{eq:cft:cc}
 \end{equation}
-The R\'enyi order enters through the known factor $(1+1/n)$. For a boundary (half-line) cut, which is the temporal situation of this thesis, the coefficient is halved, giving the family $\tfrac{c}{12}\tfrac{n+1}{n}$---i.e.\ $c/6$ for $n\to1$ and $c/8$ for $n=2$, not the bulk value $c/3$.
+The R\'enyi order enters through the factor $(1+1/n)$. For a boundary cut, which is the temporal
+situation of this thesis, the coefficient is halved, giving $\tfrac{c}{12}\tfrac{n+1}{n}$: that is
+$c/6$ at $n\to1$ and $c/8$ at $n=2$, rather than the bulk value $c/3$.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -188,19 +303,72 @@ The R\'enyi order enters through the known factor $(1+1/n)$. For a boundary (hal
 \section{Construction of the time-evolution MPO}
 \label{app:mpo}
 
-This appendix records the machinery behind the exponential-MPO family of Section~\ref{sec:mporep}: how the connected/disconnected organization is turned into an explicit operator, the auxiliary-boson trick that generates the correct symmetric cross terms, the time-step split that keeps them stable, and the closed-form second-order (VD2) blocks we use in production.
+This appendix records the machinery behind the exponential-MPO family of
+Section~\ref{sec:mporep}, together with the closed-form second-order blocks used in production and
+a direct comparison of the two constructions.
+
+\subsection{Standard time-evolution algorithms}
+\label{app:mpo:standard}
+
+The conventional way of building a time-evolution operator as a tensor network is the
+Trotter--Suzuki decomposition~\cite{vidal2004, schollwock2011}, which is the reference point for
+Section~\ref{sec:mporep}. The evolution is split into short steps, and each step $e^{-iH\delta t}$ is
+factorized into two-site gates by separating the Hamiltonian into terms acting on even and on odd
+bonds. Within each group the terms commute, so each group exponentiates exactly. The error comes only
+from the non-commutation between groups: $\mathcal{O}(\delta t^2)$ per step for the first-order
+splitting, and $\mathcal{O}(\delta t^3)$ for the symmetric second-order one.
+
+For a nearest-neighbour chain this gives the brick-wall circuit of alternating two-site gate layers.
+Each gate is split by an SVD into two tensors joined by a virtual bond, and the tensors on the same
+site are contracted together, so a layer becomes a sequence of identical local tensors, that is, an
+MPO. The sequence is uniform because every gate has the same structure and acts on adjacent sites,
+which is exactly the translation invariance the transverse contraction needs. Ref.~\cite{paeckel2019}
+reviews these and other time-evolution schemes for matrix product states.
+
+The construction fails as soon as an interaction connects sites that are not adjacent, since such a
+term does not act on a single bond of the pattern and cannot be written as one of its gates. That is
+the situation here, and the reason for the finite-state-machine route.
 
 \subsection{Size-extensivity and the connected/disconnected organization}
 \label{app:mpo:extensive}
 
-A naive truncated Taylor series $e^{\tau H}=\mathbb{I}+\tau H+\tfrac{\tau^2}{2!}H^2+\cdots$ cannot be used directly in the thermodynamic limit: each power $H^n$ is a sum of $\mathcal{O}(N^n)$ local terms, so successive orders scale with different powers of the chain length $N$ and the result cannot be normalized as $N\to\infty$~\cite{vandamme2024}. Any acceptable construction must be size-extensive---applied to a normalizable state it must return a normalizable state, regardless of $N$. The organizing idea is to expand not by powers of $H$ but by how its local terms overlap along the chain. Terms acting on disjoint regions commute and their product factorizes trivially; these disconnected contributions are harmless and can be kept to all orders at no cost. The difficulty is confined to the connected contributions, where two or more local terms act on overlapping sites and need not commute. For instance an on-site field $D$ may act on the same site where an interaction is initiated by $C$; both orderings $CD$ and $DC$ are then required, since $H^2=(\sum_i h_i)^2$ sums over every ordered pair regardless of commutation, and dropping either would break the Hermiticity that $H^2$ inherits from $H$ (individually $(CD)^\dagger=DC\neq CD$). A suitable time-evolution MPO keeps all disconnected terms exactly, captures connected clusters up to a controlled size, and pushes the truncation error to a chosen order in $\delta t$.
+A truncated Taylor series $e^{\tau H}=\mathbb{I}+\tau H+\tfrac{\tau^2}{2!}H^2+\cdots$ cannot be used
+in the thermodynamic limit. Each power $H^n$ is a sum of $\mathcal{O}(N^n)$ local terms, so
+successive orders scale with different powers of the chain length and the result cannot be
+normalized as $N\to\infty$~\cite{vandamme2024}. An acceptable construction must be size-extensive:
+applied to a normalizable state it must return one, whatever the value of $N$.
+
+The organizing idea is to expand by how the local terms overlap along the chain, rather than by
+powers of $H$. Terms acting on disjoint regions commute and their product factorizes, so these
+disconnected contributions are harmless and can be kept to all orders at no cost. The difficulty is
+confined to the connected ones, where two or more local terms act on overlapping sites and need not
+commute. An on-site field $D$ may act on the site where an interaction is initiated by $C$, for
+example, and both orderings $CD$ and $DC$ are then needed, since $H^2$ sums over every ordered pair.
+Dropping either would break the Hermiticity that $H^2$ inherits from $H$. A suitable operator
+therefore keeps all disconnected terms exactly, captures connected clusters up to a controlled size,
+and pushes the error to a chosen order in $\delta t$.
 
 \subsection{The auxiliary-boson trick and the time-step split}
 \label{app:mpo:boson}
 
-The simplest construction on this logic, $W^{\mathrm{I}}$, keeps every disconnected term and discards all overlaps; it is built from the blocks $A,B,C,D$ of $W_H$ by distributing the time step across the initiators $C$, the terminators $B$, and the on-site block $D$, keeping the virtual bond at $1+\chi$, and is only first order. The improvement to $W^{\mathrm{II}}$ additionally keeps single-site overlaps. The algebraic obstacle---writing out the correct symmetric combinations of overlapping blocks by hand---is bypassed by a clever device of Zaletel et al.~\cite{zaletel2015}: encode the four blocks in the dynamics of two auxiliary hard-core bosons, exponentiate a small effective Hamiltonian built from $A,B,C,D$ acting on these bosons, and read off the new MPO blocks by projecting the result onto the boson occupations. Because a hard-core boson can be occupied at most once, the exponential truncates on its own and produces exactly the symmetric cross terms required, keeping the on-site term exactly ($e^{\tau D}$) at the same bond dimension $1+\chi$. The Van Damme construction~\cite{vandamme2024} generalizes this auxiliary-space idea to arbitrary order.
+The simplest construction on this logic is $W^{\mathrm{I}}$, which keeps every disconnected term and
+discards all overlaps. It distributes the time step across the initiators $C$, the terminators $B$
+and the on-site block $D$, keeps the virtual bond at $1+\chi$, and is first order. Improving it to
+$W^{\mathrm{II}}$ means additionally keeping the single-site overlaps.
 
-Common to all three schemes is the time-step split, which is what keeps them numerically stable. The complex time step $\tau=-i\delta t$ is not divided evenly: we assign a real factor $t_C=\sqrt{\delta t}$ to the initiator block $C$ and put the phase in $t_B=\tau/t_C$ on the terminator block $B$, so that the product $C\otimes B$ still carries the correct factor $-i\delta t$ while the intermediate memory channels remain well behaved.
+Writing out the correct symmetric combinations of overlapping blocks by hand is awkward, and
+Zaletel et al.~\cite{zaletel2015} avoid it with an auxiliary-space device. The four blocks are
+encoded in the dynamics of two hard-core bosons; a small effective Hamiltonian built from
+$A,B,C,D$ acting on those bosons is exponentiated, and the new MPO blocks are read off by projecting
+onto the boson occupations. Since a hard-core boson can be occupied at most once, the exponential
+truncates by itself and produces exactly the required symmetric cross terms, keeping the on-site
+term exact at the same bond dimension. The Van Damme construction~\cite{vandamme2024} generalizes
+this idea to arbitrary order.
+
+All three schemes share the time-step split, which is what keeps them stable. The complex step
+$\tau=-i\delta t$ is divided unevenly: a real factor $t_C=\sqrt{\delta t}$ goes to the initiator
+block and the phase $t_B=\tau/t_C$ to the terminator block, so the product $C\otimes B$ still carries
+the correct factor while the intermediate memory channels stay well behaved.
 
 \subsection{The second-order VD2 blocks}
 \label{app:mpo:vd2}
@@ -240,14 +408,48 @@ The scalar track $W_{11}$ carries the on-site evolution to third Taylor order; t
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection{Comparing the two constructions in practice}
+\label{app:mpo:comparison}
+
+The claim that $W^{\mathrm{II}}$ degrades to first order for a next-nearest-neighbour Hamiltonian, while VD2 remains second order, can be checked directly on the model of this thesis. A convenient diagnostic is the loss of unitarity, since the exact $e^{-iH\delta t}$ preserves the norm of any state: applying successive layers of the approximate operator to $\ket{X+}^{\otimes N}$ and monitoring $\lVert\psi\rVert$ isolates the Trotter error, because a perfect construction would leave the norm at one.
+
+Applying eight layers at $\delta t=0.05$ to a chain of $N=100$ sites at $p=0.1$ gives the following norms:
+
+\begin{center}
+\begin{tabular}{lccc}
+\hline
+ & $W^{\mathrm{I}}$ & $W^{\mathrm{II}}$ & VD2 \\
+\hline
+virtual bond & $4$ & $4$ & $13$ \\
+$\lVert\psi\rVert$ after 1 layer & $1.3514$ & $1.1341$ & $0.99995$ \\
+$\lVert\psi\rVert$ after 8 layers & $12.6146$ & $3.0181$ & $0.99923$ \\
+\hline
+\end{tabular}
+\end{center}
+
+The separation is unambiguous. The first-order $W^{\mathrm{I}}$ inflates the norm by an order of magnitude within eight steps, and $W^{\mathrm{II}}$, which would be effectively second order for a strictly nearest-neighbour chain, still triples it: the connected clusters generated by the \ac{NNN} bridge are precisely the ones it fails to capture. VD2 holds the norm to within $8\times10^{-4}$ over the same interval. The same ordering appears in the Schr\"odinger-picture benchmark of the notebooks, where VD2 reproduces the TDVP evolution at every time while $W^{\mathrm{II}}$ agrees only at short times before drifting.
+
+This is what justifies paying for the larger virtual bond. Since the transverse contraction needs long temporal chains, and reducing $\delta t$ to compensate a first-order error would lengthen them further and add truncation error at every extra site, a genuinely second-order operator at a moderate time step is the configuration that makes the calculation feasible at all.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{The block power method and its implementation}
 \label{app:blockpm}
 
-This appendix develops the algorithm summarized in Section~\ref{sec:blockpm}, together with the driver and bookkeeping that turn it into the production tool used for the sweeps of Section~\ref{sec:results}. The core routine is \texttt{block\_transfer\_eigs}, which we added on top of \texttt{ITransverse.jl}; the surrounding machinery lives in the small library \texttt{transverse\_tools.jl} layered on \texttt{ITensors.jl} and \texttt{ITransverse.jl}. The first half derives the method; the second collects the practical pieces---the unified driver, the adaptive block size, the physical-branch selector, and the warm-start machinery---because several of them encode physics lessons that only became visible while running the calculation. Throughout we reuse the notation of Section~\ref{sec:nonhermitian}: the spatial transfer matrix $\mathcal{E}$, its biorthogonal eigenpairs $\langle L_i|$, $|R_i\rangle$ with eigenvalues $\mu_i$ ordered by modulus. Equation numbers are local, (B1)--(B7).
+This appendix derives the algorithm summarized in Section~\ref{sec:blockpm} and collects the
+bookkeeping that turns it into the production tool used for the sweeps of
+Section~\ref{sec:results}. The core routine is \texttt{block\_transfer\_eigs}, added on top of
+\texttt{ITransverse.jl}. Several of the practical pieces in the second half encode lessons that only
+became visible while running the calculation. We reuse the notation of
+Section~\ref{sec:nonhermitian} throughout: the transfer matrix $\mathcal{E}$, its biorthogonal
+eigenpairs $\langle L_i|$ and $|R_i\rangle$, and eigenvalues $\mu_i$ ordered by modulus. Equation
+numbers are local, (B1)--(B6).
 
 \subsection{The two-sided block and the oblique projection}
 
-We keep $k$ right vectors $|R_1\rangle,\dots,|R_k\rangle$ and, independently, $k$ left vectors $\langle L_1|,\dots,\langle L_k|$, all temporal MPS on the same time sites, seeded with random complex tensors (Section~\ref{sec:powermethod} explains why a random seed is required). One iteration applies the transfer matrix to every member of the right block and its transpose to every member of the left block,
+We keep $k$ right vectors and, independently, $k$ left vectors, all temporal MPS on the same time
+sites, seeded with random complex tensors. One iteration applies the transfer matrix to every member
+of the right block and its transpose to every member of the left block,
 \begin{equation}
   |\tilde R_j\rangle = \mathcal{E}\,|R_j\rangle, \qquad
   \langle \tilde L_j| = \langle L_j|\,\mathcal{E}
@@ -255,31 +457,57 @@ We keep $k$ right vectors $|R_1\rangle,\dots,|R_k\rangle$ and, independently, $k
   |\tilde L_j\rangle = \mathcal{E}^{\mathsf T}|L_j\rangle .
   \tag{B1}
 \end{equation}
-The transpose---implemented as a prime-level swap of the MPO's physical legs, with no complex conjugation---is the adjoint with respect to the bilinear form of Section~\ref{sec:nonhermitian}: it is defined by $(\mathcal{E}^{\mathsf T}L)^{\mathsf T}R = L^{\mathsf T}(\mathcal{E}R)$, so left overlaps computed without conjugation remain consistent. Using the Hermitian adjoint $\mathcal{E}^\dagger$ here would be a conceptual error, not a convention choice: it would converge the left block to the dominant eigenvector of $\mathcal{E}^\dagger$, which for a non-normal $\mathcal{E}$ is not the dominant left eigenvector of $\mathcal{E}$. As in the single-vector method, each application multiplies the bond dimension, so every product in (B1) is truncated back to a cap $\chi_{\max}$ and each vector is renormalized.
+The transpose is implemented as a prime-level swap of the MPO legs, with no complex conjugation. It
+is the adjoint with respect to the bilinear form, defined by
+$(\mathcal{E}^{\mathsf T}L)^{\mathsf T}R = L^{\mathsf T}(\mathcal{E}R)$, so left overlaps computed
+without conjugation stay consistent. Using the Hermitian adjoint here would be an error rather than
+a convention: it converges the left block to the dominant eigenvector of $\mathcal{E}^\dagger$,
+which for a non-normal $\mathcal{E}$ is not the dominant left eigenvector of $\mathcal{E}$. Each
+application multiplies the bond dimension, so every product is truncated back to a cap and
+renormalized.
 
-After the applications, we compress all the spectral information the blocks carry into two small $k\times k$ matrices,
+The spectral information carried by the blocks is then compressed into two $k\times k$ matrices,
 \begin{equation}
   S_{ij} = \langle L_i | R_j\rangle, \qquad
   M_{ij} = \langle L_i | \mathcal{E} | R_j \rangle ,
   \tag{B2}
 \end{equation}
-both evaluated with the bilinear overlap (no conjugation anywhere; $S$ has no Hermiticity properties at all, and that is fine). $S$ is the metric of the oblique (Petrov--Galerkin) projection---how the left test space and the right trial space are angled against each other---and $M$ is the transfer matrix seen through that projection. Approximations $\theta$ to the eigenvalues of $\mathcal{E}$ (Ritz values) solve the small generalized eigenproblem $M\,v=\theta\,S\,v$.
+both evaluated with the bilinear overlap, so $S$ has no Hermiticity properties. It is the metric of
+the oblique projection, measuring how the left test space and the right trial space are angled
+against each other, and $M$ is the transfer matrix seen through that projection. Approximations
+$\theta$ to the eigenvalues of $\mathcal{E}$, the Ritz values, solve $M\,v=\theta\,S\,v$.
 
 \subsection{Regularization and exact left pairing}
 
-Numerically we do not hand that generalized problem to a solver. Near the degeneracy the columns of the right block begin to coincide, $S$ becomes nearly singular, and a direct generalized eigensolver responds with infinite or wildly scattered eigenvalues. Instead we regularize with the pseudoinverse,
+That generalized problem is not handed to a solver directly. Near the degeneracy the columns of the
+right block begin to coincide, $S$ becomes nearly singular, and a generalized eigensolver returns
+infinite or wildly scattered eigenvalues. We regularize with the pseudoinverse instead,
 \begin{equation}
   W = S^{+} M, \qquad W = V\,\Theta\,V^{-1},
   \tag{B3}
 \end{equation}
-where $S^{+}$ is the Moore--Penrose pseudoinverse with a relative tolerance ($10^{-12}$): directions of the block that have effectively collapsed onto each other are projected out rather than inverted. The eigenvalues $\Theta=\mathrm{diag}(\theta_1,\dots,\theta_k)$, sorted by modulus, are our estimates of $\mu_0,\dots,\mu_{k-1}$, and the columns of $V$ say which combination of the current right block approximates each eigenvector.
+where $S^{+}$ carries a relative tolerance of $10^{-12}$, so directions that have effectively
+collapsed onto each other are projected out rather than inverted. The eigenvalues
+$\Theta$, sorted by modulus, estimate $\mu_0,\dots,\mu_{k-1}$, and the columns of $V$ give the
+combination of the right block approximating each eigenvector.
 
-The left block needs its own mixing coefficients, and here hides a trap. One could diagonalize the transposed pencil in a second, independent call---but then nothing guarantees its eigenvalues come out in the same order, and inside a quasi-degenerate cluster ``match each left eigenvalue to the nearest right one'' is ambiguous precisely when it matters: several $\theta$'s sit within a fraction of a percent, the greedy match picks a wrong partner, and the de-mixed left and right vectors no longer describe the same eigenvector. The block then oscillates instead of converging---a failure mode that, before it was fixed, contaminated the near-degenerate gap data. The fix is that no second diagonalization is needed: writing $y^{\mathsf T}=u^{\mathsf T}S$, the left eigenproblem becomes $y^{\mathsf T}W=\theta\,y^{\mathsf T}$, so the $y$'s are the left eigenvectors of the same $W$, i.e.\ the rows of $V^{-1}$. Hence
+The left block needs its own coefficients, and the obvious route hides a trap. Diagonalizing the
+transposed pencil in a second call gives no guarantee that its eigenvalues come out in the same
+order. Inside a quasi-degenerate cluster, matching each left eigenvalue to the nearest right one is
+ambiguous exactly when it matters: several $\theta$ sit within a fraction of a percent, a greedy
+match picks the wrong partner, and the de-mixed left and right vectors stop describing the same
+eigenvector. The block then oscillates instead of converging, a failure that contaminated the
+near-degenerate gap data before it was found.
+
+No second diagonalization is needed. Writing $y^{\mathsf T}=u^{\mathsf T}S$, the left eigenproblem
+becomes $y^{\mathsf T}W=\theta\,y^{\mathsf T}$, so the $y$ are left eigenvectors of the same $W$,
+that is, the rows of $V^{-1}$. Hence
 \begin{equation}
   u_j = \big(S^{+}\big)^{\mathsf T}\big(V^{-1}\big)^{\mathsf T} e_j ,
   \tag{B4}
 \end{equation}
-paired with $\theta_j$ by construction and automatically biorthogonal through the metric, $u_i^{\mathsf T}S\,v_j=\delta_{ij}$ (up to the regularization). One decomposition, exact pairing, no heuristic.
+paired with $\theta_j$ by construction and biorthogonal through the metric,
+$u_i^{\mathsf T}S\,v_j=\delta_{ij}$. One decomposition, exact pairing, no heuristic.
 
 \subsection{De-mixing, truncation modes, and the Schur basis}
 
@@ -289,101 +517,252 @@ The iteration closes by rotating the applied blocks onto the Ritz combinations,
   |L_j\rangle \leftarrow \sum_i U_{ij}\, |\tilde L_i\rangle ,
   \tag{B5}
 \end{equation}
-where the MPS linear combinations are formed with an exact direct-sum addition and compressed once at the end (the naive density-matrix addition is numerically fragile for near-parallel vectors). Each new pair is then truncated, in one of two modes mirroring the RTM/RDM discussion of Section~\ref{sec:transverse:truncation}: \textbf{RTM mode} truncates the matched pair $(L_j,R_j)$ jointly on its bilinear transition matrix $|R_j\rangle\langle L_j|$---optimal for the physical overlap, far cheaper, but built on the SVD of a non-Hermitian object that becomes ill-conditioned exactly at the degeneracy; \textbf{RDM mode} truncates every vector independently on its Hermitian density matrix---blind to the $L$--$R$ pairing, more expensive, but positive and well-conditioned through the cluster, and the safe fallback when RTM output turns noisy.
+where the MPS combinations use an exact direct-sum addition, compressed once at the end, because the
+naive density-matrix addition is fragile for near-parallel vectors. Each new pair is truncated in one
+of the two modes of Section~\ref{sec:transverse:truncation}. RTM mode truncates the matched pair
+jointly on $|R_j\rangle\langle L_j|$: optimal for the physical overlap and far cheaper, but built on
+the SVD of a non-Hermitian object that is ill-conditioned at the degeneracy. RDM mode truncates each
+vector independently on its Hermitian density matrix: blind to the pairing and more expensive, but
+positive and well conditioned through the cluster, which makes it the fallback when RTM output turns
+noisy.
 
-One structural weakness remains that no truncation mode removes. Equation (B5) de-mixes onto the eigenvector basis, and for a non-normal matrix that basis itself degenerates as eigenvalues cluster: the condition number of $V$ grows like the inverse gap, and rotating the block onto nearly-parallel directions amplifies every source of noise by that condition number. The remedy, standard in non-Hermitian subspace iteration, is to give up on individual eigenvectors inside the cluster and maintain only a well-conditioned basis of the invariant subspace: we QR-orthonormalize the modulus-sorted coefficient matrices,
+One weakness survives both modes. Equation (B5) de-mixes onto the eigenvector basis, and for a
+non-normal matrix that basis degenerates as eigenvalues cluster: the condition number of $V$ grows
+like the inverse gap, so rotating onto nearly parallel directions amplifies any noise by that factor.
+The standard remedy is to stop tracking individual eigenvectors inside the cluster and keep only a
+well-conditioned basis of the invariant subspace. We QR-orthonormalize the modulus-sorted coefficient
+matrices,
 \begin{equation}
   V \to Q_V, \qquad U \to Q_U, \qquad (Q^\dagger Q = \mathbb{1}),
   \tag{B6}
 \end{equation}
-an ordered-Schur-like choice whose leading $j$ columns span the same leading-$j$ eigenspaces while the rotations stay unitary. The Ritz values are still read from the pencil at every step; only the basis carried between iterations changes. In this mode the individual pairs $(L_j,R_j)$ inside a cluster are no longer eigenvector approximations---a price to remember when feeding them into entropy formulas---but the spectrum, and the leading pair when it is isolated, remain clean.
+an ordered-Schur-like choice whose leading $j$ columns span the same leading eigenspaces while the
+rotations stay unitary. The Ritz values are still read from the pencil at every step; only the basis
+carried between iterations changes. In this mode the individual pairs inside a cluster are no longer
+eigenvector approximations, which matters when feeding them into entropy formulas, but the spectrum
+and the leading pair remain clean when that pair is isolated.
 
 \subsection{Convergence and validation}
 
-Convergence is declared on the movement of the leading Ritz values between iterations, $\max_j|\theta_j^{(n)}-\theta_j^{(n-1)}|<\varepsilon$, with the physical branch $\mu_0$ identified by the modulus-dominance selector described below. The whole construction was validated against an exact dense diagonalization of $\mathcal{E}$ at small bond dimension: on all the models tested, the block-method eigenvalues reproduce the exact leading spectrum to between $10^{-8}$ and $10^{-13}$, confirming that the eigenvalue machinery is correct independently of any power-method comparison.
+Convergence is declared on the movement of the leading Ritz values between iterations, with the
+physical branch identified by the modulus-dominance selector described below. The construction was
+validated against exact dense diagonalization of $\mathcal{E}$ at small bond dimension: on every
+model tested the block-method eigenvalues reproduce the exact leading spectrum to between $10^{-8}$
+and $10^{-13}$, which confirms the eigenvalue machinery independently of any power-method comparison.
 
 \subsection{The tMPO builder and the unified entropy driver}
 \label{app:library:build}
 
-Above the solver sits a thin, model-agnostic driver, which is what guaranteed that every model in the study was measured by exactly the same pipeline. A single generic constructor, \texttt{build\_tmpo(mp, scheme, T)}, turns any of the model definitions into the rotated temporal network: it assembles the one-step propagator $U(\delta t)$ as an MPO (Appendix~\ref{app:mpo}), performs the $90^\circ$ rotation that maps the spatial virtual bond onto the temporal physical index, and returns the transfer-matrix MPO together with a structured seed tMPS carrying the correct index skeleton. Because the VD2 exponentiation enlarges the spatial bond to $1+\chi+\chi^2$ (Appendix~\ref{app:mpo:vd2}), the temporal physical dimension differs between schemes; the builder reads it dynamically rather than hard-coding it, which lets the same code path serve the WI, WII and VD2 kernels and the Ising, ANNNI-type, and control models without modification. On top of it, \texttt{compute\_entropies(mp, T; \dots)} wires the builder to the block solver and the generalized-entropy routines: it overwrites the structured seed with random complex tensors (a symmetry-special seed converges to a subdominant sector, Section~\ref{sec:powermethod}), runs the power method, trims the $N_\beta/2$ cooling bonds from each end, and returns the per-cut R\'enyi-2 profile together with the leading spectrum.
+A thin, model-agnostic driver sits above the solver, and it is what guaranteed that every model in
+the study was measured by the same pipeline. A single constructor turns any model definition into
+the rotated temporal network: it assembles the one-step propagator as an MPO
+(Appendix~\ref{app:mpo}), performs the $90^\circ$ rotation that maps the spatial virtual bond onto
+the temporal physical index, and returns the transfer-matrix MPO with a structured seed tMPS
+carrying the right index skeleton. Since the VD2 exponentiation enlarges the spatial bond, the
+temporal physical dimension differs between schemes, so the builder reads it dynamically instead of
+hard-coding it. That is what lets the same code path serve the WI, WII and VD2 kernels and every
+model without modification.
+
+On top of it, a single entropy driver wires the builder to the block solver. It overwrites the
+structured seed with random complex tensors, since a symmetry-special seed converges to a
+subdominant sector, runs the power method, trims the $N_\beta/2$ cooling bonds from each end, and
+returns the per-cut R\'enyi-2 profile together with the leading spectrum.
 
 \subsection{Adaptive block size}
 \label{app:library:adaptive}
 
-A fixed block size $k$ is not always enough. The physical first-subleading eigenvalue $\mu_1$ that Equation~\eqref{eq:cft:eq4} needs lives in the same parity tower as $\mu_0$; but at stronger frustration the leading $k=4$ block can consist of $\mu_0$ plus only displaced $\pi$-partners (Section~\ref{sec:results:tower}), with the genuine $\mu_1$ pushed out of the captured window entirely. The wrapper \texttt{block\_transfer\_eigs\_adaptive} detects this---the physical tower gap (below) returns ``not a number'' because no tower member was captured---and escalates the block in steps ($k\to6\to8$), warm-seeding each larger solve with the just-converged smaller block so that the added vectors are the only thing that has to relax. The escalation is decided afresh at every temporal extent, so a better-conditioned rung falls back to the cheap $k=4$ on its own, and the extra cost is paid only where the spectrum actually demands it. Without it, the boundary tower at $p\gtrsim0.8$ is simply unmeasurable---not because the physics is absent, but because it sits outside a too-small block.
+A fixed block size is not always enough. The subleading eigenvalue $\mu_1$ that
+Equation~\eqref{eq:cft:eq4} needs lives in the same parity tower as $\mu_0$, but at stronger
+frustration the leading $k=4$ block can hold $\mu_0$ plus displaced $\pi$-partners only, with the
+genuine $\mu_1$ pushed outside the captured window. The adaptive wrapper detects this, since the
+tower gap defined below returns ``not a number'' when no tower member was captured, and escalates the
+block in steps, $k\to6\to8$. Each larger solve is warm-seeded with the converged smaller block, so
+only the added vectors have to relax.
+
+The escalation is decided afresh at every temporal extent, so a better-conditioned rung falls back
+to the cheap $k=4$ on its own and the extra cost is paid only where the spectrum demands it. Without
+it the boundary tower at $p\gtrsim0.8$ is unmeasurable, not because the physics is absent but
+because it sits outside a block that is too small.
 
 \subsection{Phase classification and the physical-branch selector}
 \label{app:selector}
 
-The most consequential piece of bookkeeping is which eigenvalue to call the physical $\mu_0$, and it is what most directly controls whether the extracted numbers make sense. Three small phase-based routines do the work. Writing $\mathrm{phase}(z)=\arg(-z)$ for the convention of Section~\ref{sec:cft:temporal}, \texttt{classify\_tower} splits a block relative to a chosen $\mu_0$ into a tower (every eigenvalue within $\pi/2$ in phase---$\mu_0$'s own conformal descendants) and partners (the rest---the momentum-$\pi$ displaced states of Section~\ref{sec:results:tower}); \texttt{tower\_gap} then returns the physical gap $|\mu_1|/|\mu_0|$ using the largest-modulus tower member only, never a partner, and returns ``not a number'' when the block holds no tower member (the trigger for the escalation above).
+Deciding which eigenvalue is the physical $\mu_0$ is the most consequential piece of bookkeeping in
+the whole pipeline. Writing $\mathrm{phase}(z)=\arg(-z)$ for the convention of
+Section~\ref{sec:cft:temporal}, the classifier splits a block relative to a chosen $\mu_0$ into a
+tower and a set of partners. The tower is every eigenvalue within $\pi/2$ in phase, that is, the
+conformal descendants of $\mu_0$; the partners are the rest, the momentum-$\pi$ displaced states of
+Section~\ref{sec:results:tower}. The tower gap is then $|\mu_1|/|\mu_0|$ computed from the
+largest-modulus tower member only, never a partner, and it returns ``not a number'' when the block
+holds no tower member, which is the trigger for the escalation above.
 
-The load-bearing routine is \texttt{pick\_phys\_continuity}, and its final form corrects an earlier mistake worth recording because the mistake is instructive. The physical branch must be tracked from one temporal extent to the next, and the obvious rule---take the eigenvalue closest in the complex plane to the previous rung's $\mu_0$---is wrong, in a way that only shows up under frustration. The imaginary part of the leading eigenvalue winds, $\mathrm{Im}\,\lambda_0\approx a\,v\,T$ (Equation~\eqref{eq:cft:eq3}), so between two rungs the true $\mu_0$ rotates by an amount that grows with the velocity, that is, with $p$. A nearest-complex-value rule then latches onto a stationary near-modulus partner instead of the rotated physical branch; and because the next rung re-anchors on that wrong pick, a single slip cascades down the entire ladder. In the $p=0.5$ arm this appeared as the tracked $|\mu_0|$ collapsing to a spurious value at one extent and then following partners for every later time---plausible-looking output that is entirely an artifact of the selector.
+The selector itself corrects an earlier mistake worth recording, because the mistake is instructive.
+The physical branch has to be tracked from one temporal extent to the next, and the obvious rule,
+taking the eigenvalue closest in the complex plane to the previous rung, is wrong in a way that only
+appears under frustration. The imaginary part of the leading eigenvalue winds as
+$\mathrm{Im}\,\lambda_0\approx a\,v\,T$, so between two rungs the true $\mu_0$ rotates by an amount
+that grows with the velocity, and therefore with $p$. A nearest-value rule then latches onto a
+stationary partner of similar modulus instead of the rotated physical branch. Because the next rung
+re-anchors on that pick, one slip cascades down the entire ladder. In the $p=0.5$ arm this showed up
+as the tracked $|\mu_0|$ collapsing at one extent and following partners for every later time,
+output that looks plausible but is entirely an artifact of the selector.
 
-The fix is to anchor on the quantity that is stable rather than the one that winds: the physical $\mu_0$ is the eigenvalue of largest modulus (its $\pi$-partner sits at slightly smaller modulus for every frustration we can resolve, $p\lesssim1$), and continuity is used only to break a genuine sub-percent modulus tie---the exact $\pm\pi$ near-degeneracy---where the two candidates differ by $\approx\pi$ and the physical one is the closer. Re-running the stored $p=0.5$ spectra through this rule---pure post-processing, no recomputation---recovers a flat $|\mu_0|$ and a clean, monotone tower gap. A companion guard, \texttt{phys\_lambda0\_suspect}, flags any rung whose $|\mu_0|$ jumps by more than a set fraction from the previous trusted one; such a jump is the signature of a non-convergence blow-up (a cold-started rung, or a genuinely unresolved degeneracy at $p\ge1$), telling the driver to distrust that point rather than silently anchor the rest of the ladder on it.
+The fix is to anchor on the stable quantity rather than the winding one. The physical $\mu_0$ is the
+eigenvalue of largest modulus, since its $\pi$-partner sits at slightly smaller modulus for every
+frustration we can resolve. Continuity is used only to break a genuine sub-percent tie, where the
+two candidates differ by about $\pi$ and the physical one is the closer. Re-running the stored
+$p=0.5$ spectra through this rule, as pure post-processing with no recomputation, recovers a flat
+$|\mu_0|$ and a monotone tower gap. A companion guard flags any rung whose $|\mu_0|$ jumps by more
+than a set fraction from the previous trusted one, which is the signature of a non-convergence
+blow-up, so that the driver distrusts that point instead of anchoring the rest of the ladder on it.
 
 \subsection{Warm-starting and crash-safe sweeps}
 \label{app:library:cluster}
 
-Two accelerations complete the algorithm and were decisive for reaching long times. Along a ladder of temporal extents $T_1<T_2<\dots$ the converged block at one rung warm-starts the next: the converged tensors are re-indexed onto the longer time-site set and the few added sites are padded with a small random tail, so the iteration only relaxes the new sites, and the bond cap and cutoff follow a schedule---loose and cheap early, tight near convergence. This is not merely a speed-up: because the block near the wall is near-degenerate, a cold random restart at each extent has nothing biasing it onto the physical branch, so warm continuity is what keeps the tracker on the correct tower as the gap tightens. Finally, all sweeps are crash-safe: each $(p,T)$ point is written to a per-label cache as soon as it converges, keyed by parameters, so an interrupted run loses at most the point in flight, parallel jobs never clobber a shared file, and a completed point is never recomputed---which is why the campaign could be run as many independent, resumable jobs across a cluster rather than one monolithic calculation.
+Two accelerations were decisive for reaching long times. Along a ladder of temporal extents the
+converged block at one rung warm-starts the next: its tensors are re-indexed onto the longer
+time-site set, the few added sites are padded with a small random tail, and the bond cap and cutoff
+follow a schedule that is loose early and tight near convergence. This is more than a speed-up.
+Because the block near the wall is near-degenerate, a cold restart at each extent has nothing
+biasing it onto the physical branch, so warm continuity is what keeps the tracker on the correct
+tower as the gap tightens.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+All sweeps are also crash-safe. Each $(p,T)$ point is written to a per-label cache as soon as it
+converges, keyed by its parameters, so an interrupted run loses at most the point in flight,
+parallel jobs never clobber a shared file, and a completed point is never recomputed. This is what
+allowed the campaign to run as many independent, resumable cluster jobs rather than one monolithic
+calculation.
 
-\section{The entanglement-barrier wall: exceptional points and its numerical origin}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\section{The entanglement-barrier wall}
 \label{app:wall}
 
-This appendix collects the material behind the diagnosis of Section~\ref{sec:results:wall}, where the temporal-entropy dome inflates at a well-defined time and the profile stops being conformal. It has two parts: a short account of what an exceptional point is and why it degrades the eigenvectors while sparing the eigenvalues, and the set of controls that establish the wall as a gap-limited feature of the physics rather than a resolution limit of the simulation.
+This appendix supports the diagnosis of Section~\ref{sec:results:wall}, where the temporal-entropy
+dome inflates at a well-defined time and stops being conformal. It has two parts: what an
+exceptional point is and why it spoils the eigenvectors while sparing the eigenvalues, and the
+controls that establish the wall as a property of the physics rather than a resolution limit.
 
 \subsection{Exceptional points of a non-normal matrix}
 \label{app:wall:ep}
 
-For a Hermitian operator the eigenvectors form an orthonormal basis and stay well-separated as long as the eigenvalues do; a small perturbation rotates them only gently, by an amount controlled by the inverse spectral gap. A non-normal matrix $\mathcal{E}$ behaves qualitatively differently. Its left and right eigenvectors are distinct objects, paired by the bilinear form $\braket{L_i|R_j}\propto\delta_{ij}$ of Section~\ref{sec:nonhermitian}, and as two eigenvalues approach each other the associated left and right eigenvectors need not stay apart: they can rotate towards a common direction, so that the biorthogonal pairing of the coalescing branch, $\braket{L|R}$, tends to zero even though neither vector vanishes. The limiting configuration, where two eigenvalues and their eigenvectors merge simultaneously, is an exceptional point. There the matrix is defective---it no longer has a complete eigenbasis and cannot be diagonalized at all---and the sensitivity of the individual eigenvector diverges.
+For a Hermitian operator the eigenvectors form an orthonormal basis and stay separated as long as
+the eigenvalues do. A small perturbation rotates them only gently, by an amount set by the inverse
+gap. A non-normal matrix behaves differently. Its left and right eigenvectors are distinct objects
+paired by the bilinear form, and as two eigenvalues approach each other those vectors need not stay
+apart: they can rotate towards a common direction, so the pairing $\braket{L}{R}$ of the coalescing
+branch tends to zero even though neither vector vanishes. The limiting configuration, where two
+eigenvalues and their eigenvectors merge at once, is an exceptional point. There the matrix is
+defective, has no complete eigenbasis, and the sensitivity of the individual eigenvector diverges.
 
-The consequence for our measurements is a clean split between what survives and what does not. The eigenvalues themselves are well-conditioned: their first-order sensitivity to a perturbation $\delta\mathcal{E}$ is $\braket{L_i|\delta\mathcal{E}|R_i}/\braket{L_i|R_i}$, which the block method keeps bounded, so moduli, phases, and spectral gaps remain accurate arbitrarily deep into the near-degenerate regime. The eigenvectors, by contrast, carry a condition number that scales as the inverse gap and diverges at the exceptional point, so any quantity built from an individual eigenvector---the temporal entropy in particular, which is read off the dominant biorthogonal pair---loses meaning there. This is the origin of the wall: the entropy dome breaks not because the solver fails to converge but because the object it is asked to converge to becomes ill-defined. The order parameter for the approach is the phase rigidity $r_j$ of Equation~\eqref{eq:rigidity}, which equals one for a near-Hermitian pair and collapses to zero at the exceptional point; its measured collapse across the sweep (Section~\ref{sec:results:wall}) lands precisely where the dome inflates, which is what identifies the two as the same event. We stress that complex symmetry, when a model has it, does not help: every matrix is similar to a complex-symmetric one, so symmetry can relabel the near-exceptional collapse but cannot forbid it, and inside an exactly degenerate subspace the individual eigenvector is not merely ill-conditioned but undefined.
+This splits our measurements cleanly in two. The eigenvalues are well conditioned: their first-order
+sensitivity to a perturbation is $\bra{L_i}\delta\mathcal{E}\ket{R_i}/\braket{L_i}{R_i}$, which the
+block method keeps bounded, so moduli, phases and gaps stay accurate arbitrarily deep into the
+near-degenerate regime. The eigenvectors carry a condition number growing like the inverse gap,
+which diverges at the exceptional point, so anything built from an individual eigenvector loses
+meaning there. The temporal entropy is exactly such a quantity, since it is read off the dominant
+pair.
+
+This is the origin of the wall. The dome breaks not because the solver fails to converge, but
+because the object it is asked to converge to becomes ill-defined. The order parameter is the phase
+rigidity of Equation~\eqref{eq:rigidity}, which equals one for a near-Hermitian pair and collapses to
+zero at the exceptional point. Its measured collapse lands exactly where the dome inflates, which is
+what identifies the two as one event. Complex symmetry does not help, when a model has it: every
+matrix is similar to a complex-symmetric one, so symmetry can relabel the collapse but not forbid
+it, and inside an exactly degenerate subspace the individual eigenvector is undefined rather than
+merely ill-conditioned.
 
 \subsection{The wall is gap-limited, not resolution-limited}
 \label{app:wall:eps}
 
-An exceptional point is a property of the transfer matrix, so its location must not move when we change how finely the transfer matrix is represented. We verified this along three independent knobs, holding the physics fixed at $p=0.1$ and varying only the numerical resolution.
+An exceptional point is a property of the transfer matrix, so its location must not move when we
+change how finely that matrix is represented. We checked this along three independent knobs, holding
+the physics fixed at $p=0.1$ and varying only the numerical resolution.
 
-First, the bond dimension: halving the cap $\chi$ from $64$ to $32$ leaves the onset of the dome inflation at the same time, so the wall is not a matter of keeping too few states. Second, the truncation cutoff: tightening it by orders of magnitude likewise leaves the onset unchanged. Third, the truncation object itself: switching from the cheap gauge-invariant RTM scheme to the Hermitian, well-conditioned RDM scheme of Section~\ref{sec:transverse:truncation} moves the wall nowhere either---the RDM run, at several times the cost, breaks at the same time as the RTM run. That three qualitatively different refinements all leave the onset fixed is what pins the wall to the spectral gap of $\mathcal{E}$ rather than to any representational shortfall. Consistent with this, phase rigidity itself is a Rayleigh-quotient-like quantity that remains accurate even from a cold start, so the collapse it reports is a robust reading of the physics and not an artifact of the sweep protocol.
+Halving the bond dimension from $\chi=64$ to $32$ leaves the onset of the inflation at the same
+time, so the wall is not a matter of keeping too few states. Tightening the truncation cutoff by
+orders of magnitude leaves it unchanged as well. Switching the truncated object itself, from the
+cheap RTM scheme to the Hermitian RDM one, also moves nothing: the RDM run breaks at the same time,
+at several times the cost. Three qualitatively different refinements leaving the onset fixed is what
+pins the wall to the spectral gap rather than to any shortfall of the representation. Phase rigidity
+supports the same reading, since it is a Rayleigh-quotient-like quantity that stays accurate even
+from a cold start.
 
-The same controls settle the practical question of which truncation to run in production. The RTM and RDM schemes return identical eigenvalues and identical rigidity, so they agree on all the physics; RDM is simply more expensive, running several times slower for no change in the answer. RTM is therefore the production choice, with RDM kept as the well-conditioned fallback for the rare points where the RTM output turns noisy before the wall.
+These controls also settle which truncation to use in production. RTM and RDM return identical
+eigenvalues and identical rigidity, so they agree on the physics, and RDM is simply several times
+slower for the same answer. RTM is therefore the production choice, with RDM kept as the
+well-conditioned fallback for the rare points where RTM output turns noisy before the wall.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{The momentum-\texorpdfstring{$\pi$}{pi} displaced boundary tower}
 \label{app:pairing}
 
-This appendix derives the effect that resolves the boundary-exponent puzzle of Section~\ref{sec:results:tower}: why, for any $p\neq0$, the odd-parity boundary tower is displaced in phase by momentum $\approx\pi$, and why free-fermion models never show it. The one-line summary is that the next-nearest-neighbour coupling is a four-fermion interaction of a specific kind, and only such a term can attach a momentum-$\pi$ phase to the odd-parity sector.
+This appendix derives the effect behind the boundary-exponent result of
+Section~\ref{sec:results:tower}: why the odd-parity boundary tower is displaced in phase by
+momentum $\approx\pi$ for any $p\neq0$, and why free-fermion models never show it. In short, the
+next-nearest-neighbour coupling is a four-fermion interaction of a particular kind, and only such a
+term can attach a momentum-$\pi$ phase to the odd-parity sector.
 
 \subsection{Jordan--Wigner and the four-fermion interaction}
 \label{app:pairing:jw}
 
-Spins are algebraically awkward: two Pauli operators anticommute on the same site but commute on different sites, so a spin is neither a boson nor a fermion. The Jordan--Wigner (JW) transformation rewrites the chain exactly as fermions, at the cost of a non-local string. In the convention matched to our model (field on $\sigma^x$, order parameter on $\sigma^z$),
+Spins are algebraically awkward, since two Pauli operators anticommute on the same site but commute
+on different ones, so a spin is neither a boson nor a fermion. The Jordan--Wigner transformation
+rewrites the chain exactly as fermions at the cost of a non-local string. In the convention matched
+to our model,
 \begin{equation}
     \sigma^x_j = 1 - 2n_j, \qquad
     \sigma^z_j = (c_j + c_j^\dagger)\,K_j, \qquad
     K_j = \prod_{k<j}(1-2n_k),
     \tag{F1}
 \end{equation}
-with $n_j=c_j^\dagger c_j$ and the string $K_j=(-1)^{\#\text{fermions left of }j}$, which supplies exactly the signs that make the $c$'s anticommute. Using $(c+c^\dagger)(1-2n)=c^\dagger-c$ and $K_j^2=1$, the four terms of the ANNNI-type Hamiltonian (Section~\ref{sec:annni}) fermionize as follows. The transverse field is a chemical potential, $\lambda\,\sigma^x_j=\lambda(1-2n_j)$, and the nearest-neighbour Ising bond telescopes its strings away to leave a quadratic hopping-plus-pairing term,
+with $n_j=c_j^\dagger c_j$, and the string $K_j$ supplying the signs that make the $c$ anticommute.
+
+Using $(c+c^\dagger)(1-2n)=c^\dagger-c$ and $K_j^2=1$, the terms fermionize as follows. The
+transverse field becomes a chemical potential. The nearest-neighbour Ising bond telescopes its
+strings away and leaves a quadratic hopping-and-pairing term,
 \begin{equation}
-    \sigma^z_j\sigma^z_{j+1} = (c_j^\dagger-c_j)(c_{j+1}+c_{j+1}^\dagger)\quad\text{(free)}.
+    \sigma^z_j\sigma^z_{j+1} = (c_j^\dagger-c_j)(c_{j+1}+c_{j+1}^\dagger).
     \tag{F2}
 \end{equation}
-These two terms are the pure Ising chain, which is therefore a free-fermion theory---the reason it is exactly solvable and flows to a free ($c=\tfrac12$) Majorana CFT. The two extra terms of the ANNNI-type model are different: both are quartic. The self-dual $XX$ term is a plain density--density interaction, $p\lambda\,\sigma^x_j\sigma^x_{j+1}=p\lambda(1-2n_j)(1-2n_{j+1})$, which is diagonal and moves nothing; but the next-nearest-neighbour bond, whose strings no longer fully cancel, becomes a parity-dressed hop,
+Those two terms make up the pure Ising chain, which is why it is a free-fermion theory, exactly
+solvable, flowing to a free Majorana CFT.
+
+The two extra terms of the ANNNI-type model are both quartic. The self-dual $XX$ term is a plain
+density--density interaction, diagonal in the occupation basis, which moves nothing. The
+next-nearest-neighbour bond is the interesting one: its strings no longer cancel, and it becomes a
+parity-dressed hop,
 \begin{equation}
-    \sigma^z_i\sigma^z_{i+2} = (c_i^\dagger-c_i)\,\underbrace{(1-2n_{i+1})}_{(-1)^{n_{i+1}}}\,(c_{i+2}+c_{i+2}^\dagger)\quad\text{(quartic)},
+    \sigma^z_i\sigma^z_{i+2} = (c_i^\dagger-c_i)\,\underbrace{(1-2n_{i+1})}_{(-1)^{n_{i+1}}}\,(c_{i+2}+c_{i+2}^\dagger),
     \tag{F3}
 \end{equation}
-a hop from $i$ to $i+2$ carrying a sign set by the occupation of the site skipped over. This single term is the origin of everything in Section~\ref{sec:results:tower}.
+a hop from $i$ to $i+2$ whose sign is set by the occupation of the site skipped over. This single
+term is the origin of the effect.
 
 \subsection{Why free fermions cannot displace, and the quantization at \texorpdfstring{$\pi$}{pi}}
 \label{app:pairing:kw}
 
-A free-fermion transfer matrix has the normal form $\mathcal{E}=\mu_0\exp(-\sum_m \varepsilon_m \hat n_m)$: independent modes whose moduli and phases are both additive over occupations. An eigenvalue near the top may only occupy modes with $\mathrm{Re}\,\varepsilon_m\approx0$, and in an Ising-class critical chain those are the long-wavelength modes, whose phases $\pi x/(vT)$ are small. Assembling a lump of exactly $\pi$ at full modulus would require a mode that neither decays nor stops oscillating---a gapless branch at lattice momentum $\pi$---which the uniform Ising-class free chain does not possess. Hence a free chain cannot produce a displaced tower, which is precisely the zero-partner result of the Ising and XY controls (Section~\ref{sec:results:tower}). Only an interaction can supply the momentum-$\pi$ structure, and single-term probes confirm it is specifically the parity-dressed hop~(F3), not the density--density $XX$ term, that does so.
+A free-fermion transfer matrix has the normal form
+$\mathcal{E}=\mu_0\exp(-\sum_m \varepsilon_m \hat n_m)$: independent modes whose moduli and phases
+are both additive over occupations. An eigenvalue near the top can only occupy modes with
+$\mathrm{Re}\,\varepsilon_m\approx0$, and in an Ising-class critical chain those are the
+long-wavelength modes, whose phases $\pi x/(vT)$ are small. Building a phase of exactly $\pi$ at full
+modulus would need a mode that neither decays nor stops oscillating, that is a gapless branch at
+lattice momentum $\pi$, which the uniform Ising-class free chain does not have. A free chain
+therefore cannot produce a displaced tower, which is the zero-partner result of the Ising and XY
+controls. Only an interaction can supply the structure, and single-term probes confirm that it is
+the parity-dressed hop~(F3), not the density--density term, that does so.
 
-The quantization at exactly $\pi$ (rather than a coupling-dependent value) has a natural home in the model's self-duality. In Majorana variables the $XX$ and next-nearest $ZZ$ terms are both products of four consecutive Majoranas, offset by one Majorana site; the shift by one Majorana site is the lattice Kramers--Wannier duality that exchanges order and disorder, and it maps the two terms onto each other---which is why the self-dual ANNNI-type Hamiltonian must carry both. At the self-dual point the network admits a half-step transfer operation $\mathcal{E}_{1/2}$ with $\mathcal{E}=\mathcal{E}_{1/2}^{2}$; a sector whose half-step eigenvalue carries a factor $\pm i$ lands, after squaring, at phase exactly $\pi$---a discrete index rather than a tunable phase, consistent with the displacement being identical across the probed couplings. A first-principles selection of which sector carries the index remains open and is noted in the outlook; what the main text needs is established here---that the displacement exists for every $p\neq0$, is absent for free fermions, and is pinned at $\pi$.
+The quantization at exactly $\pi$, rather than at a coupling-dependent value, has a natural home in
+the self-duality of the model. In Majorana variables the $XX$ and next-nearest $ZZ$ terms are both
+products of four consecutive Majoranas, offset by one Majorana site. That one-site shift is the
+lattice Kramers--Wannier duality exchanging order and disorder, and it maps the two terms onto each
+other, which is why a self-dual Hamiltonian must carry both. At the self-dual point the network
+admits a half-step transfer operation with $\mathcal{E}=\mathcal{E}_{1/2}^{2}$, so a sector whose
+half-step eigenvalue carries a factor $\pm i$ lands after squaring at phase exactly $\pi$. This is a
+discrete index rather than a tunable phase, consistent with the displacement being identical across
+the couplings probed. Which sector carries the index is not settled from first principles, and we
+note it in the outlook. What the main text needs is established here: the displacement exists for
+every $p\neq0$, is absent for free fermions, and is pinned at $\pi$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -393,37 +772,75 @@ The quantization at exactly $\pi$ (rather than a coupling-dependent value) has a
 \subsection{Finite-size scaling of the mid-chain entropy}
 \label{app:fss}
 
-Section~\ref{sec:annni:equilibrium} reads the central charge from the shape of the entanglement profile at a single system size. A second, independent estimate comes from the size dependence of one point of that profile. At the mid-chain cut the chord takes its maximum, $W(L/2,L)=\ln(2L/\pi)$, so Equation~\eqref{eq:cft_obc} collapses to
+Section~\ref{sec:annni:equilibrium} reads the central charge from the shape of the entanglement
+profile at a single system size. A second, independent estimate comes from the size dependence of one
+point of that profile. At the mid-chain cut the chord takes its maximum, $W(L/2,L)=\ln(2L/\pi)$, so
+Equation~\eqref{eq:cft_obc} collapses to
 \begin{equation}
-    S_{\mathrm{vN}}(L/2) = \frac{c}{6}\,\ln L + k',
+    S_{\mathrm{vN}}(L/2) = \frac{c}{6}\,\ln L + k'.
     \tag{G0}
     \label{eq:cft_mid}
 \end{equation}
-so running DMRG over a ladder of sizes and plotting the mid-chain entropy against $\ln L$ gives a straight line of slope $c/6$. Over $N=40$ to $200$ this returns $c\approx0.51$ at both $p=0.1$ and $p=0.5$, consistent with the profile fit of the main text and with the Ising value.
+Running DMRG over a ladder of sizes and plotting the mid-chain entropy against $\ln L$ therefore
+gives a straight line of slope $c/6$. Over $N=40$ to $200$ this returns $c\approx0.51$ at both
+$p=0.1$ and $p=0.5$, consistent with the profile fit of the main text and with the Ising value.
 
-The same ground states also allow a cross-check with the R\'enyi-2 entropy, which is the member used for all the temporal measurements of this thesis. Its mid-chain slope is $c/8$ rather than $c/6$, and it returns $c\approx0.58$: the same universality class, but biased upward, because R\'enyi entropies with $n>1$ carry stronger corrections to scaling than the von Neumann one. This is the equilibrium counterpart of the finite-time bias that affects the temporal R\'enyi-2 read in Section~\ref{sec:results}, and it is why the von Neumann entropy is the estimator of choice in equilibrium, where the full Schmidt spectrum is available for free.
+The same ground states allow a cross-check with the R\'enyi-2 entropy, the member used for every
+temporal measurement in this thesis. Its mid-chain slope is $c/8$ rather than $c/6$, and it returns
+$c\approx0.58$: the same universality class, but biased upward, because R\'enyi entropies with $n>1$
+carry stronger corrections to scaling than the von Neumann one. This is the equilibrium counterpart
+of the finite-time bias affecting the temporal R\'enyi-2 read, and it is why the von Neumann entropy
+is the estimator of choice in equilibrium, where the full Schmidt spectrum is available at no cost.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.75\textwidth]{imgs/cft_L.png}
-    \caption{Finite-size scaling of the mid-chain entropy at $p=0.1$ and $p=0.5$. The von Neumann entropy (solid, slope $c/6$) gives $c\approx0.51$; the R\'enyi-2 entropy (dashed, slope $c/8$), computed from the same ground states, gives $c\approx0.58$, with the larger corrections to scaling characteristic of $n>1$.}
+    \caption{Finite-size scaling of the mid-chain entropy at $p=0.1$ and $p=0.5$. The von Neumann
+    entropy (solid, slope $c/6$) gives $c\approx0.51$; the R\'enyi-2 entropy (dashed, slope $c/8$),
+    computed from the same ground states, gives $c\approx0.58$, with the larger corrections to
+    scaling characteristic of $n>1$.}
     \label{fig:cft_L}
 \end{figure}
 
 \subsection{The sound velocity from the equilibrium dispersion}
 \label{app:velocity}
 
-Every temporal formula that converts a transfer-matrix phase into a scaling dimension carries the model's sound velocity $v(p)$ (Equations~\eqref{eq:cft:eq3}--\eqref{eq:cft:eq4}), so it must be known independently. We take it from equilibrium, using Alcaraz's own dispersion relation for this exact self-dual chain: diagonalizing the periodic ring Hamiltonian exactly at small size and reading the velocity off the lowest magnetic-sector excitation. The construction is validated four ways---exact recovery of $v=2$ at $p=0$; a machine-precision match of the from-scratch ring Hamiltonian to the \texttt{OpSum} used elsewhere; agreement between the sector-resolved and sector-blind reads; and, decisively, reproducing Alcaraz's published ground-state central charge $c(p)\approx\tfrac12$ through his separate Casimir formula fed with our $v(p)$. The measured values grow sharply with frustration,
+Every temporal formula that turns a transfer-matrix phase into a scaling dimension carries the sound
+velocity $v(p)$, so it has to be known independently. We take it from equilibrium, using Alcaraz's
+dispersion relation for this chain: the periodic ring Hamiltonian is diagonalized exactly at small
+size and the velocity is read off the lowest excitation carrying momentum.
+
+The construction is validated in four ways. It recovers $v=2$ exactly at $p=0$. The from-scratch ring
+Hamiltonian matches the operator used elsewhere in the code to machine precision. The
+sector-resolved and sector-blind reads agree. And, decisively, feeding our measured $v(p)$ into
+Alcaraz's separate Casimir formula reproduces his published ground-state central charge
+$c(p)\approx\tfrac12$. The measured values grow steadily with frustration,
 \begin{equation}
-    v(0)=1.98,\quad v(0.1)=2.60,\quad v(0.3)=3.80,\quad v(0.5)=4.93,
+    v(0)=1.98,\quad v(0.1)=2.60,\quad v(0.2)=3.21,\quad
+    v(0.3)=3.80,\quad v(0.4)=4.37,\quad v(0.5)=4.93,
     \tag{G1}
 \end{equation}
-and it is these---not a fixed $v=2$---that make the boundary tower of Section~\ref{sec:results:tower} read as clean half-integers at every $p$. That the temporal transfer matrix carries this true, $p$-dependent velocity (and not the bare Ising value) was itself checked with the anisotropic XY control, whose velocity $v(\gamma)=2\gamma$ is exactly known: the pipeline recovers $x_1=\tfrac12$ there only when fed the correct $v(\gamma)$, confirming that the method is velocity-faithful.
+and it is these, rather than a fixed $v=2$, that make the boundary tower of
+Section~\ref{sec:results:tower} read as clean half-integers at every $p$.
+
+That the temporal transfer matrix really carries this $p$-dependent velocity was checked separately
+with the anisotropic XY control, whose velocity $v(\gamma)=2\gamma$ is known exactly. The pipeline
+recovers $x_1=\tfrac12$ there only when fed the correct $v(\gamma)$, which confirms that the method
+is velocity-faithful.
 
 \subsection{The branch constant in the eigenvalue central-charge fit}
 \label{app:eq3}
 
-The eigenvalue route to $c$ (Equation~\eqref{eq:cft:eq3}) has a subtlety that wrecks the fit if ignored. Because the paper works with $\lambda_0=\log(-\mu_0)$, and $\log(-\mu_0)=\log(\mu_0)+i\pi$, the imaginary part carries a constant $-\pi$ branch offset that the bare fit form omits. Omitting it dumps a spurious $-\pi/T$ contribution into the $1/T^2$ Casimir slot and returns a nonsensical central charge (of order $10^3$). The corrected procedure pins $B=-\pi$ (verified to four digits at the integrable points), fits the three-term form $\mathrm{Im}\,\lambda_0 = A\,T + B + C/T + D/T^3$ on the de-biased phase, and reads $c=24\,v\,|C|/\pi$ with no stray $\delta t$. This returns $c=0.4997$ on Ising and reproduces the reference Ising/Potts values; the free four-parameter fit with a floating $B$ is unstable on the short pre-wall window, which is why the pinning matters and why the absolute read at $p=0.1$ waits for the longer-$T$ cluster data.
+The eigenvalue route to $c$ has a subtlety that ruins the fit if ignored. We work with
+$\lambda_0=\log(-\mu_0)$, following Ref.~\cite{carignano_tagliacozzo2025}, and since
+$\log(-\mu_0)=\log(\mu_0)+i\pi$ the imaginary part carries a constant $-\pi$ branch offset that the
+bare fit form omits. Leaving it in dumps a spurious $-\pi/T$ contribution into the $1/T^2$ Casimir
+slot and returns a central charge of order $10^3$.
+
+The corrected procedure pins $B=-\pi$, verified to four digits at the integrable points, fits the
+three-term form $\mathrm{Im}\,\lambda_0 = A\,T + B + C/T + D/T^3$ on the de-biased phase, and reads
+$c=24\,v\,|C|/\pi$. This returns $c=0.4997$ on Ising and reproduces the reference Ising and Potts
+values. Freeing $B$ instead makes the four-parameter fit unstable on a short window, which is why
+the pinning matters and why an absolute read at $p\neq0$ requires a long baseline in $T$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
