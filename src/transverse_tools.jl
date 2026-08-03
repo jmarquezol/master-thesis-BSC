@@ -703,6 +703,24 @@ function phys_lambda0_suspect(theta, i0, previous_phys; tol::Float64=0.30)
 end
 
 """
+    pick_phys_robust(theta, reference; tol=0.05) -> (i0, recovered)
+
+`pick_phys_continuity` restricted to candidates within `tol` of `reference`, the last accepted |λ0|.
+A non-converged rung can carry a spurious Ritz value above the true λ0, and plain modulus-dominance
+then returns that artefact; the real λ0 is usually still in the block. `tol=0.05` separates the
+physical drift (<0.5% per rung) from the contamination (>13%).
+
+`recovered=false` means nothing in the block matches `reference` — drop the rung and keep chaining
+`reference` from the last accepted one.
+"""
+function pick_phys_robust(theta, reference; tol::Float64=0.05)
+    reference === nothing && return (pick_phys_continuity(theta, reference), true)
+    keep = [i for i in eachindex(theta) if abs(abs(theta[i]) - abs(reference)) / abs(reference) <= tol]
+    isempty(keep) && return (pick_phys_continuity(theta, reference), false)
+    return (keep[pick_phys_continuity(theta[keep], reference)], true)
+end
+
+"""
     block_transfer_eigs_adaptive(mpo, scaffold; k=4, k_retry=8, anchor=nothing,
                                   seedL=nothing, seedR=nothing, kwargs...)
 

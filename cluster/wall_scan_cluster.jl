@@ -5,6 +5,7 @@
 #   julia --project=. cluster/wall_scan_cluster.jl <mode> [p] [Tmax]
 #
 # modes:
+#   preflight                 build one small tMPO and exit — cheap check that the env still works
 #   rtm / rdm / cutoff        the original p=0.1 truncation comparison (no extra args)
 #   psweep    <p> <Tmax>      full run (with entropy), RTM, at coupling p
 #   eigsweep  <p> <Tmax>      eigenvalues only (no entropy) — goes past the wall
@@ -55,7 +56,7 @@ function run_wall_scan(; chi::Int, label::String,
         itermax=8000, stuck_after=400,
         k=4, k_retry=6,
         cachefile=CLUSTER_CACHE,
-        checkpointfile=joinpath(@__DIR__, "checkpoint_$(label).jld2"))
+        checkpointfile=joinpath(@__DIR__, "checkpoints", "checkpoint_$(label).jld2"))
 
     # Spectrum-only mode: de-mix on the Schur basis and skip the eigenvector work. θ is a Rayleigh
     # quotient so it survives the wall even where the vectors do not.
@@ -64,11 +65,13 @@ function run_wall_scan(; chi::Int, label::String,
     end
 
     mkpath(dirname(cachefile))
+    mkpath(dirname(checkpointfile))
     done = isfile(cachefile) ? load(cachefile, "done") : Dict{Tuple{String,Float64},Any}()
 
     previous_L = nothing
     previous_R = nothing
     previous_phys = nothing
+    consecutive_failures = 0
 
     for T in Ts
         already_done = haskey(done, (label, T)) && !haskey(done[(label, T)], :error)
@@ -166,10 +169,19 @@ function run_wall_scan(; chi::Int, label::String,
             done[(label, T)] = (error=string(err),)
             previous_L = nothing
             previous_R = nothing
+            consecutive_failures += 1
+        else
+            consecutive_failures = 0
         end
 
         jldsave(cachefile; done=done)
         GC.gc()
+
+        # A broken environment fails on every rung; stop rather than error the whole ladder.
+        if consecutive_failures >= 2
+            @error "[$label] aborting at T=$T after two consecutive failures — check the environment"
+            break
+        end
     end
 
     n_ok = 0
@@ -191,14 +203,18 @@ function run_wall_scan(; chi::Int, label::String,
 end
 
 # ── entry point: dispatch on the command-line mode ──────────────────────────────────────────────
-mode = length(ARGS) >= 1 ? ARGS[1] : error("usage: julia wall_scan_cluster.jl <rtm|rdm|cutoff|psweep|eigsweep|betascan|betawall> [p] [nbeta] [Tmax]")
+mode = length(ARGS) >= 1 ? ARGS[1] : error("usage: julia wall_scan_cluster.jl <preflight|rtm|rdm|cutoff|psweep|eigsweep|betascan|betawall> [p] [nbeta] [Tmax]")
 
 const FULL_LADDER    = collect(2.0:1.0:14.0)
 const RTM_FULL_LADDER = collect(2.0:1.0:20.0)  # rtm alone now matches the psweep arms' T=20 reach
 const RDM_LADDER     = collect(2.0:1.0:12.0)   # cold T=9 alone took 20.6h; two points past the warm
                                                 # wall suffice — extend Ts + resubmit if ever needed.
 
-if mode == "rtm"
+if mode == "preflight"
+    # Cheap environment check: same tMPO call the ladder makes on every rung.
+    mpo, scaffold = build_alcaraz_tmpo(2.0; p=0.1, lambda=LAMBDA, dt=DT, nbeta=NBETA, MPO_alg="VD2")
+    println("preflight OK — tMPO built, $(length(scaffold)) sites, maxlinkdim $(maxlinkdim(mpo))")
+elseif mode == "rtm"
     run_wall_scan(chi=64, label="rtm64_full", Ts=RTM_FULL_LADDER, p_nnn=P_NNN)
 elseif mode == "rdm"
     run_wall_scan(chi=64, label="rdm_p0.1", trunc_mode=:rdm, Ts=RDM_LADDER, p_nnn=P_NNN,
@@ -212,7 +228,8 @@ elseif mode == "psweep"
     length(ARGS) >= 3 || error("psweep needs two extra args: julia wall_scan_cluster.jl psweep <p> <Tmax>")
     p_val = parse(Float64, ARGS[2])
     Tmax  = parse(Float64, ARGS[3])
-    run_wall_scan(chi=64, label="rtm_p$(p_val)", Ts=collect(2.0:1.0:Tmax), trunc_mode=:rtm, p_nnn=p_val)
+    run_wall_scan(chi=64, label="rtm_p$(p_val)", Ts=collect(2.0:1.0:Tmax), trunc_mode=:rtm, p_nnn=p_val,
+        cachefile=joinpath(CLUSTER_DIR, "sweep_rtm_p$(p_val).jld2"))
 elseif mode == "eigsweep"
     # Eigenvalues only: same configuration as `psweep` but in Schur/eigvals-only mode, skipping the
     # eigenvector work (entropy, rigidity). The spectrum is Rayleigh-quotient-like and survives the
@@ -257,5 +274,5 @@ elseif mode == "betawall"
         trunc_mode=:rtm, p_nnn=p_val, nbeta=nb,
         cachefile=joinpath(CLUSTER_DIR, "sweep_betawall_p$(p_val).jld2"))
 else
-    error("unknown mode \"$mode\" — expected one of: rtm, rdm, cutoff, psweep, eigsweep, betascan, betawall")
+    error("unknown mode \"$mode\" — expected one of: preflight, rtm, rdm, cutoff, psweep, eigsweep, betascan, betawall")
 end

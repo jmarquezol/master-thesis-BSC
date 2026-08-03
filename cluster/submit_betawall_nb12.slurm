@@ -18,4 +18,6 @@ mkdir -p logs
 module load julia/1.12.0
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
+julia --project=.. wall_scan_cluster.jl preflight || { echo "PREFLIGHT FAILED - bad environment, not starting the ladder"; exit 1; }
+
 julia --project=.. wall_scan_cluster.jl betawall 0.1 12 14

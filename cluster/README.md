@@ -9,27 +9,32 @@ The driver is `wall_scan_cluster.jl`; the `submit_*.slurm` files are thin wrappe
 
 ## What to run now
 
-Two things, in parallel:
+The first round finished in August 2026. What is left is finishing the ladders that ran out of
+walltime, plus one arm that was never submitted.
 
-**1. Eigenvalues-only sweeps, `p = 0, 0.1, 0.3, 0.5`, up to `T = 20`.** These skip the eigenvectors
-(so no entropy), which is what lets them run far past the wall — we only need the spectrum here (dual
-unitarity, the Eq. 3 central charge, the boundary exponent, the tower gaps).
+**1. Resume the eigenvalues-only sweeps.** `p = 0` is complete (`T = 20`). The other three stopped
+short: `p = 0.1` at `T = 17`, `p = 0.3` at `T = 13`, `p = 0.5` at `T = 15`. Resubmitting the same
+script resumes from the cached rungs.
 
 ```
-sbatch submit_rtm_eigs_p0.0.slurm
 sbatch submit_rtm_eigs_p0.1.slurm
 sbatch submit_rtm_eigs_p0.3.slurm
 sbatch submit_rtm_eigs_p0.5.slurm
 ```
 
-**2. One RDM check.** A single full run (with entropy) at `p = 0.1`, up to `T = 12` (about where the
-RTM `p = 0.1` run reached), using RDM truncation instead of RTM. The question is just whether the wall
-moves when we switch truncation at a frustrated point — compare against `sweep_rtm_p0.1.jld2`. RDM is a
-few times slower than RTM.
+**2. The two entropy arms.** `psweep 0.3` reached `T = 14` and resumes; `psweep 0.5` has never run
+and is the only source for the `p = 0.5` entropy dome, since the eigsweeps carry no entropy and the
+2026-07 `sweep_rtm_p0.5` run is unusable.
 
 ```
-sbatch submit_rdm.slurm
+sbatch submit_rtm_p0.3.slurm
+sbatch submit_rtm_p0.5.slurm
 ```
+
+**Do not resubmit the RDM job.** It reached `T = 12` and answered its question: the dome breaks at
+`T ≈ 10` under RDM truncation, the same place as RTM, and the four rigidities are all ≈ 5·10⁻⁶
+there, so no eigenvector in the block survives. Extending it would buy more rungs on the wrong side
+of the wall. See NB9 §3.
 
 **3. β₀ regulator scan, `p = 0` and `0.1`.** Each job reruns the same full sweep for a few amounts of
 imaginary-time cooling (`nbeta = 2,4,…,16`, i.e. `β₀ = 0.1 … 0.8`), up to `T = 10` — to check how
@@ -63,6 +68,25 @@ julia --project=. -e 'using Pkg; Pkg.instantiate()'   # from the repo root, once
 # then sbatch the jobs above from inside cluster/
 ```
 
+Every submit script now runs `wall_scan_cluster.jl preflight` first. That builds one small tMPO and
+exits, which is the same call the long run makes on every rung. It exists because of how the first
+round ended: four jobs hit the 48 h walltime, and on requeue two of them could no longer dispatch
+`build_alcaraz_tmpo` — a `MethodError` on the VD2 kernel from a stale precompile. The ladder then
+marked every remaining `T` as errored in a few seconds. The preflight turns that into a one-minute
+failure, and the driver now also stops after two consecutive failures instead of burning the rest of
+the ladder. Run `Pkg.instantiate()` again if the preflight fails, and check that `Manifest.toml`
+still pins ITransverse at `f10aee05`.
+
+## Checkpoints
+
+Checkpoints live in `cluster/checkpoints/checkpoint_<label>.jld2` and are gitignored, so they never
+travel with a `git push` — they have to be copied across by hand. They are what makes a resubmission
+resume *warm*; without one the first new rung starts cold, and a cold restart is what corrupted the
+entropy dome in the first array sweep. Never delete them.
+
+Present: `rtm_eigs_p0.1` (`T = 17`), `rtm_eigs_p0.3` (`T = 13`), `betawall_p0.1_nb4`.
+Missing: `rtm_eigs_p0.5` (`T = 15`), `rtm_p0.3` (`T = 14`), `rdm_p0.1` (`T = 12`).
+
 Check progress with `squeue -u $USER` and `tail -f logs/eigs_p0.1-<jobid>.out`. Each finished `T`
 logs a line like `[rtm_eigs_p0.1] T=9.0 converged@61 k=4 |θ0|=1.5443 gap=0.731 ...`.
 
@@ -76,10 +100,16 @@ git add results/data/cluster/*.jld2 && git commit -m "cluster sweep progress" &&
 
 ## What's already done
 
-The full-eigenvector RTM runs (`p = 0 … 1.5`) finished earlier and are saved in `cluster/data/` and
-`results/data/cluster/sweep_rtm_p*.jld2`. They stop at different `T` per `p` because the eigenvector
-route hits the wall at different times (`p=0.1` at `T≈8`, `p=0.3` at `T≈7`, …) — that's the physics,
-not a failed job. The eigenvalues-only reruns above are the follow-up that pushes past those walls.
+The 2026-07 full-eigenvector RTM runs (`p = 0 … 1.5`) stop at different `T` per `p` because the
+eigenvector route hits the wall at different times — that is the physics, not a failed job. The ones
+that have since been superseded or fall outside the `0 ≤ p ≤ 0.5` thesis range moved to
+`results/data/cluster/archive/`; the duplicate copy under `cluster/data/` is gone, and the raw
+per-`T` array-job outputs are in `cluster/archive/` (NB9 §1 still merges them into `cold_sweep.jld2`).
+
+The August round delivered `sweep_rtm_eigs_p{0.0,0.1,0.3,0.5}.jld2`, `sweep_rdm_p0.1.jld2`, and the
+`p = 0.3` entropy arm. That last one arrived as `warm_sweep.jld2`, because `psweep` used to write
+every `p` into the driver's shared default cache; it now writes `sweep_rtm_p<p>.jld2` like
+`eigsweep` does, and the file was renamed to match.
 
 ## The other jobs
 
