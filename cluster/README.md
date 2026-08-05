@@ -5,18 +5,15 @@ job is a single Julia process that walks a ladder of evolution times `T`, warm-s
 from the previous one and checkpointing as it goes, so a job that hits the walltime just needs to be
 resubmitted — it resumes where it stopped.
 
-The driver is `wall_scan_cluster.jl`; the `submit_*.slurm` files are thin wrappers around it.
+The driver is `wall_scan_cluster.jl`; the `submit_*.slurm` files are thin wrappers around it. Every
+script sitting in this folder still needs computation. The ones that have already run are in
+`done/`.
 
 ## What to run now
 
-The August 2026 round finished four eigenvalue ladders and two entropy ones. What is left is
-finishing the ladders that ran out of walltime, plus a new kind of job that did not exist before.
-
-**1. Resume the eigenvalues-only sweeps.** `p = 0` is complete (`T = 20`). The other three stopped
-short: `p = 0.1` at `T = 17`, `p = 0.3` at `T = 13`, `p = 0.5` at `T = 15`. Resubmitting the same
-script resumes from the cached rungs. These are the slowest jobs we have — a single rung at
-`p = 0.3, T = 14` ran over seven hours on a 16-core desktop without finishing — so expect a couple
-of resubmissions each.
+**1. Eigenvalue-only sweeps.** `p = 0` is complete up to `T = 20`. The others stopped short:
+`p = 0.1` at `T = 17`, `p = 0.3` at `T = 13`, `p = 0.5` at `T = 15`. Resubmitting resumes from the
+cached rungs. These are the slowest jobs, so expect a few resubmissions each.
 
 ```
 sbatch submit_rtm_eigs_p0.1.slurm
@@ -24,35 +21,46 @@ sbatch submit_rtm_eigs_p0.3.slurm
 sbatch submit_rtm_eigs_p0.5.slurm
 ```
 
-**2. Half-integer ladders at `p = 0.3` and `0.5`.** New. We follow the physical eigenvalue by
-predicting the phase it should have at the next rung. That advance grows with the sound velocity,
-and at `p ≥ 0.3` a ladder spaced `ΔT = 1` advances by more than `π` between rungs — ambiguous
-modulo `2π`, so the branch is lost after a few rungs and the extraction stops working. Halving the
-spacing resolves the winding. The driver now takes an optional third argument for the step, and the
-new rungs merge into the same cache, so the analysis just sees one denser ladder.
+**2. Half-integer ladders.** The physical eigenvalue is followed by predicting the phase it should
+have at the next rung and taking the nearest member of the block. Two things set whether that works.
+The block members are separated in phase by roughly `π x /(v T)`, so a larger sound velocity crowds
+them together — they sit about 2.5 times closer at `p = 0.5` than at `p = 0`. And the prediction is
+an extrapolation, so its error grows with the step. At `p ≥ 0.3` the two meet and the branch is lost
+after a few rungs. Halving the step halves the extrapolation error and separates them again. The new
+rungs merge into the same cache, so the analysis sees one denser ladder.
+
+Worth doing at `p = 0.1` as well: the branch is currently trackable only to `T = 11` there, and that
+is the coupling all the quantitative results are quoted at.
 
 ```
+sbatch submit_rtm_eigs_p0.1_fine.slurm
 sbatch submit_rtm_eigs_p0.3_fine.slurm
 sbatch submit_rtm_eigs_p0.5_fine.slurm
 ```
 
-**3. The entropy arms.** `psweep 0.1` stopped at `T = 8` and `psweep 0.5` at `T = 6`. Both compute
-the temporal entropy as well as the spectrum, so they are heavier per rung, and past the wall
-(`T ≈ 9` at `p = 0.1`, `T ≈ 2` at `p = 0.5`) the entropy stops meaning anything. Worth having as a
-record of where the wall sits, but lower priority than 1 and 2. These are the jobs that genuinely
-need their checkpoint — a cold restart distorts the dome.
+**3. Entropy sweeps.** `p = 0` stopped at `T = 14`, `p = 0.1` at `T = 8`, `p = 0.5` at `T = 6`. These
+compute the temporal entropy as well as the spectrum, so they cost more per rung. The `p = 0` one is
+the only arm without a wall, and its later rungs run for several hours each. At the other two the
+entropy stops being meaningful past the wall, so those are worth having mainly as a record of where
+it sits. All three need their checkpoint: a cold restart distorts the dome.
 
 ```
+sbatch submit_rtm_p0.0.slurm
 sbatch submit_rtm_p0.1.slurm
 sbatch submit_rtm_p0.5.slurm
 ```
 
-**Do not resubmit the RDM job.** It reached `T = 12` and answered its question: the dome breaks at
-`T ≈ 10` under RDM truncation, the same place as RTM, and the four rigidities are all ≈ 5·10⁻⁶
-there, so no eigenvector in the block survives. Extending it would buy more rungs on the wrong side
-of the wall. See NB9 §3.
+**4. Does β₀ move the wall?** The regulator scan showed the modulus gaps between the leading
+eigenvalues grow linearly with β₀, and it is those gaps closing that ends the eigenvector route.
+A larger β₀ should therefore buy some reach. These two run the same ladder at `nbeta = 12`
+(β₀ = 0.6) and at the usual `nbeta = 4` (β₀ = 0.2) as the control, so the only difference is the
+regulator; compare where the entropy dome breaks in each. The enhancement falls off as β₀/T², so
+expect a modest shift rather than an escape. Only two rungs have ever run, so this one is open.
 
-The β₀ jobs (`submit_beta_*.slurm`, `submit_betawall_*.slurm`) are done and answered — leave them.
+```
+sbatch submit_betawall_nb12.slurm
+sbatch submit_betawall_nb4.slurm
+```
 
 Everything writes to `results/data/cluster/` under its own filename, so nothing overwrites anything.
 
@@ -64,32 +72,26 @@ julia --project=. -e 'using Pkg; Pkg.instantiate()'   # from the repo root, once
 # then sbatch the jobs above from inside cluster/
 ```
 
-Every submit script now runs `wall_scan_cluster.jl preflight` first. That builds one small tMPO and
-exits, which is the same call the long run makes on every rung. It exists because of how the first
-round ended: four jobs hit the 48 h walltime, and on requeue two of them could no longer dispatch
-`build_alcaraz_tmpo` — a `MethodError` on the VD2 kernel from a stale precompile. The ladder then
-marked every remaining `T` as errored in a few seconds. The preflight turns that into a one-minute
-failure, and the driver now also stops after two consecutive failures instead of burning the rest of
-the ladder. Run `Pkg.instantiate()` again if the preflight fails, and check that `Manifest.toml`
+Every submit script runs `wall_scan_cluster.jl preflight` first. It builds one small tMPO and exits,
+the same call each rung makes, so a broken environment fails in a minute instead of marking every
+`T` as errored. The driver also stops after two consecutive failures rather than burning the rest of
+the ladder. If the preflight fails, run `Pkg.instantiate()` again and check that `Manifest.toml`
 still pins ITransverse at `f10aee05`.
 
 ## Checkpoints
 
-Checkpoints live in `cluster/checkpoints/checkpoint_<label>.jld2` and are gitignored, so they never
-travel with a `git push` — they have to be copied across by hand. They are what makes a resubmission
-resume *warm*; without one the first new rung starts cold, and a cold restart is what corrupted the
-entropy dome in the first array sweep. Never delete them.
-
-All the checkpoints we have are shipped as a zip alongside the repo. Unpack it so the files land in
-`cluster/checkpoints/`, then check they are there before submitting:
+Checkpoints live in `cluster/checkpoints/checkpoint_<label>.jld2`. They are gitignored, so they do
+not travel with the repository and come as a separate zip. Unpack it so the files land in that
+directory, and check they are there before submitting:
 
 ```
 unzip checkpoints.zip -d cluster/
-ls cluster/checkpoints/          # expect checkpoint_rtm_eigs_p0.{1,3,5}.jld2 and checkpoint_rtm_p0.{3,5}.jld2
+ls cluster/checkpoints/
 ```
 
-The eigenvalue jobs run correctly without them — they compute no entropy, so a cold first rung only
-costs iterations. The entropy jobs in step 3 do need theirs.
+They are what makes a resubmission resume warm. Never delete them. The eigenvalue jobs still run
+correctly without one, since they compute no entropy and only the first rung starts cold; the
+entropy jobs do need theirs.
 
 Check progress with `squeue -u $USER` and `tail -f logs/eigs_p0.1-<jobid>.out`. Each finished `T`
 logs a line like `[rtm_eigs_p0.1] T=9.0 converged@61 k=4 |θ0|=1.5443 gap=0.731 ...`.
@@ -104,22 +106,20 @@ git add results/data/cluster/*.jld2 && git commit -m "cluster sweep progress" &&
 
 ## What's already done
 
-The 2026-07 full-eigenvector RTM runs (`p = 0 … 1.5`) stop at different `T` per `p` because the
-eigenvector route hits the wall at different times — that is the physics, not a failed job. The ones
-that have since been superseded or fall outside the `0 ≤ p ≤ 0.5` thesis range moved to
-`results/data/cluster/archive/`; the duplicate copy under `cluster/data/` is gone, and the raw
-per-`T` array-job outputs are in `cluster/archive/` (NB9 §1 still merges them into `cold_sweep.jld2`).
+The full-eigenvector RTM runs stop at a different `T` for each `p`, because the eigenvector route
+hits the wall at different times. That is the physics, not a failed job. Runs that were superseded,
+or that fall outside the `0 ≤ p ≤ 0.5` range of the thesis, are in
+`results/data/cluster/archive/`; the raw per-`T` array-job outputs are in `cluster/archive/`.
 
-The August round delivered `sweep_rtm_eigs_p{0.0,0.1,0.3,0.5}.jld2`, `sweep_rdm_p0.1.jld2`, and the
-`p = 0.3` entropy arm. That last one arrived as `warm_sweep.jld2`, because `psweep` used to write
-every `p` into the driver's shared default cache; it now writes `sweep_rtm_p<p>.jld2` like
-`eigsweep` does, and the file was renamed to match.
+## The jobs in `done/`
 
-## The other jobs
-
-`submit_rtm.slurm` and `submit_cutoff.slurm` are the original `p=0.1` truncation comparison (bond
-dimension / cutoff); `submit_rtm_p*.slurm` are the full-eigenvector p-sweep. Those are all run and
-archived — leave them unless you want to regenerate something.
+Kept for reference, and to regenerate something if needed. `submit_rtm.slurm`, `submit_cutoff.slurm`
+and `submit_rdm.slurm` are the `p = 0.1` truncation comparison; the RDM one answered its question,
+that the dome breaks at the same `T` as under RTM truncation with every rigidity in the block at
+≈ 5·10⁻⁶, so extending it would only add rungs past the wall (NB9 §3). `submit_rtm_p0.3.slurm` is the `p = 0.3` entropy arm and
+`submit_rtm_p1.0/1.5.slurm` are outside the `0 ≤ p ≤ 0.5` range of the thesis;
+`submit_rtm_eigs_p0.0.slurm` is the complete `p = 0` eigenvalue ladder, and `submit_beta_*.slurm`
+the regulator scans.
 
 ## Output format
 
