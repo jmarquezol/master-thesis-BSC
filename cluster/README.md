@@ -38,7 +38,7 @@ sbatch submit_rtm_eigs_p0.3_fine.slurm
 sbatch submit_rtm_eigs_p0.5_fine.slurm
 ```
 
-**3. Entropy sweeps.** `p = 0` stopped at `T = 14`, `p = 0.1` at `T = 8`, `p = 0.5` at `T = 6`. These
+**3. Entropy sweeps.** `p = 0` stopped at `T = 14`, `p = 0.1` at `T = 8`, `p = 0.5` at `T = 7`. These
 compute the temporal entropy as well as the spectrum, so they cost more per rung. The `p = 0` one is
 the only arm without a wall, and its later rungs run for several hours each. At the other two the
 entropy stops being meaningful past the wall, so those are worth having mainly as a record of where
@@ -66,10 +66,23 @@ Everything writes to `results/data/cluster/` under its own filename, so nothing 
 
 ## Running it
 
+First time, from anywhere:
+
 ```
-git checkout main && git pull
-julia --project=. -e 'using Pkg; Pkg.instantiate()'   # from the repo root, once
-# then sbatch the jobs above from inside cluster/
+git clone https://github.com/jmarquezol/master-thesis-BSC.git
+cd master-thesis-BSC
+module load julia/1.12.0
+julia --project=. -e 'using Pkg; Pkg.instantiate()'
+```
+
+Do not update the packages: `Manifest.toml` pins ITransverse to a specific commit, and floating it
+has broken runs before. If you already have the repository, `git checkout main && git pull` is
+enough. Then unpack the checkpoints as described below, and submit from inside `cluster/`:
+
+```
+cd cluster
+julia --project=.. wall_scan_cluster.jl preflight    # must print "preflight OK"
+sbatch submit_rtm_eigs_p0.1.slurm                    # and the rest, in the order above
 ```
 
 Every submit script runs `wall_scan_cluster.jl preflight` first. It builds one small tMPO and exits,
@@ -85,7 +98,7 @@ not travel with the repository and come as a separate zip. Unpack it so the file
 directory, and check they are there before submitting:
 
 ```
-unzip checkpoints.zip -d cluster/
+unzip checkpoints_for_bsc.zip -d cluster/
 ls cluster/checkpoints/
 ```
 
