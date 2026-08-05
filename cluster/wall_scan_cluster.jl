@@ -124,20 +124,24 @@ function run_wall_scan(; chi::Int, label::String,
                 seedL=seedL, seedR=seedR)
             k_actual = length(theta)
 
-            i0 = pick_phys_continuity(theta, previous_phys)
+            i0, recovered = pick_phys_robust(theta, previous_phys)
             dphi, cls = classify_tower(theta; i0=i0)
             gap = tower_gap(theta; i0=i0)
 
             # Entropy and rigidity both need the bi-normalized pairs, which :schur does not return.
             if eigvals_only
-                s2_base = Float64[]
+                s2_base = ComplexF64[]
+                s2_all = Vector{ComplexF64}[]
                 rigidity = Float64[]
             else
-                s2_base = trim_dome(ITransverse.gen_renyi2(L[i0], R[i0]), nbeta)
+                # one dome per member: i0 is only reliable across the whole ladder, not rung by rung
+                s2_all = Vector{ComplexF64}[]
                 rigidity = Float64[]
                 for j in 1:k_actual
+                    push!(s2_all, trim_dome(ITransverse.gen_renyi2(L[j], R[j]), nbeta))
                     push!(rigidity, phase_rigidity(L[j], R[j]))
                 end
+                s2_base = s2_all[i0]
             end
             end # @elapsed
 
@@ -146,10 +150,10 @@ function run_wall_scan(; chi::Int, label::String,
                 i0=i0, theta_phys=theta[i0],
                 dphi=dphi, cls=string.(cls), tower_gap=gap,
                 k_used=info[:k_used], escalated=info[:escalated],
-                s2_base=s2_base, peak=peak, rigidity=rigidity,
+                s2_base=s2_base, s2_all=s2_all, peak=peak, rigidity=rigidity,
                 reason=string(info[:reason]), niters=info[:niters], elapsed=elapsed)
 
-            previous_phys = theta[i0]
+            recovered && (previous_phys = theta[i0])
             previous_L = L
             previous_R = R
 
@@ -231,6 +235,25 @@ elseif mode == "psweep"
     dT    = length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0
     run_wall_scan(chi=64, label="rtm_p$(p_val)", Ts=collect(2.0:dT:Tmax), trunc_mode=:rtm, p_nnn=p_val,
         cachefile=joinpath(CLUSTER_DIR, "sweep_rtm_p$(p_val).jld2"))
+elseif mode == "entsweep"
+    # Entropy arm from T=2, one dome per block member. Own cache: the old psweep runs stored only
+    # the selected dome, so their branch choice cannot be revisited.
+    # Usage: julia wall_scan_cluster.jl entsweep <p> <Tmax> [dT]
+    length(ARGS) >= 3 || error("entsweep needs two extra args: julia wall_scan_cluster.jl entsweep <p> <Tmax> [dT]")
+    p_val = parse(Float64, ARGS[2])
+    Tmax  = parse(Float64, ARGS[3])
+    dT    = length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0
+    run_wall_scan(chi=64, label="ent_p$(p_val)", Ts=collect(2.0:dT:Tmax), trunc_mode=:rtm, p_nnn=p_val,
+        cachefile=joinpath(CLUSTER_DIR, "sweep_ent_p$(p_val).jld2"))
+elseif mode == "towerscan"
+    # Deep k=8 block at small T: the tower figure needs more members than the k=4 arms carry.
+    # Usage: julia wall_scan_cluster.jl towerscan <p> <Tmax>
+    length(ARGS) >= 3 || error("towerscan needs two extra args: julia wall_scan_cluster.jl towerscan <p> <Tmax>")
+    p_val = parse(Float64, ARGS[2])
+    Tmax  = parse(Float64, ARGS[3])
+    run_wall_scan(chi=64, label="tower_p$(p_val)", Ts=collect(2.0:1.0:Tmax), k=8, k_retry=10,
+        trunc_mode=:rtm, p_nnn=p_val, eigvals_only=true,
+        cachefile=joinpath(CLUSTER_DIR, "sweep_tower_p$(p_val).jld2"))
 elseif mode == "eigsweep"
     # Eigenvalues only: same configuration as `psweep` but in Schur/eigvals-only mode, skipping the
     # eigenvector work (entropy, rigidity). The spectrum is Rayleigh-quotient-like and survives the
