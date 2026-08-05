@@ -7,8 +7,8 @@
 # modes:
 #   preflight                 build one small tMPO and exit — cheap check that the env still works
 #   rtm / rdm / cutoff        the original p=0.1 truncation comparison (no extra args)
-#   psweep    <p> <Tmax>      full run (with entropy), RTM, at coupling p
-#   eigsweep  <p> <Tmax>      eigenvalues only (no entropy) — goes past the wall
+#   psweep    <p> <Tmax> [dT]  full run (with entropy), RTM, at coupling p; dT defaults to 1
+#   eigsweep  <p> <Tmax> [dT]  eigenvalues only (no entropy) — goes past the wall; dT defaults to 1
 #   betascan  <p> <Tmax>      full run, repeated over nbeta=2..16 — the β0 regulator scan
 #   betawall  <p> <nbeta> <Tmax>   full run at ONE β0 on a long ladder — does β0 move the wall?
 #
@@ -225,10 +225,11 @@ elseif mode == "psweep"
     # A p-sweep job, always through the RTM route (NB9's cost comparison: RDM buys nothing
     # physical for ~4-11x the cost, so it is not worth extending to the p-sweep at all).
     # Usage: julia wall_scan_cluster.jl psweep <p> <Tmax>
-    length(ARGS) >= 3 || error("psweep needs two extra args: julia wall_scan_cluster.jl psweep <p> <Tmax>")
+    length(ARGS) >= 3 || error("psweep needs two extra args: julia wall_scan_cluster.jl psweep <p> <Tmax> [dT]")
     p_val = parse(Float64, ARGS[2])
     Tmax  = parse(Float64, ARGS[3])
-    run_wall_scan(chi=64, label="rtm_p$(p_val)", Ts=collect(2.0:1.0:Tmax), trunc_mode=:rtm, p_nnn=p_val,
+    dT    = length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0
+    run_wall_scan(chi=64, label="rtm_p$(p_val)", Ts=collect(2.0:dT:Tmax), trunc_mode=:rtm, p_nnn=p_val,
         cachefile=joinpath(CLUSTER_DIR, "sweep_rtm_p$(p_val).jld2"))
 elseif mode == "eigsweep"
     # Eigenvalues only: same configuration as `psweep` but in Schur/eigvals-only mode, skipping the
@@ -236,10 +237,14 @@ elseif mode == "eigsweep"
     # wall, so this arm reaches larger T than the full runs — it is the right tool for dual
     # unitarity, the Eq.(3) central charge, Eq.(4), and the tower gaps. Own cache per p.
     # Usage: julia wall_scan_cluster.jl eigsweep <p> <Tmax>
-    length(ARGS) >= 3 || error("eigsweep needs two extra args: julia wall_scan_cluster.jl eigsweep <p> <Tmax>")
+    length(ARGS) >= 3 || error("eigsweep needs two extra args: julia wall_scan_cluster.jl eigsweep <p> <Tmax> [dT]")
     p_val = parse(Float64, ARGS[2])
     Tmax  = parse(Float64, ARGS[3])
-    run_wall_scan(chi=64, label="rtm_eigs_p$(p_val)", Ts=collect(2.0:1.0:Tmax),
+    # dT < 1 fills half-integer rungs into the SAME cache. The branch tracker follows the physical
+    # eigenvalue by predicting its phase, and the phase advance per rung grows with the velocity, so
+    # at larger p a unit ladder advances by more than pi and the branch can no longer be identified.
+    dT    = length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0
+    run_wall_scan(chi=64, label="rtm_eigs_p$(p_val)", Ts=collect(2.0:dT:Tmax),
         trunc_mode=:rtm, p_nnn=p_val, eigvals_only=true,
         cachefile=joinpath(CLUSTER_DIR, "sweep_rtm_eigs_p$(p_val).jld2"))
 elseif mode == "betascan"

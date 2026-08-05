@@ -9,12 +9,14 @@ The driver is `wall_scan_cluster.jl`; the `submit_*.slurm` files are thin wrappe
 
 ## What to run now
 
-The first round finished in August 2026. What is left is finishing the ladders that ran out of
-walltime, plus one arm that was never submitted.
+The August 2026 round finished four eigenvalue ladders and two entropy ones. What is left is
+finishing the ladders that ran out of walltime, plus a new kind of job that did not exist before.
 
 **1. Resume the eigenvalues-only sweeps.** `p = 0` is complete (`T = 20`). The other three stopped
 short: `p = 0.1` at `T = 17`, `p = 0.3` at `T = 13`, `p = 0.5` at `T = 15`. Resubmitting the same
-script resumes from the cached rungs.
+script resumes from the cached rungs. These are the slowest jobs we have — a single rung at
+`p = 0.3, T = 14` ran over seven hours on a 16-core desktop without finishing — so expect a couple
+of resubmissions each.
 
 ```
 sbatch submit_rtm_eigs_p0.1.slurm
@@ -22,12 +24,26 @@ sbatch submit_rtm_eigs_p0.3.slurm
 sbatch submit_rtm_eigs_p0.5.slurm
 ```
 
-**2. The two entropy arms.** `psweep 0.3` reached `T = 14` and resumes; `psweep 0.5` has never run
-and is the only source for the `p = 0.5` entropy dome, since the eigsweeps carry no entropy and the
-2026-07 `sweep_rtm_p0.5` run is unusable.
+**2. Half-integer ladders at `p = 0.3` and `0.5`.** New. We follow the physical eigenvalue by
+predicting the phase it should have at the next rung. That advance grows with the sound velocity,
+and at `p ≥ 0.3` a ladder spaced `ΔT = 1` advances by more than `π` between rungs — ambiguous
+modulo `2π`, so the branch is lost after a few rungs and the extraction stops working. Halving the
+spacing resolves the winding. The driver now takes an optional third argument for the step, and the
+new rungs merge into the same cache, so the analysis just sees one denser ladder.
 
 ```
-sbatch submit_rtm_p0.3.slurm
+sbatch submit_rtm_eigs_p0.3_fine.slurm
+sbatch submit_rtm_eigs_p0.5_fine.slurm
+```
+
+**3. The entropy arms.** `psweep 0.1` stopped at `T = 8` and `psweep 0.5` at `T = 6`. Both compute
+the temporal entropy as well as the spectrum, so they are heavier per rung, and past the wall
+(`T ≈ 9` at `p = 0.1`, `T ≈ 2` at `p = 0.5`) the entropy stops meaning anything. Worth having as a
+record of where the wall sits, but lower priority than 1 and 2. These are the jobs that genuinely
+need their checkpoint — a cold restart distorts the dome.
+
+```
+sbatch submit_rtm_p0.1.slurm
 sbatch submit_rtm_p0.5.slurm
 ```
 
@@ -36,27 +52,7 @@ sbatch submit_rtm_p0.5.slurm
 there, so no eigenvector in the block survives. Extending it would buy more rungs on the wrong side
 of the wall. See NB9 §3.
 
-**3. β₀ regulator scan, `p = 0` and `0.1`.** Each job reruns the same full sweep for a few amounts of
-imaginary-time cooling (`nbeta = 2,4,…,16`, i.e. `β₀ = 0.1 … 0.8`), up to `T = 10` — to check how
-much the extracted central charge and boundary exponent depend on that regulator. Short jobs.
-
-```
-sbatch submit_beta_p0.0.slurm
-sbatch submit_beta_p0.1.slurm
-```
-
-**4. Does β₀ move the wall?** The β₀ scan above showed the modulus gaps between the leading
-eigenvalues grow *linearly* with β₀ — and it's those gaps closing that ends the eigenvector route
-(the "wall"). So a bigger β₀ should, in principle, buy more reach. These two jobs test it directly:
-the same long ladder (`T` up to 14) run at `nbeta = 12` (β₀ = 0.6) and at our usual `nbeta = 4`
-(β₀ = 0.2) as the control, so the only difference between them is the regulator. Compare where the
-entropy dome breaks in each. Worth knowing: the gap enhancement falls off as β₀/T², so the honest
-expectation is a modest shift rather than an escape — a null result is still a useful answer.
-
-```
-sbatch submit_betawall_nb12.slurm
-sbatch submit_betawall_nb4.slurm
-```
+The β₀ jobs (`submit_beta_*.slurm`, `submit_betawall_*.slurm`) are done and answered — leave them.
 
 Everything writes to `results/data/cluster/` under its own filename, so nothing overwrites anything.
 
@@ -84,8 +80,16 @@ travel with a `git push` — they have to be copied across by hand. They are wha
 resume *warm*; without one the first new rung starts cold, and a cold restart is what corrupted the
 entropy dome in the first array sweep. Never delete them.
 
-Present: `rtm_eigs_p0.1` (`T = 17`), `rtm_eigs_p0.3` (`T = 13`), `betawall_p0.1_nb4`.
-Missing: `rtm_eigs_p0.5` (`T = 15`), `rtm_p0.3` (`T = 14`), `rdm_p0.1` (`T = 12`).
+All the checkpoints we have are shipped as a zip alongside the repo. Unpack it so the files land in
+`cluster/checkpoints/`, then check they are there before submitting:
+
+```
+unzip checkpoints.zip -d cluster/
+ls cluster/checkpoints/          # expect checkpoint_rtm_eigs_p0.{1,3,5}.jld2 and checkpoint_rtm_p0.{3,5}.jld2
+```
+
+The eigenvalue jobs run correctly without them — they compute no entropy, so a cold first rung only
+costs iterations. The entropy jobs in step 3 do need theirs.
 
 Check progress with `squeue -u $USER` and `tail -f logs/eigs_p0.1-<jobid>.out`. Each finished `T`
 logs a line like `[rtm_eigs_p0.1] T=9.0 converged@61 k=4 |θ0|=1.5443 gap=0.731 ...`.
