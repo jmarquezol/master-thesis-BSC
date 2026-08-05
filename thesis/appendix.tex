@@ -680,6 +680,34 @@ matrix is similar to a complex-symmetric one, so symmetry can relabel the collap
 it, and inside an exactly degenerate subspace the individual eigenvector is undefined rather than
 merely ill-conditioned.
 
+\subsection{What the broken dome looks like}
+\label{app:wall:shape}
+
+Section~\ref{sec:results:wall} reads the wall from the chord plot, where the profiles past it appear
+as a detached arc rather than as points scattered about the line. The shape has a simple origin, and
+it makes a sharper diagnostic than the height of the dome.
+
+The chord variable of Eq.~\eqref{eq:chord} is not monotonic in the cut position. It grows as the cut
+moves in from either edge and is largest at mid-strip, so a profile plotted against $W$ is traversed
+twice: once for cuts in the first half, once for cuts in the second. A conformal profile depends on
+the cut only through $W$, which is what Eq.~\eqref{eq:cft:chord} states, so the two traversals give
+the same value at the same $W$ and land on top of one another. The dome then collapses onto a single
+straight line, and the fold is invisible. This is what makes the chord plot a test rather than a
+change of variables: the collapse only happens if the profile really is a function of $W$.
+
+Past the wall that ceases to hold. The two halves of the profile no longer agree at equal $W$, the
+fold opens, and the two branches trace out the arc seen in Figure~\ref{fig:wall}. At $p=0.1$ the
+transition is abrupt: between $T=9$ and $T=10$ the peak of the dome jumps from $0.34$ to $0.72$ and
+a second maximum appears, so a single evolution step separates a profile that collapses cleanly from
+one that does not. The hump count and the failure to collapse are two views of the same failure, and
+either can be used to locate the wall without fitting anything.
+
+We do not plot the broken profiles in the main text. Once the dome carries two maxima its height and
+its slope have no conformal meaning, so a figure of them would document the failure of the estimator
+rather than any property of the model. The rigidity of Figure~\ref{fig:wall} says the same thing in
+a quantity that remains well defined on both sides of the wall, which is why it is the diagnostic we
+report.
+
 \subsection{The wall is gap-limited, not resolution-limited}
 \label{app:wall:eps}
 
@@ -760,9 +788,23 @@ $\mathrm{Re}\,\varepsilon_m\approx0$, and in an Ising-class critical chain those
 long-wavelength modes, whose phases $\pi x/(vT)$ are small. Building a phase of exactly $\pi$ at full
 modulus would need a mode that neither decays nor stops oscillating, that is a gapless branch at
 lattice momentum $\pi$, which the uniform Ising-class free chain does not have. A free chain
-therefore cannot produce a displaced tower, which is the zero-partner result of the Ising and XY
-controls. Only an interaction can supply the structure, and single-term probes confirm that it is
-the parity-dressed hop~(F3), not the density--density term, that does so.
+therefore cannot produce a displaced tower. This is what the free-fermion controls show: the critical
+Ising chain at two evolution times, and the anisotropic XY chain at $\gamma=0.5,\,1,\,1.5$, return no
+displaced state at all.
+
+What the argument requires is a source of momentum-$\pi$ structure, and in this model that source is
+an interaction. Single-term probes identify which one. Deforming the critical Ising chain by the
+\ac{NNN} term alone, at strength $0.1$ and $T=4$, produces a displaced family at
+$x\approx0.37,\,1.22,\,2.17$; deforming it by the $\sigma^x\sigma^x$ term alone produces none. It is
+therefore the parity-dressed hop of Eq.~(F3), not the density--density term, that carries the
+displacement. Scanning down to small couplings, the displaced family is present at every
+$p\neq0$ tested, down to $p=0.01$, with no threshold: the effect switches on with the interaction
+rather than at some finite strength.
+
+One consequence of the single-term probe is worth recording. The \ac{NNN}-only deformation is not
+self-dual, and it displaces all the same. Self-duality is therefore not needed for the displacement
+to exist; the argument below concerns why it is pinned at exactly $\pi$ rather than at a
+coupling-dependent value.
 
 The quantization at exactly $\pi$, rather than at a coupling-dependent value, has a natural home in
 the self-duality of the model. In Majorana variables the $XX$ and next-nearest $ZZ$ terms are both
