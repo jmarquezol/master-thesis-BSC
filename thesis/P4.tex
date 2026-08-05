@@ -9,7 +9,7 @@ For \ac{NN} Hamiltonians, such an operator is usually constructed through a Trot
 \subsection{The Hamiltonian as a \texorpdfstring{\ac{FSM}}{FSM}}
 \label{sec:mporep:fsm}
 
-In the \ac{FSM} representation, the Hamiltonian is encoded as an \ac{MPO} whose local tensor has a block-upper-triangular form. This tensor is composed of two identity blocks, which propagate the initial and final states; an on-site block $D$; a block row $C$, which initiates interactions; a block column $B$, which terminates them; and a memory block $A$, which propagates unfinished interactions between their endpoints. The virtual index therefore records whether an interaction has not yet begun, is being propagated, or has terminated. For the ANNNI-type model, the local tensor has bond dimension $D_W=5$ and takes the form
+In the \ac{FSM} representation~\cite{pirvu2010}, the Hamiltonian is encoded as an \ac{MPO} whose local tensor has a block-upper-triangular form~\cite{parker2020}. This tensor is composed of two identity blocks, which propagate the initial and final states; an on-site block $D$; a block row $C$, which initiates interactions; a block column $B$, which terminates them; and a memory block $A$, which propagates unfinished interactions between their endpoints. The virtual index therefore records whether an interaction has not yet begun, is being propagated, or has terminated. This block form can also be generated automatically from the operator itself, which is the practical route for more complicated Hamiltonians~\cite{hubig2017}. For the ANNNI-type model, the local tensor has bond dimension $D_W=5$ and takes the form
 \begin{align}
   W_H & =
   \begin{pmatrix}
