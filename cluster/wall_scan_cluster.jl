@@ -53,7 +53,7 @@ function run_wall_scan(; chi::Int, label::String,
         cutoff=1e-12, cutoffs=[fill(1e-8, 40); 1e-10],
         trunc_mode=:rtm, basis=:eig,
         eigvals_only::Bool=false,
-        itermax=8000, stuck_after=400,
+        itermax=8000, stuck_after=150,
         k=4, k_retry=6,
         cachefile=CLUSTER_CACHE,
         checkpointfile=joinpath(@__DIR__, "checkpoints", "checkpoint_$(label).jld2"))

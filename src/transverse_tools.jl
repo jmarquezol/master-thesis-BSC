@@ -43,13 +43,17 @@ function build_alcaraz_tmpo(target_T::Float64;
     return build_tmpo(AlcarazParams(lambda=lambda, p=p), recipe, target_T; dt=dt, nbeta=nbeta)
 end
 
-# Weighted sum Σ coeffs[i]*vecs[i]. Exact MPS addition stacks bond dimensions, so we directsum
-# first and compress once at the end; do_truncate=false returns the uncompressed sum.
+# Weighted sum Σ coeffs[i]*vecs[i]. A plain directsum of k vectors peaks at k times the input bond,
+# which is the memory and time peak of a block iteration. `accdim` caps the running sum; the last
+# addition stays exact so the caller still chooses the final compression.
 function lincomb_mps(coeffs::AbstractVector, vecs::AbstractVector{MPS};
-                     cutoff::Float64=1e-12, maxdim::Int=256, do_truncate::Bool=true)
+                     cutoff::Float64=1e-12, maxdim::Int=256, do_truncate::Bool=true,
+                     accdim::Int=maxdim)
     acc = coeffs[1] * vecs[1]
-    for i in 2:lastindex(vecs)
+    last = lastindex(vecs)
+    for i in 2:last
         acc = +(acc, coeffs[i] * vecs[i]; alg="directsum")
+        i < last && truncate!(acc; cutoff=cutoff, maxdim=accdim)
     end
     do_truncate && truncate!(acc; cutoff=cutoff, maxdim=maxdim)
     return acc
@@ -121,6 +125,7 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         maxdims::Union{Nothing,AbstractVector{<:Integer}}=nothing,
         cutoffs::Union{Nothing,AbstractVector{<:Real}}=nothing,
         trunc_mode::Symbol=:rtm, itermin::Int=20, stuck_after::Int=100,
+        accdim::Int=0,
         seedL::Union{Nothing,AbstractVector{MPS}}=nothing,
         seedR::Union{Nothing,AbstractVector{MPS}}=nothing,
         basis::Symbol=:eig,
@@ -135,6 +140,9 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
     if eigvals_only
         basis = :schur
     end
+
+    # cap on the running sum inside lincomb_mps; 0 means "same as maxdim"
+    accdim = accdim > 0 ? accdim : maxdim
 
     # SETUP
     sit  = siteinds(scaffold)
@@ -224,8 +232,8 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
             # conjugation. Fewer, cleaner states, but the non-Hermitian SVD is ill-conditioned
             # right at the gap closing. Directsum without truncating: truncate_sweep
             # orthogonalises its own inputs.
-            Rnew = MPS[lincomb_mps(VR[:, j], AR;  do_truncate=false) for j in 1:k]
-            Lnew = MPS[lincomb_mps(VL[:, j], ATL; do_truncate=false) for j in 1:k]
+            Rnew = MPS[lincomb_mps(VR[:, j], AR;  do_truncate=false, accdim=accdim) for j in 1:k]
+            Lnew = MPS[lincomb_mps(VL[:, j], ATL; do_truncate=false, accdim=accdim) for j in 1:k]
             for j in 1:k
                 res = truncate_sweep(Lnew[j], Rnew[j]; cutoff=cut, maxdim=md)   # joint pair truncation
                 Lnew[j], Rnew[j] = res.L, res.R
@@ -234,8 +242,8 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
             # Truncate every L_j and R_j independently on its own density matrix |v⟩⟨v*|. Throws
             # away the L–R coupling, but it is Hermitian and positive, so it stays well conditioned
             # where the RTM SVD scatters. (:naive is the old alias for this route.)
-            Rnew = MPS[lincomb_mps(VR[:, j], AR;  cutoff=cut, maxdim=md) for j in 1:k]
-            Lnew = MPS[lincomb_mps(VL[:, j], ATL; cutoff=cut, maxdim=md) for j in 1:k]
+            Rnew = MPS[lincomb_mps(VR[:, j], AR;  cutoff=cut, maxdim=md, accdim=accdim) for j in 1:k]
+            Lnew = MPS[lincomb_mps(VL[:, j], ATL; cutoff=cut, maxdim=md, accdim=accdim) for j in 1:k]
         else
             error("block_transfer_eigs: unknown trunc_mode=$(trunc_mode) (use :rtm, :rdm, or :naive)")
         end
@@ -606,6 +614,10 @@ function thesis_plot_theme!()
     )
     return nothing
 end
+
+# One colour and marker per frustration value, shared by every thesis figure.
+const P_COLOR  = Dict(0.0 => :dodgerblue, 0.1 => :crimson, 0.3 => :seagreen, 0.5 => :darkorange)
+const P_MARKER = Dict(0.0 => :circle, 0.1 => :square, 0.3 => :diamond, 0.5 => :utriangle)
 
 # Save a row of subplots as one figure under results/imgs/
 function plot_panels(panels...; filename::String, title::String="",

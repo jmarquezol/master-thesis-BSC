@@ -18,6 +18,8 @@
 %\usepackage[scaled=1.03]{inconsolata} %Monospace font
 \usepackage{hyperref}  %Hyperlinks (pink, green, blue)
 \usepackage{graphicx} % Package to insert external figures
+\usepackage{flafter} % Prevent floats from appearing before their source position
+\usepackage{placeins} % Provide \FloatBarrier at section boundaries
 \usepackage[babel]{microtype}  %Improves text justification
 
 \usepackage{amsmath,amssymb,amsthm,bm,amsfonts,mathrsfs,bbm} %Useful math packages
@@ -53,8 +55,11 @@ The universal properties of a critical many-body system---its central charge and
 %
 % Uncomment for keywords
 \noindent{\it Keywords}: Tensor Networks, Transverse Contraction, Many-body Systems, Quantum Dynamics, Criticality
-\bigskip
-%
+
+
+\clearpage
+
+\FloatBarrier
 \section*{Acknowledgements}
 I thank my dad, my brother, but specially to my mom, my gf Helena, my flatmates...
 
@@ -64,6 +69,7 @@ I thank my dad, my brother, but specially to my mom, my gf Helena, my flatmates.
 
 \clearpage
 
+\FloatBarrier
 \section*{Acronyms}
 \begin{acronym}[TDVP]
     \acro{CFT}{Conformal Field Theory}
@@ -90,6 +96,7 @@ I thank my dad, my brother, but specially to my mom, my gf Helena, my flatmates.
 \clearpage
 \pagenumbering{arabic}
 
+\FloatBarrier
 \section{Introduction and Motivation}
 \label{sec:intro}
 
@@ -134,18 +141,21 @@ The rest of this thesis is organized as follows. Section~\ref{sec:cft} defines t
 % CONCLUSION
 %%%%%%%%%%%%%%%%%%%%
 
+\FloatBarrier
 \section{Conclusions and Outlook}
 \label{sec:conclusions}
 
-\textit{This section is a provisional summary: the numerical campaign it draws on is complete for $p=0$ and $p=0.1$, while the sweep to stronger frustration is still in progress, and its conclusions should be read as current rather than final.}
+This work asked whether the conformal structure that makes transverse contraction efficient at a critical point survives when the model is no longer integrable. For the self-dual ANNNI-type chain, up to the frustration we can resolve, it does. The temporal central charge at $p=0.1$ is $c=0.47\pm0.05$ from the calibrated entropy slope and $0.57$ from the independent eigenvalue route, both consistent with the Ising value $c=\tfrac12$, and the free-boundary exponent $x_1\approx\tfrac12$ is recovered at both couplings once the spectrum is read correctly. Emergent dual unitarity persists at every coupling in the sweep: each arm settles onto its own constant modulus while the phase winds. What the conformal predictions require is criticality---not integrability.
 
-The question that motivated this work was whether the universal, conformal signatures that make transverse contraction efficient at a critical point---emergent dual unitarity and the logarithmic growth of the generalized temporal entropies---survive when the model is no longer integrable. Our answer, for next-nearest-neighbour frustration up to $p=0.1$, is that they do. We established this in three steps. At the integrable point $p=0$ the transverse pipeline reproduces the known Ising conformal predictions along four independent axes---the R\'enyi-2 entropy chord, its imaginary plateau, the free-boundary exponent $x_1=\tfrac12$, and the $\mu_0$ circle with its eigenvalue extraction of the central charge---which calibrates the method and fixes our conventions. Switching on frustration, the temporal central charge at $p=0.1$ comes out $c=0.47\pm0.05$ from the entropy slope and $0.50$--$0.53$ from the independent eigenvalue route, both consistent with the Ising value $c=\tfrac12$, and the boundary content is unchanged: once the odd-parity boundary tower---which the next-nearest-neighbour interaction displaces in phase by momentum $\pi$---is read on the correct side of the spectrum, the free-boundary exponent $x_1=\tfrac12$ is recovered at $p=0.1$ as well. Integrability, in other words, is not what the conformal structure of these quenches requires; criticality is.
+The two families of measurements behave very differently along the way. The eigenvalues are robust: at the integrable point they carry the central charge and the boundary exponents out to $T=20$, far past the point where the entropy is gone, and the long window resolves the branch constant of the phase fit at its exact value $-\pi$. The temporal entropy instead ends at a wall. The transfer matrix approaches an exceptional point, diagnosed by the geometric collapse of the phase rigidity, where the dominant left and right eigenvectors coalesce and any entropy built from them loses meaning. The wall is set by the physics rather than the resolution---neither the bond dimension, nor the truncation cutoff, nor the choice of truncation scheme moves it.
 
-Beyond this physics result, the work makes a few methodological contributions. The \ac{FSM} construction of the time-evolution MPO, combined with the second-order Van~Damme exponentiation, gives a genuinely translation-invariant, second-order propagator for a next-nearest-neighbour Hamiltonian---the ingredient that lets the transverse method reach the thermodynamic limit for a model outside the usual \ac{NN} setting. To resolve the non-Hermitian transfer matrix through the gap closing we developed a left--right block power method with exact biorthogonal pairing and a Schur-stable subspace basis, which extends the usable window well past the single-vector iteration. Reading the transfer spectrum correctly was itself part of the work: the near-$\pm$ pairing of the leading eigenvalues that had looked like a nuisance turned out to be the odd-parity boundary tower displaced by momentum $\pi$, and recognizing it fixed both the boundary-exponent extraction and the modulus-dominant branch-selection rule on which the stronger-frustration data depend. And we mapped, quantitatively, where and why the method ultimately fails: the entanglement barrier is a near-exceptional point of the transfer matrix, diagnosed by the geometric collapse of the phase rigidity, at which the eigenvalues remain well-conditioned but the individual eigenvectors---and therefore the temporal entropy---do not. We further verified that this barrier is set by the physics rather than by our numerical resolution: neither the bond dimension, nor the truncation cutoff, nor the choice between the two truncation schemes moves it. Characterizing that limit, rather than merely hitting it, is itself part of the contribution.
+Frustration makes the simulation genuinely harder than the integrable case. The larger sound velocity compresses the phase ladder, the displaced partner closes on the leading eigenvalue to within one per cent already at short times, the phase rigidity collapses faster, and the clean windows shrink accordingly: the entropy route is quantitative to $T=9$ at $p=0.1$ and closes almost immediately at $p\ge0.3$, while the eigenvalue route reaches $T=11$ at $p=0.1$ and loses the branch after a few rungs beyond. Completing the $c(p)$ table therefore needs finer time ladders at $p\ge0.3$---not more of the same ones.
 
-Several threads remain open, and are the natural continuation of this project. The most immediate is completing the sweep to stronger frustration, spanning $p=0.3$ through $p=1.5$ and extended to longer times: the low-frustration arms already confirm that temporal Ising universality persists with a monotonically shrinking reach, and finishing the higher-$p$ arms---which require the automatic block-size escalation and the corrected branch selector developed here---will turn the picture into a full $c(p)$ curve and pin down the strong-frustration edge, where an exact top-spectrum degeneracy finally stops the method. The resolution of the momentum-$\pi$ displaced boundary tower leaves one theory question behind it: a first-principles selection of which sector carries the $\pm i$ half-step index that quantizes the displacement at exactly $\pi$. Smaller open questions include a sub-leading boundary state at $p\gtrsim0.15$ that matches no Ising boundary dimension, and a systematic study of the Trotter-step dependence of the wall. Looking further out, the same framework applies unchanged to models whose quench carries an exact symmetry degeneracy or a larger central charge---for instance the XXZ chain quenched from a N\'eel state, or the tricritical Ising point---where preliminary work indicates that the barrier arrives markedly earlier, for reasons tied to the symmetry content of the quench and to the value of $c$; a systematic account of how these dials set the barrier's position is a promising direction. Finally, the finite-$\ell$ boundary-weighted construction that survives the wall as a diagnostic hints that the physically meaningful object past the degeneracy may be a genuinely finite-width temporal entropy rather than its thermodynamic limit---a reframing worth pursuing in its own right.
+The most interesting by-product of reading the spectrum carefully is a genuine feature of the interacting model: for any $p\neq0$ the entire odd-parity boundary tower, which contains the lightest boundary operator, is displaced in phase by momentum $\pi$. The displacement originates in the parity-dressed hopping generated by the NNN interaction, is absent for free fermions, and is what makes a naive boundary-exponent estimator fail. Recognizing it fixed the measurement and dictated the branch-selection rules on which the frustrated data depend.
 
+On the methods side, the work contributes a genuinely translation-invariant second-order propagator for a next-nearest-neighbour Hamiltonian, built from the FSM representation and the Van Damme exponentiation; a left--right block power method with exact biorthogonal pairing, a Schur-stable subspace basis and a phase-predicted branch tracker for the near-degenerate regime; and a quantitative map of where and why the approach fails, with the phase rigidity as the practical diagnostic.
 
+Two directions follow naturally. The first is algorithmic. The de-mixing step dominates the cost of every iteration, the stagnation of late rungs dominates the iteration count, and the branch tracking is limited by the time spacing of the ladders; progress on any of these extends the reach in $T$ at fixed frustration, and finer-spaced ladders alone would already unlock the eigenvalue route at $p\ge0.3$. The second is physical. The mechanism selecting which sector carries the momentum-$\pi$ displacement is not yet derived from the lattice model, a sub-leading boundary state near $p\gtrsim0.15$ matches no Ising boundary dimension, and the completed $c(p)$ curve across the critical range remains to be measured. The same framework also applies unchanged to quenches with exact symmetry degeneracies or larger central charge, where the barrier arrives earlier and its dependence on the symmetry content of the quench is itself worth a systematic study.
 
 \clearpage
 

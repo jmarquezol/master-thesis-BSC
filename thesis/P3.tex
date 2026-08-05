@@ -1,3 +1,4 @@
+\FloatBarrier
 \section{Time Evolution via Transverse Contraction}
 \label{sec:transverse}
 
@@ -10,14 +11,14 @@ The construction proceeds by rotating the space--time tensor network and identif
 
 Transverse contraction represents the time evolution of a $D$-dimensional system as a $(D{+}1)$-dimensional tensor network, with time providing the additional dimension. For the one-dimensional chain studied here, this gives a two-dimensional network that is a \ac{PEPS} up to the Trotter error. Exact contraction of a general \ac{PEPS} is \#P-hard~\cite{schuch2007}, so the calculation requires an approximate representation with a controlled bond dimension.
 
-The network follows directly from Equation~\eqref{eq:echo}. The initial and final states are represented as \acp{MPS}, while the evolution operator is decomposed into a sequence of \ac{MPO} layers, one for each Trotter step. Because the Hamiltonian is translation invariant and time independent, the same bulk tensor $W$ appears at every spatial site and time step. Section~\ref{sec:mporep} constructs this tensor for the model with \ac{NNN} interactions.
+The network follows directly from Eq.~\eqref{eq:echo}. The initial and final states are represented as \acp{MPS}, while the evolution operator is decomposed into a sequence of \ac{MPO} layers, one for each Trotter step. Because the Hamiltonian is translation invariant and time independent, the same bulk tensor $W$ appears at every spatial site and time step. Section~\ref{sec:mporep} constructs this tensor for the model with \ac{NNN} interactions.
 
 In the conventional contraction, successive \ac{MPO} layers are applied to the initial \ac{MPS}. The resulting spatial entanglement grows with time and eventually makes the state intractable at fixed bond dimension. Transverse contraction instead rotates the network by $90^\circ$ and contracts it column by column. Under this rotation, the virtual spatial bonds become physical temporal indices, while the physical spatial indices become virtual temporal bonds (Figure~\ref{fig:rotation}). The boundary columns define the \acp{tMPS} $\bra{L}$ and $\ket{R}$, and each bulk column defines a \ac{tMPO} $\mathcal{E}$ that acts as a transfer matrix along the original spatial direction. Translation invariance ensures that the same $\mathcal{E}$ is applied at every site.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.45\textwidth]{imgs/rotation.pdf}
-  \caption{The index relabelling behind the rotation. The same rank-4 tensor is read (a) along space, where $(i_x,j_x)$ are the physical indices and $(\alpha_x,\beta_x)$ the virtual ones, and (b) along time, where the roles are exchanged: the physical spatial indices become the virtual bonds $(\alpha_t,\beta_t)$ of the \ac{tMPO}, and the virtual spatial bonds become its physical indices $(i_t,j_t)$. The physical dimension of the temporal problem is therefore set by the bond dimension of $U(\delta t)$.}
+  \caption{\textbf{The rotation exchanges physical and virtual indices.} The same rank-4 tensor is read (a) along space, where $(i_x,j_x)$ are the physical indices and $(\alpha_x,\beta_x)$ the virtual ones, and (b) along time, where the roles are exchanged: the physical spatial indices become the virtual bonds $(\alpha_t,\beta_t)$ of the \ac{tMPO}, and the virtual spatial bonds become its physical indices $(i_t,j_t)$. The physical dimension of the temporal problem is therefore set by the bond dimension of $U(\delta t)$.}
   \label{fig:rotation}
 \end{figure}
 
@@ -44,7 +45,7 @@ The spectrum of $\mathcal{T}_t$ defines the generalized temporal entropies assoc
 \end{equation}
 The quantity $\operatorname{Tr}(\mathcal{T}_t^2)$ can be evaluated by contracting two copies of the \ac{RTM}, without diagonalizing it or computing a matrix logarithm. By contrast, the generalized von Neumann entropy, $S_1^{\mathrm{gen}}=-\operatorname{Tr}(\mathcal{T}_t\log\mathcal{T}_t)$, requires the full spectrum of an exponentially large non-Hermitian matrix and is not used here. The same two-copy structure makes the R\'enyi-2 temporal entropy accessible through the experimental replica protocol proposed in Ref.~\cite{boucomas2026measuring}.
 
-Once $\bra{L}$ and $\ket{R}$ have converged for a target evolution time $T$, we evaluate Equation~\eqref{eq:s2gen} at every internal bond of the temporal chain, corresponding to cuts $t\in(0,T)$. The entropy is generally complex because $\mathcal{T}_t$ is non-Hermitian, so its real and imaginary parts are analysed separately as functions of the normalized cut position. Our cuts extend from one edge of the strip to the temporal bond at $t$. The logarithmic slope in Equation~\eqref{eq:cft:chord} therefore carries the boundary coefficient $\tfrac{c}{12}(1+1/n)$, which equals $c/8$ for $n=2$, rather than the coefficient for a bulk spatial interval. The central charges reported in Section~\ref{sec:results} are extracted using this convention.
+Once $\bra{L}$ and $\ket{R}$ have converged for a target evolution time $T$, we evaluate Eq.~\eqref{eq:s2gen} at every internal bond of the temporal chain, corresponding to cuts $t\in(0,T)$. The entropy is generally complex because $\mathcal{T}_t$ is non-Hermitian, so its real and imaginary parts are analysed separately as functions of the normalized cut position. Our cuts extend from one edge of the strip to the temporal bond at $t$. The logarithmic slope in Eq.~\eqref{eq:cft:chord} therefore carries the boundary coefficient $\tfrac{c}{12}(1+1/n)$, which equals $c/8$ for $n=2$, rather than the coefficient for a bulk spatial interval. The central charges reported in Section~\ref{sec:results} are extracted using this convention.
 
 \subsection{Truncation using the transition matrix}
 \label{sec:transverse:truncation}
@@ -62,8 +63,23 @@ The \ac{RTM} scheme is thus gauge invariant and less expensive, but may converge
 \subsection{The dynamics as an eigenvalue problem}
 \label{sec:transverse:eigenproblem}
 
-Contracting the network along the spatial direction requires repeated applications of the same transfer matrix $\mathcal{E}$. In the thermodynamic limit, this contraction is determined by its leading left and right eigenvectors, to which the temporal boundary states converge. The many-body dynamics relevant to the Loschmidt echo is thereby reduced to an eigenvalue problem for a single \ac{tMPO}, and the computational cost becomes independent of the spatial length of the chain.
+The rotated network reduces the Loschmidt echo to repeated applications of the column transfer matrix. After the rotation and Trotter decomposition, the two-dimensional network of Figure~\ref{fig:echo_strip} can be contracted along the spatial direction between the temporal boundaries introduced in Section~\ref{sec:transverse:network}. For a chain of $N$ spatial sites,
+\begin{equation}
+    \mathcal{L}(T)
+    \;=\; \bra{L}\,\mathcal{E}(T)^{\,N}\,\ket{R}
+    \;=\; \sum_i c_i\,\mu_i(T)^{\,N}
+    \;=\; c_0\,\mu_0(T)^{\,N}
+      \Big[\,1+\sum_{i\ge1}\frac{c_i}{c_0}\Big(\frac{\mu_i}{\mu_0}\Big)^{\!N}\,\Big],
+    \label{eq:contraction}
+\end{equation}
+where $\mu_i$ are the eigenvalues of $\mathcal{E}$ and the coefficients $c_i$ contain the corresponding overlaps with the boundary states. If $\mu_0$ has the largest modulus, every other contribution is suppressed relative to it by $(|\mu_i|/|\mu_0|)^N$. The thermodynamic limit is therefore determined by the leading eigenvalue, and the intensive Loschmidt rate becomes
+\begin{equation}
+    \ell(T) = -\lim_{N\to\infty}\frac{1}{N}\log|\mathcal{L}(T)|
+            = -\log|\mu_0(T)|,
+    \label{eq:rate}
+\end{equation}
+up to $\mathcal{O}(1/N)$ boundary corrections for a finite open chain. The calculation thus reduces to a spectral problem whose cost is independent of the spatial length.
 
-The leading eigenvectors can be approximated with a tensor-network power method, in which one column is absorbed into each boundary state before truncation. Its convergence rate is controlled by $|\mu_1/\mu_0|$, where $\mu_0$ and $\mu_1$ are the two eigenvalues of largest modulus. The method is efficient when this ratio is well below one. At a critical quench, however, Prediction~4 of Section~\ref{sec:cft:temporal} implies that the leading eigenvalues approach a common modulus as $T$ increases. The single-vector iteration therefore slows down in the same long-time regime in which the conformal spectrum emerges and may converge to a mixture of nearby eigenvectors.
+Equation~\eqref{eq:contraction} also identifies the spectral data required for the conformal analysis. The modulus of $\mu_0$ determines the Loschmidt rate, its phase encodes the central charge, and the first spectral gap gives access to the boundary operator content. The generalized temporal entropies instead depend on the dominant left and right eigenvectors. Our calculations must therefore resolve the leading eigenpairs of the non-Hermitian operator $\mathcal{E}$.
 
-We address this near-degeneracy by iterating a block of $k$ states that spans the leading invariant subspace. Convergence is then governed by the spectral separation between this block and the remaining eigenvalues, rather than by the smaller separations within the block. Since $\mathcal{E}$ is non-Hermitian, the left and right subspaces must be evolved and paired biorthogonally. Section~\ref{sec:numerics} develops the resulting block power method and the stabilization procedures used in the numerical calculations.
+Resolving these eigenpairs becomes more difficult in the long-time regime where the conformal predictions apply. Their asymptotic form requires $T$ to be large compared with both the regulator $\beta_0$ and the lattice scale. In this regime, Prediction~4 of Section~\ref{sec:cft:temporal} states that the leading eigenvalues approach a common modulus, so a single dominant eigenvalue is no longer well separated from its neighbours. We therefore iterate a block of $k$ states that represents the full leading subspace, rather than a single candidate for the dominant eigenvector. Section~\ref{sec:numerics} develops the block power method that implements this idea.

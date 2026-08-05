@@ -1,3 +1,4 @@
+\FloatBarrier
 \section{The ANNNI-type Model}
 \label{sec:annni}
 
@@ -9,7 +10,7 @@ The framework developed in Section~\ref{sec:cft} requires a quench to a critical
 \end{equation}
 where $\sigma^{x,z}$ are Pauli matrices, $\lambda$ is the transverse field, and $p$ controls the strength of the additional interactions. The first two terms define the transverse-field Ising chain. The terms proportional to $p$ introduce the \ac{NNN} bond and the accompanying $\sigma^x\sigma^x$ interaction required to preserve self-duality.
 
-Throughout this work we set $\lambda=1$, where the chain is critical and the conformal predictions of Section~\ref{sec:cft} apply. At $p=0$, Equation~\eqref{eq:annni_H} reduces to the integrable transverse-field Ising chain. For $p>0$, the additional interactions introduce a second length scale and break the free-fermion structure, as shown in Section~\ref{sec:annni:jw}.
+Throughout this work we set $\lambda=1$, where the chain is critical and the conformal predictions of Section~\ref{sec:cft} apply. At $p=0$, Eq.~\eqref{eq:annni_H} reduces to the integrable transverse-field Ising chain. For $p>0$, the additional interactions introduce a second length scale and break the free-fermion structure, as shown in Section~\ref{sec:annni:jw}.
 
 \subsection{Equilibrium criticality and the central charge}
 \label{sec:annni:equilibrium}
@@ -21,25 +22,25 @@ We verify the equilibrium universality class over this range using the ground-st
     S_{\mathrm{vN}}(l,L) = \frac{c}{6}\,W(l,L) + k,
     \label{eq:cft_obc}
 \end{equation}
-where $W$ is the chord variable of Equation~\eqref{eq:chord} and $k$ is a non-universal constant. The von Neumann entropy is well suited to this equilibrium calculation because \ac{DMRG} provides directly the full Schmidt spectrum of the ground state---unlike the temporal calculation in Section~\ref{sec:transverse}, which requires evaluating a matrix logarithm---and its finite-size corrections are smaller than those of higher-order R\'enyi entropies.
+where $W$ is the chord variable of Eq.~\eqref{eq:chord} and $k$ is a non-universal constant. The von Neumann entropy is well suited to this equilibrium calculation because \ac{DMRG} provides directly the full Schmidt spectrum of the ground state---unlike the temporal calculation in Section~\ref{sec:transverse}, which requires evaluating a matrix logarithm---and its finite-size corrections are smaller than those of higher-order R\'enyi entropies.
 
 For each value of $p$, we obtain the ground state of a chain with $N=100$ sites and evaluate the entropy across every bond. Equation~\eqref{eq:cft_obc} predicts a linear dependence on $W(l,L)$, with slope $c/6$. The complete entanglement profile of a single ground state therefore provides an estimate of the central charge. We fit the central half of the chain, where boundary corrections are smallest; the resulting profiles are shown in Figure~\ref{fig:cft_chord}.
 
-\begin{figure}[!htbp]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.75\textwidth]{imgs/cft_chord_equilibrium.png}
-    \caption{Ground-state entanglement profiles of the ANNNI-type chain at $\lambda=1$ and $N=100$ for $p=0$ to $0.5$ in steps of $0.1$. Each profile is linear in the chord variable $W$ of Equation~\eqref{eq:chord}, with slope $c/6$ as predicted by Equation~\eqref{eq:cft_obc}. The fitted central charge ranges from $0.5070$ to $0.5081$. Its small offset from $1/2$ is already present at $p=0$ and is attributed to finite-size corrections.}
+    \caption{\textbf{The equilibrium central charge is unchanged by frustration.} Ground-state entanglement profiles at $\lambda=1$ and $N=100$, for $p=0$ to $0.5$ in steps of $0.1$. Each profile is linear in the chord variable $W$ of Eq.~\eqref{eq:chord}, with slope $c/6$ as predicted by Eq.~\eqref{eq:cft_obc}. The fitted central charge ranges from $0.5070$ to $0.5081$. Its small offset from $1/2$ is already present at $p=0$ and is attributed to finite-size corrections.}
     \label{fig:cft_chord}
 \end{figure}
 
-The profiles follow the conformal scaling law at every coupling. The fitted central charge remains between $0.5070$ and $0.5081$ over the full range, so it barely moves as $p$ grows. The common offset from the exact value $c=1/2$ is consistent with residual finite-size corrections to Equation~\eqref{eq:cft_obc}: it is present both at the exactly known point $p=0$ and at non-zero $p$. These results confirm that the additional interactions do not change the universality class over the range considered. Appendix~\ref{app:fss} provides an independent estimate from the finite-size scaling of the mid-chain entropy, together with a cross-check based on the R\'enyi-2 entropy.
+The profiles follow the conformal scaling law at every coupling. The fitted central charge remains between $0.5070$ and $0.5081$ over the full range, so it barely moves as $p$ grows. The common offset from the exact value $c=1/2$ is consistent with residual finite-size corrections to Eq.~\eqref{eq:cft_obc}: it is present both at the exactly known point $p=0$ and at non-zero $p$. These results confirm that the additional interactions do not change the universality class over the range considered. Appendix~\ref{app:fss} provides an independent estimate from the finite-size scaling of the mid-chain entropy, together with a cross-check based on the R\'enyi-2 entropy.
 
 The point $p=0$ provides the reference case for the dynamical analysis. In the transverse-field Ising chain, the post-quench temporal entropies have been derived from \ac{CFT} and reproduced numerically~\cite{carignano_tagliacozzo2025}. We use this exact limit to calibrate the transverse contraction in Section~\ref{sec:results:validation}, before introducing the non-integrable interactions.
 
 \subsection{Fermionic form of the NNN interactions}
 \label{sec:annni:jw}
 
-The effect of the additional interactions becomes explicit after mapping the spin chain to fermions. In the convention of Equation~\eqref{eq:annni_H}, with the transverse field along $\sigma^x$ and the order parameter along $\sigma^z$, the \ac{JW} transformation~\cite{jordan_wigner1928,fradkin2013} is
+The effect of the additional interactions becomes explicit after mapping the spin chain to fermions. In the convention of Eq.~\eqref{eq:annni_H}, with the transverse field along $\sigma^x$ and the order parameter along $\sigma^z$, the \ac{JW} transformation~\cite{jordan_wigner1928,fradkin2013} is
 \begin{equation}
     \sigma^x_j = 1 - 2n_j, \qquad
     \sigma^z_j = \big(c_j + c_j^\dagger\big)\,K_j, \qquad
@@ -65,13 +66,6 @@ The parity dependence also provides a microscopic origin for the sector structur
 
 The \ac{NNN} interaction modifies the propagation of low-energy excitations. At the critical point, their linear dispersion defines the sound velocity $v$ through $\omega=v|k|$. This velocity enters the conformal predictions of Section~\ref{sec:cft}, so it must be determined independently before the dynamical data can be compared with them. For the integrable chain, $v=2$ exactly; for $p>0$, we determine it numerically.
 
-We extract $v(p)$ from the equilibrium dispersion of small periodic chains by identifying the lowest excitation with non-zero momentum. The construction and its validation are described in Appendix~\ref{app:velocity}. As shown in Figure~\ref{fig:velocity}, the velocity increases monotonically with $p$ over the range studied. The additional interaction therefore changes a non-universal scale that must be included when testing the universal conformal predictions.
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.7\textwidth]{imgs/nb4_velocity_vs_p.png}
-    \caption{Sound velocity $v(p)$ of the ANNNI-type chain at criticality, extracted from the equilibrium dispersion of periodic chains with $N=12$ sites; see Appendix~\ref{app:velocity}. The dashed line marks the exact Ising value $v=2$ at $p=0$.}
-    \label{fig:velocity}
-\end{figure}
+We extract $v(p)$ from the equilibrium dispersion of small periodic chains by identifying the lowest excitation with non-zero momentum. The construction, its validation, and the measured values are given in Appendix~\ref{app:velocity} (Figure~\ref{fig:velocity}). The velocity increases monotonically over the range studied, from the exact $v=2$ at $p=0$ to $v\approx4.9$ at $p=0.5$. The additional interaction therefore changes a non-universal scale that must be included when testing the universal conformal predictions.
 
 Having established that the model remains in the Ising universality class and determined the coupling-dependent velocity, we now consider the quench from the completely polarised state. The next section develops the transverse-contraction framework used to test whether the conformal signatures persist for $p>0$.

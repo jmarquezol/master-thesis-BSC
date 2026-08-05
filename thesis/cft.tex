@@ -1,3 +1,4 @@
+\FloatBarrier
 \section{Universal Data from the Dynamics}
 \label{sec:cft}
 
@@ -18,7 +19,7 @@ Figure~\ref{fig:echo_strip} shows this construction, first as the network that i
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{imgs/echo_strip.pdf}
-  \caption{The Loschmidt echo as a tensor network and as a conformal strip. (a) After the Wick rotation the echo is the contraction of a two-dimensional network. Open circles are the product state $\ket{\Psi_0}$ closing the network at either end; each row of filled circles is one Trotter layer $U(\delta t)$, and the cream rows at top and bottom are the imaginary-time cooling $\beta_0$ that turns the sharp product state into a conformal boundary condition. Dots indicate that the chain continues in both directions. (b) The same object in the continuum. The two heavy lines are the edges where $\ket{\Psi_0}$ closes the path integral, the cream bands are the cooling intervals and the blue bulk is the real-time evolution, so the strip has total width $T+2\beta_0$; the ends fade because the strip is infinite in the spatial direction. Contracting along the spatial rather than the temporal direction groups one column of the network into the transfer matrix $\mathcal{E}$, which acts on a temporal slice and advances from one spatial site to the next.}
+  \caption{\textbf{The Loschmidt echo as a tensor network and as a conformal strip.} (a) After the Wick rotation the echo is the contraction of a two-dimensional network. Open circles are the product state $\ket{\Psi_0}$ closing the network at either end; each row of filled circles is one Trotter layer $U(\delta t)$, and the cream rows at top and bottom are the imaginary-time cooling $\beta_0$ that turns the sharp product state into a conformal boundary condition. (b) The same object in the continuum. The heavy lines are the edges where $\ket{\Psi_0}$ closes the path integral, the cream bands are the cooling intervals and the blue bulk is the real-time evolution, so the strip has width $T+2\beta_0$ and is infinite in the spatial direction.}
   \label{fig:echo_strip}
 \end{figure}
 
@@ -40,7 +41,7 @@ A \ac{CFT} is organized around primary operators, each labelled by a scaling dim
     x = h + \bar h,
     \label{eq:cft:dim}
 \end{equation}
-built from the holomorphic and antiholomorphic weights $h$ and $\bar h$. This dimension fixes the power law of the operator's correlations. The full list of dimensions is a fingerprint of the theory and can be read from the excited levels of Equation~\eqref{eq:cft:casimir}, stacked above the anomaly offset.
+built from the holomorphic and antiholomorphic weights $h$ and $\bar h$. This dimension fixes the power law of the operator's correlations. The full list of dimensions is a fingerprint of the theory and can be read from the excited levels of Eq.~\eqref{eq:cft:casimir}, stacked above the anomaly offset.
 
 Our transfer matrix inherits that structure directly~\cite{carignano_tagliacozzo2025},
 \begin{equation}
@@ -105,17 +106,17 @@ In the transverse description of the strip, the generalized R\'enyi-$n$ entropy 
 \end{equation}
 Because the separation is timelike, the entropy grows logarithmically with the total evolution time $T$ rather than linearly, which is what allows the transverse contraction to remain efficient.
 
-Combined with the transfer spectrum in Equation~\eqref{eq:cft:transfer}, this result leads to four predictions, all of which are tested in Section~\ref{sec:results}. Three concern the transfer eigenvalues $\mu_i$, which we order by decreasing modulus. In practice, we work with their logarithms, $\lambda_i = \log(-\mu_i)$, so that $\mathrm{Im}\,\lambda_i = \arg(-\mu_i)$ gives the phase of $\mu_i$ measured from the negative real axis. The minus sign follows the convention of Ref.~\cite{carignano_tagliacozzo2025} and adds the same shift of $\pi$ to every phase. It therefore cancels from the phase differences $\mathrm{Im}(\lambda_i-\lambda_0)$ used below, but must be accounted for when $\mathrm{Im}\,\lambda_0$ is considered on its own (Appendix~\ref{app:eq3}).
+Combined with the transfer spectrum in Eq.~\eqref{eq:cft:transfer}, this result leads to four predictions, all of which are tested in Section~\ref{sec:results}. Three concern the transfer eigenvalues $\mu_i$, which we order by decreasing modulus. In practice, we work with their logarithms, $\lambda_i = \log(-\mu_i)$, so that $\mathrm{Im}\,\lambda_i = \arg(-\mu_i)$ gives the phase of $\mu_i$ measured from the negative real axis. The minus sign follows the convention of Ref.~\cite{carignano_tagliacozzo2025} and adds the same shift of $\pi$ to every phase. It therefore cancels from the phase differences $\mathrm{Im}(\lambda_i-\lambda_0)$ used below, but must be accounted for when $\mathrm{Im}\,\lambda_0$ is considered on its own (Appendix~\ref{app:eq3}).
 
 \begin{enumerate}
-    \item The generalized-entropy profile. Separating Equation~\eqref{eq:cft:sgen} into real and imaginary parts gives
+    \item The generalized-entropy profile. Separating Eq.~\eqref{eq:cft:sgen} into real and imaginary parts gives
     \begin{equation}
         \mathrm{Re}\,S_n^{\mathrm{gen}}(t) = s_0 + \frac{c}{12}\Big(1+\frac{1}{n}\Big)\,W(t,T),
         \qquad
         \mathrm{Im}\,S_n^{\mathrm{gen}} = \frac{\pi c}{24}\Big(1+\frac{1}{n}\Big).
         \label{eq:cft:chord}
     \end{equation}
-    The real part follows a symmetric chord profile. When plotted against $W(t,T)$, it becomes a straight line with slope $c/8$ for the R\'enyi-2 entropy used here. We extract $c$ either through the calibration in Equation~\eqref{eq:cft:calibratio} or by including the finite-time correction explicitly. The imaginary part does not depend on $t$ at all: it forms a plateau at $\pi c/16$~\cite{boucomas2026} and therefore provides a second estimate of $c$ from the same data, without fitting the profile.
+    The real part follows a symmetric chord profile. When plotted against $W(t,T)$, it becomes a straight line with slope $c/8$ for the R\'enyi-2 entropy used here. We extract $c$ either through the calibration in Eq.~\eqref{eq:cft:calibratio} or by including the finite-time correction explicitly. The imaginary part does not depend on $t$ at all: it forms a plateau at $\pi c/16$~\cite{boucomas2026} and therefore provides a second estimate of $c$ from the same data, without fitting the profile.
 
     \item The central charge from the leading eigenvalue. The imaginary part of the dominant eigenvalue obeys
     \begin{equation}

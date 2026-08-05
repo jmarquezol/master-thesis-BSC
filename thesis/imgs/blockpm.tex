@@ -1,9 +1,6 @@
-% The block power method: one iteration, and the two small matrices it is projected onto.
-% Time runs vertically, as in imgs/echo_strip.tex, so a temporal MPS is a column of tensors and the
-% transfer matrix is a column applied to it from the left.
-% (a) applying E multiplies the bond dimension, so every product is truncated back to chi.
-% (b) the blocks are compressed into S and M, both built with the bilinear overlap: the left chain
-%     enters as a bra directly, with no conjugation.
+% The block power method: one application-and-truncation step, and the two projected matrices.
+% Time runs vertically as in imgs/echo_strip.tex; the tMPO column is closed by the product state
+% (small open circles), the boundary tMPS are not. Panels sit on one line to save page height.
 %
 % Standalone: compiles to imgs/blockpm.pdf.
 % Inline:     with \usepackage{standalone}, \input{imgs/blockpm}.
@@ -16,8 +13,8 @@
 \definecolor{tnE}{RGB}{250,200,70}
 
 \newcommand{\DY}{0.72}    % time-site spacing
-\newcommand{\CS}{0.84}    % column spacing: two radii plus the usual gap
-\newcommand{\LG}{0.42}    % half of it, so legs from neighbouring columns meet
+\newcommand{\CS}{0.84}    % column spacing
+\newcommand{\LG}{0.42}
 
 \begin{document}
 \begin{tikzpicture}[
@@ -30,14 +27,14 @@
     idx/.style={font=\footnotesize},
   ]
 
-  % the tMPO column is closed at both ends by the product state; the boundary tMPS are not
+  % product-state caps closing the tMPO column
   \newcommand{\caps}[1]{%
     \draw[bond] (#1,{1.5*\DY}) -- (#1,{1.5*\DY+0.52});
     \draw[bond] (#1,{-1.5*\DY}) -- (#1,{-1.5*\DY-0.52});
     \node[P] at (#1,{1.5*\DY+0.52}) {};
     \node[P] at (#1,{-1.5*\DY-0.52}) {};}
 
-  % a temporal MPS: a column of tensors joined along time. #1 x, #2 fill, #3 leg side
+  % temporal MPS: #1 x, #2 fill, #3 leg side
   \newcommand{\tmps}[3]{%
     \draw[bond] (#1,{1.5*\DY}) -- (#1,{-1.5*\DY});
     \foreach \j in {-1.5,-0.5,0.5,1.5} {
@@ -45,7 +42,7 @@
       \node[T, fill=#2] at (#1,{\j*\DY}) {};
     }}
 
-  % a transfer-matrix column: legs on both sides
+  % transfer-matrix column: legs on both sides, capped
   \newcommand{\tmpo}[1]{%
     \caps{#1}
     \draw[bond] (#1,{1.5*\DY}) -- (#1,{-1.5*\DY});
@@ -54,49 +51,50 @@
       \node[W] at (#1,{\j*\DY}) {};
     }}
 
-  %% ================= (a) one iteration =================
-  \begin{scope}[xshift=-0.31cm, yshift=5.15cm]
-    \tmpo{0} \tmps{0.84}{tnR}{-1}
-    \node[idx, anchor=west] at (1.02,\DY) {$\chi$};
-    \node[idx, anchor=south] at (0,{1.5*\DY+0.88})   {$\mathcal{E}$};
-    \node[idx, anchor=south] at (0.84,{1.5*\DY+0.88}) {$\ket{R_j}$};
+  % time axis: same direction as imgs/echo_strip.tex
+  \draw[->, line width=0.9pt] (-1.15,{-1.5*\DY}) -- (-1.15,{1.5*\DY})
+        node[midway, left=2pt, idx] {$t$};
 
-    \node[tag] at (2.00,0) {$=$};
+  %% ================= (a) one application, then truncation =================
+  \tmpo{0} \tmps{0.84}{tnR}{-1}
+  \node[idx, anchor=west] at (1.02,\DY) {$\chi$};
+  \node[idx, anchor=south] at (0,{1.5*\DY+0.88})    {$\mathcal{E}$};
+  \node[idx, anchor=south] at (0.84,{1.5*\DY+0.88}) {$\ket{R_j}$};
 
-    % the product carries a bond of dimension chi D
-    \draw[fat] (2.85,{1.5*\DY}) -- (2.85,{-1.5*\DY});
-    \foreach \j in {-1.5,-0.5,0.5,1.5} {
-      \draw[bond] ({2.85-\LG},{\j*\DY}) -- (2.85,{\j*\DY});
-      \node[T, fill=tnR] at (2.85,{\j*\DY}) {};
-    }
-    \node[idx, anchor=west] at (3.05,\DY) {$\chi\cdot D$};
+  \node[tag] at (2.00,0) {$=$};
 
+  \draw[fat] (2.85,{1.5*\DY}) -- (2.85,{-1.5*\DY});
+  \foreach \j in {-1.5,-0.5,0.5,1.5} {
+    \draw[bond] ({2.85-\LG},{\j*\DY}) -- (2.85,{\j*\DY});
+    \node[T, fill=tnR] at (2.85,{\j*\DY}) {};
+  }
+  \node[idx, anchor=west] at (3.05,\DY) {$\chi\cdot D$};
 
-    \draw[->, line width=0.9pt] (3.90,0) -- (4.90,0)
-          node[midway, above=2pt, idx] {truncate};
+  \draw[->, line width=0.9pt] (3.90,0) -- (4.90,0)
+        node[midway, above=2pt, idx] {truncate};
 
-    \tmps{5.60}{tnR}{-1}
-    \node[idx, anchor=west] at (5.78,\DY) {$\chi$};
+  \tmps{5.60}{tnR}{-1}
+  \node[idx, anchor=west] at (5.78,\DY) {$\chi$};
 
-
-    \node[tag] at (2.6,-2.15) {(a)};
-  \end{scope}
+  \node[tag] at (2.8,-2.35) {(a)};
 
   %% ================= (b) the two projected matrices =================
-  \tmps{0}{tnL}{1} \tmps{0.84}{tnR}{-1}
-  \node[idx, anchor=south] at (0,{1.5*\DY+0.88})   {$\bra{L_i}$};
-  \node[idx, anchor=south] at (0.84,{1.5*\DY+0.88}) {$\ket{R_j}$};
-  \node[idx, anchor=north] at (0.42,{-1.5*\DY-0.88}) {$S_{ij}$};
+  \begin{scope}[xshift=8.3cm]
+    \tmps{0}{tnL}{1} \tmps{\CS}{tnR}{-1}
+    \node[idx, anchor=south] at (0,{1.5*\DY+0.88})   {$\bra{L_i}$};
+    \node[idx, anchor=south] at (\CS,{1.5*\DY+0.88}) {$\ket{R_j}$};
+    \node[idx, anchor=north] at (0.42,{-1.5*\DY-0.30}) {$S_{ij}$};
 
-  \node[tag] at (2.10,0) {and};
+    \node[tag] at (2.10,0) {and};
 
-  \tmps{3.35}{tnL}{1} \tmpo{4.19} \tmps{5.03}{tnR}{-1}
-  \node[idx, anchor=south] at (3.35,{1.5*\DY+0.88})        {$\bra{L_i}$};
-  \node[idx, anchor=south] at (4.19,{1.5*\DY+0.88})  {$\mathcal{E}$};
-  \node[idx, anchor=south] at (5.03,{1.5*\DY+0.88}){$\ket{R_j}$};
-  \node[idx, anchor=north] at (4.19,{-1.5*\DY-0.88}) {$M_{ij}$};
+    \tmps{3.35}{tnL}{1} \tmpo{4.19} \tmps{5.03}{tnR}{-1}
+    \node[idx, anchor=south] at (3.35,{1.5*\DY+0.88}) {$\bra{L_i}$};
+    \node[idx, anchor=south] at (4.19,{1.5*\DY+0.88}) {$\mathcal{E}$};
+    \node[idx, anchor=south] at (5.03,{1.5*\DY+0.88}) {$\ket{R_j}$};
+    \node[idx, anchor=north] at (4.19,{-1.5*\DY-0.95}) {$M_{ij}$};
 
-  \node[tag] at (2.6,-2.55) {(b)};
+    \node[tag] at (2.5,-2.35) {(b)};
+  \end{scope}
 
 \end{tikzpicture}
 \end{document}
