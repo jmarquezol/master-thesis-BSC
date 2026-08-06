@@ -10,9 +10,9 @@
 #SBATCH --cpus-per-task=40
 
 # half-integer rungs at p=0.5 (T=2.5,3.5,...) to resolve the phase winding.
-# The rungs merge into the same cache as the unit ladder, so the analysis sees one denser ladder.
 # Resubmit this script if it hits the walltime — it resumes from the last completed rung.
-# Writes to results/data/cluster/sweep_rtm_eigs_p0.5.jld2.
+# Own cache: results/data/cluster/sweep_rtm_eigs_p0.5_fine.jld2; the analysis merges it with the
+# unit ladder. Capped at T=12, which covers the window where the unit ladder loses the branch.
 
 cd "${SLURM_SUBMIT_DIR:-.}" || exit 1
 mkdir -p logs
@@ -22,4 +22,4 @@ export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 julia --project=.. wall_scan_cluster.jl preflight || { echo "PREFLIGHT FAILED - bad environment, not starting the ladder"; exit 1; }
 
-julia --project=.. wall_scan_cluster.jl eigsweep 0.5 20 0.5
+julia --project=.. wall_scan_cluster.jl eigsweep 0.5 12 0.5

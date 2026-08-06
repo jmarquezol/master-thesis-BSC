@@ -53,6 +53,12 @@ write their own.
 
 ## The jobs
 
+Every job writes its own cache and its own checkpoint, so they can all be submitted at once and
+none can overwrite another. If the queue is tight, this is the order of value: the eigenvalue sweeps
+and the entropy sweeps first, since they complete the missing numbers, then the short tower scan,
+and the half-integer ladders last — they refine the eigenvalue reach at `p ≥ 0.3` rather than adding
+new measurements.
+
 **1. Eigenvalue sweeps.** The main arms, and the slowest. `p = 0` is already complete to `T = 20`;
 these three resume from their checkpoints and target the same.
 
@@ -67,8 +73,10 @@ the nearest member of the block. A larger sound velocity packs the members close
 prediction error grows with the step, so at `p ≥ 0.3` the branch is lost after a few rungs. Halving
 the step fixes both. These write their own caches (`sweep_rtm_eigs_p*_fine.jld2`) and start from
 `T = 2`, so they never touch the files of the jobs above and can run at the same time as them; the
-analysis merges the two ladders. Worth doing at `p = 0.1` too, since that is where the results are
-quoted.
+analysis merges the two ladders. Because the caches are separate they recompute the integer rungs,
+so they are capped at `T = 12`, which covers the window where the unit ladder loses the branch and
+keeps the cost bounded — rungs beyond that cost hours each and the unit ladder already reaches
+further. Worth doing at `p = 0.1` too, since that is where the results are quoted.
 
 ```
 sbatch submit_rtm_eigs_p0.1_fine.slurm
