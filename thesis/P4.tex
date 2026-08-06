@@ -2,7 +2,7 @@
 \section{Building the Time-Evolution MPO}
 \label{sec:mporep}
 
-The transverse contraction framework introduced in Section~\ref{sec:transverse} requires the short-time evolution operator $U(\delta t)=e^{-iH\delta t}$ to be represented as a translation-invariant \ac{MPO}. This ensures that every column of the rotated space-time network defines the same transfer matrix, effectively reducing the spatial contraction (which encodes the dynamics) to an eigenvalue problem. If the local tensors depended on the site, each column would instead define a different operator and this simple reduction would no longer apply.
+The transverse contraction framework introduced in Section~\ref{sec:transverse} requires the infinitesimal-time evolution operator $U(\delta t)=e^{-iH\delta t}$ to be represented as a translation-invariant \ac{MPO}. This ensures that every column of the rotated space-time network defines the same transfer matrix, effectively reducing the spatial contraction (which encodes the dynamics) to an eigenvalue problem. If the local tensors depended on the site, each column would instead define a different operator and this simple reduction would no longer apply.
 
 For \ac{NN} Hamiltonians, such an operator is usually constructed through a Trotter--Suzuki decomposition into layers of two-site gates, as summarized in Appendix~\ref{app:mpo:standard}. A term coupling sites $i$ and $i+2$ does not fit into this bond pattern, and the standard extensions do not preserve a one-site translation-invariant \ac{MPO}. We therefore represent the Hamiltonian as a \acf{FSM} and exponentiate this representation directly.
 

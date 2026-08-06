@@ -2,7 +2,7 @@
 \section{The ANNNI-type Model}
 \label{sec:annni}
 
-The framework developed in Section~\ref{sec:cft} requires a quench to a critical point. We study a self-dual spin chain that extends the transverse-field Ising model with next-nearest-neighbour interactions~\cite{alcaraz2016}. For spin $1/2$, the Hamiltonian is
+The framework of Sections~\ref{sec:cft} and~\ref{sec:transverse} requires a quench to a critical point. We study a self-dual spin chain that extends the transverse-field Ising model with next-nearest-neighbour interactions~\cite{alcaraz2016}. For spin $1/2$, the Hamiltonian is
 \begin{equation}
     H = - \sum_{i} \Big[ \sigma_i^z \sigma_{i+1}^z + \lambda\, \sigma_i^x
         \;+\; p\,\big( \sigma_i^z \sigma_{i+2}^z + \lambda\, \sigma_i^x \sigma_{i+1}^x \big) \Big],
@@ -68,4 +68,4 @@ The \ac{NNN} interaction modifies the propagation of low-energy excitations. At 
 
 We extract $v(p)$ from the equilibrium dispersion of small periodic chains by identifying the lowest excitation with non-zero momentum. The construction, its validation, and the measured values are given in Appendix~\ref{app:velocity} (Figure~\ref{fig:velocity}). The velocity increases monotonically over the range studied, from the exact $v=2$ at $p=0$ to $v\approx4.9$ at $p=0.5$. The additional interaction therefore changes a non-universal scale that must be included when testing the universal conformal predictions.
 
-Having established that the model remains in the Ising universality class and determined the coupling-dependent velocity, we now consider the quench from the completely polarised state. The next section develops the transverse-contraction framework used to test whether the conformal signatures persist for $p>0$.
+Having established that the model remains in the Ising universality class and determined the coupling-dependent velocity, we now consider the quench from the completely polarised state. The next section constructs the time-evolution MPO, whose rotation defines the transfer matrix of Section~\ref{sec:transverse} for this model.
