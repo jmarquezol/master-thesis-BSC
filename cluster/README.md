@@ -65,8 +65,10 @@ sbatch submit_rtm_eigs_p0.5.slurm      # from T=15
 **2. Half-integer ladders.** The physical eigenvalue is followed by predicting its phase and taking
 the nearest member of the block. A larger sound velocity packs the members closer, and the
 prediction error grows with the step, so at `p ≥ 0.3` the branch is lost after a few rungs. Halving
-the step fixes both. New rungs merge into the same cache, so the analysis sees one denser ladder.
-Worth doing at `p = 0.1` too, since that is where the results are quoted.
+the step fixes both. These write their own caches (`sweep_rtm_eigs_p*_fine.jld2`) and start from
+`T = 2`, so they never touch the files of the jobs above and can run at the same time as them; the
+analysis merges the two ladders. Worth doing at `p = 0.1` too, since that is where the results are
+quoted.
 
 ```
 sbatch submit_rtm_eigs_p0.1_fine.slurm

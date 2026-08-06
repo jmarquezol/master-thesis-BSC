@@ -267,9 +267,13 @@ elseif mode == "eigsweep"
     # eigenvalue by predicting its phase, and the phase advance per rung grows with the velocity, so
     # at larger p a unit ladder advances by more than pi and the branch can no longer be identified.
     dT    = length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0
-    run_wall_scan(chi=64, label="rtm_eigs_p$(p_val)", Ts=collect(2.0:dT:Tmax),
+    # A finer ladder gets its own label, so it never shares a cache or a checkpoint with the unit
+    # ladder; the analysis merges the two. Sharing them races when both run, and the warm start
+    # fails when they run in sequence, since the checkpoint sits at a longer chain than the rung.
+    lbl = dT == 1.0 ? "rtm_eigs_p$(p_val)" : "rtm_eigs_p$(p_val)_fine"
+    run_wall_scan(chi=64, label=lbl, Ts=collect(2.0:dT:Tmax),
         trunc_mode=:rtm, p_nnn=p_val, eigvals_only=true,
-        cachefile=joinpath(CLUSTER_DIR, "sweep_rtm_eigs_p$(p_val).jld2"))
+        cachefile=joinpath(CLUSTER_DIR, "sweep_$(lbl).jld2"))
 elseif mode == "betascan"
     # Regulator scan: same full RTM run, repeated for a few values of the imaginary-time cooling
     # nbeta (β0 = nbeta·dt/2 = 0.1, 0.2, 0.3, 0.4 at dt=0.1). Lets us see how the CFT read depends on
