@@ -1,6 +1,81 @@
 \appendix
 
 \FloatBarrier
+\section{Conformal-field-theory derivations}
+\label{app:cft}
+
+This appendix collects the standard conformal-field-theory results used in Section~\ref{sec:cft}---the chord form of the two-point function, the strip quantization behind the transfer-matrix spectrum, and the entropy coefficients---and sketches where each comes from. Full derivations are in Refs.~\cite{calabrese_cardy2004,difrancesco1997}; what is specific to this thesis is only how the results are used.
+
+\subsection{Conformal maps, the two-point function and the entropy coefficients}
+\label{app:cft:maps}
+
+In two dimensions the Euclidean coordinates are packaged into $z=x+i\tau$ and $\bar z=x-i\tau$. A primary operator $\phi$ carries a pair of weights $(h,\bar h)$, its exponents under the two chiral halves of the conformal group, and the combination
+\begin{equation}
+    x = h + \bar h
+    \label{eq:cft:dim}
+\end{equation}
+is its scaling dimension, the exponent quoted in the main text. On the plane the two-point function is the power law
+\begin{equation}
+    \langle \phi(z_1)\phi(z_2)\rangle
+      = \frac{1}{(z_1-z_2)^{2h}\,(\bar z_1-\bar z_2)^{2\bar h}}.
+    \label{eq:cft:plane2pt}
+\end{equation}
+Because every analytic map is a conformal symmetry, this fixes the correlator on any geometry such a map reaches. Mapping the plane onto a cylinder of circumference $\beta$ with the logarithm map turns the power law into~\cite{calabrese_cardy2004,difrancesco1997}
+\begin{equation}
+    \langle\phi(\omega_1)\phi(\omega_2)\rangle \;\propto\;
+      \Big[\sinh\tfrac{\pi(\omega_1-\omega_2)}{\beta}\Big]^{-2h}
+      \Big[\sinh\tfrac{\pi(\bar\omega_1-\bar\omega_2)}{\beta}\Big]^{-2\bar h}.
+    \label{eq:cft:cyl2pt}
+\end{equation}
+Continuing to real time, with $\beta\to iT$ and $\sinh\to\sin$, produces the strip geometry of the quench, and the time-like version of Eq.~\eqref{eq:cft:cyl2pt} is the origin of the chord variable of Eq.~\eqref{eq:chord}.
+
+The same two-point function fixes the entropy coefficients, which is why the two derivations belong together. The entanglement entropy of an interval $\mathcal A$ follows from the R\'enyi moments $\mathrm{Tr}\,\rho_{\mathcal A}^{\,n}$, continued to $n\to1$. The replica trick~\cite{calabrese_cardy2004} computes those moments by inserting one twist operator at each endpoint of $\mathcal A$ that lies in the interior of the system; the twist operator is a primary of dimension~\cite{calabrese_cardy2004}
+\begin{equation}
+    \Delta_n = \frac{c}{12}\Big(n - \frac{1}{n}\Big).
+    \label{eq:cft:twist}
+\end{equation}
+For a bulk interval both endpoints are interior, the moments follow the two-point power law $\mathrm{Tr}\,\rho_{\mathcal A}^{\,n}\sim\ell^{-4\Delta_n}$, and the entropy is
+\begin{equation}
+    S_n = \frac{c}{6}\Big(1+\frac1n\Big)\log\ell + \text{const},
+    \qquad
+    S_{n\to1} = \frac{c}{3}\log\ell + \text{const}.
+    \label{eq:cft:cc}
+\end{equation}
+The cuts of this thesis are the other case. Each temporal region is anchored at an edge of the strip, so it shares only one border with its complement: a single interior endpoint, a single twist operator, and half the logarithmic coefficient. That gives $\tfrac{c}{12}(1+\tfrac1n)$---$c/6$ at $n\to1$ and $c/8$ at $n=2$---rather than the bulk $c/3$, and using the bulk coefficient by mistake would double every fitted central charge.
+
+
+
+
+\subsection{The transfer-matrix spectrum from the stress tensor}
+\label{app:cft:spectrum}
+
+The central charge is carried by the stress-energy tensor, the operator that measures the response of the theory to a change of coordinates. In two dimensions those changes are the symmetry itself, so the modes $L_n$ of the stress tensor generate the conformal transformations; their commutators close into the Virasoro algebra, whose central term is proportional to $c$, which is where the central charge gets its name~\cite{difrancesco1997}. One mode is special: $L_0$ generates scalings, and its eigenvalues on the primary operators are their weights, so its spectrum is the operator content of the theory.
+
+Quantizing on a strip of transverse size $\beta$ makes the anomaly of the main text explicit. Following Ref.~\cite{carignano_tagliacozzo2025}, the generator of translations along the strip is an integral of the stress tensor, and the conformal map from the plane leaves behind one extra, purely geometric term proportional to $c$,
+\begin{equation}
+    \hat H = \frac{\pi}{\beta}\Big(L_0 - \frac{c}{24}\Big).
+    \label{eq:cft:casimir}
+\end{equation}
+This single expression contains both kinds of universal data: the constant $-c/24$ is the Casimir anomaly and carries the central charge, while the spectrum of $L_0$ lists the scaling dimensions. The transfer matrix advances one column of the network, so it is $\mathcal{E}=e^{-a\,\hat H}$ with $a$ the spatial lattice spacing, and substituting Eq.~\eqref{eq:cft:casimir} fixes its whole spectrum in the form of Eq.~\eqref{eq:cft:transfer}, with $g=a/\beta$ and $a=1$ in lattice units: a dominant eigenvalue carrying the Casimir term, and a tower of subleading ones whose ratios and phases carry the operator dimensions.
+
+The width entering on the lattice is not purely Euclidean, since the regulator supplies imaginary time at the two ends and the quench real time in between, and the velocity converts both durations into lengths,
+\begin{equation}
+    \beta = v\,(2\beta_0 + i\,T),
+    \qquad
+    \frac{1}{\beta} \;\simeq\; \frac{1}{v}\Big(\frac{2\beta_0}{T^2} - \frac{i}{T}\Big),
+    \label{eq:cft:continuation}
+\end{equation}
+the expansion holding to first order in $\beta_0/T$. Substituting it into Eq.~\eqref{eq:cft:transfer} gives the eigenvalues of the transfer matrix,
+\begin{equation}
+    \log\mu_i \;\simeq\; \frac{i\pi}{v\,T}\Big(x_i-\frac{c}{24}\Big)
+      \;-\; \frac{2\pi\beta_0}{v\,T^2}\Big(x_i-\frac{c}{24}\Big).
+    \label{eq:cft:contexpand}
+\end{equation}
+The universal data therefore appear in the phases at order $1/T$, and in the moduli only through the regulator, at order $\beta_0/T^2$. Taking $x_i=0$ for the identity gives Eq.~\eqref{eq:cft:eq3}, and the difference between two eigenvalues gives Eq.~\eqref{eq:cft:eq4}. The moduli are flat to the extent that $\beta_0$ is small, which is the emergent dual unitarity measured in Section~\ref{sec:results}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\FloatBarrier
 \section{Optimal Truncation and the Transition Matrix}
 \label{app:tensor_networks}
 
@@ -9,7 +84,7 @@ For the general framework of tensor networks---diagrammatic notation, matrix pro
 \subsection{Gauge freedom and canonical forms}
 \label{app:sub:canonical_forms}
 
-The \ac{MPS} representation of a state is not unique. On any virtual bond one may insert $\mathbb{1}=XX^{-1}$ and absorb the two factors into the neighbouring tensors, $A^{[n]}\to A^{[n]}X$ and $A^{[n+1]}\to X^{-1}A^{[n+1]}$, changing the tensors while leaving the state untouched. The canonical form fixes this freedom: sweeping QR or SVD decompositions inward from both ends makes every tensor an isometry, $A^\dagger A=\mathbb{1}$ from the left and $BB^\dagger=\mathbb{1}$ from the right, with one centre tensor carrying the non-trivial weight.
+The \ac{MPS} representation of a state is not unique. On any virtual bond one may insert $\mathbb{1}=XX^{-1}$ and absorb the two factors into the neighbouring tensors, $A^{[n]}\to A^{[n]}X$ and $A^{[n+1]}\to X^{-1}A^{[n+1]}$, changing the tensors while leaving the state untouched. The canonical form fixes this freedom: sweeping QR or SVD decompositions inward from both ends makes every tensor an isometry, $A^\dagger A=\mathbb{1}$ from the left and $BB^\dagger=\mathbb{1}$ from the right, with one centre tensor carrying the non-trivial weight. Refs.~\cite{schollwock2011,banuls2023} give the construction in full.
 
 Gauge freedom draws the line between physical and representational quantities. Anything that depends on the individual tensors rather than on the state they encode can be changed at will by a gauge transformation, and is therefore not meaningful to truncate on. In the single-state setting this causes no trouble, because the canonical form fixes the gauge and the Schmidt values below are automatically the physical ones. In the transverse picture it becomes the deciding issue, as Section~\ref{app:sub:rtm_truncation} shows.
 
@@ -49,7 +124,7 @@ Two features of this scheme matter later, because the transverse picture keeps o
 \subsection{The reduced transition matrix and its truncation}
 \label{app:sub:rtm_truncation}
 
-In the transverse picture the transfer matrix is non-Hermitian, so its dominant left and right fixed points are distinct states, and the object to truncate is the \ac{RTM} of Eq.~\eqref{eq:rtm}, built from both. Its eigenvalues can be complex, so the Schmidt interpretation above does not carry over. Figure~\ref{fig:rdm_rtm} contrasts the reduced density matrix with the transition matrix at the same temporal cut.
+In the transverse picture the transfer matrix is non-Hermitian, so its dominant left and right fixed points are distinct states, and the object to truncate is the \ac{RTM} of Eq.~\eqref{eq:rtm}, built from both. Its eigenvalues can be complex, so the Schmidt interpretation above does not carry over. The gauge freedom also controls how well the two fixed points can be represented at a given bond dimension, since it moves weight between the components that contribute to $\braket{L}{R}$ and those that do not~\cite{tang2025}. Figure~\ref{fig:rdm_rtm} contrasts the reduced density matrix with the transition matrix at the same temporal cut.
 
 \begin{figure}[htbp]
   \centering
@@ -63,7 +138,7 @@ In the transverse picture the transfer matrix is non-Hermitian, so its dominant 
   \label{fig:rdm_rtm}
 \end{figure}
 
-This is where the gauge argument becomes decisive, and it is the derivation promised in Section~\ref{sec:transverse:truncation}. Insert a gauge transformation $X$ on the cut bond and the two candidate objects respond in opposite ways. The boundary RDM transforms by a congruence, $\rho_L\to X^\dagger\rho_L X$, which for the non-unitary $X$ generic here distorts its spectrum. The transition matrix transforms by a similarity, $\mathcal{T}_t\to X^{-1}\mathcal{T}_t X$, which leaves its eigenvalues untouched. Figure~\ref{fig:gauge} shows the difference at the level of the network. The Schmidt values of a single temporal boundary are therefore not physical, while the RTM spectrum is, and truncating on the former can discard exactly the weight the overlap needs.
+The choice between the two objects is settled by their behaviour under a gauge transformation. Insert $X$ on the cut bond: the reduced density matrix and the transition matrix respond differently. The boundary RDM transforms by a congruence, $\rho_L\to X^\dagger\rho_L X$, which for the non-unitary $X$ generic here distorts its spectrum. The transition matrix transforms by a similarity, $\mathcal{T}_t\to X^{-1}\mathcal{T}_t X$, which leaves its eigenvalues untouched. Figure~\ref{fig:gauge} shows the difference at the level of the network. The Schmidt values of a single temporal boundary are therefore not physical, while the RTM spectrum is, and truncating on the former can discard exactly the weight the overlap needs.
 
 \begin{figure}[htbp]
   \centering
@@ -101,66 +176,6 @@ A second approximation enters through the environment. The truncation at each st
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\FloatBarrier
-\section{Conformal-field-theory derivations}
-\label{app:cft}
-
-This appendix collects the standard conformal-field-theory results used in Section~\ref{sec:cft}---the chord form of the two-point function, the strip quantization behind the transfer-matrix spectrum, and the entropy coefficients---and sketches where each comes from. Full derivations are in Refs.~\cite{calabrese_cardy2004,difrancesco1997}; what is specific to this thesis is only how the results are used.
-
-\subsection{Conformal maps and the two-point function}
-\label{app:cft:maps}
-
-In two dimensions the Euclidean coordinates are packaged into $z=x+i\tau$ and $\bar z=x-i\tau$. A primary operator $\phi$ carries a pair of weights $(h,\bar h)$, its exponents under the two chiral halves of the conformal group, and the combination
-\begin{equation}
-    x = h + \bar h
-    \label{eq:cft:dim}
-\end{equation}
-is its scaling dimension, the exponent quoted in the main text. On the plane the two-point function is the power law
-\begin{equation}
-    \langle \phi(z_1)\phi(z_2)\rangle
-      = \frac{1}{(z_1-z_2)^{2h}\,(\bar z_1-\bar z_2)^{2\bar h}}.
-    \label{eq:cft:plane2pt}
-\end{equation}
-Because every analytic map is a conformal symmetry, this fixes the correlator on any geometry such a map reaches. Mapping the plane onto a cylinder of circumference $\beta$ with the logarithm map turns the power law into~\cite{calabrese_cardy2004,difrancesco1997}
-\begin{equation}
-    \langle\phi(\omega_1)\phi(\omega_2)\rangle \;\propto\;
-      \Big[\sinh\tfrac{\pi(\omega_1-\omega_2)}{\beta}\Big]^{-2h}
-      \Big[\sinh\tfrac{\pi(\bar\omega_1-\bar\omega_2)}{\beta}\Big]^{-2\bar h}.
-    \label{eq:cft:cyl2pt}
-\end{equation}
-Continuing to real time, with $\beta\to iT$ and $\sinh\to\sin$, produces the strip geometry of the quench, and the time-like version of Eq.~\eqref{eq:cft:cyl2pt} is the origin of the chord variable of Eq.~\eqref{eq:chord}.
-
-\subsection{The transfer-matrix spectrum from the stress tensor}
-\label{app:cft:spectrum}
-
-The central charge is carried by the stress-energy tensor, the operator that measures the response of the theory to a change of coordinates. In two dimensions those changes are the symmetry itself, so the modes $L_n$ of the stress tensor generate the conformal transformations; their commutators close into the Virasoro algebra, whose central term is proportional to $c$, which is where the central charge gets its name~\cite{difrancesco1997}. One mode is special: $L_0$ generates scalings, and its eigenvalues on the primary operators are their weights, so its spectrum is the operator content of the theory.
-
-Quantizing on a strip of transverse size $\beta$ makes the anomaly of the main text explicit. Following Ref.~\cite{carignano_tagliacozzo2025}, the generator of translations along the strip is an integral of the stress tensor, and the conformal map from the plane leaves behind one extra, purely geometric term proportional to $c$,
-\begin{equation}
-    \hat H = \frac{\pi}{\beta}\Big(L_0 - \frac{c}{24}\Big).
-    \label{eq:cft:casimir}
-\end{equation}
-This single expression contains both kinds of universal data: the constant $-c/24$ is the Casimir anomaly and carries the central charge, while the spectrum of $L_0$ lists the scaling dimensions. Since the transfer matrix is essentially $\mathcal{E}=e^{-\delta t\,\hat H}$, substituting Eq.~\eqref{eq:cft:casimir} fixes its whole spectrum in the form of Eq.~\eqref{eq:cft:transfer}, with $g=\delta t/\beta$: a dominant eigenvalue carrying the Casimir term, and a tower of subleading ones whose ratios and phases carry the operator dimensions.
-
-\subsection{Twist fields and the entropy coefficients}
-\label{app:cft:twist}
-
-The entanglement entropy of an interval $\mathcal A$ follows from the R\'enyi moments $\mathrm{Tr}\,\rho_{\mathcal A}^{\,n}$, continued to $n\to1$. The replica trick~\cite{calabrese_cardy2004} computes those moments by inserting one twist operator at each endpoint of $\mathcal A$ that lies in the interior of the system; the twist operator is a primary of dimension~\cite{calabrese_cardy2004}
-\begin{equation}
-    \Delta_n = \frac{c}{12}\Big(n - \frac{1}{n}\Big).
-    \label{eq:cft:twist}
-\end{equation}
-For a bulk interval both endpoints are interior, the moments follow the two-point power law $\mathrm{Tr}\,\rho_{\mathcal A}^{\,n}\sim\ell^{-4\Delta_n}$, and the entropy is
-\begin{equation}
-    S_n = \frac{c}{6}\Big(1+\frac1n\Big)\log\ell + \text{const},
-    \qquad
-    S_{n\to1} = \frac{c}{3}\log\ell + \text{const}.
-    \label{eq:cft:cc}
-\end{equation}
-The cuts of this thesis are the other case. Each temporal region is anchored at an edge of the strip, so it shares only one border with its complement: a single interior endpoint, a single twist operator, and half the logarithmic coefficient. That gives $\tfrac{c}{12}(1+\tfrac1n)$---$c/6$ at $n\to1$ and $c/8$ at $n=2$---rather than the bulk $c/3$, and using the bulk coefficient by mistake would double every fitted central charge.
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -328,13 +343,38 @@ The options that control a production run are the following; none changes what t
 
 The classifier assigns the block members relative to a candidate $\mu_0$. Writing $\mathrm{phase}(z)=\arg(-z)$ for the convention of Section~\ref{sec:cft:temporal}, it splits the block into a tower and a set of partners: the tower is every eigenvalue within $\pi/2$ in phase, the conformal descendants of $\mu_0$, and the partners are the momentum-$\pi$ displaced states of Section~\ref{sec:results:tower}. The tower gap is $|\mu_1|/|\mu_0|$ computed from the largest-modulus tower member only, never a partner, and it returns no value when the block holds no tower member, which is the trigger for the escalation above.
 
-The selection rules themselves---modulus dominance with a continuity tie-break, the flagging of suspect rungs, and the five-per-cent repair window---are stated in Section~\ref{sec:numerics:practical}; here we record what a nearest-value rule does wrong, since it is the natural first attempt. The physical branch rotates between rungs by an amount that grows with the velocity and hence with $p$, while its displaced partners of similar modulus stand still in phase, so a nearest-value rule latches onto a partner and, re-anchoring on its own pick, corrupts the ladder that follows. At $p=0.5$ this manifests as the tracked $|\mu_0|$ collapsing at one rung and following partners ever after: output that looks plausible but is an artefact of the selector.
+The selection rules are the following. We take the eigenvalue of largest modulus, using continuity with the preceding rung only when the two largest moduli differ by less than one per cent, and we flag a rung whenever the selected $|\mu_0|$ jumps by more than a prescribed fraction relative to the last trusted value, since such a jump signals unreliable convergence or a wrong branch assignment. Flagged rungs are not discarded outright. A rung can fail to converge and still carry the physical branch: the spurious value typically sits far above the physical band while the true $\mu_0$ survives further down the block, so a post-processing selector restricts the candidates to a window of five per cent around the last trusted modulus and applies dominance inside that window. Rungs with no candidate in the window are dropped and the reference is chained from the last accepted point. This repairs affected rungs from the stored spectra alone, with no recomputation; on the one rung where an independently converged run exists for comparison, the repaired eigenvalue agrees with it to $3\times10^{-5}$ relative.
+
+Modulus dominance holds only while the two moduli can be told apart. Deep in the dual-unitary regime the physical branch and its displaced partner approach a common modulus, and once their splitting falls below the accuracy of the iteration the ordering between them loses meaning. The phase-predicted tracking of Section~\ref{sec:reach} then takes over: a rung whose block holds no member near the predicted phase is discarded, and the prediction resolves the branch only while the ladder samples the winding finely enough. Phases are defined modulo $2\pi$, so an advance per rung larger than $\pi$ is indistinguishable from the same advance plus a full turn, and the spacing of the ladder in $T$ therefore sets the frustration up to which the branch can be followed. We record here what a nearest-value rule does wrong, since it is the natural first attempt. The physical branch rotates between rungs by an amount that grows with the velocity and hence with $p$, while its displaced partners of similar modulus stand still in phase, so a nearest-value rule latches onto a partner and, re-anchoring on its own pick, corrupts the ladder that follows. At $p=0.5$ this manifests as the tracked $|\mu_0|$ collapsing at one rung and following partners ever after: output that looks plausible but is an artefact of the selector.
 
 The phase-predicted tracking that takes over past the modulus crossing deserves three technical notes. First, a crossing does not lose the branch: the physical eigenvalue survives inside the block as a subleading member, and where an independently tracked ladder exists for comparison the phases agree to four decimals. Second, the prediction must be seeded, because the phase advance per rung grows with the velocity and can exceed $\pi$, making the wrapped step ambiguous; the first step is chosen by testing every candidate advance against the next few rungs and keeping the most consistent one. Third, each accepted rung records the distance between the prediction and the matched phase, and the ladder is cut at the first rung where this distance jumps, which is where the block stops resolving the branch.
 
+\subsection{Why eigenvalues outlive eigenvectors}
+\label{app:conditioning}
+
+Section~\ref{sec:reach} states that eigenvalues remain accurate where eigenvectors do not. Both halves of that statement follow from first-order perturbation theory for a non-Hermitian matrix~\cite{wilkinson1965}. Perturb $\mathcal{E}$ by $\delta\mathcal{E}$ and expand the perturbed eigenvector as $\ket{R_i}+\sum_{j\neq i}a_{ij}\ket{R_j}$. Projecting the eigenvalue equation onto $\bra{L_i}$ gives the shift of the eigenvalue,
+\begin{equation}
+  \delta\mu_i=
+  \frac{\bra{L_i}\delta\mathcal{E}\ket{R_i}}
+       {\braket{L_i}{R_i}},
+  \label{eq:eigenvalue_perturbation}
+\end{equation}
+and projecting it onto $\bra{L_j}$ with $j\neq i$ gives the mixing coefficients,
+\begin{equation}
+  a_{ij}=
+  \frac{\bra{L_j}\delta\mathcal{E}\ket{R_i}}
+       {(\mu_i-\mu_j)\,\braket{L_j}{R_j}} .
+  \label{eq:eigenvector_perturbation}
+\end{equation}
+The two expressions differ in one respect that matters here. Equation~\eqref{eq:eigenvalue_perturbation} contains no eigenvalue difference, so an eigenvalue stays accurate as long as its own overlap $\braket{L_i}{R_i}$ stays finite. Equation~\eqref{eq:eigenvector_perturbation} is divided by $\mu_i-\mu_j$, so the eigenvector mixes with its neighbours as soon as two eigenvalues approach, and the de-mixing that separates the block members becomes correspondingly harder.
+
+The denominator of Eq.~\eqref{eq:eigenvalue_perturbation} is the rigidity of Eq.~\eqref{eq:rigidity}, so the same expression bounds how far the protection extends. Near an exceptional point the overlap tends to zero and an eigenvalue tied to an individual eigenvector loses accuracy with it; close to a defective point individual eigenvalues are in fact fragile, splitting under a perturbation of size $\varepsilon$ as $\varepsilon^{1/n}$ rather than $\varepsilon$, where $n$ is the size of the coalescing cluster~\cite{moro1997}. What stays well conditioned is the leading subspace as a whole, whose separation from the rest of the spectrum governs the block iteration. Our eigenvalue-only mode reads the spectrum at that level: it never assigns block members to separate eigenvectors, but carries an orthonormal basis of the subspace and takes the Ritz values from the projected pencil. The eigenvalues therefore behave better than the eigenvectors not because they are immune, but because the subspace-level read avoids the ill-conditioned de-mixing that the eigenvector route cannot do without.
+
+One further diagnostic belongs here. The spectral ratio $|\mu_1/\mu_0|$ controls the suppression of the first subleading contribution in Eq.~\eqref{eq:contraction}, but it is not a convergence criterion for the block, which is governed instead by the separation of the whole leading subspace from the rest of the spectrum. The two differ near a degeneracy inside the block, where $|\mu_1/\mu_0|$ may approach one while the subspace stays well separated and its eigenvalues keep converging.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \FloatBarrier
-\section{The entanglement-barrier wall}
+\section{The exceptional-point wall}
 \label{app:wall}
 
 This appendix supports the diagnosis of Section~\ref{sec:results:wall}, where the temporal-entropy dome inflates at a well-defined time and stops being conformal. It has two parts: what an exceptional point is and why it spoils the eigenvectors while sparing the eigenvalues, and the controls that establish the wall as a property of the physics rather than a resolution limit.
@@ -342,31 +382,57 @@ This appendix supports the diagnosis of Section~\ref{sec:results:wall}, where th
 \subsection{Exceptional points of a non-normal matrix}
 \label{app:wall:ep}
 
-Section~\ref{sec:reach} established how eigenvalues and eigenvectors respond differently as a gap inside the block closes. The limiting configuration is what this subsection adds. As two eigenvalues of a non-normal matrix approach each other, their left and right eigenvectors need not stay apart: they can rotate towards a common direction, so the pairing $\braket{L}{R}$ of the coalescing branch tends to zero even though neither vector vanishes. Where two eigenvalues and their eigenvectors merge at once the matrix is at an exceptional point: it is defective, has no complete eigenbasis, and the sensitivity of the individual eigenvector diverges.
+Section~\ref{sec:reach} established how eigenvalues and eigenvectors respond differently as a gap inside the block closes, and Appendix~\ref{app:conditioning} gives the perturbative statement behind it. The limiting configuration is what this subsection adds~\cite{rotter2009}. As two eigenvalues of a non-normal matrix approach each other, their left and right eigenvectors need not stay apart: they can rotate towards a common direction, so the pairing $\braket{L}{R}$ of the coalescing branch tends to zero even though neither vector vanishes. Where two eigenvalues and their eigenvectors merge at once the matrix is at an exceptional point: it is defective, has no complete eigenbasis, and the sensitivity of the individual eigenvector diverges.
 
 This is the origin of the wall. The dome breaks not because the solver fails to converge, but because the object it is asked to converge to becomes ill-defined. The order parameter is the phase rigidity of Eq.~\eqref{eq:rigidity}, which equals one for a near-Hermitian pair and collapses to zero at the exceptional point, and its measured collapse lands exactly where the dome inflates, which is what identifies the two as one event. Complex symmetry does not help, when a model has it: every matrix is similar to a complex-symmetric one, so symmetry can relabel the collapse but not forbid it, and inside an exactly degenerate subspace the individual eigenvector is undefined rather than merely ill-conditioned.
 
-\subsection{What the broken dome looks like}
+\subsection{Locating the wall from the entropy profile}
 \label{app:wall:shape}
 
-Section~\ref{sec:results:wall} reads the wall from the chord plot, where the profiles past it appear as a detached arc rather than as points scattered about the line. The shape has a simple origin, and it makes a sharper diagnostic than the height of the dome.
+Equation~\eqref{eq:cft:chord} predicts that the real part of the entropy is linear in the chord variable, with slope $c/8$. This gives a direct test of whether a given profile is still conformal, and therefore a way to read off the time at which the route fails.
 
-The chord variable of Eq.~\eqref{eq:chord} is not monotonic in the cut position. It grows as the cut moves in from either edge and is largest at mid-strip, so a profile plotted against $W$ is traversed twice: once for cuts in the first half, once for cuts in the second. A conformal profile depends on the cut only through $W$, which is what Eq.~\eqref{eq:cft:chord} states, so the two traversals give the same value at the same $W$ and land on top of one another. The dome then collapses onto a single straight line, and the fold is invisible. This is what makes the chord plot a test rather than a change of variables: the collapse only happens if the profile really is a function of $W$.
+Figure~\ref{fig:broken_dome} shows the $p=0.1$ profiles at $T=9$ and $T=10$ against the $c=\tfrac12$ line. At $T=9$ the profile follows that line, departing from it by at most $0.06$. At $T=10$ it leaves the line altogether, departing by $0.42$ and more than doubling in height, $0.72$ against $0.34$. One evolution step separates the two.
 
-Past the wall that ceases to hold. The two halves of the profile no longer agree at equal $W$, the fold opens, and the two branches trace out the arc seen in Figure~\ref{fig:wall}. At $p=0.1$ the transition is abrupt: between $T=9$ and $T=10$ the peak of the dome jumps from $0.34$ to $0.72$ and a second maximum appears, so a single evolution step separates a profile that collapses cleanly from one that does not. The hump count and the failure to collapse are two views of the same failure, and either can be used to locate the wall without fitting anything.
+Past that step the iteration has converged to something other than the physical eigenvectors, so the profile is an artefact of the failed convergence. Its height, its slope and the second maximum it develops are not properties of the model, and we do not read anything from them. The one thing we use is the time at which the profile leaves the conformal line.
 
-We do not plot the broken profiles in the main text. Once the dome carries two maxima its height and its slope have no conformal meaning, so a figure of them would document the failure of the estimator rather than any property of the model. The rigidity of Figure~\ref{fig:wall} says the same thing in a quantity that remains well defined on both sides of the wall, which is why it is the diagnostic we report.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{imgs/res_broken_dome.png}
+  \caption{\textbf{Locating the wall at $p=0.1$.} Real part of the generalized R\'enyi-2 entropy against the chord variable, with the $c=\tfrac12$ prediction as a dashed line. Cuts in the two halves of the strip are marked separately. At $T=9$ the profile follows the conformal line to within $0.06$. At $T=10$ it departs from it by $0.42$; that profile comes from a failed convergence and its shape is not interpreted.}
+  \label{fig:broken_dome}
+\end{figure}
+
+The rigidity of Figure~\ref{fig:wall} is the diagnostic we quote, since it stays well defined on both sides of the wall.
 
 \subsection{The wall is gap-limited, not resolution-limited}
 \label{app:wall:eps}
 
 An exceptional point is a property of the transfer matrix, so its location must not move when we change how finely that matrix is represented. We checked this along three independent knobs, holding the physics fixed at $p=0.1$ and varying only the numerical resolution.
 
-Halving the bond dimension from $\chi=64$ to $32$ leaves the onset of the inflation at the same time, so the wall is not a matter of keeping too few states. Tightening the truncation cutoff by orders of magnitude leaves it unchanged as well. Switching the truncated object itself, from the cheap RTM scheme to the Hermitian RDM one, also moves nothing: the RDM run breaks at the same time, at several times the cost. Three qualitatively different refinements leaving the onset fixed is what pins the wall to the spectral gap rather than to any shortfall of the representation. Phase rigidity supports the same reading, since it is a Rayleigh-quotient-like quantity that stays accurate even from a cold start.
+Table~\ref{tab:wall_controls} lists the peak of the dome at $p=0.1$ for three of these settings. Up to $T=9$ they agree to three decimal places. Between $T=9$ and $T=10$ all three double, and the profile acquires a second maximum. The onset therefore does not move when the bond dimension is halved, nor when the truncated object is changed from the \ac{RTM} to the Hermitian \ac{RDM}. Tightening the truncation cutoff by orders of magnitude leaves it unchanged as well.
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{lccc}
+    \hline
+    $T$ & \ac{RTM}, $\chi=64$ & \ac{RTM}, $\chi=32$ & \ac{RDM}, $\chi=64$ \\
+    \hline
+    $2$  & $0.1999$ & $0.1999$ & $0.2023$ \\
+    $5$  & $0.2832$ & $0.2830$ & $0.2836$ \\
+    $8$  & $0.3224$ & $0.3216$ & $0.3227$ \\
+    $9$  & $0.3329$ & $0.3331$ & $0.3321$ \\
+    $10$ & $0.7067$ & $0.6840$ & $0.7157$ \\
+    \hline
+    \end{tabular}
+    \caption{\textbf{The wall does not move with the representation.} Peak of the R\'enyi-2 dome at $p=0.1$, for two bond dimensions and for both truncation schemes. The values agree while the dome is conformal and all three double between $T=9$ and $T=10$, where a second maximum appears.}
+    \label{tab:wall_controls}
+\end{table}
 
 The regulator $\beta_0$ is a fourth knob, and the most promising one, because the modulus gaps grow linearly with it and it is those gaps closing that ends the route. The measurement behind the statement in Section~\ref{sec:results:wall} is the following. Across $\beta_0=0.1$ to $0.8$ the rate at which the rigidity collapses is unchanged, the ratio $r(T{=}6)/r(T{=}2)$ staying between $7.35$ and $7.40\times10^{-3}$ over the whole range, so the curves are parallel and the wall sits at the same time. The rigidity itself is in fact lower at larger $\beta_0$, by about $40\%$ from one end of that range to the other, so widening the regulator makes the conditioning slightly worse rather than better.
 
-These controls also settle which truncation to use in production. Where both converge, RTM and RDM agree on every eigenvalue and on the rigidity to four to five digits, so they agree on the physics, and RDM is simply slower for the same answer, by factors that grow with $T$ up to an order of magnitude. RTM is therefore the production choice, with RDM kept as the well-conditioned fallback for the rare points where RTM output turns noisy before the wall.
+These controls also inform which truncation to use in production. The two schemes reach the same wall, but the \ac{RDM} run is considerably more expensive, because it needs a larger bond dimension to reach the same accuracy. The reason is the one given in Section~\ref{sec:transverse:truncation}: the \ac{RTM} keeps only the components that contribute to $\braket{L}{R}$, whereas the \ac{RDM} also represents components of one boundary that are orthogonal to the other and drop out of the contraction. We therefore use the \ac{RTM} in production.
+
+This comparison was run at one coupling, at one bond dimension, and inside the block power method. It says nothing about how the two schemes compare elsewhere. The \ac{RDM} is Hermitian and positive, so it is the better conditioned of the two. It may well reach further at larger $\chi$, at stronger frustration, or under a plain power iteration. We have not tested any of these. The question is open, and running $p=0.3$ with a bond dimension of a few hundred would settle it.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -374,12 +440,14 @@ These controls also settle which truncation to use in production. Where both con
 \section{The momentum-\texorpdfstring{$\pi$}{pi} displaced boundary tower}
 \label{app:pairing}
 
-This appendix derives the effect behind the boundary-exponent result of Section~\ref{sec:results:tower}: why the odd-parity boundary tower is displaced in phase by momentum $\approx\pi$ for any $p\neq0$, and why free-fermion models never show it. In short, the next-nearest-neighbour coupling is a four-fermion interaction of a particular kind, and only such a term can attach a momentum-$\pi$ phase to the odd-parity sector.
+This appendix supports the boundary-exponent result of Section~\ref{sec:results:tower}. It establishes two things: that the next-nearest-neighbour coupling becomes a genuine interaction after fermionization, and that a free-fermion chain cannot produce a displaced tower.
+
+Fermion parity, the number of fermions modulo two, is conserved and separates the transfer spectrum into the two families observed in Section~\ref{sec:results:tower}. The even-parity states form the identity tower and the odd-parity states the $\varepsilon$ tower. The displaced states are the odd ones. The measurement therefore says that a state with an odd number of fermions picks up a minus sign under a one-site shift. A minus sign is a phase of $\pi$.
 
 \subsection{Jordan--Wigner and the four-fermion interaction}
 \label{app:pairing:jw}
 
-The main text quotes the transformation in Eq.~\eqref{eq:annni:jwmap} and its action on the \ac{NNN} bond in Eq.~\eqref{eq:annni:hop}; this subsection supplies the algebra between the two. The working identities are $(c+c^\dagger)(1-2n)=c^\dagger-c$ and $K_j^2=1$.
+The main text quotes the transformation in Eq.~\eqref{eq:annni:jwmap} and its action on the \ac{NNN} bond in Eq.~\eqref{eq:annni:hop}; this subsection supplies the algebra between the two. The string is what makes the transformation possible at all. Two Pauli operators anticommute on the same site but commute on different ones, so a spin is neither a boson nor a fermion, and no purely local combination of spins can anticommute at a distance. Attaching to each fermion the parity of everything to its left converts the commuting spin algebra into the anticommuting fermion one exactly. The reward is that a Hamiltonian quadratic in fermions is exactly solvable --- diagonalizing a single-particle matrix yields independent normal modes --- which is the reason the plain Ising chain is free and its critical point a free Majorana \ac{CFT}. The working identities below are $(c+c^\dagger)(1-2n)=c^\dagger-c$ and $K_j^2=1$.
 
 The transverse field becomes a chemical potential directly from Eq.~\eqref{eq:annni:jwmap}. For the \ac{NN} Ising bond the two strings overlap on all but one site, so they cancel telescopically and leave the quadratic hopping-and-pairing term
 \begin{equation}
@@ -390,16 +458,27 @@ These two terms make up the pure Ising chain, which is why it is a free-fermion 
 
 The two terms proportional to $p$ are both quartic. The self-dual $\sigma^x\sigma^x$ term becomes the density--density factor $(1-2n_j)(1-2n_{j+1})$, diagonal in the occupation basis. For the \ac{NNN} bond the strings cancel only partially: the site skipped over contributes its factor once instead of twice, leaving the parity $(1-2n_{i+1})=(-1)^{n_{i+1}}$ in place, which is Eq.~\eqref{eq:annni:hop}---a hop from $i$ to $i+2$ whose sign is set by the occupation of the intermediate site. This single term is the origin of the displacement.
 
-\subsection{Why free fermions cannot displace, and the quantization at \texorpdfstring{$\pi$}{pi}}
+\subsection{The free-fermion normal form}
+\label{app:pairing:normalform}
+
+The argument of the next subsection rests on what being free buys, so we state it here. An operator is Gaussian, or free, if it is the exponential of an expression quadratic in the fermions, allowing both hopping terms $c^\dagger_i c_j$ and pairing terms $c^\dagger_i c^\dagger_j$. Pairing terms mean the operator cannot be diagonalized by relabelling particles alone; one must mix creation and annihilation operators through a Bogoliubov transformation, $\eta_m=\sum_j(u_{mj}c_j+v_{mj}c^\dagger_j)$, which is still a linear change of variables, so the result is still free: a set of independent normal modes.
+
+For a Gaussian state, Wick's theorem reduces every higher correlation function to sums of products of two-point functions, one term per pairing of the operators, with a sign from the permutation that brings the partners together. It holds because the modes are independent: each is a two-level system with its own occupation, and expectation values factorize mode by mode, so nothing correlates three or four particles beyond what the pairs already encode. Its significance is that the entire theory --- correlators, entanglement, the full spectrum --- is generated by single-particle data, a matrix of size set by the number of modes rather than by the exponentially large Hilbert space. This is the precise sense in which free means exactly solvable.
+
+Applied to a Gaussian transfer matrix, the same logic produces the normal form $\mathcal{E}=\mu_0\exp(-\sum_m\varepsilon_m\hat n_m)$ with $\hat n_m\in\{0,1\}$: every eigenvalue is $\mu_0\,e^{-\sum_{m\in S}\varepsilon_m}$ for some occupied subset $S$, so moduli and phases are both additive over occupied modes --- $\mathrm{Re}\,\varepsilon_m$ is a mode's cost in magnitude and $\mathrm{Im}\,\varepsilon_m$ the phase it contributes. This additivity is why the conformal tower appears as small, evenly spaced phase steps: the near-gapless modes have $\mathrm{Re}\,\varepsilon\approx0$ and $\mathrm{Im}\,\varepsilon=\pi x/(vT)$. A quartic term destroys this structure: the modes cease to be independent, Wick's theorem fails, and the spectrum is no longer additive over any single-particle data. The parity operator $e^{i\pi\hat N}$ is itself Gaussian, since $\hat N$ is quadratic, so the argument of the next subsection rests on the dispersion of the free chain rather than on Gaussianity alone.
+
+\subsection{Why free fermions cannot displace}
 \label{app:pairing:kw}
 
-A free-fermion transfer matrix has the normal form $\mathcal{E}=\mu_0\exp(-\sum_m \varepsilon_m \hat n_m)$: independent modes whose moduli and phases are both additive over occupations. An eigenvalue near the top can only occupy modes with $\mathrm{Re}\,\varepsilon_m\approx0$, and in an Ising-class critical chain those are the long-wavelength modes, whose phases $\pi x/(vT)$ are small. Building a phase of exactly $\pi$ at full modulus would need a mode that neither decays nor stops oscillating, that is a gapless branch at lattice momentum $\pi$, which the uniform Ising-class free chain does not have. A free chain therefore cannot produce a displaced tower. This is what the free-fermion controls show: the critical Ising chain at two evolution times, and the anisotropic XY chain at $\gamma=0.5,\,1,\,1.5$, return no displaced state at all.
+A free-fermion transfer matrix has the normal form of the previous subsection, so its eigenvalues are fixed by which modes are occupied. An eigenvalue close to the top of the spectrum can only occupy modes that cost almost nothing in magnitude, $\mathrm{Re}\,\varepsilon_m\approx0$. In an Ising-class critical chain those are the long-wavelength modes, and their phases $\pi x/(vT)$ are small.
 
-What the argument requires is a source of momentum-$\pi$ structure, and in this model that source is an interaction. Single-term probes identify which one. Deforming the critical Ising chain by the \ac{NNN} term alone, at strength $0.1$ and $T=4$, produces a displaced family at $x\approx0.37,\,1.22,\,2.17$; deforming it by the $\sigma^x\sigma^x$ term alone produces none. It is therefore the parity-dressed hop of Eq.~\eqref{eq:annni:hop}, not the density--density term, that carries the displacement. Scanning down to small couplings, the displaced family is present at every $p\neq0$ tested, down to $p=0.01$, with no threshold: the effect switches on with the interaction rather than at some finite strength.
+A displaced state requires the opposite combination, a phase of $\pi$ at full modulus, and therefore a mode that neither decays nor stops oscillating. Such a mode is a gapless branch at lattice momentum $\pi$. The uniform Ising-class free chain has no such branch, so it cannot produce a displaced tower. The controls confirm this, since the critical Ising chain at two evolution times and the anisotropic XY chain at $\gamma=0.5,\,1,\,1.5$ return no displaced state at all.
+
+The displacement therefore requires a source of momentum-$\pi$ structure, and in this model that source is an interaction. Single-term probes identify which one. Deforming the critical Ising chain by the \ac{NNN} term alone, at strength $0.1$ and $T=4$, produces a displaced family at $x\approx0.37,\,1.22,\,2.17$; deforming it by the $\sigma^x\sigma^x$ term alone produces none. It is therefore the parity-dressed hop of Eq.~\eqref{eq:annni:hop}, not the density--density term, that carries the displacement. Scanning down to small couplings, the displaced family is present at every $p\neq0$ tested, down to $p=0.01$, with no threshold: the effect switches on with the interaction rather than at some finite strength.
 
 One consequence of the single-term probe is worth recording. The \ac{NNN}-only deformation is not self-dual, and it displaces all the same. Self-duality is therefore not needed for the displacement to exist; the argument below concerns why it is pinned at exactly $\pi$ rather than at a coupling-dependent value.
 
-The quantization at exactly $\pi$, rather than at a coupling-dependent value, has a natural home in the self-duality of the model. In Majorana variables the $XX$ and next-nearest $ZZ$ terms are both products of four consecutive Majoranas, offset by one Majorana site. That one-site shift is the lattice Kramers--Wannier duality exchanging order and disorder, and it maps the two terms onto each other, which is why a self-dual Hamiltonian must carry both. At the self-dual point the network admits a half-step transfer operation with $\mathcal{E}=\mathcal{E}_{1/2}^{2}$, so a sector whose half-step eigenvalue carries a factor $\pm i$ lands after squaring at phase exactly $\pi$. This is a discrete index rather than a tunable phase, consistent with the displacement being identical across the couplings probed. Which sector carries the index is not settled from first principles, and we note it in the outlook. What the main text needs is established here: the displacement exists for every $p\neq0$, is absent for free fermions, and is pinned at $\pi$.
+The value of the displacement deserves its own remark. Across every coupling probed, from $p=0.01$ to $0.15$, the offset is identical and compatible with exactly $\pi$ rather than with any coupling-dependent phase. One structural observation fits naturally here: in Majorana variables the $XX$ and next-nearest $ZZ$ terms are both products of four consecutive Majoranas, offset by one Majorana site, and that one-site shift is the lattice Kramers--Wannier duality exchanging order and disorder --- which is why a self-dual Hamiltonian must carry both terms. \textit{The mechanism selecting the odd sector and fixing the displacement at exactly $\pi$ is ongoing work and is not settled here.} What the main text needs is established: the displacement exists for every $p\neq0$, is absent for free fermions, and is pinned at $\pi$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -420,7 +499,7 @@ Section~\ref{sec:annni:equilibrium} reads the central charge from the shape of t
 \end{equation}
 Running DMRG over a ladder of sizes and plotting the mid-chain entropy against $\ln L$ therefore gives a straight line of slope $c/6$. Over $N=40$ to $200$ this returns $c\approx0.51$ at both $p=0.1$ and $p=0.5$, consistent with the profile fit of the main text and with the Ising value. The ladder uses fifteen DMRG sweeps with the bond dimension ramped to $400$ and a truncation cutoff of $10^{-10}$; the heavier $N=100$ chord fit of Section~\ref{sec:annni:equilibrium} uses fifty sweeps, a ramp to $1000$, and a cutoff of $10^{-12}$. Both ramps start with noise-assisted sweeps.
 
-The same ground states allow a cross-check with the R\'enyi-2 entropy, the member used for every temporal measurement in this thesis. Its mid-chain slope is $c/8$ rather than $c/6$, and it returns $c\approx0.58$: the same universality class, but biased upward, because R\'enyi entropies with $n>1$ carry stronger corrections to scaling than the von Neumann one. This is the equilibrium counterpart of the finite-time bias affecting the temporal R\'enyi-2 read, and it is why the von Neumann entropy is the estimator of choice in equilibrium, where the full Schmidt spectrum is available at no cost. Figure~\ref{fig:cft_L} compares the two finite-size estimates.
+The same ground states allow a cross-check with the R\'enyi-2 entropy, the member used for every temporal measurement in this thesis. Its mid-chain slope is $c/8$ rather than $c/6$, and a plain linear fit returns $c\approx0.58$: the same universality class, but biased upward. The bias is expected, and it has the same origin on both axes of this thesis. In equilibrium, R\'enyi entropies with $n>1$ carry corrections to scaling that the von Neumann entropy does not, oscillating with the cut position and decaying as a power of the subsystem size~\cite{calabrese2010}. In the temporal problem, Ref.~\cite{boucomas2026} derives the corresponding finite-time correction for the generalized temporal R\'enyi entropies and finds $\Delta S_n \propto T^{-1/n}$ for the Ising class, which decays more slowly as $n$ grows and is why higher members are more strongly biased. A straight-line fit that ignores either correction is therefore not an unbiased estimator of $c$. We do not fit the equilibrium corrections here, because the von Neumann route already measures the equilibrium central charge; the temporal $n=2$ correction, $T^{-1/2}$, is fitted where it matters, in Section~\ref{sec:results:wall}. This is the equilibrium counterpart of the finite-time bias affecting the temporal R\'enyi-2 read, and it is why the von Neumann entropy is the estimator of choice in equilibrium, where the full Schmidt spectrum is available at no cost. Figure~\ref{fig:cft_L} compares the two finite-size estimates.
 
 \begin{figure}[htbp]
     \centering
@@ -435,30 +514,11 @@ The same ground states allow a cross-check with the R\'enyi-2 entropy, the membe
 \subsection{The sound velocity from the equilibrium dispersion}
 \label{app:velocity}
 
-Every temporal formula that turns a transfer-matrix phase into a scaling dimension carries the sound velocity $v(p)$, so it has to be known independently. We take it from equilibrium, using Alcaraz's dispersion relation for this chain: the periodic ring Hamiltonian is diagonalized exactly at small size and the velocity is read off the lowest excitation carrying momentum.
+Section~\ref{sec:annni:velocity} measures the sound velocity from the equilibrium dispersion. We use Alcaraz's relation for this chain: the ring Hamiltonian is diagonalized at small size, and $v$ follows from the gap between the lowest momentum-carrying excitation in the magnetic sector and the lowest state without momentum. This appendix records the checks behind the numbers quoted there.
 
-The construction is validated in four ways. It recovers $v=2$ exactly at $p=0$. The from-scratch ring Hamiltonian matches the operator used elsewhere in the code to machine precision. The sector-resolved and sector-blind reads agree. And, decisively, feeding our measured $v(p)$ into Alcaraz's separate Casimir formula reproduces his published ground-state central charge $c(p)\approx\tfrac12$. The measured values grow steadily with frustration,
-\begin{equation}
-    v(0)=1.98,\quad v(0.1)=2.60,\quad v(0.2)=3.21,\quad
-    v(0.3)=3.80,\quad v(0.4)=4.37,\quad v(0.5)=4.93,
-    \tag{G1}
-\end{equation}
-and it is these, rather than a fixed $v=2$, that make the boundary tower of Section~\ref{sec:results:tower} read as clean half-integers at every $p$. Figure~\ref{fig:velocity} shows them against $p$.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.7\textwidth]{imgs/nb4_velocity_vs_p.png}
-    \caption{\textbf{The sound velocity grows with frustration.} $v(p)$ at criticality, extracted from the equilibrium dispersion of periodic chains with $N=12$ sites. The dashed line marks the exact Ising value $v=2$ at $p=0$.}
-    \label{fig:velocity}
-\end{figure}
+The construction is validated in four ways. It recovers $v=2$ at $p=0$, to $1.987$ at $N=16$ and improving with size. The ring Hamiltonian built from scratch matches the operator used elsewhere in the code to machine precision, $7\times10^{-14}$ on the full spectrum at $N=8$. The sector-resolved and sector-blind reads agree at every $p$. Finally, feeding the measured $v(p)$ into Alcaraz's separate Casimir formula reproduces his published ground-state central charge: we obtain $c=0.504$ at $p=0$ and $c=0.525$ at $p=0.5$ from rings of $16$ sites. The values used throughout are those at $N=12$, and it is these, rather than a fixed $v=2$, that make the boundary tower of Section~\ref{sec:results:tower} read as clean half-integers at every $p$.
 
 That the temporal transfer matrix really carries this $p$-dependent velocity was checked separately with the anisotropic XY control, whose velocity $v(\gamma)=2\gamma$ is known exactly. At $\gamma=0.5,\,1,\,1.5$ the measured first-gap slopes are $a_1 = 1.481,\,0.782,\,0.520$ against the exact $\pi/(4\gamma) = 1.571,\,0.785,\,0.524$, giving $x_1 = 0.471,\,0.498,\,0.496$; pinning $v=2$ instead would force $a_1=0.785$ at every $\gamma$ and disagree with two of the three measured slopes. The pipeline recovers $x_1=\tfrac12$ only when fed the correct $v(\gamma)$, which confirms that the method is velocity-faithful.
 
-\subsection{The branch constant in the eigenvalue central-charge fit}
-\label{app:eq3}
-
-The eigenvalue route to $c$ has a subtlety that ruins the fit if ignored. We work with $\lambda_0=\log(-\mu_0)$, following Ref.~\cite{carignano_tagliacozzo2025}, and since $\log(-\mu_0)=\log(\mu_0)+i\pi$ the imaginary part carries a constant $-\pi$ branch offset that the bare fit form omits. Leaving it in dumps a spurious $-\pi/T$ contribution into the $1/T^2$ Casimir slot and returns a central charge of order $10^3$.
-
-The corrected procedure fits the four-term form $\mathrm{Im}\,\lambda_0 = A\,T + B + C/T + D/T^3$ on the unwrapped phase and reads $c=24\,v\,|C|/\pi$. We leave $B$ free rather than pinning it at $-\pi$. On a short window $B$ and $C$ trade off against each other, and pinning hides that trade-off instead of removing it: the fit then returns a Casimir coefficient whose error has nowhere to go. Left free, $B$ becomes the diagnostic. Where the window is long enough to separate the two, the fit recovers $B=-3.141$ on its own and the central charge can be read absolutely; where it is not, $B$ drifts off $-\pi$ and the window is not yet trustworthy. This is what limits the absolute read at $p\neq0$, where the branch can be followed over fewer rungs.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

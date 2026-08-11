@@ -10,8 +10,8 @@
 \usetikzlibrary{arrows.meta,fadings}
 
 \newcommand{\NX}{6}
-\newcommand{\DX}{0.78}
-\newcommand{\DY}{0.78}
+\newcommand{\DX}{0.96}
+\newcommand{\DY}{0.60}
 
 \definecolor{tnbulk}{RGB}{86,196,229}
 \definecolor{tncool}{RGB}{240,224,178}
@@ -31,39 +31,39 @@
   ]
 
   %% ================= panel (a): the lattice network =================
-  \foreach \i in {0,...,\NX} { \draw[leg] (\i*\DX,0) -- (\i*\DX,{6*\DY}); }
-  \foreach \j in {1,...,5} { \draw[leg] (0,\j*\DY) -- (\NX*\DX,\j*\DY); }
+  \foreach \i in {0,...,\NX} { \draw[leg] (\i*\DX,0) -- (\i*\DX,{8*\DY}); }
+  \foreach \j in {1,...,7} { \draw[leg] (0,\j*\DY) -- (\NX*\DX,\j*\DY); }
 
   \foreach \i in {0,...,\NX} {
-    \foreach \j in {1,5} { \node[B] at (\i*\DX,\j*\DY) {}; }
-    \foreach \j in {2,3,4} { \node[W] at (\i*\DX,\j*\DY) {}; }
+    \foreach \j in {1,7} { \node[B] at (\i*\DX,\j*\DY) {}; }
+    \foreach \j in {2,...,6} { \node[W] at (\i*\DX,\j*\DY) {}; }
     \node[P] at (\i*\DX,0)       {};
-    \node[P] at (\i*\DX,{6*\DY}) {};
+    \node[P] at (\i*\DX,{8*\DY}) {};
   }
 
   % the chain continues in both directions
-  \foreach \j in {1,...,5} {
+  \foreach \j in {1,...,7} {
     \node[tag] at (-0.62,\j*\DY)             {$\cdots$};
     \node[tag] at ({\NX*\DX+0.62},\j*\DY)    {$\cdots$};
   }
 
   % one Trotter layer, and one spatial column
-  \draw[hbox] (-0.30,{3*\DY-0.32}) rectangle ({\NX*\DX+0.30},{3*\DY+0.32});
-  \node[tag, tnrow, anchor=east] at (-1.0,{3*\DY}) {$U(\delta t)$};
-  \draw[vbox] ({4*\DX-0.32},-0.34) rectangle ({4*\DX+0.32},{6*\DY+0.34});
-  \node[tag, tnbox] at ({4*\DX},{6*\DY+0.74}) {$\mathcal{E}$};
+  \draw[hbox] (-0.95,{4*\DY-0.30}) rectangle ({\NX*\DX+0.95},{4*\DY+0.30});
+  \node[tag, tnrow, anchor=east] at (-1.15,{4*\DY}) {$U(\delta t)$};
+  \draw[vbox] ({4*\DX-0.32},-0.34) rectangle ({4*\DX+0.32},{8*\DY+0.34});
+  \node[tag, tnbox] at ({4*\DX},{8*\DY+0.74}) {$\mathcal{E}$};
 
-  \node[tag, anchor=east] at (-1.0,{6*\DY}) {$\bra{\Psi_0}$};
+  \node[tag, anchor=east] at (-1.0,{8*\DY}) {$\bra{\Psi_0}$};
   \node[tag, anchor=east] at (-1.0,0)       {$\ket{\Psi_0}$};
 
   \node[tag] at ({\NX*\DX/2},-1.05) {(a)};
 
-  \node[font=\large] at ({\NX*\DX+1.55},{3*\DY}) {$\equiv$};
+  \node[font=\large] at ({\NX*\DX+1.55},{4*\DY}) {$\equiv$};
 
   %% ================= panel (b): the continuum strip =================
   \begin{scope}[xshift={(\NX*\DX+2.85)*1cm}]
     \def\SW{5.2}
-    \def\YA{0.35} \def\YB{1.02} \def\YC{4.98} \def\YD{5.65}
+    \def\YA{0} \def\YB{0.75} \def\YC{7.25} \def\YD{8}
 
     \fill[tncool] (0,{\YA*\DY}) rectangle (\SW,{\YB*\DY});
     \fill[tnbulk] (0,{\YB*\DY}) rectangle (\SW,{\YC*\DY});
@@ -92,7 +92,7 @@
     \draw[<->] ({\XD},{\YC*\DY}) -- ({\XD},{\YD*\DY}) node[midway, right=2pt, tag] {$\beta_0$};
 
     \draw[vbox] ({0.68*\SW},{\YA*\DY-0.30}) rectangle ({0.68*\SW+0.62},{\YD*\DY+0.30});
-    \node[tag, tnbox] at ({0.68*\SW+0.31},{6*\DY+0.74}) {$\mathcal{E}$};
+    \node[tag, tnbox] at ({0.68*\SW+0.31},{8*\DY+0.74}) {$\mathcal{E}$};
 
     \node[tag] at ({\SW/2},-1.05) {(b)};
   \end{scope}

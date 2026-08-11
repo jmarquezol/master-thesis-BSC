@@ -2,124 +2,124 @@
 \section{Universal Data from the Dynamics}
 \label{sec:cft}
 
-The real-time dynamics of a lattice model carries sharp universal information when the model is critical, and this information can be read directly from a simulation. At a continuous critical point, the lattice model forgets its microscopic details and is described by a \ac{CFT}---a continuum theory so constrained by symmetry that its predictions are fixed by the central charge $c$ together with the spectrum of scaling dimensions of its operators. These quantities are universal: every model in the same universality class must reproduce them, which is exactly what makes them good targets for a numerical method. This section explains how a dynamical quantity, the Loschmidt echo, maps onto such a conformal theory; what universal data the theory predicts; and how that data can be separated from the non-universal lattice constants present in any real simulation. The resulting predictions are tested in Section~\ref{sec:results}.
+The real-time dynamics of a lattice model at criticality carries universal information that can be read directly from a simulation. At a continuous critical point, the lattice model forgets its microscopic details and is described by a \ac{CFT}---a continuum theory so constrained by symmetry that its predictions are fixed by a small set of numbers: the central charge $c$ and the spectrum of scaling dimensions of its operators. These quantities are universal: every model in the same universality class reproduces them, which is exactly what makes them good targets for a numerical method. This section explains how a dynamical quantity, the Loschmidt echo, maps onto such a conformal theory; what universal data the theory predicts; and how conformal data can be separated from the non-universal lattice constants present in any real simulation.
 
 \subsection{From the Loschmidt echo to a boundary CFT}
 \label{sec:cft:boundary}
 
-The object we compute is the Loschmidt echo introduced in Section~\ref{sec:intro},
+The object we compute is the Loschmidt echo,
 \begin{equation}
-    \mathcal{L}(T) = \bra{\Psi_0}\, e^{-iHT} \ket{\Psi_0},
-    \label{eq:echo}
+  \mathcal{L}(T) = \bra{\Psi_0}\, e^{-iHT} \ket{\Psi_0},
+  \label{eq:echo}
 \end{equation}
-the amplitude for the system, prepared in an initial product state $\ket{\Psi_0}$, to return to that state after evolving for a time $T$ with the critical Hamiltonian. To connect this amplitude with the continuum theory, we rotate the evolution time to the imaginary axis, $T\to-i\tau$ (a Wick rotation). The real-time propagator $e^{-iHT}$ then becomes the Euclidean weight $e^{-\tau H}$, the same operator that generates the thermal partition function of a two-dimensional statistical system. Summing this weight over configurations while holding both ends of the evolution in the state $\ket{\Psi_0}$ expresses the echo as a Euclidean path integral on a slab of width $\tau$, with both edges fixed to $\ket{\Psi_0}$. In \ac{CFT} language, a state that can terminate this path integral is a conformal boundary state. The echo is therefore the partition function of the critical theory on a long strip whose two edges carry the boundary condition set by $\ket{\Psi_0}$ and whose width is the (imaginary) evolution time. Viewed as a function of complex time, the echo is thus the dynamical analogue of a partition function, and its logarithm per site defines a dynamical free-energy density---the rate function measured in Section~\ref{sec:numerics}.
+the amplitude for an infinite, translation-invariant chain, prepared in an initial state $\ket{\Psi_0}$, to return to that state after evolving for a time $T$ with the critical Hamiltonian. For simplicity, we take the initial state to be a product state; the particular product state is important, and we return to that choice below. 
 
-Figure~\ref{fig:echo_strip} shows this construction, first as the network that is actually contracted and then as the strip it represents.
+To connect this amplitude with the continuum theory, we rotate the evolution time to the imaginary axis, $T\to-i\tau$ (a Wick rotation~\cite{wick1950}). The real-time propagator $e^{-iHT}$ then becomes the Euclidean weight $e^{-\tau H}$, the same operator that generates the thermal partition function of a two-dimensional statistical system. Summing this weight over configurations while holding both ends of the evolution in the state $\ket{\Psi_0}$ expresses the echo as a Euclidean path integral on a slab of width $\tau$, with both edges fixed to $\ket{\Psi_0}$. A state that can terminate a path integral in this way, without introducing any scale of its own, is what a \ac{CFT} calls a conformal boundary state. The echo is therefore the partition function of the critical theory on a long strip whose two edges carry the boundary condition set by $\ket{\Psi_0}$ and whose width is the (imaginary) evolution time. The rotation is used only to obtain the conformal predictions, which are derived on the Euclidean strip; they are continued back to real time before being compared with the simulation. Figure~\ref{fig:echo_strip} shows this construction, first as a tensor network and then as the strip it represents.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{imgs/echo_strip.pdf}
-  \caption{\textbf{The Loschmidt echo as a tensor network and as a conformal strip.} (a) After the Wick rotation the echo is the contraction of a two-dimensional network. Open circles are the product state $\ket{\Psi_0}$ closing the network at either end; each row of filled circles is one Trotter layer $U(\delta t)$, and the cream rows at top and bottom are the imaginary-time cooling $\beta_0$ that turns the sharp product state into a conformal boundary condition. (b) The same object in the continuum. The heavy lines are the edges where $\ket{\Psi_0}$ closes the path integral, the cream bands are the cooling intervals and the blue bulk is the real-time evolution, so the strip has width $T+2\beta_0$ and is infinite in the spatial direction.}
+  \caption{\textbf{The Loschmidt echo as a tensor network and as a conformal strip.} (a) Trotterising the evolution expresses the echo as the contraction of a two-dimensional network. Open circles are the product state $\ket{\Psi_0}$ closing the network at either end; each row of filled circles is one Trotter layer $U(\delta t)$, and the cream rows at top and bottom are the imaginary-time cooling $\beta_0$ that turns the sharp product state into a conformal boundary condition. (b) The same object after the Wick rotation, in the continuum. The heavy lines are the edges where $\ket{\Psi_0}$ closes the path integral, the cream bands are the cooling intervals and the blue bulk is the real-time evolution, so the strip spans $T+2\beta_0$ in the time direction and is infinite in the spatial one.}
   \label{fig:echo_strip}
 \end{figure}
 
-Two features of this construction matter for the numerics that follow. First, a bare product state is not, by itself, a conformal boundary state: it carries weight on high-energy configurations, whereas the conformal description holds in the low-energy subspace. We therefore cool it in imaginary time for a short interval $\beta_0$, which damps that high-energy content and brings the state closer to the regime where the CFT applies; on the lattice this amounts to $N_\beta = 2\beta_0/\delta t$ imaginary-time sites split between the two ends, and the strip width becomes $T+2\beta_0$. Second, the initial state is the boundary condition of the strip: each $\ket{\Psi_0}$ realizes a particular conformal boundary condition, whose lightest boundary operator has a dimension $x_1$ that controls how quickly finite-size corrections decay. For the Ising class, the disordered (free) boundary has $x_1=\tfrac12$ and converges quickly, whereas the ordered (fixed) boundary has $x_1=2$ and converges slowly. In the $\sigma^x$-field convention used for our model, the polarized $\ket{X+}$ state realizes the free boundary, which is why we quench from it.
+Two features of this construction are important for the numerics that follow. First, a bare product state is not, by itself, a conformal boundary state: it carries weight on high-energy configurations, whereas the conformal description holds in the low-energy subspace. We therefore cool it in imaginary time for a short interval $\beta_0$, which damps that high-energy content and brings the state closer to the regime where the CFT applies; on the lattice this amounts to $N_\beta = 2\beta_0/\delta t$ imaginary-time sites split between the two ends, and the strip spans $T+2\beta_0$ in the time direction. Second, the initial state is the boundary condition of the strip: each $\ket{\Psi_0}$ realizes a particular conformal boundary condition, whose lightest boundary operator has a dimension $x_1$ that controls how quickly finite-size corrections decay. For instance, in the Ising class, the disordered (free) boundary has $x_1=\tfrac12$ and converges quickly, whereas the ordered (fixed) boundary has $x_1=2$ and converges slowly. In the $\sigma^x$-field convention, the polarized $\ket{X+}$ initial state realizes the free boundary, which is why we quench from it.
 
-We evaluate the strip in the transverse direction. In the Euclidean description, space and imaginary time are coordinates of the same two-dimensional geometry, so either one can be chosen as the direction of propagation. In the transverse picture adopted in this work, we exchange their usual roles and contract the network along the original spatial direction. This defines a transfer matrix $\mathcal{E}$ that propagates from one spatial column to the next while acting on states supported on a temporal slice. Its tensor-network construction is developed in Section~\ref{sec:transverse}.
+We contract the strip in the transverse direction. In the Euclidean description, space and imaginary time are coordinates of the same two-dimensional geometry, so either one can be chosen as the direction of propagation. In the transverse picture, we exchange their usual roles and contract the network along the original spatial direction. This defines a transfer matrix $\mathcal{E}$ that propagates from one spatial column to the next while acting on states supported on a temporal slice. Its tensor-network construction is developed in Section~\ref{sec:transverse}.
 
-The value of this description is that conformal symmetry fixes the spectrum of $\mathcal{E}$. In two dimensions, this symmetry constrains a critical theory almost completely (Appendix~\ref{app:cft:maps};~\cite{bpz1984, difrancesco1997}). In a simulation, those constraints appear through two channels: the transfer-matrix spectrum and the scaling of entanglement.
+In two dimensions, conformal symmetry constrains a critical theory completely and therefore fixes the spectrum of $\mathcal{E}$ (Appendix~\ref{app:cft:maps};~\cite{bpz1984, difrancesco1997}). In a simulation, those constraints appear through two channels: the transfer-matrix spectrum and the shape of the generalized temporal entanglement along a cut in the strip.
 
-The first channel is the transfer-matrix spectrum. Confining a \ac{CFT} to a strip of transverse size $\beta$ shifts its ground-state energy by an amount proportional to the central charge---the conformal anomaly: quantization on a finite geometry shifts the energy of a scale-invariant theory, and $c$ measures that shift ($c=\tfrac12$ for the Ising class). The excitations built on top of that shift are fixed by the theory as well: one level per operator, spaced by the scaling dimensions $x_i$, the universal exponents that set the power laws of the operators' correlations. Appendix~\ref{app:cft:spectrum} derives both statements by quantizing the theory on the strip. Our transfer matrix inherits this structure directly~\cite{carignano_tagliacozzo2025},
+\textit{The transfer-matrix spectrum}. Confining a \ac{CFT} to an infinite strip of transverse size $\beta$ produces a finite-size shift in its ground-state energy---the conformal anomaly---by an amount set by the central charge $c$. The excitations built on top of that shift are fixed by the theory as well: one level per operator, spaced by the scaling dimensions $x_i$, the universal exponents that set the power laws of the operators' correlations. See Appendix~\ref{app:cft:spectrum} for the details. Our transfer matrix inherits this structure directly~\cite{carignano_tagliacozzo2025},
 \begin{equation}
-    \mathcal{E} = e^{-\delta t\,\hat H}= \exp\!\Big[-\big(-\kappa + \pi L_0\big)\,g\Big],
-    \qquad \kappa = \frac{\pi c}{24},
-    \label{eq:cft:transfer}
+  \mathcal{E} = e^{-a\,\hat H}= \exp\!\Big[-\big(-\kappa + \pi L_0\big)\,g\Big],
+  \qquad \kappa = \frac{\pi c}{24},
+  \label{eq:cft:transfer}
 \end{equation}
-where $L_0$ is the operator whose eigenvalues list the scaling dimensions (Appendix~\ref{app:cft:spectrum}), $\kappa$ is the pure Casimir number, and $g=\delta t/\beta$ is the time step divided by the strip width. On the lattice the width is $v(T+2\beta_0)$ up to the continuation to real time, which is how $\delta t$, $\beta_0$, $T$ and the velocity all enter this single factor. The Casimir term appears in the dominant eigenvalue and carries $c$, while the gaps to the subleading eigenvalues encode the dimensions $x$. A single diagonalisation therefore yields both kinds of universal data, which appear in the eigenvalue moduli or phases depending on the real-time continuation.
+where $L_0$ is the operator whose eigenvalues list the scaling dimensions, $\kappa$ is the pure Casimir number, and $g=a/\beta$ is the spacing between the columns the transfer matrix steps through, divided by the width of the strip; since we measure lengths in lattice sites, $a=1$. On the lattice the width has both a real and an imaginary part, because the regulator contributes $2\beta_0$ of imaginary time and the quench contributes $T$ of real time. The model's velocity turns these durations into a length, $\beta=v(2\beta_0+iT)$. Appendix~\ref{app:cft:spectrum} puts this width into Eq.~\eqref{eq:cft:transfer} and expands for $\beta_0\ll T$. The universal terms then appear in the phases of the eigenvalues at order $1/T$, and in the moduli only at order $\beta_0/T^2$. The Casimir term appears in the dominant eigenvalue and carries $c$, while the gaps to the subleading eigenvalues encode the dimensions $x$. A single diagonalisation therefore yields both kinds of universal data, both read from phases.
 
-The second channel is entanglement. When a state is divided at a cut, the correlations between the two sides are measured by the entanglement entropy or, more generally, by the R\'enyi entropies $S_n$, a one-parameter family that includes the von Neumann entropy in the limit $n\to1$. In a \ac{CFT} these entropies follow from correlation functions of twist operators, primary fields whose dimension is proportional to $c$~\cite{calabrese_cardy2004}, so the entropy grows as the logarithm of the subsystem size with a coefficient proportional to $c$; Appendix~\ref{app:cft:twist} gives the mechanism. The precise coefficient, which depends on $n$ and on whether the cut is anchored at a boundary, is quoted with the predictions in Section~\ref{sec:cft:temporal}.
+\textit{The generalized temporal entanglement}. When a state is divided at a cut, the correlations between its two parts are quantified by the R\'enyi entropies $S_n$, whose limit $n\to1$ is the von Neumann entropy. In a \ac{CFT} these entropies follow from correlation functions of twist operators, primary fields whose dimension is proportional to $c$~\cite{calabrese_cardy2004}, so the entropy grows as the logarithm of the subsystem size with a coefficient proportional to $c$ (see Appendix~\ref{app:cft:maps} for details).
 
-In the transverse setting these entropies take a generalized form. The cut runs across the strip, in the time direction, rather than along its infinite spatial direction, and the two sides of the cut are not two halves of a single state: they belong to the two distinct temporal boundary states $\bra{L}$ and $\ket{R}$ of the transfer matrix. The corresponding entropies are therefore generalized entropies, built from the transition matrix $\ket{R}\bra{L}$ rather than from a density matrix of one state, and they are generally complex. Their construction is given in Section~\ref{sec:transverse}; the conformal predictions below apply to this generalized family.
-
-We use different members of the R\'enyi family in the equilibrium and dynamical settings. The equilibrium central charge (Section~\ref{sec:annni}) is extracted from the ground-state von Neumann entropy ($n\to1$), which \ac{DMRG} provides directly. For every temporal entropy in this thesis we instead use the generalized R\'enyi-2 entropy ($n=2$), because it avoids the matrix logarithm required for the von Neumann member, is numerically robust, and can be accessed experimentally through the two-replica protocol of Ref.~\cite{boucomas2026measuring}.
+In the transverse setting, the cut runs across the strip, in the time direction, and the two sides of the cut do not belong to a single quantum state: the entropies are instead built from the left and right temporal \acp{MPS} presented in Section~\ref{sec:transverse}. The resulting entropies are generalized entropies~\cite{doi2023}, and they are generally complex. The conformal predictions below apply to this generalized family, of which we always use in practice the generalized R\'enyi-2 entropy. It is the cheapest member to compute, and it is also the one within experimental reach~\cite{boucomas2026measuring}, since it needs only two copies of the system; the equilibrium calculations of Section~\ref{sec:annni} instead use the ground-state von Neumann entropy, obtained directly from the entanglement spectrum produced by \ac{DMRG}.
 
 \subsection{The universal predictions}
 \label{sec:cft:temporal}
 \label{sec:emergent}
 
-Conformal entropies on a finite interval are naturally expressed through the chord variable
-\begin{equation}
-    W(x,\ell) \;=\; \log\!\left[\frac{2\ell}{\pi}\,\sin\frac{\pi x}{\ell}\right],
-    \label{eq:chord}
-\end{equation}
-the logarithm of the chord subtended by a cut at position $x$ in a system of extent $\ell$. We use
-it throughout, both for the temporal cuts here and for the spatial ones of
-Section~\ref{sec:annni:equilibrium}.
-
 In the transverse description of the strip, the generalized R\'enyi-$n$ entropy across a temporal cut takes the form~\cite{carignano_tagliacozzo2025, boucomas2026}
 \begin{equation}
-    S_n^{\mathrm{gen}}(t) = s_0 + \frac{i\pi c}{24}\Big(1+\frac{1}{n}\Big)
-      + \frac{c}{12}\Big(1+\frac{1}{n}\Big)\,W(t,T).
-    \label{eq:cft:sgen}
+  S_n^{\mathrm{gen}}(t) = s_0 + \frac{i\pi c}{24}\Big(1+\frac{1}{n}\Big)
+  + \frac{c}{12}\Big(1+\frac{1}{n}\Big)\,W(t,T),
+  \label{eq:cft:sgen}
 \end{equation}
-Because the separation is timelike, the entropy grows logarithmically with the total evolution time $T$ rather than linearly, which is what allows the transverse contraction to remain efficient.
+where $x$ is the position of the cut, $\ell$ is the extent of the system, and we have defined the chord variable as
+\begin{equation}
+  W(x,\ell) \;=\; \log\!\left[\frac{2\ell}{\pi}\,\sin\frac{\pi x}{\ell}\right].
+  \label{eq:chord}
+\end{equation}
+Because the cut runs along the time direction (see Section~\ref{sec:transverse:network}), the evolution time plays the role of the subsystem size in the usual spatial formula. Evaluating the chord variable on the interval $(0,T)$ therefore gives an entropy that grows as $\log T$, so the bond dimension required for the transverse contraction grows only polynomially with $T$, rather than exponentially as in standard real-time evolution algorithms~\cite{schuch2008,paeckel2019}.
 
-Combined with the transfer spectrum in Eq.~\eqref{eq:cft:transfer}, this result leads to four predictions, all of which are tested in Section~\ref{sec:results}. Three concern the transfer eigenvalues $\mu_i$, which we order by decreasing modulus. In practice, we work with their logarithms, $\lambda_i = \log(-\mu_i)$, so that $\mathrm{Im}\,\lambda_i = \arg(-\mu_i)$ gives the phase of $\mu_i$ measured from the negative real axis. The minus sign follows the convention of Ref.~\cite{carignano_tagliacozzo2025} and adds the same shift of $\pi$ to every phase. It therefore cancels from the phase differences $\mathrm{Im}(\lambda_i-\lambda_0)$ used below, but must be accounted for when $\mathrm{Im}\,\lambda_0$ is considered on its own (Appendix~\ref{app:eq3}).
+Combined with the transfer spectrum in Eq.~\eqref{eq:cft:transfer}, this result leads to four predictions, all of which are tested in Section~\ref{sec:results}. Three concern the transfer eigenvalues $\mu_i$; in practice, we work with their logarithms, $\lambda_i = \log(-\mu_i)$, so that $\mathrm{Im}\,\lambda_i = \arg(-\mu_i)$ gives the phase of $\mu_i$ measured from the negative real axis. The minus sign shifts every phase by the same constant $\pi$. It cancels in the phase differences used below, and is absorbed by a constant in any fit of $\mathrm{Im}\,\lambda_0$ alone.
 
 \textit{The generalized-entropy profile.} Separating Eq.~\eqref{eq:cft:sgen} into real and imaginary parts gives
 \begin{equation}
-    \mathrm{Re}\,S_n^{\mathrm{gen}}(t) = s_0 + \frac{c}{12}\Big(1+\frac{1}{n}\Big)\,W(t,T),
-    \qquad
-    \mathrm{Im}\,S_n^{\mathrm{gen}} = \frac{\pi c}{24}\Big(1+\frac{1}{n}\Big).
-    \label{eq:cft:chord}
+  \mathrm{Re}\,S_n^{\mathrm{gen}}(t) = s_0 + \frac{c}{12}\Big(1+\frac{1}{n}\Big)\,W(t,T),
+  \qquad
+  \mathrm{Im}\,S_n^{\mathrm{gen}} = \frac{\pi c}{24}\Big(1+\frac{1}{n}\Big).
+  \label{eq:cft:chord}
 \end{equation}
-The real part follows a symmetric chord profile. When plotted against $W(t,T)$, it becomes a straight line with slope $c/8$ for the R\'enyi-2 entropy used here; how $c$ is extracted from that slope in practice is the subject of Section~\ref{sec:cft:universal}. The imaginary part does not depend on $t$ at all: it forms a plateau at $\pi c/16$~\cite{boucomas2026} and therefore provides a second estimate of $c$ from the same data, without fitting the profile. At the times we can reach, the plateau is not yet at its asymptotic height: it carries a finite-time correction that decays as $T^{-1/2}$~\cite{boucomas2026}, so a plain read is biased upward and an absolute estimate of $c$ requires fitting that form and extrapolating.
+The real part follows a symmetric chord profile. When plotted against $W(t,T)$, it becomes a straight line with a known slope from which $c$ is extracted (see Section~\ref{sec:cft:universal}). The imaginary part, on the other hand, does not depend on $t$ and is equal to a known constant proportional to $c$, providing a second, more direct estimate with no fits. Finite-time corrections to $S_n^{\mathrm{gen}}$ decay as $T^{-1/n}$~\cite{boucomas2026}; for the R\'enyi-2 entropy used here this is $T^{-1/2}$, so extracting $c$ requires extrapolation to the long-time limit.
 
-\textit{The central charge from the leading eigenvalue.} The imaginary part of the dominant eigenvalue obeys
+\textit{The central charge from the leading eigenvalue.} The two predictions that follow are expansions in $1/T$ of the logarithms $\lambda_i$, not of the eigenvalues themselves. Substituting the strip width into Eq.~\eqref{eq:cft:transfer} and expanding gives the result of~\cite{carignano_tagliacozzo2025}, reproduced in Appendix~\ref{app:cft:spectrum}: the imaginary part of the dominant eigenvalue obeys
 \begin{equation}
-    \frac{\mathrm{Im}\,\lambda_0}{T} = a_0 + \frac{C}{T^2} + \frac{a_4}{T^4} + \cdots,
-    \qquad C = -\frac{\kappa}{v} = -\frac{\pi c}{24\,v}.
-    \label{eq:cft:eq3}
+  \frac{\mathrm{Im}\,\lambda_0}{T} = a_0 + \frac{C}{T^2} + \frac{a_4}{T^4} + \cdots,
+  \qquad C = -\frac{\kappa}{v} = -\frac{\pi c}{24\,v}.
+  \label{eq:cft:eq3}
 \end{equation}
-Here $a_0$ is the non-universal extensive contribution, while the coefficient of $1/T^2$ carries the Casimir number divided by the velocity. Once $v$ has been measured independently (Section~\ref{sec:annni:velocity}), the relation $c = 24\,v\,|C|/\pi$ determines the central charge from the eigenvalue phase alone, without relying on the entropy. Because this term is small, the extraction requires a nonzero $\beta_0$, sufficiently long times, and a fixed branch offset, as discussed in Appendix~\ref{app:eq3}.
+Here $a_0$ and $a_4$ are non-universal coefficients, while the coefficient of $1/T^2$ carries the Casimir number divided by the velocity. Once $v$ has been measured independently (Section~\ref{sec:annni:velocity}), the relation $c = 24\,v\,|C|/\pi$ determines the central charge from the eigenvalue phase alone, without relying on the entropy. Because this term is small, the extraction requires a nonzero $\beta_0$ and sufficiently long times. In practice we fit $\mathrm{Im}\,\lambda_0 = A\,T + B + C/T + D/T^3$ on the unwrapped phase, where $B$ absorbs the branch shift.
 
 \textit{The boundary exponent from the first gap.} The gap between the leading and first subleading eigenvalues measures the lightest boundary dimension,
 \begin{equation}
-    \mathrm{Im}(\lambda_1-\lambda_0) = -\frac{\pi x_1}{v\,T}.
-    \label{eq:cft:eq4}
+  \mathrm{Im}(\lambda_1-\lambda_0) = \frac{\pi x_1}{v\,T}.
+  \label{eq:cft:eq4}
 \end{equation}
-Once the sound velocity is known, this phase gap determines $x_1$. More generally, the subleading eigenvalues reproduce the tower of boundary scaling dimensions through phase gaps of the form $\pi x/(vT)$.
+Once the sound velocity is known, this phase gap determines $x_1$. More generally, the $i$-th subleading eigenvalue measures the $i$-th boundary dimension, $\mathrm{Im}(\lambda_i-\lambda_0) = \pi x_i/(v\,T)$, so the spectrum reproduces the whole tower of boundary scaling dimensions.
 
-\textit{Emergent dual unitarity.} Equation~\eqref{eq:cft:transfer} also fixes how the spectrum evolves with $T$: the moduli of the leading eigenvalues approach a common value while their phases stay distinct,
+\textit{Emergent dual unitarity.} Equation~\eqref{eq:cft:transfer} also fixes how the spectrum evolves with $T$. Unlike the two predictions above, this one is an expansion of the eigenvalues themselves rather than of their logarithms: the moduli of the leading eigenvalues approach a common value while their phases stay distinct,
 \begin{equation}
-    \frac{|\mu_i(T)|}{|\mu_0(T)|}
-        = 1 - \frac{a_i}{T} - \frac{b_i}{T^2} - \cdots
-        \;\xrightarrow[T\to\infty]{}\; 1 .
-    \label{eq:gapclose}
+  \frac{|\mu_i(T)|}{|\mu_0(T)|}
+  = 1 - \frac{a_i}{T} - \frac{b_i}{T^2} - \cdots
+  \;\xrightarrow[T\to\infty]{}\; 1 .
+  \label{eq:gapclose}
 \end{equation}
-Equal moduli with distinct phases indicate that the temporal transfer matrix approaches a unitary operator up to an overall (model-dependent) normalization. This emergent dual unitarity follows from conformal invariance and accounts for the logarithmic entropy growth above. The closing of the modulus gaps also makes the leading eigenvectors increasingly difficult to resolve, which ultimately limits the numerical method (Section~\ref{sec:numerics}). We test this behaviour by following the dominant eigenvalue $\mu_0(T)$ in the complex plane, where it approaches a trajectory of nearly constant radius with a winding phase.
+Equal moduli with distinct phases indicate that the temporal transfer matrix approaches a unitary operator up to an overall (non-universal) normalization. We test this behaviour by following the dominant eigenvalue $\mu_0(T)$ in the complex plane, where it approaches a trajectory of nearly constant radius with a winding phase.
 
 \subsection{Universal versus non-universal constants}
 \label{sec:cft:universal}
 
 The predictions above are exact only in the continuum limit. A simulation instead runs on a microscopic lattice, at finite evolution time $T$, bond dimension $\chi$ and Trotter step $\delta t$, and with a nonzero regulator $\beta_0$. Its measurements therefore mix two kinds of contributions. The universal ones are fixed by the universality class: the central charge $c$ and the scaling dimensions $x_i$, which set every coefficient in Eqs.~\eqref{eq:cft:chord}--\eqref{eq:gapclose}. The non-universal ones are introduced by the lattice and the algorithm: the regulator $\beta_0$ and the entropy offset $s_0$ it feeds, the Trotter step $\delta t$, the sound velocity $v$, and the overall normalization of the transfer matrix, which is model dependent and makes the modulus of the dominant eigenvalue differ from one. How well these contributions can be separated determines which predictions can be compared with a simulation and how that comparison should be made.
 
-The sound velocity plays a distinct role. Although it is non-universal and varies with $p$ (Section~\ref{sec:annni:velocity}), it can be measured independently from the equilibrium dispersion. Since the eigenvalue phases depend on the combination $\pi x/(vT)$, the velocity is needed to convert a measured phase gap into the universal scaling dimension $x$.
+The sound velocity is non-universal, but it can be measured independently from the equilibrium dispersion of the same model (Section~\ref{sec:annni:velocity}). Since the eigenvalue phases depend on the combination $\pi x/(vT)$, the velocity is needed to convert a measured phase gap into the corresponding universal scaling dimension $x_i$.
 
-This separation is possible because the universal and non-universal contributions affect the spectrum differently. The overall normalization of the transfer matrix multiplies every eigenvalue by the same constant: it rescales all the moduli $|\mu_i|$ while leaving the phases untouched. The universal level structure therefore appears in the phases, and we read scaling dimensions from phase differences, using the moduli only through ratios or their limiting behaviour.
+This separation is possible because the universal and non-universal contributions affect the spectrum differently. The transfer matrix carries an overall normalization that the lattice construction fixes and the continuum theory does not. Each column of the network is one Trotter layer together with the cooling rows, so its scale depends on $\delta t$, on $\beta_0$, and on the normalization convention chosen for the local \ac{MPO} tensor. Its closed form is not needed: the constant multiplies every eigenvalue alike, so it rescales all the moduli $|\mu_i|$ and leaves the phases untouched. The universal level structure therefore appears in the phases, and we read scaling dimensions from phase differences, using the moduli only through ratios or their limiting behaviour.
 
-Ratios remove more than the normalization. A single phase gap contains a universal dimension, but also depends on the regulator $\beta_0$ and the velocity. The ratio of two gaps, $(x_i-x_0)/(x_j-x_0)$, is independent of all three at once. It therefore probes the operator content without any external input and provides the cleanest measurement available to us.
-
-Not every quantity can be turned into a ratio of this kind. The entropy slope of Eq.~\eqref{eq:cft:chord} measures $c$ directly, but at finite $(T,\chi,\delta t)$ the measured slope is not the continuum value $c/8$: finite-time, truncation and Trotter corrections multiply it,
+Ratios remove more than the normalization. A single phase gap contains a universal dimension, but also depends on the regulator $\beta_0$ and the velocity. The ratio of two gaps,
 \begin{equation}
-    \mathrm{slope}(p; T, \chi, \delta t) = \frac{c(p)}{8}\,K(T,\chi,\delta t,\beta_0) + \text{(subleading)},
-    \label{eq:cft:calib}
+    \frac{\mathrm{Im}(\lambda_2-\lambda_0)}{\mathrm{Im}(\lambda_1-\lambda_0)}
+      = \frac{x_2-x_0}{x_1-x_0},
+    \label{eq:cft:gapratio}
 \end{equation}
-where $K$ collects the corrections shared by models in the same universality class. Two routes deal with $K$. The first is calibration: a reference model in the same universality class, with $c$ known exactly, is run through the same pipeline at matched $(T,\chi,\delta t,\beta_0)$, and the ratio of slopes cancels the common factor,
-\begin{equation}
-    c(p) \approx \frac{1}{2}\,\frac{\mathrm{slope}(p)}{\mathrm{slope}(0)}.
-    \label{eq:cft:calibratio}
-\end{equation}
-For us the reference is the integrable point $p=0$ of the chain studied in Section~\ref{sec:annni}, whose central charge is exactly $\tfrac12$; the residual uncertainty comes from coupling-dependent subleading terms, which do not cancel. The second route uses the fact that the functional form of the corrections is itself fixed by the \ac{CFT}~\cite{boucomas2026}, so they can be included explicitly in the fit and $c$ extracted absolutely, without a reference. The costs differ: the absolute route needs a window in $T$ long enough to separate the correction from the leading term, while calibration works at shorter times but needs the reference simulation. An absolute extraction from the leading eigenvalue also requires a constant branch offset to be fixed first, as discussed in Appendix~\ref{app:eq3}.
+is independent of all three at once, since $\beta_0$, the velocity and the normalization cancel between numerator and denominator. It therefore probes the operator content without any external input and provides the cleanest measurement available to us.
 
+Not every quantity can be turned into a ratio of this kind. The entropy slope of Eq.~\eqref{eq:cft:chord} measures $c$ directly, but at finite $(T,\chi,\delta t)$ the measured slope does not directly give the continuum value: finite-time, truncation and Trotter corrections multiply it,
+\textit{esta ecuacion no es muy bonita, podemos decir algo de que slope0 = 1/2 y por tanto el fit directamente da el resultado de c, o darle una vuelta...}
+\begin{equation}
+  \mathrm{slope}(p; T, \chi, \delta t) = \frac{c(p)}{8}\,K(T,\chi,\delta t,\beta_0) + \text{(subleading)},
+  \label{eq:cft:calib}
+\end{equation}
+where $K$ collects the corrections that two models in the same universality class share when run through the same pipeline. Two routes deal with $K$. The first is calibration: a reference model with $c$ known exactly is run at matched $(T,\chi,\delta t,\beta_0)$, and the ratio of slopes cancels the common factor,
+\begin{equation}
+  c(p) \approx \frac{1}{2}\,\frac{\mathrm{slope}(p)}{\mathrm{slope}(0)}.
+  \label{eq:cft:calibratio}
+\end{equation}
+For us the reference is the integrable point of the chain studied in Section~\ref{sec:annni}, whose central charge is exactly $\tfrac12$. The cancellation is exact only for corrections common to both runs. It therefore assumes that the two models share a universality class, which is part of what the measurement is meant to establish. Coupling-dependent subleading terms do not cancel and set the residual uncertainty. The calibrated number is a consistency check rather than an independent determination. The second route uses the fact that the functional form of the corrections is itself fixed by the \ac{CFT}~\cite{boucomas2026}, so they can be included explicitly in the fit and $c$ extracted absolutely, without a reference. The costs differ: the absolute route needs a window in $T$ long enough to separate the correction from the leading term, while calibration works at shorter times but needs the reference simulation.
 These predictions are stated for the continuum theory. Section~\ref{sec:transverse} constructs their lattice counterpart: the transverse contraction that turns the space--time network into a transfer-matrix eigenproblem, and the transition matrix from which the generalized temporal entropies are computed.

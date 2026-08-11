@@ -10,6 +10,8 @@ The framework of Sections~\ref{sec:cft} and~\ref{sec:transverse} requires a quen
 \end{equation}
 where $\sigma^{x,z}$ are Pauli matrices, $\lambda$ is the transverse field, and $p$ controls the strength of the additional interactions. The first two terms define the transverse-field Ising chain. The terms proportional to $p$ introduce the \ac{NNN} bond and the accompanying $\sigma^x\sigma^x$ interaction required to preserve self-duality.
 
+Self-duality is what fixes the critical point without a numerical search. The Kramers--Wannier transformation maps the order variables onto disorder variables defined on the dual lattice: $\sigma^z_i\sigma^z_{i+1}\to\sigma^x_i$ and $\sigma^x_i\to\sigma^z_i\sigma^z_{i+1}$, and correspondingly $\sigma^z_i\sigma^z_{i+2}\to\sigma^x_i\sigma^x_{i+1}$ for the next-nearest bond. Each pair of terms in Eq.~\eqref{eq:annni_H} is exchanged with its partner, and the Hamiltonian returns to itself with $\lambda\to1/\lambda$ at fixed $p$. The $\sigma^x\sigma^x$ term is present precisely so that the $p$ sector closes under this map. A self-dual point is a fixed point of the transformation, so if the chain has a single transition it must sit at $\lambda=1$ for every $p$. Alcaraz established that the transition remains continuous and in the Ising universality class over a wide range of $p$~\cite{alcaraz2016}, which is what makes the conformal predictions of Section~\ref{sec:cft} applicable at $\lambda=1$ throughout.
+
 Throughout this work we set $\lambda=1$, where the chain is critical and the conformal predictions of Section~\ref{sec:cft} apply. At $p=0$, Eq.~\eqref{eq:annni_H} reduces to the integrable transverse-field Ising chain. For $p>0$, the additional interactions introduce a second length scale and break the free-fermion structure, as shown in Section~\ref{sec:annni:jw}.
 
 \subsection{Equilibrium criticality and the central charge}
@@ -35,7 +37,7 @@ For each value of $p$, we obtain the ground state of a chain with $N=100$ sites 
 
 The profiles follow the conformal scaling law at every coupling. The fitted central charge remains between $0.5070$ and $0.5081$ over the full range, so it barely moves as $p$ grows. The common offset from the exact value $c=1/2$ is consistent with residual finite-size corrections to Eq.~\eqref{eq:cft_obc}: it is present both at the exactly known point $p=0$ and at non-zero $p$. These results confirm that the additional interactions do not change the universality class over the range considered. Appendix~\ref{app:fss} provides an independent estimate from the finite-size scaling of the mid-chain entropy, together with a cross-check based on the R\'enyi-2 entropy.
 
-The point $p=0$ provides the reference case for the dynamical analysis. In the transverse-field Ising chain, the post-quench temporal entropies have been derived from \ac{CFT} and reproduced numerically~\cite{carignano_tagliacozzo2025}. We use this exact limit to calibrate the transverse contraction in Section~\ref{sec:results:validation}, before introducing the non-integrable interactions.
+The point $p=0$ provides the reference case for the dynamical analysis. In the transverse-field Ising chain, the post-quench generalized temporal entropies have been derived from \ac{CFT} and reproduced numerically~\cite{carignano_tagliacozzo2025}. We use this exact limit to calibrate the transverse contraction in Section~\ref{sec:results:validation}, before introducing the non-integrable interactions.
 
 \subsection{Fermionic form of the NNN interactions}
 \label{sec:annni:jw}
@@ -64,8 +66,19 @@ The parity dependence also provides a microscopic origin for the sector structur
 \subsection{Sound velocity}
 \label{sec:annni:velocity}
 
-The \ac{NNN} interaction modifies the propagation of low-energy excitations. At the critical point, their linear dispersion defines the sound velocity $v$ through $\omega=v|k|$. This velocity enters the conformal predictions of Section~\ref{sec:cft}, so it must be determined independently before the dynamical data can be compared with them. For the integrable chain, $v=2$ exactly; for $p>0$, we determine it numerically.
+The \ac{NNN} interaction modifies the propagation of low-energy excitations. At the critical point the excitation energy $\omega$ is linear in the lattice momentum $k$ at long wavelengths, and the slope of that dispersion is the sound velocity, $\omega=v|k|$. This velocity enters the conformal predictions of Section~\ref{sec:cft}, so it must be determined independently before the dynamical data can be compared with them. For the integrable chain, $v=2$ exactly; for $p>0$, we determine it numerically.
 
-We extract $v(p)$ from the equilibrium dispersion of small periodic chains by identifying the lowest excitation with non-zero momentum. The construction, its validation, and the measured values are given in Appendix~\ref{app:velocity} (Figure~\ref{fig:velocity}). The velocity increases monotonically over the range studied, from the exact $v=2$ at $p=0$ to $v\approx4.9$ at $p=0.5$. The additional interaction therefore changes a non-universal scale that must be included when testing the universal conformal predictions.
+We extract $v(p)$ from the equilibrium dispersion of periodic chains, diagonalized exactly, by identifying the lowest excitation carrying momentum in the magnetic sector. Figure~\ref{fig:velocity} shows the result at four ring sizes. The velocity grows steadily with frustration, from the exact $v=2$ at $p=0$ to $v=5.05$ at $p=0.5$ for the largest ring we reach.
+
+The dependence on $p$ is close to linear. Fitting $v=K_0+K_1p$ over $0\le p\le0.5$ leaves residuals below $0.03$ at every size, so the line is a good description but not an exact one. Its coefficients still move with the ring size, from $(K_0,K_1)=(2.00,5.68)$ at $N=10$ to $(2.01,6.13)$ at $N=16$, the intercept settling near the exact value $v(0)=2$ while the slope is still drifting upward. We therefore use the measured $v(p)$ at fixed $N=12$ throughout, rather than the fitted line, and treat the remaining size dependence as part of the uncertainty on any quantity that needs the velocity. Appendix~\ref{app:velocity} gives the construction and its validation.
+
+The additional interaction therefore changes a non-universal scale that must be included when testing the universal conformal predictions.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.72\textwidth]{imgs/nb4_velocity_vs_p.png}
+    \caption{\textbf{The sound velocity grows with frustration.} $v(p)$ at $\lambda=1$, from the equilibrium dispersion of periodic rings of $N=10$ to $16$ sites. The dashed line is the linear fit at $N=16$ and the dotted line marks the exact Ising value $v=2$ at $p=0$.}
+    \label{fig:velocity}
+\end{figure}
 
 Having established that the model remains in the Ising universality class and determined the coupling-dependent velocity, we now consider the quench from the completely polarised state. The next section constructs the time-evolution MPO, whose rotation defines the transfer matrix of Section~\ref{sec:transverse} for this model.
