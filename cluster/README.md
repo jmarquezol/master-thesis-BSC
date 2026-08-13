@@ -30,14 +30,14 @@ From inside `cluster/`:
 cd cluster
 julia --project=.. wall_scan_cluster.jl preflight    # must print "preflight OK"
 
-sbatch submit_rtm_eigs_p0.0_fine.slurm   # 1. the most important one
-sbatch submit_ksec_p0.3_plus.slurm       # 2.
-sbatch submit_ksec_p0.3_minus.slurm      # 3.
-sbatch submit_ksec_p0.5_plus.slurm       # 4.
-sbatch submit_ksec_p0.5_minus.slurm      # 5.
-sbatch submit_tower_p0.1.slurm           # 6.
-sbatch submit_tower_p0.3.slurm           # 7.
-sbatch submit_tower_p0.5.slurm           # 8.
+sbatch submit_rtm_eigs_p0.0_fine.slurm
+sbatch submit_ksec_p0.3_plus.slurm    
+sbatch submit_ksec_p0.3_minus.slurm   
+sbatch submit_ksec_p0.5_plus.slurm    
+sbatch submit_ksec_p0.5_minus.slurm   
+sbatch submit_tower_p0.1.slurm        
+sbatch submit_tower_p0.3.slurm        
+sbatch submit_tower_p0.5.slurm        
 ```
 
 Every script runs the preflight itself, so a broken environment fails in a minute instead of
