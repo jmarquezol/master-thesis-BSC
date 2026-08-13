@@ -23,4 +23,4 @@ export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 julia --project=.. wall_scan_cluster.jl preflight || { echo "PREFLIGHT FAILED - bad environment, not starting the ladder"; exit 1; }
 
-julia --project=.. wall_scan_cluster.jl ksector 0.3 plus 12
+julia --project=.. wall_scan_cluster.jl ksector 0.3 plus 18
