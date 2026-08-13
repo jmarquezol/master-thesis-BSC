@@ -9,7 +9,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=40
 
-# k=8 block at p=0.1, T up to 6, for the tower figure.
+# k=8 block at p=0.1, T up to 10, for the tower figure.
 
 cd "${SLURM_SUBMIT_DIR:-.}" || exit 1
 mkdir -p logs
@@ -18,4 +18,4 @@ export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
 julia --project=.. wall_scan_cluster.jl preflight || { echo "PREFLIGHT FAILED - bad environment, not starting the ladder"; exit 1; }
 
-julia --project=.. wall_scan_cluster.jl towerscan 0.1 6
+julia --project=.. wall_scan_cluster.jl towerscan 0.1 10
