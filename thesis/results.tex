@@ -10,12 +10,12 @@ Unless stated otherwise, all runs use the VD2 time-evolution MPO of Section~\ref
 \label{sec:results:validation}
 \label{sec:results:wall}
 
-At $p=0$ the generalized temporal entropy follows the conformal prediction over the full simulated window. Figure~\ref{fig:domes_p0} shows the R\'enyi-2 profiles: the real part collapses onto the chord curves of Eq.~\eqref{eq:cft:chord} with $c=\tfrac12$, and the imaginary part forms the predicted plateau. The plateau sits above $\pi c/16$ at every time we reach, and falls as $T$ grows, from $0.129$ at $T=6$ to $0.119$ at $T=12$. This is the finite-time correction of Ref.~\cite{boucomas2026}, which decays as $T^{-1/2}$. Fitting that form over $T=4$ to $12$ and extrapolating to infinite time gives $c=0.53$, an absolute estimate that needs no reference model.
+At $p=0$ the generalized temporal entropy follows the conformal prediction over the full simulated window. Figure~\ref{fig:domes_p0} shows the R\'enyi-2 profiles: the real part collapses onto the chord curves of Eq.~\eqref{eq:cft:chord} with $c=\tfrac12$, and the imaginary part forms the predicted plateau. The plateau sits above $\pi c/16$ at every time we reach, and falls as $T$ grows, from $0.130$ at $T=4$ to $0.118$ at $T=15$. This is the finite-time correction of Ref.~\cite{boucomas2026}, which decays as $T^{-1/2}$. Fitting that form over $T=4$ to $15$ and extrapolating to infinite time gives $c=0.55$, an absolute estimate that needs no reference model.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{imgs/res_domes_p0.png}
-    \caption{\textbf{The generalized temporal entropy at the integrable point.} One colour per evolution time. (a) Re $S_2$ against $t/T$. Each dashed curve is the prediction of Eq.~\eqref{eq:cft:chord} at $c=\tfrac12$ for that $T$, not a fit: its shape is fixed by the prediction, and only its height is matched to the data, since the additive constant $s_0$ is non-universal. What is being compared is therefore the shape. (b) Im $S_2$, flat across the interior of the strip as predicted. Each dashed line here is the measured plateau of its own $T$. The plateaus fall from $0.129$ at $T=6$ to $0.119$ at $T=12$, approaching the predicted $\pi c/16=0.098$ from above as the finite-time correction decays.}
+    \caption{\textbf{The generalized temporal entropy at the integrable point.} One colour per evolution time. (a) Re $S_2$ against $t/T$. Each dashed curve is the prediction of Eq.~\eqref{eq:cft:chord} at $c=\tfrac12$ for that $T$, not a fit: its shape is fixed by the prediction, and only its height is matched to the data, since the additive constant $s_0$ is non-universal. What is being compared is therefore the shape. (b) Im $S_2$, flat across the interior of the strip as predicted. Each dashed line here is the measured plateau of its own $T$. The plateaus fall from $0.129$ at $T=6$ to $0.122$ at $T=14$, approaching the predicted $\pi c/16=0.098$ from above as the finite-time correction decays.}
     \label{fig:domes_p0}
 \end{figure}
 
@@ -26,13 +26,13 @@ Switching on frustration, the dome remains conformal inside a window that shrink
 \end{equation}
 with per-time values between $0.42$ and $0.56$, consistent with the Ising value. The quoted uncertainty is the sample standard deviation of these per-time reads. At $p=0.3$ and $p=0.5$ the entropy stops being usable at $T\approx3$ and $T\approx2$. These times are too short for the conformal asymptotics to apply in the first place, so no central charge can be extracted from the entropy at those couplings, and we do not quote one. They are omitted from Figure~\ref{fig:wall} for the same reason.
 
-At $p=0.1$ the window closes for a reason we can identify. Figure~\ref{fig:wall}a shows the phase rigidity of the dominant pair, Eq.~\eqref{eq:rigidity}, falling geometrically at every coupling and faster as $p$ grows. It reaches its floor at $T=10$ for $p=0.1$, which is where the profiles leave the conformal line in Figure~\ref{fig:wall}b. The left and right eigenvectors have coalesced there, so the entropy built from them is no longer well defined, whatever the solver does.
+At $p=0.1$ the window closes for a reason we can identify. Figure~\ref{fig:wall}a shows the phase rigidity of the dominant pair, Eq.~\eqref{eq:rigidity}, falling geometrically at every coupling and faster as $p$ grows. It reaches its floor at $T=9$ for $p=0.1$, which is where the profiles leave the conformal line in Figure~\ref{fig:wall}b. The left and right eigenvectors have coalesced there, so the entropy built from them is no longer well defined, whatever the solver does.
 
 Past the wall the iteration no longer converges to the physical eigenvectors, so the profiles it returns are not entropies of the state we intend to compute. Their shape carries no physical meaning and we do not interpret it. We use only the time at which the profile stops following the conformal line, which is what locates the wall. Appendix~\ref{app:wall:shape} shows the profiles on either side of that time.
 
-The eigenvalues are not affected at the same time: the ladder of Section~\ref{sec:results:spectral} continues past $T=10$ at $p=0.1$ and gives central charges consistent with $\tfrac12$ there. This is the asymmetry of Section~\ref{sec:reach}, where an eigenvalue is protected by its own overlap and an eigenvector is not.
+The eigenvalues are not affected at the same time: the ladder of Section~\ref{sec:results:spectral} continues past $T=9$ at $p=0.1$ and gives central charges consistent with $\tfrac12$ there. This is the asymmetry of Section~\ref{sec:reach}, where an eigenvalue is protected by its own overlap and an eigenvector is not.
 
-We tested at $p=0.1$ whether this onset depends on the numerical resolution, by halving the bond dimension, tightening the truncation cutoff, and replacing the \ac{RTM} truncation with the \ac{RDM} one. Table~\ref{tab:wall_controls} lists the dome peaks. They agree to three decimals up to $T=9$, and all break between $T=9$ and $T=10$. Varying the regulator between $\beta_0=0.1$ and $0.8$ does not move it either (Appendix~\ref{app:wall:eps}). All of this was measured at one coupling and one bond dimension, so a much larger $\chi$ remains untested. Past $T=10$ at $p=0.1$ we read the physics from the eigenvalues alone.
+We tested at $p=0.1$ whether this onset depends on the numerical resolution, by halving the bond dimension, tightening the truncation cutoff, and replacing the \ac{RTM} truncation with the \ac{RDM} one. Table~\ref{tab:wall_controls} lists the dome peaks. They agree to three decimals with one another and all break at the same time, one rung later than the cluster arm quoted above. Varying the regulator between $\beta_0=0.1$ and $0.8$ does not move it either (Appendix~\ref{app:wall:eps}). All of this was measured at one coupling and one bond dimension, so a much larger $\chi$ remains untested. Past $T=9$ at $p=0.1$ we read the physics from the eigenvalues alone. The controls were run locally and the arm quoted above on the cluster; the one-rung difference between them is not understood and is left open.
 
 \begin{figure}[htbp]
     \centering
@@ -91,13 +91,13 @@ The fit window at $p=0.1$ must end where the branch tracking ends. The constant 
     $p$ & R\'enyi-2 slope $c$ & eigenvalue-route $c$ & boundary exponent $x_1$ \\
     \hline
     $0$   & $\tfrac12$ (calibration) & $0.48$ & $0.49$ \\
-    $0.1$ & $0.47\pm0.05$ & $0.54$ & $0.47$ \\
+    $0.1$ & $0.53$ & $0.54$ & $0.47$ \\
     $0.3$ & \textit{[OPEN]} & \textit{[OPEN]} & \textit{[OPEN]} \\
     $0.5$ & \textit{[OPEN]} & \textit{[OPEN]} & \textit{[OPEN]} \\
     $1.0$--$1.5$ & \multicolumn{3}{c}{\textit{[method wall: near-exact top-spectrum degeneracy]}} \\
     \hline
     \end{tabular}
-    \caption{\textbf{Universal data versus frustration.} All three measurements agree with the Ising values at both computed couplings, the eigenvalue-route entries being read over $T\le9$ (Section~\ref{sec:results:spectral}). The $p=0.3,\,0.5$ rows await the finer cluster ladders, and at $p\ge1$ the top of the spectrum is degenerate to machine precision and the physical branch cannot be resolved.}
+    \caption{\textbf{Universal data versus frustration.} All three measurements agree with the Ising values at both computed couplings, the eigenvalue-route entries being read over $T\le9$ (Section~\ref{sec:results:spectral}). The $p=0.3,\,0.5$ rows remain open. The finer cluster ladders have since been run and do not close them: the leading pair is already close to degenerate at the shortest time we simulate, with the phase rigidity falling from $0.29$ at $p=0$ to $0.05$ at $p=0.3$ and $0.014$ at $p=0.5$ at $T=2$, so neither route has a well-conditioned window at those couplings. At $p\ge1$ the top of the spectrum is degenerate to machine precision and the physical branch cannot be resolved.}
     \label{tab:cp}
 \end{table}
 

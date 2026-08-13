@@ -1,3 +1,4 @@
+/*.log
 results/logs/
 
 # Claude process/meta files: kept locally for session context, not tracked in the repo
@@ -21,3 +22,6 @@ checkpoints_for_bsc.zip
 STATE.md
 conclusions_draft.tex
 defense_prep.ipynb
+NEXT_SESSION_PROMPT.md
+V12_REVISIONS.md
+NBs/*.ipynb.bak

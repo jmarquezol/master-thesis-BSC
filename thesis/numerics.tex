@@ -98,3 +98,33 @@ Eigenvalues and eigenvectors then lose accuracy at different points, which deter
 the normalized overlap between the left and right eigenvector of the same eigenvalue. For a Hermitian matrix the two coincide and $r_j=1$. As two eigenvectors rotate towards a common direction $r_j$ falls towards zero, and at $r_j=0$ they have coalesced: the matrix is defective and has no complete eigenbasis. Two eigenvalues can approach each other without their eigenvectors coalescing, and the eigenvalues alone do not distinguish the two cases, whereas $r_j$ does. Appendix~\ref{app:wall} develops the consequences.
 
 Finally, we test whether an observed limitation is physical or resolution dependent by repeating representative calculations at half the bond dimension, with a tighter truncation cutoff, and with \ac{RDM} rather than \ac{RTM} truncation. We attribute a feature to the transfer matrix only if it persists under all three changes.
+
+\subsection{Universal versus non-universal constants}
+\label{sec:numerics:universal}
+
+The predictions of Section~\ref{sec:cft} are exact only in the continuum limit. A simulation instead runs on a microscopic lattice, at finite evolution time $T$, bond dimension $\chi$ and Trotter step $\delta t$, and with a nonzero regulator $\beta_0$. Its measurements therefore mix two kinds of contributions. The universal ones are fixed by the universality class: the central charge $c$ and the scaling dimensions $x_i$, which set every coefficient in Eqs.~\eqref{eq:cft:chord}--\eqref{eq:gapclose}. The non-universal ones are introduced by the lattice and the algorithm: the regulator $\beta_0$ and the entropy offset $s_0$ it feeds, the Trotter step $\delta t$, the sound velocity $v$, and the overall normalization of the transfer matrix, which is model dependent and makes the modulus of the dominant eigenvalue differ from one. How well these contributions can be separated determines which predictions can be compared with a simulation and how that comparison should be made.
+
+The sound velocity is non-universal, but it can be measured independently from the equilibrium dispersion of the same model (Section~\ref{sec:annni:velocity}). Since the eigenvalue phases depend on the combination $\pi x/(vT)$, the velocity is needed to convert a measured phase gap into the corresponding universal scaling dimension $x_i$.
+
+This separation is possible because the universal and non-universal contributions affect the spectrum differently. The transfer matrix carries an overall normalization that the lattice construction fixes and the continuum theory does not. Each column of the network is one Trotter layer together with the cooling rows, so its scale depends on $\delta t$, on $\beta_0$, and on the normalization convention chosen for the local \ac{MPO} tensor. Its closed form is not needed: the constant multiplies every eigenvalue alike, so it rescales all the moduli $|\mu_i|$ and leaves the phases untouched. The universal level structure therefore appears in the phases, and we read scaling dimensions from phase differences, using the moduli only through ratios or their limiting behaviour.
+
+Ratios remove more than the normalization. A single phase gap contains a universal dimension, but also depends on the regulator $\beta_0$ and the velocity. The ratio of two gaps,
+\begin{equation}
+    \frac{\mathrm{Im}(\lambda_2-\lambda_0)}{\mathrm{Im}(\lambda_1-\lambda_0)}
+      = \frac{x_2-x_0}{x_1-x_0},
+    \label{eq:cft:gapratio}
+\end{equation}
+is independent of all three at once, since $\beta_0$, the velocity and the normalization cancel between numerator and denominator. It therefore probes the operator content without any external input and provides the cleanest measurement available to us.
+
+Not every quantity can be turned into a ratio of this kind. The entropy slope of Eq.~\eqref{eq:cft:chord} measures $c$ directly, but at finite $(T,\chi,\delta t)$ the measured slope does not directly give the continuum value: finite-time, truncation and Trotter corrections multiply it,
+\textit{esta ecuacion no es muy bonita, podemos decir algo de que slope0 = 1/2 y por tanto el fit directamente da el resultado de c, o darle una vuelta...}
+\begin{equation}
+  \mathrm{slope}(p; T, \chi, \delta t) = \frac{c(p)}{8}\,K(T,\chi,\delta t,\beta_0) + \text{(subleading)},
+  \label{eq:cft:calib}
+\end{equation}
+where $K$ collects the corrections that two models in the same universality class share when run through the same pipeline. Two routes deal with $K$. The first is calibration: a reference model with $c$ known exactly is run at matched $(T,\chi,\delta t,\beta_0)$, and the ratio of slopes cancels the common factor,
+\begin{equation}
+  c(p) \approx \frac{1}{2}\,\frac{\mathrm{slope}(p)}{\mathrm{slope}(0)}.
+  \label{eq:cft:calibratio}
+\end{equation}
+For us the reference is the integrable point of the chain studied in Section~\ref{sec:annni}, whose central charge is exactly $\tfrac12$. The cancellation is exact only for corrections common to both runs. It therefore assumes that the two models share a universality class, which is part of what the measurement is meant to establish. Coupling-dependent subleading terms do not cancel and set the residual uncertainty. The calibrated number is a consistency check rather than an independent determination. The second route uses the fact that the functional form of the corrections is itself fixed by the \ac{CFT}~\cite{boucomas2026}, so they can be included explicitly in the fit and $c$ extracted absolutely, without a reference. The costs differ: the absolute route needs a window in $T$ long enough to separate the correction from the leading term, while calibration works at shorter times but needs the reference simulation.
