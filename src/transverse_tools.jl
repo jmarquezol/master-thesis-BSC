@@ -129,7 +129,8 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         seedL::Union{Nothing,AbstractVector{MPS}}=nothing,
         seedR::Union{Nothing,AbstractVector{MPS}}=nothing,
         basis::Symbol=:eig,
-        eigvals_only::Bool=false)
+        eigvals_only::Bool=false,
+        project::Union{Nothing,Function}=nothing)
 
     # Spectrum-only mode. The eigenvalues survive the wall even when the eigenvectors do not: θ is a
     # Rayleigh quotient, so its error is O(δ²) in the vector error δ. Callers who only want θ (the λ0
@@ -251,6 +252,14 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         for j in 1:k
             nr = norm(Rnew[j]); Rnew[j] = (isfinite(nr) && nr > 1e-300) ? normalize(Rnew[j]) : rand_mps()
             nl = norm(Lnew[j]); Lnew[j] = (isfinite(nl) && nl > 1e-300) ? normalize(Lnew[j]) : rand_mps()
+        end
+        # symmetry projection: truncation does not preserve a global sector, so leaked components
+        # of the other sector grow back under iteration unless removed every step
+        if project !== nothing
+            for j in 1:k
+                Rnew[j] = normalize(project(Rnew[j]))
+                Lnew[j] = normalize(project(Lnew[j]))
+            end
         end
         R, L = Rnew, Lnew                               # adopt the refreshed block for next iteration
 
@@ -764,4 +773,49 @@ function block_transfer_eigs_adaptive(mpo::MPO, scaffold::MPS;
 
     info = merge(info, Dict(:k_used => k_used, :escalated => k_used > k))
     return theta, L, R, info
+end
+
+"""
+    ksector_signs(p; dt=0.1, nbeta=4, MPO_alg="VD2")
+
+The diagonal Z2 sector operator of the transfer matrix, per temporal site. Solves the intertwiner
+equation X W X = R W R^{-1} on a bulk tMPO tensor (X = spin flip on the links) and returns the
+sign vector of R. The nullspace must be one-dimensional; errors otherwise.
+"""
+function ksector_signs(p::Float64; dt::Float64=0.1, nbeta::Int=4, MPO_alg::String="VD2")
+    mpo, _ = build_alcaraz_tmpo(3.0; p=p, lambda=1.0, dt=dt, nbeta=nbeta, MPO_alg=MPO_alg)
+    Tb = mpo[div(length(mpo), 2)]
+    phys = [noprime(s) for s in inds(Tb) if plev(s) == 0 && hastags(s, "Site")]
+    lnks = [s for s in inds(Tb) if hastags(s, "Link")]
+    d = dim(phys[1])
+    Warr = Array(Tb, lnks[1], lnks[2], prime(phys[1]), phys[1])
+    sx = [0.0 1.0; 1.0 0.0]
+    Wx = zeros(ComplexF64, size(Warr))
+    for a in 1:2, b in 1:2, a2 in 1:2, b2 in 1:2
+        Wx[a, b, :, :] .+= sx[a, a2] * sx[b, b2] * Warr[a2, b2, :, :]
+    end
+    rows = Matrix{ComplexF64}[]
+    for a in 1:2, b in 1:2
+        push!(rows, kron(Matrix(1.0I, d, d), Wx[a, b, :, :]) - kron(transpose(Warr[a, b, :, :]), Matrix(1.0I, d, d)))
+    end
+    ns = nullspace(vcat(rows...); rtol=1e-10)
+    size(ns, 2) == 1 || error("ksector_signs: intertwiner nullspace is $(size(ns, 2))-dimensional at p=$p")
+    return sign.(real.(diag(reshape(ns[:, 1], d, d))))
+end
+
+# K acts as one sign per temporal site; bond dimension unchanged
+function apply_ksign(psi::MPS, Rd)
+    out = copy(psi)
+    for i in 1:length(out)
+        s = siteind(out, i)
+        out[i] = noprime(out[i] * ITensor(collect(Diagonal(Rd)), s', s))
+    end
+    return out
+end
+
+# P± = (1 ± K)/2. Truncation leaks between sectors, so apply this every iteration
+# (the `project` kwarg of block_transfer_eigs), never only to the seeds.
+function project_ksector(psi::MPS, Rd, sgn::Int; maxdim::Int=128)
+    return normalize(lincomb_mps([0.5, 0.5 * sgn], [psi, apply_ksign(psi, Rd)];
+                                 cutoff=1e-12, maxdim=maxdim))
 end

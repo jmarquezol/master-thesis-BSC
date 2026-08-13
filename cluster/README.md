@@ -101,10 +101,39 @@ sbatch submit_ent_p0.5.slurm
 ```
 
 **4. Deep block.** The sweeps above keep four eigenvalues per rung — enough to follow the physical
-branch, not enough to show the tower around it. This keeps eight, at small `T`, so it is short.
+branch, not enough to show the tower around it. These keep eight, at small `T`, so they are short.
+The `p = 0.3` one also tests whether a larger block recovers the branch there: the earlier k-block
+test only ever reached `T = 2`, so the question is open rather than answered.
 
 ```
 sbatch submit_tower_p0.1.slurm
+sbatch submit_tower_p0.3.slurm
+```
+
+**5. The integrable-point half-integer ladder.** Added 2026-08-12, and the most useful of the
+remaining jobs. The fine and unit ladders at `p = 0.1` disagree by twenty per cent on the central
+charge, and only the fine one settles as the fit window grows. There is no fine ladder at `p = 0`,
+so that analysis has never been run where the answer is known. This supplies the control.
+
+```
+sbatch submit_rtm_eigs_p0.0_fine.slurm
+```
+
+**6. Sector-projected eigenvalue ladders.** Added 2026-08-13. The transfer matrix has an exact Z2
+symmetry whose two sectors hold the two eigenvalue families, and the branch-tracking failures at
+`p ≥ 0.3` were the two families' modulus curves crossing inside one run. These ladders confine the
+iteration to one sector each, so the branch is fixed before the run and the crossing never has to
+be resolved. They replace the mixed `eigsweep` arms at `p ≥ 0.3` rather than extend them, and they
+start cold from `T = 2` — the old checkpoints hold mixed-sector vectors and are not reusable here.
+Each job writes its own cache (`sweep_ksec_p<p>_<sector>.jld2`) and stores the sector charge of
+every member per rung as a purity check (it should print ±1.000). A rung reporting `stuck` is
+normal past the sector crossing; the eigenvalue is still accurate and a resubmission resumes warm.
+
+```
+sbatch submit_ksec_p0.3_plus.slurm
+sbatch submit_ksec_p0.3_minus.slurm
+sbatch submit_ksec_p0.5_plus.slurm
+sbatch submit_ksec_p0.5_minus.slurm
 ```
 
 Everything writes to `results/data/cluster/` under its own filename, so nothing overwrites anything.

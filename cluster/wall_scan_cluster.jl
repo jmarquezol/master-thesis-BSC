@@ -55,6 +55,7 @@ function run_wall_scan(; chi::Int, label::String,
         eigvals_only::Bool=false,
         itermax=8000, stuck_after=150,
         k=4, k_retry=6,
+        ksector::Union{Nothing,Tuple{Vector{Float64},Int}}=nothing,
         cachefile=CLUSTER_CACHE,
         checkpointfile=joinpath(@__DIR__, "checkpoints", "checkpoint_$(label).jld2"))
 
@@ -114,14 +115,30 @@ function run_wall_scan(; chi::Int, label::String,
                 end
             end
 
-            theta, L, R, info = block_transfer_eigs_adaptive(mpo, scaffold;
-                k=k, k_retry=k_retry, anchor=previous_phys,
-                maxdim=chi, maxdims=collect(2:2:chi),
-                cutoff=cutoff, cutoffs=cutoffs,
-                itermax=itermax, eps_conv=1e-6, trunc_mode=trunc_mode, basis=basis,
-                eigvals_only=eigvals_only,
-                n_track=2, stuck_after=stuck_after,
-                seedL=seedL, seedR=seedR)
+            if ksector === nothing
+                theta, L, R, info = block_transfer_eigs_adaptive(mpo, scaffold;
+                    k=k, k_retry=k_retry, anchor=previous_phys,
+                    maxdim=chi, maxdims=collect(2:2:chi),
+                    cutoff=cutoff, cutoffs=cutoffs,
+                    itermax=itermax, eps_conv=1e-6, trunc_mode=trunc_mode, basis=basis,
+                    eigvals_only=eigvals_only,
+                    n_track=2, stuck_after=stuck_after,
+                    seedL=seedL, seedR=seedR)
+            else
+                # one K sector only: the escalation rule looks for the family the projection
+                # removes, so it must not fire here. Truncation leaks sectors, hence project
+                # every iteration, not just the seeds.
+                Rd, sector_sign = ksector
+                theta, L, R, info = block_transfer_eigs(mpo, scaffold;
+                    k=k, maxdim=chi, maxdims=collect(2:2:chi),
+                    cutoff=cutoff, cutoffs=cutoffs,
+                    itermax=itermax, eps_conv=1e-6, trunc_mode=trunc_mode, basis=basis,
+                    eigvals_only=eigvals_only,
+                    n_track=2, stuck_after=stuck_after,
+                    seedL=seedL, seedR=seedR,
+                    project=psi -> project_ksector(psi, Rd, sector_sign))
+                info = merge(info, Dict(:k_used => k, :escalated => false))
+            end
             k_actual = length(theta)
 
             i0, recovered = pick_phys_robust(theta, previous_phys)
@@ -146,11 +163,14 @@ function run_wall_scan(; chi::Int, label::String,
             end # @elapsed
 
             peak = isempty(s2_base) ? NaN : maximum(real.(s2_base))   # no entropy in eigvals-only mode
+            kcharge = ksector === nothing ? Float64[] :
+                [real(overlap_noconj(L[j], apply_ksign(R[j], ksector[1])) /
+                      overlap_noconj(L[j], R[j])) for j in 1:k_actual]
             done[(label, T)] = (label=label, T=T, chi=chi, theta=collect(theta),
                 i0=i0, theta_phys=theta[i0],
                 dphi=dphi, cls=string.(cls), tower_gap=gap,
                 k_used=info[:k_used], escalated=info[:escalated],
-                s2_base=s2_base, s2_all=s2_all, peak=peak, rigidity=rigidity,
+                s2_base=s2_base, s2_all=s2_all, peak=peak, rigidity=rigidity, kcharge=kcharge,
                 reason=string(info[:reason]), niters=info[:niters], elapsed=elapsed)
 
             recovered && (previous_phys = theta[i0])
@@ -274,6 +294,22 @@ elseif mode == "eigsweep"
     run_wall_scan(chi=64, label=lbl, Ts=collect(2.0:dT:Tmax),
         trunc_mode=:rtm, p_nnn=p_val, eigvals_only=true,
         cachefile=joinpath(CLUSTER_DIR, "sweep_$(lbl).jld2"))
+elseif mode == "ksector"
+    # ksector <p> <plus|minus> <Tmax> [dT] — eigenvalue ladder confined to one K sector.
+    # Replaces the mixed eigsweep arms at p >= 0.3: inside a sector the displaced family does not
+    # exist, so the branch is the sector label and no pi-jump can occur.
+    length(ARGS) >= 4 || error("ksector needs <p> <plus|minus> <Tmax> [dT]")
+    p_val = parse(Float64, ARGS[2])
+    sector_sign = ARGS[3] in ("plus", "+1", "+") ? 1 :
+                  ARGS[3] in ("minus", "-1", "-") ? -1 : error("sector must be plus or minus")
+    Tmax = parse(Float64, ARGS[4])
+    dT = length(ARGS) >= 5 ? parse(Float64, ARGS[5]) : 1.0
+    Rd = ksector_signs(p_val; dt=DT, nbeta=NBETA)
+    lbl = "ksec_p$(p_val)_" * (sector_sign == 1 ? "plus" : "minus")
+    run_wall_scan(chi=64, label=lbl, Ts=collect(2.0:dT:Tmax), p_nnn=p_val,
+        eigvals_only=true, k=2, ksector=(Rd, sector_sign),
+        cachefile=joinpath(CLUSTER_DIR, "sweep_$(lbl).jld2"))
+
 elseif mode == "betascan"
     # Regulator scan: same full RTM run, repeated for a few values of the imaginary-time cooling
     # nbeta (β0 = nbeta·dt/2 = 0.1, 0.2, 0.3, 0.4 at dt=0.1). Lets us see how the CFT read depends on
