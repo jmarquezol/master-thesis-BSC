@@ -31,10 +31,12 @@ cd cluster
 julia --project=.. wall_scan_cluster.jl preflight    # must print "preflight OK"
 
 sbatch submit_rtm_eigs_p0.0_fine.slurm
-sbatch submit_ksec_p0.3_plus.slurm    
-sbatch submit_ksec_p0.3_minus.slurm   
-sbatch submit_ksec_p0.5_plus.slurm    
-sbatch submit_ksec_p0.5_minus.slurm   
+sbatch submit_ksec_p0.1_plus.slurm
+sbatch submit_ksec_p0.1_minus.slurm
+sbatch submit_ksec_p0.3_plus.slurm
+sbatch submit_ksec_p0.3_minus.slurm
+sbatch submit_ksec_p0.5_plus.slurm
+sbatch submit_ksec_p0.5_minus.slurm
 sbatch submit_tower_p0.1.slurm        
 sbatch submit_tower_p0.3.slurm        
 sbatch submit_tower_p0.5.slurm        
@@ -52,7 +54,7 @@ control at the coupling where the answer is known. The most valuable job in the 
 **`ksec_*`** — eigenvalue ladders confined to one symmetry sector each, to `T = 18`. The transfer
 matrix has an exact Z2 symmetry whose two sectors hold the two eigenvalue families, and the
 branch-tracking failures at `p ≥ 0.3` were the two families crossing in modulus inside one run.
-Confining the run to one sector fixes the branch before the run starts. Each rung prints a sector
+Confining the run to one sector fixes the branch before the run starts. The p=0.1 pair is the control: the answer is known there, so the sector ladders must reproduce it. Each rung prints a sector
 charge that should read ±1.000. A rung reporting `stuck` past `T ≈ 4` is normal — the eigenvalue
 is still accurate there — and a resubmission resumes from the checkpoint.
 
