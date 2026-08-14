@@ -51,7 +51,7 @@ The cuts of this thesis are the other case. Each temporal region is anchored at 
 
 The central charge is carried by the stress-energy tensor, the operator that measures the response of the theory to a change of coordinates. In two dimensions those changes are the symmetry itself, so the modes $L_n$ of the stress tensor generate the conformal transformations; their commutators close into the Virasoro algebra, whose central term is proportional to $c$, which is where the central charge gets its name~\cite{difrancesco1997}. One mode is special: $L_0$ generates scalings, and its eigenvalues on the primary operators are their weights, so its spectrum is the operator content of the theory.
 
-Quantizing on a strip of transverse size $\beta$ makes the anomaly of the main text explicit. Following Ref.~\cite{carignano_tagliacozzo2025}, the generator of translations along the strip is an integral of the stress tensor, and the conformal map from the plane leaves behind one extra, purely geometric term proportional to $c$,
+Quantizing on a strip of transverse size $\beta$ makes the anomaly of the main text explicit. The generator of translations along the strip is an integral of the stress tensor, and the conformal map from the plane leaves behind one extra, purely geometric term proportional to $c$~\cite{carignano_tagliacozzo2025},
 \begin{equation}
     \hat H = \frac{\pi}{\beta}\Big(L_0 - \frac{c}{24}\Big).
     \label{eq:cft:casimir}
@@ -192,7 +192,7 @@ The canonical form still helps, but in a generalized version, shown in Figure~\r
   \label{fig:rtm_truncation}
 \end{figure}
 
-The logic of truncation changes accordingly. In the ordinary case one keeps the directions that best preserve the norm of a state. Here the relevant quantities are bilinear matrix elements $\bra{L}\mathcal O\ket{R}$. A component of $\ket R$ with little overlap with $\bra L$ contributes little, however large it looks from $\ket R$ alone, and a component with small weight in $\ket R$ can still matter if its projection onto $\bra L$ is large. The scheme of Ref.~\cite{carignano_marimon_tagliacozzo2024} therefore performs a biorthogonal decomposition of $\ket R\bra L$ and keeps the eigenvalues of largest modulus, which are the directions that dominate the physical contraction. Because relevance is measured through the overlap, this can retain fewer states than an RDM truncation at the same accuracy.
+The logic of truncation changes accordingly. In the ordinary case one keeps the directions that best preserve the norm of a state. Here the relevant quantities are bilinear matrix elements $\bra{L}\mathcal O\ket{R}$. A component of $\ket R$ with little overlap with $\bra L$ contributes little, however large it looks from $\ket R$ alone, and a component with small weight in $\ket R$ can still matter if its projection onto $\bra L$ is large. The scheme used here therefore performs a biorthogonal decomposition of $\ket R\bra L$ and keeps the eigenvalues of largest modulus~\cite{carignano_marimon_tagliacozzo2024}, which are the directions that dominate the physical contraction. Because relevance is measured through the overlap, this can retain fewer states than an RDM truncation at the same accuracy.
 
 The stability caveat of Section~\ref{sec:transverse:truncation} can now be made precise. The singular values of $\mathcal{T}_t$ and its eigenvalues are different quantities, and it is the eigenvalues that enter the contraction, since the trace is their sum. A component with a large singular value can therefore still fail to contribute: an operator with eigenvalues $+1$ and $-1$ has both at unit modulus, so an SVD-based truncation keeps both, yet they cancel exactly in the trace. Truncating the RTM on singular values is thus a motivated heuristic rather than a bound.
 
@@ -207,21 +207,28 @@ A second approximation enters through the environment. The truncation at each st
 \section{Construction of the time-evolution MPO}
 \label{app:mpo}
 
-This appendix records the construction details behind Section~\ref{sec:mporep}: the schemes that exponentiate the \ac{FSM} blocks directly, the closed-form second-order tensor used in production, and the measurement that justifies it.
+This appendix records the construction details behind Section~\ref{sec:mporep}: how the exponentiation is carried out in practice, the two schemes it can apply, the closed-form second-order tensor used in production, and the measurement that justifies it.
 
-\subsection{The auxiliary-boson trick and the time-step split}
-\label{app:mpo:boson}
+\subsection{How the exponentiation is carried out}
+\label{app:mpo:code}
 
-The simplest construction on the overlap logic of Section~\ref{sec:mporep:exp} is $W^{\mathrm{I}}$, which keeps every disconnected term and discards all overlaps. It distributes the time step across the initiators $C$, the terminators $B$ and the on-site block $D$, keeps the virtual bond at $1+\chi$, and is first order. Improving it to $W^{\mathrm{II}}$ means additionally keeping the single-site overlaps, and the overlaps need care: $H^2$ sums over every ordered pair, so both orderings $CD$ and $DC$ of an initiator and a field on the same site must be kept, or the operator loses the Hermiticity it inherits from $H$.
+The exponentiation is performed with the \texttt{ITensorExpMPO.jl} package~\cite{pokart2024expmpo}, which implements the constructions of Zaletel et al.~\cite{zaletel2015} on top of \texttt{ITensors.jl}~\cite{itensor2022}. The package takes the Hamiltonian in the symbolic form used to build any \ac{MPO} in that library, a sum of operator strings with their coefficients, so the \ac{FSM} of Section~\ref{sec:mporep:fsm} never has to be written out by hand. It walks along the chain, collects at every bond the terms that cross it, and compresses the resulting coefficient matrix with an \ac{SVD}. What survives is the smallest set of memory channels able to carry the interactions across that bond, which for Eq.~\eqref{eq:annni_H} is the three channels of Eq.~\eqref{eq:Wannni}. The blocks $A$, $B$, $C$ and $D$ are then read off site by site and passed to the routine that builds the local tensor of the evolution operator.
 
-Writing out the correct symmetric combinations by hand is impractical. Ref.~\cite{zaletel2015} generates them with an auxiliary-space construction, encoding the blocks in the dynamics of two hard-core bosons whose exponential truncates by itself, and Ref.~\cite{vandamme2024} generalizes the idea to arbitrary order; the second-order member of that family is the VD2 operator below.
+That routine is where our own contribution sits. The package provided the first- and second-order operators of Zaletel et al.; we added a mode that applies the same machinery with the second-order recipe of Van Damme et al.~\cite{vandamme2024}, together with the enlargement of the virtual bond from $1+\chi$ to $1+\chi+\chi^2$ that this recipe requires. The addition is available in a fork of the package~\cite{marquezolguin2026expmpo}, and the two repositories document the software details.
 
-All these schemes share the time-step split, which is what keeps them stable. The complex step $\tau=-i\delta t$ is divided unevenly: a real factor $t_C=\sqrt{\delta t}$ goes to the initiator block and the phase $t_B=\tau/t_C$ to the terminator block, so the product $C\otimes B$ still carries the correct factor while the intermediate memory channels stay well behaved.
+\subsection{The two constructions in outline}
+\label{app:mpo:outline}
 
-\subsection{The second-order VD2 blocks}
+Both constructions solve the same problem. Reaching second order by squaring $W_H$ directly produces cross terms between the blocks, since $H^2$ sums over every ordered pair: both orderings $CD$ and $DC$ of an initiator and a field on the same site must be kept, or the operator loses the Hermiticity it inherits from $H$. Writing out the correct symmetric combinations by hand is impractical. The first construction avoids this by encoding the blocks in an auxiliary space of two hard-core bosons, where the exponential terminates by itself once both modes are filled; exponentiating that small operator and projecting onto the four boson states returns the blocks of $W$ directly~\cite{zaletel2015}. Keeping only the terms with disjoint support gives $W^{\mathrm{I}}$, which is first order, and adding the single-site overlaps gives $W^{\mathrm{II}}$, which is second order provided the Hamiltonian has only \ac{NN} interactions. Both keep the virtual bond at $1+\chi$.
+
+The second construction organizes the same expansion by clusters of overlapping terms rather than by powers of $W_H$~\cite{vandamme2024}. Terms with disjoint support commute and factorize, so they are kept to all orders, and only the connected clusters have to be reproduced explicitly; retaining clusters up to size $n$ leaves a one-step error of order $\delta t^{n+1}$. The second-order member is the operator used here. It carries a doubled memory leg, which is the origin of the virtual bond $1+\chi+\chi^2$, and that leg is what reproduces the three-site clusters generated by the \ac{NNN} bond. The original papers give the derivations; the resulting tensor is recorded below.
+
+All of these schemes share one device, which is what keeps them stable. The complex step $\tau=-i\delta t$ is split unevenly between the blocks: the initiator $C$ carries a real factor $t_C=\sqrt{\delta t}$ and the terminator $B$ the phase $t_B=\tau/t_C$, so the product $C\otimes B$ still carries the correct factor while the intermediate memory channels stay well behaved.
+
+\subsection{The second-order \textit{VD2} blocks}
 \label{app:mpo:vd2}
 
-We record the explicit local tensor of the second-order MPO (VD2) used throughout this work. These are the closed-form expressions of Van Damme et al.~\cite{vandamme2024}, specialized to our \ac{FSM} blocks; they are what the exponentiation routine assembles for a given memory dimension $\chi$.
+We record the explicit local tensor of the second-order MPO (\textit{VD2}) used throughout this work. These are the closed-form expressions of Van Damme et al.~\cite{vandamme2024}, specialized to our \ac{FSM} blocks; they are what the exponentiation routine assembles for a given memory dimension $\chi$.
 
 We start from the four blocks $A,B,C,D$ of the Hamiltonian MPO $W_H$ (Eq.~\eqref{eq:Wannni}): $D$ is the on-site term, $C$ initiates an interaction, $B$ terminates one, and $A$ propagates it. Following the time-step split above, we scale them as
 \begin{equation}
@@ -232,7 +239,7 @@ The construction organizes the exponential $e^{\tau W_H}$ not by powers of $W_H$
 
 The resulting local tensor is a $3\times3$ block object (indices $1,2,3$ label the scalar, single- and doubled-memory sectors, which is the origin of the enlarged $1+\chi+\chi^2$ virtual bond),
 \begin{equation}
-  W^{\mathrm{VD2}} =
+  W^{\textit{VD2}} =
   \begin{pmatrix}
     W_{11} & W_{12} & W_{13} \\
     W_{21} & W_{22} & W_{23} \\
@@ -252,21 +259,21 @@ with
   W_{32} = \tfrac12\{\tilde A\tilde B\} + \tfrac16\big(\{\tilde A\tilde B\tilde D\}+\{\tilde B\tilde B\tilde C\}\big), \\
   W_{33} &= \{\tilde A\tilde A\} + \tfrac13\big(\{\tilde A\tilde B\tilde C\}+\{\tilde A\tilde A\tilde D\}\big).
 \end{align}
-The scalar track $W_{11}$ carries the on-site evolution to third Taylor order; the $W_{12},W_{13}$ entries dress an outgoing memory leg (single and doubled), $W_{21},W_{31}$ the incoming one, and the lower-right block dresses the through-wire $\tilde A$ with all of its symmetric companions. Keeping the doubled-leg (index-3) sector is exactly what reproduces the connected clusters spanning three sites---the next-nearest-neighbour overlaps that $W^{\mathrm{II}}$ misses---and is why VD2 is genuinely second order for our model at the cost of the enlarged virtual bond.
+The scalar track $W_{11}$ carries the on-site evolution to third Taylor order; the $W_{12},W_{13}$ entries dress an outgoing memory leg (single and doubled), $W_{21},W_{31}$ the incoming one, and the lower-right block dresses the through-wire $\tilde A$ with all of its symmetric companions. Keeping the doubled-leg (index-3) sector is exactly what reproduces the connected clusters spanning three sites---the \ac{NNN} overlaps that $W^{\mathrm{II}}$ misses---and is why \textit{VD2} is genuinely second order for our model at the cost of the enlarged virtual bond.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Comparing the two constructions in practice}
 \label{app:mpo:comparison}
 
-The claim that $W^{\mathrm{II}}$ degrades to first order for a next-nearest-neighbour Hamiltonian, while VD2 remains second order, can be checked directly on the model of this thesis. A convenient diagnostic is the loss of unitarity, since the exact $e^{-iH\delta t}$ preserves the norm of any state: applying successive layers of the approximate operator to $\ket{X+}^{\otimes N}$ and monitoring $\lVert\psi\rVert$ isolates the Trotter error, because a perfect construction would leave the norm at one.
+The claim that $W^{\mathrm{II}}$ degrades to first order for a Hamiltonian with \ac{NNN} interactions, while \textit{VD2} remains second order, can be checked directly on the model of this thesis. A convenient diagnostic is the loss of unitarity, since the exact $e^{-iH\delta t}$ preserves the norm of any state: applying successive layers of the approximate operator to $\ket{X+}^{\otimes N}$ and monitoring $\lVert\psi\rVert$ isolates the Trotter error, because a perfect construction would leave the norm at one.
 
 Applying eight layers at $\delta t=0.05$ to a chain of $N=100$ sites at $p=0.1$ gives the following norms:
 
 \begin{center}
 \begin{tabular}{lccc}
 \hline
- & $W^{\mathrm{I}}$ & $W^{\mathrm{II}}$ & VD2 \\
+ & $W^{\mathrm{I}}$ & $W^{\mathrm{II}}$ & \textit{VD2} \\
 \hline
 virtual bond & $4$ & $4$ & $13$ \\
 $\lVert\psi\rVert$ after 1 layer & $1.3514$ & $1.1341$ & $0.99995$ \\
@@ -275,7 +282,7 @@ $\lVert\psi\rVert$ after 8 layers & $12.6146$ & $3.0181$ & $0.99923$ \\
 \end{tabular}
 \end{center}
 
-The separation is unambiguous. The first-order $W^{\mathrm{I}}$ inflates the norm by an order of magnitude within eight steps, and $W^{\mathrm{II}}$, which would be effectively second order for a strictly \ac{NN} chain, still triples it: the connected clusters generated by the \ac{NNN} bridge are precisely the ones it fails to capture. VD2 holds the norm to within $8\times10^{-4}$ over the same interval.
+The separation is unambiguous. The first-order $W^{\mathrm{I}}$ inflates the norm by an order of magnitude within eight steps, and $W^{\mathrm{II}}$, which would be effectively second order for a strictly \ac{NN} chain, still triples it: the connected clusters generated by the \ac{NNN} bridge are precisely the ones it fails to capture. \textit{VD2} holds the norm to within $8\times10^{-4}$ over the same interval.
 
 This is what justifies paying for the larger virtual bond. Since the transverse contraction needs long temporal chains, and reducing $\delta t$ to compensate a first-order error would lengthen them further and add truncation error at every extra site, a genuinely second-order operator at a moderate time step is the configuration that makes the calculation feasible at all.
 
@@ -285,19 +292,19 @@ This is what justifies paying for the larger virtual bond. Since the transverse 
 \section{Implementation details}
 \label{app:blockpm}
 
-This appendix documents the implementation of the block power method of Section~\ref{sec:blockpm} for a reader who wants to know how it works internally or to run it. The core routine is \texttt{block\_transfer\_eigs}, built on top of \texttt{ITransverse.jl}~\cite{carignano2025itransverse}; all code, notebooks and cluster drivers are in the public repository of Ref.~\cite{marquezolguin2026code}. The subsections cover, in order: the numerical solve of the projected pencil, the eigenvalue-only mode, the validation against exact diagonalization, the cost profile, the options that control a production run, and the classifier that assigns the block members.
+This appendix documents the implementation of the block power method of Section~\ref{sec:blockpm}. The core routine is \texttt{block\_transfer\_eigs}, built on top of \texttt{ITransverse.jl}~\cite{carignano2025itransverse}; all code, notebooks and cluster drivers are in the public repository for this thesis~\cite{marquezolguin2026code}.
 
 \subsection{The regularized solve and the left pairing}
 \label{app:blockpm:pairing}
 
-Near the degeneracy the columns of the right block begin to coincide and the metric $S$ of Eq.~\eqref{eq:blockpm_pencil} becomes nearly singular, so the pencil $Mv=\theta\,Sv$ is not handed to a generalized eigensolver, which would return infinite or wildly scattered values. It is regularized with the pseudoinverse instead,
+Near a degeneracy the columns of the right block begin to coincide and the metric $S$ of Eq.~\eqref{eq:blockpm_pencil} becomes nearly singular. A generalized eigensolver applied to the pencil $Mv=\theta\,Sv$ would then return infinite or scattered values, so we regularize it with the pseudoinverse instead,
 \begin{equation}
   W = S^{+} M, \qquad W = V\,\Theta\,V^{-1},
   \tag{D1}
 \end{equation}
 where $S^{+}$ carries a relative tolerance of $10^{-12}$: directions that have effectively collapsed onto each other are projected out rather than inverted. The eigenvalues $\Theta$, sorted by modulus, estimate $\mu_0,\dots,\mu_{k-1}$, and the columns of $V$ give the right mixing coefficients.
 
-The left block needs its own coefficients, and the direct route is unreliable. Diagonalizing the transposed pencil in a second call gives no guarantee that its eigenvalues come out in the same order, and inside a quasi-degenerate cluster, matching each left eigenvalue to the nearest right one is ambiguous exactly when it matters: a greedy match picks the wrong partner, the paired left and right vectors stop describing the same eigenvector, and the block oscillates instead of converging. No second diagonalization is needed. Writing $y^{\mathsf T}=u^{\mathsf T}S$, the left problem becomes $y^{\mathsf T}W=\theta\,y^{\mathsf T}$, so the $y$ are the rows of $V^{-1}$ and
+The left block needs its own coefficients, and obtaining them from a second diagonalization is unreliable: the transposed pencil returns its eigenvalues in no guaranteed order, and inside a quasi-degenerate cluster the matching of left to right eigenvalues becomes ambiguous exactly when it matters, so the paired vectors can stop describing the same eigenvector and the block oscillates instead of converging. Fortunately, no second diagonalization is needed. Writing $y^{\mathsf T}=u^{\mathsf T}S$, the left problem becomes $y^{\mathsf T}W=\theta\,y^{\mathsf T}$, so the $y$ are the rows of $V^{-1}$ and
 \begin{equation}
   u_j = \big(S^{+}\big)^{\mathsf T}\big(V^{-1}\big)^{\mathsf T} e_j ,
   \tag{D2}
@@ -329,7 +336,7 @@ At evolution times short enough that the rotated transfer operator stays below a
     \hline
     operator & dense dimension & exact $|\mu_0|,\,|\mu_1|$ & error on the leading pair \\
     \hline
-    ANNNI-type, VD2, $p=0.1$ & $343$ & $0.9598,\;0.3263$ & $1.4\times10^{-8}$ \\
+    ANNNI-type, \textit{VD2}, $p=0.1$ & $343$ & $0.9598,\;0.3263$ & $1.4\times10^{-8}$ \\
     ANNNI-type, $W^{\mathrm{II}}$, $p=0.1$ & $27$ & $0.9758,\;0.3292$ & $4.6\times10^{-13}$ \\
     critical Ising & $256$ & $1.5488,\;0.0611$ & $4.2\times10^{-10}$ \\
     \hline
@@ -350,28 +357,22 @@ Two adjustments reduce this cost without changing what the method converges to. 
 \label{app:library:cluster}
 \label{app:library:adaptive}
 
-A thin, model-agnostic builder sits above the solver. It assembles the one-step propagator as an MPO (Appendix~\ref{app:mpo}), performs the $90^\circ$ rotation that maps the spatial virtual bond onto the temporal physical index, and returns the transfer-matrix MPO with a seed tMPS carrying the right index skeleton. The seed is always overwritten with random complex tensors before the iteration, because a symmetry-special seed converges to a subdominant sector. The temporal physical dimension is read from the operator rather than hard-coded, which is what lets the same code path serve the $W^{\mathrm{I}}$, $W^{\mathrm{II}}$ and VD2 kernels and every model without modification.
+A thin, model-agnostic builder sits above the solver. It assembles the one-step propagator as an MPO (Appendix~\ref{app:mpo}), performs the $90^\circ$ rotation that maps the spatial virtual bond onto the temporal physical index, and returns the transfer-matrix MPO with a seed tMPS carrying the right index skeleton. The seed is always overwritten with random complex tensors before the iteration, because a symmetry-special seed converges to a subdominant sector. The temporal physical dimension is read from the operator rather than hard-coded, which is what lets the same code path serve the $W^{\mathrm{I}}$, $W^{\mathrm{II}}$ and \textit{VD2} kernels and every model without modification.
 
 The options that control a production run are the following; none changes what the method converges to.
 
-\textit{Warm starting.} Along a ladder of evolution times, the converged block at one time is re-indexed onto the longer time-site set of the next and padded with a small random tail, so the iteration only has to relax the newly added sites. The bond cap and the cutoff follow a schedule that is loose early and tight near convergence: the cap grows in steps of two up to $\chi$, and the cutoff holds at $10^{-8}$ for the first forty iterations before tightening to $10^{-10}$. This is more than a speed-up: near a degeneracy a cold random restart has nothing biasing it onto the physical branch, so warm continuity is also what keeps the tracker on the correct eigenvector family as the spectrum tightens.
+\textit{Warm starting.} Along a ladder of evolution times, the converged block at one time is re-indexed onto the longer time-site set of the next and padded with a small random tail, so the iteration only has to relax the newly added sites. The bond cap and the cutoff follow a schedule that is loose early and tight near convergence: the cap grows in steps of two up to $\chi$, and the cutoff holds at $10^{-8}$ for the first forty iterations before tightening to $10^{-10}$. Warm continuity also stabilises the selection along the ladder, since consecutive rungs then start from the same leading subspace.
 
-\textit{Block-size escalation.} At stronger frustration the leading $k=4$ block can fill with members of a single near-degenerate cluster, pushing the subleading eigenvalue needed by Eq.~\eqref{eq:cft:eq4} outside the captured window. The driver detects this, since the tower gap of the classifier below returns no value when no tower member was captured, and escalates the block in steps ($k=4\to6\to8$), warm-seeding each larger solve with the converged smaller block, so the extra cost is paid only where the spectrum demands it.
+\textit{Block-size escalation.} At stronger frustration the leading $k=4$ block can fill with members of a single near-degenerate cluster, pushing the subleading eigenvalue needed by Eq.~\eqref{eq:cft:eq4} outside the captured window. The driver detects this and escalates the block in steps ($k=4\to6\to8$), warm-seeding each larger solve with the converged smaller block, so the extra cost is paid only where the spectrum demands it.
 
 \textit{Truncation scheme.} The truncated object is selectable between \ac{RTM} and \ac{RDM} (Section~\ref{sec:transverse:truncation}), with RTM the production default and RDM the well-conditioned fallback.
 
 \textit{Crash safety.} Each $(p,T)$ point is written to a per-label cache as soon as it converges, keyed by its parameters, so an interrupted run loses at most the point in flight and a completed point is never recomputed. A separate checkpoint stores the last converged block, so a resubmitted run resumes warm.
 
-\subsection{The branch classifier}
+\subsection{Selecting the dominant eigenvalue}
 \label{app:selector}
 
-The classifier assigns the block members relative to a candidate $\mu_0$. Writing $\mathrm{phase}(z)=\arg(-z)$ for the convention of Section~\ref{sec:cft:temporal}, it splits the block into a tower and a set of partners: the tower is every eigenvalue within $\pi/2$ in phase, the conformal descendants of $\mu_0$, and the partners are the momentum-$\pi$ displaced states of Section~\ref{sec:results:tower}. The tower gap is $|\mu_1|/|\mu_0|$ computed from the largest-modulus tower member only, never a partner, and it returns no value when the block holds no tower member, which is the trigger for the escalation above.
-
-The selection rules are the following. We take the eigenvalue of largest modulus, using continuity with the preceding rung only when the two largest moduli differ by less than one per cent, and we flag a rung whenever the selected $|\mu_0|$ jumps by more than a prescribed fraction relative to the last trusted value, since such a jump signals unreliable convergence or a wrong branch assignment. Flagged rungs are not discarded outright. A rung can fail to converge and still carry the physical branch: the spurious value typically sits far above the physical band while the true $\mu_0$ survives further down the block, so a post-processing selector restricts the candidates to a window of five per cent around the last trusted modulus and applies dominance inside that window. Rungs with no candidate in the window are dropped and the reference is chained from the last accepted point. This repairs affected rungs from the stored spectra alone, with no recomputation; on the one rung where an independently converged run exists for comparison, the repaired eigenvalue agrees with it to $3\times10^{-5}$ relative.
-
-Modulus dominance holds only while the two moduli can be told apart. Deep in the dual-unitary regime the physical branch and its displaced partner approach a common modulus, and once their splitting falls below the accuracy of the iteration the ordering between them loses meaning. The phase-predicted tracking of Section~\ref{sec:reach} then takes over: a rung whose block holds no member near the predicted phase is discarded, and the prediction resolves the branch only while the ladder samples the winding finely enough. Phases are defined modulo $2\pi$, so an advance per rung larger than $\pi$ is indistinguishable from the same advance plus a full turn, and the spacing of the ladder in $T$ therefore sets the frustration up to which the branch can be followed. We record here what a nearest-value rule does wrong, since it is the natural first attempt. The physical branch rotates between rungs by an amount that grows with the velocity and hence with $p$, while its displaced partners of similar modulus stand still in phase, so a nearest-value rule latches onto a partner and, re-anchoring on its own pick, corrupts the ladder that follows. At $p=0.5$ this manifests as the tracked $|\mu_0|$ collapsing at one rung and following partners ever after: output that looks plausible but is an artefact of the selector.
-
-The phase-predicted tracking that takes over past the modulus crossing deserves three technical notes. First, a crossing does not lose the branch: the physical eigenvalue survives inside the block as a subleading member, and where an independently tracked ladder exists for comparison the phases agree to four decimals. Second, the prediction must be seeded, because the phase advance per rung grows with the velocity and can exceed $\pi$, making the wrapped step ambiguous; the first step is chosen by testing every candidate advance against the next few rungs and keeping the most consistent one. Third, each accepted rung records the distance between the prediction and the matched phase, and the ladder is cut at the first rung where this distance jumps, which is where the block stops resolving the branch.
+The production rule is the one stated in Section~\ref{sec:reach}: the eigenvalue of largest modulus, with continuity against the preceding rung breaking ties below one per cent. Two safeguards protect a ladder built on this rule. A rung whose selected $|\mu_0|$ jumps by more than a prescribed fraction relative to the last trusted value is flagged, since such a jump signals unreliable convergence rather than physics. A flagged rung is not discarded: the physical eigenvalue usually survives further down the block, so a post-processing pass restricts the candidates to a window of five per cent around the last trusted modulus and applies dominance inside it, chaining the reference from the last accepted point. This repairs affected rungs from the stored spectra alone; on the one rung where an independently converged run exists for comparison, the repaired eigenvalue agrees with it to $3\times10^{-5}$ relative. The subleading members are then ordered by their phase distance from $\mu_0$ and matched to the conformal tower rung by rung.
 
 \subsection{Why eigenvalues outlive eigenvectors}
 \label{app:conditioning}
@@ -392,81 +393,37 @@ and projecting it onto $\bra{L_j}$ with $j\neq i$ gives the mixing coefficients,
 \end{equation}
 The two expressions differ in one respect that matters here. Equation~\eqref{eq:eigenvalue_perturbation} contains no eigenvalue difference, so an eigenvalue stays accurate as long as its own overlap $\braket{L_i}{R_i}$ stays finite. Equation~\eqref{eq:eigenvector_perturbation} is divided by $\mu_i-\mu_j$, so the eigenvector mixes with its neighbours as soon as two eigenvalues approach, and the de-mixing that separates the block members becomes correspondingly harder.
 
-The denominator of Eq.~\eqref{eq:eigenvalue_perturbation} is the rigidity of Eq.~\eqref{eq:rigidity}, so the same expression bounds how far the protection extends. Near an exceptional point the overlap tends to zero and an eigenvalue tied to an individual eigenvector loses accuracy with it; close to a defective point individual eigenvalues are in fact fragile, splitting under a perturbation of size $\varepsilon$ as $\varepsilon^{1/n}$ rather than $\varepsilon$, where $n$ is the size of the coalescing cluster~\cite{moro1997}. What stays well conditioned is the leading subspace as a whole, whose separation from the rest of the spectrum governs the block iteration. Our eigenvalue-only mode reads the spectrum at that level: it never assigns block members to separate eigenvectors, but carries an orthonormal basis of the subspace and takes the Ritz values from the projected pencil. The eigenvalues therefore behave better than the eigenvectors not because they are immune, but because the subspace-level read avoids the ill-conditioned de-mixing that the eigenvector route cannot do without.
+The denominator of Eq.~\eqref{eq:eigenvalue_perturbation} is the rigidity of Eq.~\eqref{eq:rigidity}, so the same expression bounds how far the protection extends: an eigenvalue tied to an individual eigenvector loses accuracy as its overlap falls. What stays well conditioned is the leading subspace as a whole, whose separation from the rest of the spectrum governs the block iteration. Our eigenvalue-only mode reads the spectrum at that level: it never assigns block members to separate eigenvectors, but carries an orthonormal basis of the subspace and takes the Ritz values from the projected pencil. The eigenvalues therefore behave better than the eigenvectors not because they are immune, but because the subspace-level read avoids the ill-conditioned de-mixing that the eigenvector route cannot do without.
 
 One further diagnostic belongs here. The spectral ratio $|\mu_1/\mu_0|$ controls the suppression of the first subleading contribution in Eq.~\eqref{eq:contraction}, but it is not a convergence criterion for the block, which is governed instead by the separation of the whole leading subspace from the rest of the spectrum. The two differ near a degeneracy inside the block, where $|\mu_1/\mu_0|$ may approach one while the subspace stays well separated and its eigenvalues keep converging.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \FloatBarrier
-\section{The exceptional-point wall}
-\label{app:wall}
-
-This appendix supports the diagnosis of Section~\ref{sec:results:wall}, where the temporal-entropy dome inflates at a well-defined time and stops being conformal. It has two parts: what an exceptional point is and why it spoils the eigenvectors while sparing the eigenvalues, and the controls that establish the wall as a property of the physics rather than a resolution limit.
-
-\subsection{Exceptional points of a non-normal matrix}
-\label{app:wall:ep}
-
-Section~\ref{sec:reach} established how eigenvalues and eigenvectors respond differently as a gap inside the block closes, and Appendix~\ref{app:conditioning} gives the perturbative statement behind it. The limiting configuration is what this subsection adds~\cite{rotter2009}. As two eigenvalues of a non-normal matrix approach each other, their left and right eigenvectors need not stay apart: they can rotate towards a common direction, so the pairing $\braket{L}{R}$ of the coalescing branch tends to zero even though neither vector vanishes. Where two eigenvalues and their eigenvectors merge at once the matrix is at an exceptional point: it is defective, has no complete eigenbasis, and the sensitivity of the individual eigenvector diverges.
-
-This is the origin of the wall. The dome breaks not because the solver fails to converge, but because the object it is asked to converge to becomes ill-defined. The order parameter is the phase rigidity of Eq.~\eqref{eq:rigidity}, which equals one for a near-Hermitian pair and collapses to zero at the exceptional point, and its measured collapse lands exactly where the dome inflates, which is what identifies the two as one event. Complex symmetry does not help, when a model has it: every matrix is similar to a complex-symmetric one, so symmetry can relabel the collapse but not forbid it, and inside an exactly degenerate subspace the individual eigenvector is undefined rather than merely ill-conditioned.
-
-\subsection{Locating the wall from the entropy profile}
-\label{app:wall:shape}
-
-Equation~\eqref{eq:cft:chord} predicts that the real part of the entropy is linear in the chord variable, with slope $c/8$. This gives a direct test of whether a given profile is still conformal, and therefore a way to read off the time at which the route fails.
-
-Figure~\ref{fig:broken_dome} shows the $p=0.1$ profiles at $T=8$ and $T=9$ against the $c=\tfrac12$ line. At $T=8$ the profile follows that line, departing from it by at most $0.05$. At $T=9$ it leaves the line altogether, departing by $0.57$ and more than doubling in height, $0.87$ against $0.32$. One evolution step separates the two.
-
-Past that step the iteration has converged to something other than the physical eigenvectors, so the profile is an artefact of the failed convergence. Its height, its slope and the second maximum it develops are not properties of the model, and we do not read anything from them. The one thing we use is the time at which the profile leaves the conformal line.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\textwidth]{imgs/res_broken_dome.png}
-  \caption{\textbf{Locating the wall at $p=0.1$.} Real part of the generalized R\'enyi-2 entropy against the chord variable, with the $c=\tfrac12$ prediction as a dashed line. Cuts in the two halves of the strip are marked separately. At $T=9$ the profile follows the conformal line to within $0.06$. At $T=10$ it departs from it by $0.42$; that profile comes from a failed convergence and its shape is not interpreted.}
-  \label{fig:broken_dome}
-\end{figure}
-
-The rigidity of Figure~\ref{fig:wall} is the diagnostic we quote, since it stays well defined on both sides of the wall.
-
-\subsection{The wall is gap-limited, not resolution-limited}
-\label{app:wall:eps}
-
-An exceptional point is a property of the transfer matrix, so its location must not move when we change how finely that matrix is represented. We checked this along three independent knobs, holding the physics fixed at $p=0.1$ and varying only the numerical resolution.
-
-Table~\ref{tab:wall_controls} lists the peak of the dome at $p=0.1$ for three of these settings. Up to $T=9$ they agree to three decimal places. Between $T=9$ and $T=10$ all three double, and the profile acquires a second maximum. The onset therefore does not move when the bond dimension is halved, nor when the truncated object is changed from the \ac{RTM} to the Hermitian \ac{RDM}. Tightening the truncation cutoff by orders of magnitude leaves it unchanged as well.
-
-\begin{table}[htbp]
-    \centering
-    \begin{tabular}{lccc}
-    \hline
-    $T$ & \ac{RTM}, $\chi=64$ & \ac{RTM}, $\chi=32$ & \ac{RDM}, $\chi=64$ \\
-    \hline
-    $2$  & $0.1999$ & $0.1999$ & $0.2023$ \\
-    $5$  & $0.2832$ & $0.2830$ & $0.2836$ \\
-    $8$  & $0.3224$ & $0.3216$ & $0.3227$ \\
-    $9$  & $0.3329$ & $0.3331$ & $0.3321$ \\
-    $10$ & $0.7067$ & $0.6840$ & $0.7157$ \\
-    \hline
-    \end{tabular}
-    \caption{\textbf{The wall does not move with the representation.} Peak of the R\'enyi-2 dome at $p=0.1$, for two bond dimensions and for both truncation schemes. The values agree while the dome is conformal and all three double between $T=9$ and $T=10$, where a second maximum appears.}
-    \label{tab:wall_controls}
-\end{table}
-
-The regulator $\beta_0$ is a fourth knob, and the most promising one, because the modulus gaps grow linearly with it and it is those gaps closing that ends the route. The measurement behind the statement in Section~\ref{sec:results:wall} is the following. Across $\beta_0=0.1$ to $0.8$ the rate at which the rigidity collapses is unchanged, the ratio $r(T{=}6)/r(T{=}2)$ staying between $7.35$ and $7.40\times10^{-3}$ over the whole range, so the curves are parallel and the wall sits at the same time. The rigidity itself is in fact lower at larger $\beta_0$, by about $40\%$ from one end of that range to the other, so widening the regulator makes the conditioning slightly worse rather than better.
-
-These controls also inform which truncation to use in production. The two schemes reach the same wall, but the \ac{RDM} run is considerably more expensive, because it needs a larger bond dimension to reach the same accuracy. The reason is the one given in Section~\ref{sec:transverse:truncation}: the \ac{RTM} keeps only the components that contribute to $\braket{L}{R}$, whereas the \ac{RDM} also represents components of one boundary that are orthogonal to the other and drop out of the contraction. We therefore use the \ac{RTM} in production.
-
-This comparison was run at one coupling, at one bond dimension, and inside the block power method. It says nothing about how the two schemes compare elsewhere. The \ac{RDM} is Hermitian and positive, so it is the better conditioned of the two. It may well reach further at larger $\chi$, at stronger frustration, or under a plain power iteration. We have not tested any of these. The question is open, and running $p=0.3$ with a bond dimension of a few hundred would settle it.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\FloatBarrier
-\section{The momentum-\texorpdfstring{$\pi$}{pi} displaced boundary tower}
+\section{The fermionic form of the NNN interactions}
 \label{app:pairing}
+\label{sec:annni:jw}
 
-This appendix supports the boundary-exponent result of Section~\ref{sec:results:tower}. It establishes two things: that the next-nearest-neighbour coupling becomes a genuine interaction after fermionization, and that a free-fermion chain cannot produce a displaced tower.
+This appendix derives the fermionic form of the model: the \ac{NNN} coupling becomes a genuine interaction after fermionization, which is what breaks integrability for every $p\neq0$.
 
-Fermion parity, the number of fermions modulo two, is conserved and separates the transfer spectrum into the two families observed in Section~\ref{sec:results:tower}. The even-parity states form the identity tower and the odd-parity states the $\varepsilon$ tower. The displaced states are the odd ones. The measurement therefore says that a state with an odd number of fermions picks up a minus sign under a one-site shift. A minus sign is a phase of $\pi$.
+
+The effect of the additional interactions becomes explicit after mapping the spin chain to fermions. In the convention of Eq.~\eqref{eq:annni_H}, with the transverse field along $\sigma^x$ and the order parameter along $\sigma^z$, the \ac{JW} transformation~\cite{jordan_wigner1928,fradkin2013} is
+\begin{equation}
+    \sigma^x_j = 1 - 2n_j, \qquad
+    \sigma^z_j = \big(c_j + c_j^\dagger\big)\,K_j, \qquad
+    K_j = \prod_{k<j}\big(1-2n_k\big),
+    \label{eq:annni:jwmap}
+\end{equation}
+where $c_j$ annihilates a spinless fermion, $n_j=c^\dagger_j c_j$, and the string $K_j$ enforces the fermionic anticommutation relations.
+
+The two Ising terms remain quadratic under this transformation. The transverse field becomes a chemical-potential term, while the strings associated with the \ac{NN} bond cancel and leave ordinary hopping and pairing. The $p=0$ chain is therefore a free-fermion model and can be diagonalised exactly~\cite{pfeuty1970}. At criticality, its continuum limit is the free Majorana \ac{CFT} with $c=\tfrac12$~\cite{difrancesco1997}.
+
+The terms proportional to $p$ introduce quartic fermionic contributions. The self-dual $\sigma^x_j\sigma^x_{j+1}$ term becomes the density--density factor $(1-2n_j)(1-2n_{j+1})$, which is diagonal in the occupation basis. For the \ac{NNN} bond, the Jordan--Wigner strings do not cancel completely: a parity factor remains on the intermediate site,
+\begin{equation}
+    \sigma^z_i \sigma^z_{i+2}
+    = \big(c_i^\dagger - c_i\big)\,\big(1-2n_{i+1}\big)\,\big(c_{i+2}+c_{i+2}^\dagger\big).
+    \label{eq:annni:hop}
+\end{equation}
+This term describes hopping and pairing between sites $i$ and $i+2$, with an amplitude whose sign depends on the occupation of site $i+1$. We refer to this process as parity-dressed hopping. The quartic contributions allow the fermions to scatter, so Wick's theorem no longer reduces correlation functions to two-point functions~\cite{wick1950}. Consequently, the model is genuinely interacting and no longer admits a free-fermion solution for $p\neq0$. The algebra behind these statements is given below.
 
 \subsection{Jordan--Wigner and the four-fermion interaction}
 \label{app:pairing:jw}
@@ -480,29 +437,7 @@ The transverse field becomes a chemical potential directly from Eq.~\eqref{eq:an
 \end{equation}
 These two terms make up the pure Ising chain, which is why it is a free-fermion theory, exactly solvable, with a free Majorana \ac{CFT} at criticality.
 
-The two terms proportional to $p$ are both quartic. The self-dual $\sigma^x\sigma^x$ term becomes the density--density factor $(1-2n_j)(1-2n_{j+1})$, diagonal in the occupation basis. For the \ac{NNN} bond the strings cancel only partially: the site skipped over contributes its factor once instead of twice, leaving the parity $(1-2n_{i+1})=(-1)^{n_{i+1}}$ in place, which is Eq.~\eqref{eq:annni:hop}---a hop from $i$ to $i+2$ whose sign is set by the occupation of the intermediate site. This single term is the origin of the displacement.
-
-\subsection{The free-fermion normal form}
-\label{app:pairing:normalform}
-
-The argument of the next subsection rests on what being free buys, so we state it here. An operator is Gaussian, or free, if it is the exponential of an expression quadratic in the fermions, allowing both hopping terms $c^\dagger_i c_j$ and pairing terms $c^\dagger_i c^\dagger_j$. Pairing terms mean the operator cannot be diagonalized by relabelling particles alone; one must mix creation and annihilation operators through a Bogoliubov transformation, $\eta_m=\sum_j(u_{mj}c_j+v_{mj}c^\dagger_j)$, which is still a linear change of variables, so the result is still free: a set of independent normal modes.
-
-For a Gaussian state, Wick's theorem reduces every higher correlation function to sums of products of two-point functions, one term per pairing of the operators, with a sign from the permutation that brings the partners together. It holds because the modes are independent: each is a two-level system with its own occupation, and expectation values factorize mode by mode, so nothing correlates three or four particles beyond what the pairs already encode. Its significance is that the entire theory --- correlators, entanglement, the full spectrum --- is generated by single-particle data, a matrix of size set by the number of modes rather than by the exponentially large Hilbert space. This is the precise sense in which free means exactly solvable.
-
-Applied to a Gaussian transfer matrix, the same logic produces the normal form $\mathcal{E}=\mu_0\exp(-\sum_m\varepsilon_m\hat n_m)$ with $\hat n_m\in\{0,1\}$: every eigenvalue is $\mu_0\,e^{-\sum_{m\in S}\varepsilon_m}$ for some occupied subset $S$, so moduli and phases are both additive over occupied modes --- $\mathrm{Re}\,\varepsilon_m$ is a mode's cost in magnitude and $\mathrm{Im}\,\varepsilon_m$ the phase it contributes. This additivity is why the conformal tower appears as small, evenly spaced phase steps: the near-gapless modes have $\mathrm{Re}\,\varepsilon\approx0$ and $\mathrm{Im}\,\varepsilon=\pi x/(vT)$. A quartic term destroys this structure: the modes cease to be independent, Wick's theorem fails, and the spectrum is no longer additive over any single-particle data. The parity operator $e^{i\pi\hat N}$ is itself Gaussian, since $\hat N$ is quadratic, so the argument of the next subsection rests on the dispersion of the free chain rather than on Gaussianity alone.
-
-\subsection{Why free fermions cannot displace}
-\label{app:pairing:kw}
-
-A free-fermion transfer matrix has the normal form of the previous subsection, so its eigenvalues are fixed by which modes are occupied. An eigenvalue close to the top of the spectrum can only occupy modes that cost almost nothing in magnitude, $\mathrm{Re}\,\varepsilon_m\approx0$. In an Ising-class critical chain those are the long-wavelength modes, and their phases $\pi x/(vT)$ are small.
-
-A displaced state requires the opposite combination, a phase of $\pi$ at full modulus, and therefore a mode that neither decays nor stops oscillating. Such a mode is a gapless branch at lattice momentum $\pi$. The uniform Ising-class free chain has no such branch, so it cannot produce a displaced tower. The controls confirm this, since the critical Ising chain at two evolution times and the anisotropic XY chain at $\gamma=0.5,\,1,\,1.5$ return no displaced state at all.
-
-The displacement therefore requires a source of momentum-$\pi$ structure, and in this model that source is an interaction. Single-term probes identify which one. Deforming the critical Ising chain by the \ac{NNN} term alone, at strength $0.1$ and $T=4$, produces a displaced family at $x\approx0.37,\,1.22,\,2.17$; deforming it by the $\sigma^x\sigma^x$ term alone produces none. It is therefore the parity-dressed hop of Eq.~\eqref{eq:annni:hop}, not the density--density term, that carries the displacement. Scanning down to small couplings, the displaced family is present at every $p\neq0$ tested, down to $p=0.01$, with no threshold: the effect switches on with the interaction rather than at some finite strength.
-
-One consequence of the single-term probe is worth recording. The \ac{NNN}-only deformation is not self-dual, and it displaces all the same. Self-duality is therefore not needed for the displacement to exist; the argument below concerns why it is pinned at exactly $\pi$ rather than at a coupling-dependent value.
-
-The value of the displacement deserves its own remark. Across every coupling probed, from $p=0.01$ to $0.15$, the offset is identical and compatible with exactly $\pi$ rather than with any coupling-dependent phase. One structural observation fits naturally here: in Majorana variables the $XX$ and next-nearest $ZZ$ terms are both products of four consecutive Majoranas, offset by one Majorana site, and that one-site shift is the lattice Kramers--Wannier duality exchanging order and disorder --- which is why a self-dual Hamiltonian must carry both terms. \textit{The mechanism selecting the odd sector and fixing the displacement at exactly $\pi$ is ongoing work and is not settled here.} What the main text needs is established: the displacement exists for every $p\neq0$, is absent for free fermions, and is pinned at $\pi$.
+The two terms proportional to $p$ are both quartic. The self-dual $\sigma^x\sigma^x$ term becomes the density--density factor $(1-2n_j)(1-2n_{j+1})$, diagonal in the occupation basis. For the \ac{NNN} bond the strings cancel only partially: the site skipped over contributes its factor once instead of twice, leaving the parity $(1-2n_{i+1})=(-1)^{n_{i+1}}$ in place, which is Eq.~\eqref{eq:annni:hop}---a hop from $i$ to $i+2$ whose sign is set by the occupation of the intermediate site.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -521,9 +456,9 @@ Section~\ref{sec:annni:equilibrium} reads the central charge from the shape of t
     \tag{G0}
     \label{eq:cft_mid}
 \end{equation}
-Running DMRG over a ladder of sizes and plotting the mid-chain entropy against $\ln L$ therefore gives a straight line of slope $c/6$. Over $N=40$ to $200$ this returns $c\approx0.51$ at both $p=0.1$ and $p=0.5$, consistent with the profile fit of the main text and with the Ising value. The ladder uses fifteen DMRG sweeps with the bond dimension ramped to $400$ and a truncation cutoff of $10^{-10}$; the heavier $N=100$ chord fit of Section~\ref{sec:annni:equilibrium} uses fifty sweeps, a ramp to $1000$, and a cutoff of $10^{-12}$. Both ramps start with noise-assisted sweeps.
+Running DMRG over a ladder of sizes and plotting the mid-chain entropy against $\ln L$ therefore gives a straight line of slope $c/6$. Over $N=40$ to $200$ this returns $c\approx0.51$ at both $p=0.1$ and $p=0.5$, consistent with the profile fit of the main text and with the Ising value. The ladder uses fifteen DMRG sweeps with the bond dimension ramped to $400$ and a truncation cutoff of $10^{-10}$; the heavier $N=400$ chord fit of Section~\ref{sec:annni:equilibrium} uses fifty sweeps, a ramp to $1000$, and a cutoff of $10^{-12}$. Both ramps start with noise-assisted sweeps.
 
-The same ground states allow a cross-check with the R\'enyi-2 entropy, the member used for every temporal measurement in this thesis. Its mid-chain slope is $c/8$ rather than $c/6$, and a plain linear fit returns $c\approx0.58$: the same universality class, but biased upward. The bias is expected, and it has the same origin on both axes of this thesis. In equilibrium, R\'enyi entropies with $n>1$ carry corrections to scaling that the von Neumann entropy does not, oscillating with the cut position and decaying as a power of the subsystem size~\cite{calabrese2010}. In the temporal problem, Ref.~\cite{boucomas2026} derives the corresponding finite-time correction for the generalized temporal R\'enyi entropies and finds $\Delta S_n \propto T^{-1/n}$ for the Ising class, which decays more slowly as $n$ grows and is why higher members are more strongly biased. A straight-line fit that ignores either correction is therefore not an unbiased estimator of $c$. We do not fit the equilibrium corrections here, because the von Neumann route already measures the equilibrium central charge; the temporal $n=2$ correction, $T^{-1/2}$, is fitted where it matters, in Section~\ref{sec:results:wall}. This is the equilibrium counterpart of the finite-time bias affecting the temporal R\'enyi-2 read, and it is why the von Neumann entropy is the estimator of choice in equilibrium, where the full Schmidt spectrum is available at no cost. Figure~\ref{fig:cft_L} compares the two finite-size estimates.
+The same ground states allow a cross-check with the R\'enyi-2 entropy, the member used for every temporal measurement in this thesis. Its mid-chain slope is $c/8$ rather than $c/6$, and a plain linear fit returns $c\approx0.58$: the same universality class, but biased upward. The bias is expected. R\'enyi entropies with $n>1$ carry corrections to scaling that the von Neumann entropy does not, oscillating with the cut position and decaying as a power of the subsystem size~\cite{calabrese2010}, so a straight-line fit that ignores them overestimates the slope. The temporal analogue of this bias is the finite-time correction $\Delta S_n \propto T^{-1/n}$~\cite{boucomas2026}, which decays more slowly as $n$ grows; it is fitted where it matters, in Section~\ref{sec:results:wall}. We do not fit the equilibrium corrections here, because the von Neumann route already measures the equilibrium central charge cleanly, which is why it is the estimator of choice where the full Schmidt spectrum is available. Figure~\ref{fig:cft_L} compares the two finite-size estimates.
 
 \begin{figure}[htbp]
     \centering
@@ -538,9 +473,49 @@ The same ground states allow a cross-check with the R\'enyi-2 entropy, the membe
 \subsection{The sound velocity from the equilibrium dispersion}
 \label{app:velocity}
 
-Section~\ref{sec:annni:velocity} measures the sound velocity from the equilibrium dispersion. We use Alcaraz's relation for this chain: the ring Hamiltonian is diagonalized at small size, and $v$ follows from the gap between the lowest momentum-carrying excitation in the magnetic sector and the lowest state without momentum. This appendix records the checks behind the numbers quoted there.
+Section~\ref{sec:annni:velocity} measures the sound velocity from the equilibrium dispersion. This appendix gives the construction in full and records the checks behind the numbers quoted there.
 
-The construction is validated in four ways. It recovers $v=2$ at $p=0$, to $1.987$ at $N=16$ and improving with size. The ring Hamiltonian built from scratch matches the operator used elsewhere in the code to machine precision, $7\times10^{-14}$ on the full spectrum at $N=8$. The sector-resolved and sector-blind reads agree at every $p$. Finally, feeding the measured $v(p)$ into Alcaraz's separate Casimir formula reproduces his published ground-state central charge: we obtain $c=0.504$ at $p=0$ and $c=0.525$ at $p=0.5$ from rings of $16$ sites. The values used throughout are those at $N=12$, and it is these, rather than a fixed $v=2$, that make the boundary tower of Section~\ref{sec:results:tower} read as clean half-integers at every $p$.
+The measurement uses a periodic chain, so that momentum is a good quantum number. We build the ring Hamiltonian of Eq.~\eqref{eq:annni_H} at $\lambda=1$ for a small number of sites and diagonalize it exactly. Because the ring is translation invariant, every eigenstate can be labelled by its momentum, which we read off from the expectation value of the one-site translation operator, and by its parity under the spin flip. Degenerate levels come out of the diagonalization as arbitrary mixtures, so we resolve momentum and parity together before assigning labels. Within the magnetic (odd-parity) sector we then take the lowest state carrying no momentum and the lowest state carrying momentum $k$, and the velocity follows from the slope of the dispersion between them,
+\begin{equation}
+  v = \frac{N}{2\pi}\,\frac{E_1(k)-E_1(0)}{|k|},
+  \label{eq:app:velocity}
+\end{equation}
+with $k$ the smallest non-zero momentum available on the ring. Equation~\eqref{eq:app:velocity} is the lattice form of the linear dispersion $\omega=v|k|$: on a ring of $N$ sites the allowed momenta are spaced by $2\pi/N$, so the factor $N/2\pi$ converts an energy difference between neighbouring momentum levels into the slope of that line. Everything is computed at $\lambda=1$, where the chain is critical and the dispersion is linear at long wavelengths.
+
+The construction is validated in four ways. It recovers $v=2$ at $p=0$, to $1.990$ at $N=18$ and improving with size. The ring Hamiltonian built from scratch matches the operator used elsewhere in the code to machine precision, $7\times10^{-14}$ on the full spectrum at $N=8$. The sector-resolved and sector-blind reads agree at every $p$. Finally, feeding the measured $v(p)$ into Alcaraz's separate Casimir formula reproduces his published ground-state central charge: we obtain $c=0.504$ at $p=0$ and $c=0.525$ at $p=0.5$ from rings of $16$ sites.
+
+The ring sizes that exact diagonalization reaches are not in the thermodynamic limit. At $p=0$ the measurement still returns $1.9899$ at $N=18$, against the exact $2$. That error is not random: multiplying it by $N^2$ gives $3.27$, $3.28$, $3.28$, $3.28$ and $3.28$ at $N=10$ to $18$, so it decays as $1/N^2$. Reaching three-digit accuracy by enlarging the ring would need $N\approx57$, far beyond what can be diagonalized, but the regularity of the error means it can be fitted away instead.
+
+We therefore fit $v(N)=v_\infty + C/N^2$ at each coupling and take $v_\infty$ as the production velocity. Table~\ref{tab:velocity} collects the measurements and the fits, and Figure~\ref{fig:velocity_extrap} shows them. The residuals stay below $2.8\times10^{-2}$ at every coupling, on velocities of order two to eleven, so the assumed form describes the data rather than being imposed on it. The $p=0$ row is the control: the extrapolation returns $1.99994$ against the exact $2$, an error of $6\times10^{-5}$ where the largest ring is still $1.0\times10^{-2}$ away. The correction grows steeply with frustration, from $C=-3.27$ at $p=0$ to $-140.7$ at $p=1.5$, so the extrapolation matters most at the couplings where the raw ring values sit furthest from the limit. It is these extrapolated values, rather than a fixed $v=2$, that make the measured boundary dimensions read as clean half-integers at every $p$.
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{lccccccc}
+    \hline
+    $p$ & $N=10$ & $N=12$ & $N=14$ & $N=16$ & $N=18$ & $v_\infty$ & $C$ \\
+    \hline
+    $0.0$ & $1.9673$ & $1.9772$ & $1.9833$ & $1.9872$ & $1.9899$ & $1.99994$ & $-3.27$ \\
+    $0.1$ & $2.5707$ & $2.6007$ & $2.6191$ & $2.6312$ & $2.6396$ & $2.67016$ & $-9.97$ \\
+    $0.2$ & $3.1565$ & $3.2073$ & $3.2387$ & $3.2594$ & $3.2738$ & $3.32561$ & $-16.96$ \\
+    $0.3$ & $3.7247$ & $3.7972$ & $3.8423$ & $3.8722$ & $3.8931$ & $3.96723$ & $-24.34$ \\
+    $0.4$ & $4.2756$ & $4.3707$ & $4.4305$ & $4.4703$ & $4.4981$ & $4.59585$ & $-32.16$ \\
+    $0.5$ & $4.8096$ & $4.9284$ & $5.0038$ & $5.0543$ & $5.0897$ & $5.21214$ & $-40.46$ \\
+    $1.0$ & $7.2534$ & $7.5020$ & $7.6674$ & $7.7824$ & $7.8653$ & $8.12650$ & $-88.23$ \\
+    $1.5$ & $9.4140$ & $9.7946$ & $10.0594$ & $10.2504$ & $10.3921$ & $10.79924$ & $-140.69$ \\
+    \hline
+  \end{tabular}
+  \caption{\textbf{The measured velocities and their extrapolation.} $v(p)$ at $\lambda=1$ from rings of $N=10$ to $18$ sites, with the parameters of the fit $v(N)=v_\infty+C/N^2$. The largest fit residual is $1.1\times10^{-5}$ at $p=0$ and $2.8\times10^{-2}$ at $p=1.5$. The $v_\infty$ column holds the velocities used throughout this work.}
+  \label{tab:velocity}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.72\textwidth]{imgs/nb4_velocity_extrapolation.png}
+  \caption{\textbf{Extrapolating the velocity to the thermodynamic limit.} The measured $v$ against $1/N^2$ at each coupling, with the fitted lines and their intercepts (diamonds). The intercept is the production velocity. At $p=0$ it lands on the exact $v=2$, marked by the dotted line, which is the control on the procedure.}
+  \label{fig:velocity_extrap}
+\end{figure}
+
+Over the range studied the extrapolated velocity is close to linear in $p$: fitting $v_\infty=K_0+K_1p$ gives $2.02+6.42\,p$, with residuals up to $0.023$. This is a description of the data and not a law. The same fit applied to the individual ring sizes has coefficients that still move with $N$, from $(K_0,K_1)=(2.00,5.68)$ at $N=10$ to $(2.01,6.13)$ at $N=16$, and the intercept of the extrapolated line misses the exact $v(0)=2$ by more than the extrapolation itself does. At stronger frustration than we reach here the linear description would be expected to fail altogether. Every conversion in this thesis therefore uses $v_\infty$ at its own coupling, never the fitted line.
 
 That the temporal transfer matrix really carries this $p$-dependent velocity was checked separately with the anisotropic XY control, whose velocity $v(\gamma)=2\gamma$ is known exactly. At $\gamma=0.5,\,1,\,1.5$ the measured first-gap slopes are $a_1 = 1.481,\,0.782,\,0.520$ against the exact $\pi/(4\gamma) = 1.571,\,0.785,\,0.524$, giving $x_1 = 0.471,\,0.498,\,0.496$; pinning $v=2$ instead would force $a_1=0.785$ at every $\gamma$ and disagree with two of the three measured slopes. The pipeline recovers $x_1=\tfrac12$ only when fed the correct $v(\gamma)$, which confirms that the method is velocity-faithful.
 

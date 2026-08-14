@@ -7,26 +7,55 @@
 overlap_lr(L::MPS, R::MPS) = overlap_noconj(L, R)
 
 """
-    build_tmpo(mp, scheme, target_T; dt, nbeta, init_state) → (mpo, scaffold)
+    bulk_fwtmpoblocks(tp; nsites=5) → FwtMPOBlocks
 
-Model-agnostic tMPO builder. Returns the rotated forward tMPO (the spatial transfer
-matrix) and a structured seed tMPS on the same time-site indices (the scaffold). The
-scaffold gets overwritten with random complex tensors before any power method.
-`init_state` is the single-site boundary state name (e.g. "X+"). Works for any
-`ModelParams`/`ExpHRecipe` pair that has an `ITransverse.expH` method.
+Corrected column: ITransverse tiles the middle tensor of a 3-site U(dt), which is not a
+bulk tensor for a NNN model (dim 7 instead of 13). Build U on 5 sites and take the true
+middle tensor instead. Replaces only Wc/Wc_im, so fw_tMPS cannot run on these blocks.
+"""
+function bulk_fwtmpoblocks(tp::tMPOParams; nsites::Int=5)
+    b3  = FwtMPOBlocks(tp)
+    ss  = [addtags(sim(tp.mp.phys_site), "Site") for _ in 1:nsites]
+    U   = ITransverse.expH(ss, tp.mp, tp.scheme; dt=tp.dt)
+    Uim = ITransverse.expH(ss, tp.mp, tp.scheme; dt=tp.dbeta)
+    mid = (nsites + 1) ÷ 2
+    L, Lim = linkinds(U), linkinds(Uim)
+    dim(L[mid-1]) == dim(L[mid]) ||
+        error("middle tensor is still edge-affected (bond $(dim(L[mid-1]))≠$(dim(L[mid]))); increase nsites")
+    icP     = ss[mid]
+    time_P  = sim(L[mid-1], tags="Site,time")
+    time_vL = sim(icP,  tags="Link,time")
+    time_vR = sim(icP', tags="Link,time")
+    Wc   = replaceinds(U[mid], (L[mid-1], L[mid], icP, icP'), (time_P', time_P, time_vL, time_vR))
+    Wcim = ITensors.permute(replaceinds(Uim[mid], (Lim[mid-1], Lim[mid], icP, icP'),
+                                        (time_P', time_P, time_vL, time_vR)), inds(Wc)...)
+    return FwtMPOBlocks(b3; Wc=Wc, Wc_im=Wcim, iL=time_vL, iR=time_vR, iP=time_P, iPs=time_P')
+end
+
+"""
+    build_tmpo(mp, scheme, target_T; dt, nbeta, init_state, column) → (mpo, scaffold)
+
+Model-agnostic tMPO builder: the rotated forward tMPO plus a seed tMPS on the same
+time sites (overwritten with random tensors before any power method). `column=:legacy3`
+is ITransverse's 3-site extraction (exact only for NN models); `:bulk5` is the corrected
+bulk tensor. Default stays :legacy3 until :bulk5 is validated end to end.
 """
 function build_tmpo(mp::ModelParams, scheme::ExpHRecipe, target_T::Float64;
-        dt::Float64=0.1, nbeta::Int=0, init_state::String="X+")
+        dt::Float64=0.1, nbeta::Int=0, init_state::String="X+", column::Symbol=:legacy3)
     Nsteps      = round(Int, target_T / dt) + nbeta          # time-steps + nbeta cooling sites
     s           = mp.phys_site
     init        = complex(state(s, init_state))              # single-site LEFT/RIGHT boundary
     tp          = tMPOParams(mp=mp, dt=dt, nbeta=nbeta, scheme=scheme, dbeta=-im*dt, bl=init)
-    b           = FwtMPOBlocks(tp)                           # rotated bulk/boundary tensors
+    column in (:legacy3, :bulk5) || error("unknown column mode $column")
+    b           = column === :bulk5 ? bulk_fwtmpoblocks(tp) : FwtMPOBlocks(tp)
     # the spatial MPO's VIRTUAL bond => the temporal PHYSICAL dimension (read it dynamically)
     spatial_bond_dim = dim(inds(b.Wc, "Site,time")[1])
     time_sites  = addtags(siteinds(spatial_bond_dim, Nsteps; conserve_qns=false), "time")
     mpo         = fw_tMPO(b, time_sites, tr=init)            # the transfer matrix (an MPO)
-    scaffold    = fw_tMPS(b, time_sites; tr=init, LR=:right) # structured seed tMPS (index skeleton + dims)
+    # legacy: structured fw_tMPS seed; bulk5: random seed (fw_tMPS needs the legacy edge tensors)
+    scaffold    = column === :bulk5 ?
+        normalize(complex.(randomMPS(time_sites; linkdims=4))) :
+        fw_tMPS(b, time_sites; tr=init, LR=:right)
     return mpo, scaffold
 end
 
@@ -38,9 +67,9 @@ existing Alcaraz notebooks/sweeps.
 """
 function build_alcaraz_tmpo(target_T::Float64;
         p::Float64=0.1, lambda::Float64=1.0, dt::Float64=0.1,
-        nbeta::Int=0, MPO_alg::String="VD2")
+        nbeta::Int=0, MPO_alg::String="VD2", column::Symbol=:legacy3)
     recipe = Dict("WI"=>AlcarazWI(), "WII"=>AlcarazWII(), "VD2"=>AlcarazVD2())[MPO_alg]
-    return build_tmpo(AlcarazParams(lambda=lambda, p=p), recipe, target_T; dt=dt, nbeta=nbeta)
+    return build_tmpo(AlcarazParams(lambda=lambda, p=p), recipe, target_T; dt=dt, nbeta=nbeta, column=column)
 end
 
 # Weighted sum Σ coeffs[i]*vecs[i]. A plain directsum of k vectors peaks at k times the input bond,
@@ -356,10 +385,10 @@ function run_pm_diagnosed(target_T::Float64;
         p::Float64=0.1, lambda::Float64=1.0, dt::Float64=0.1,
         maxdim::Int=256, cutoff::Float64=1e-14, eps_converged::Float64=1e-6,
         nbeta::Int=0, MPO_alg::String="VD2", alg::String="RTM",
-        itermax::Int=5000, stuck_after::Int=200)
+        itermax::Int=5000, stuck_after::Int=200, column::Symbol=:legacy3)
 
     mpo, scaffold = build_alcaraz_tmpo(target_T; p=p, lambda=lambda, dt=dt,
-                                        nbeta=nbeta, MPO_alg=MPO_alg)
+                                        nbeta=nbeta, MPO_alg=MPO_alg, column=column)
     seed_mps = deepcopy(scaffold)
     for i in eachindex(seed_mps)    # random seed to avoid subdominant-sector trap
         seed_mps[i] = randomITensor(ComplexF64, inds(seed_mps[i]))
@@ -428,7 +457,8 @@ function compute_entropies(mp::ModelParams, target_T::Float64;
         maxdims::Union{Nothing,AbstractVector{<:Integer}}=nothing,
         cutoffs::Union{Nothing,AbstractVector{<:Real}}=nothing,
         trunc_mode::Symbol=:rtm, init_state::String="X+", basis::Symbol=:eig,
-        itermax::Int=8000, stuck_after::Int=2000, seed::Union{Nothing,MPS}=nothing)
+        itermax::Int=8000, stuck_after::Int=2000, seed::Union{Nothing,MPS}=nothing,
+        column::Symbol=:legacy3)
 
     Ntime_steps = round(Int, target_T / dt)
     Nsteps      = Ntime_steps + nbeta
@@ -436,12 +466,15 @@ function compute_entropies(mp::ModelParams, target_T::Float64;
     init        = complex(state(s, init_state))
 
     tp = tMPOParams(mp=mp, dt=dt, nbeta=nbeta, scheme=scheme, dbeta=-im*dt, bl=init)
-    b  = FwtMPOBlocks(tp)
+    column in (:legacy3, :bulk5) || error("unknown column mode $column")
+    b  = column === :bulk5 ? bulk_fwtmpoblocks(tp) : FwtMPOBlocks(tp)
     spatial_bond_dim = dim(inds(b.Wc, "Site,time")[1])
     time_sites = addtags(siteinds(spatial_bond_dim, Nsteps; conserve_qns=false), "time")
 
     mpo       = fw_tMPO(b, time_sites, tr=init)
-    start_mps = fw_tMPS(b, time_sites; tr=init, LR=:right)
+    start_mps = column === :bulk5 ?
+        normalize(complex.(randomMPS(time_sites; linkdims=4))) :
+        fw_tMPS(b, time_sites; tr=init, LR=:right)
 
     if use_block_pm
         # (A) robust block PM through gap closing
@@ -782,8 +815,8 @@ The diagonal Z2 sector operator of the transfer matrix, per temporal site. Solve
 equation X W X = R W R^{-1} on a bulk tMPO tensor (X = spin flip on the links) and returns the
 sign vector of R. The nullspace must be one-dimensional; errors otherwise.
 """
-function ksector_signs(p::Float64; dt::Float64=0.1, nbeta::Int=4, MPO_alg::String="VD2")
-    mpo, _ = build_alcaraz_tmpo(3.0; p=p, lambda=1.0, dt=dt, nbeta=nbeta, MPO_alg=MPO_alg)
+function ksector_signs(p::Float64; dt::Float64=0.1, nbeta::Int=4, MPO_alg::String="VD2", column::Symbol=:legacy3)
+    mpo, _ = build_alcaraz_tmpo(3.0; p=p, lambda=1.0, dt=dt, nbeta=nbeta, MPO_alg=MPO_alg, column=column)
     Tb = mpo[div(length(mpo), 2)]
     phys = [noprime(s) for s in inds(Tb) if plev(s) == 0 && hastags(s, "Site")]
     lnks = [s for s in inds(Tb) if hastags(s, "Link")]

@@ -2,83 +2,53 @@
 \section{The ANNNI-type Model}
 \label{sec:annni}
 
-The framework of Sections~\ref{sec:cft} and~\ref{sec:transverse} requires a quench to a critical point. We study a self-dual spin chain that extends the transverse-field Ising model with next-nearest-neighbour interactions~\cite{alcaraz2016}. For spin $1/2$, the Hamiltonian is
+The framework of Sections~\ref{sec:cft} and~\ref{sec:transverse} requires a quench to a critical point. We study a self-dual quantum spin chain that extends the transverse-field Ising model with \ac{NNN} interactions~\cite{alcaraz2016}. For spin-$1/2$ degrees of freedom, the Hamiltonian is
 \begin{equation}
     H = - \sum_{i} \Big[ \sigma_i^z \sigma_{i+1}^z + \lambda\, \sigma_i^x
         \;+\; p\,\big( \sigma_i^z \sigma_{i+2}^z + \lambda\, \sigma_i^x \sigma_{i+1}^x \big) \Big],
     \label{eq:annni_H}
 \end{equation}
-where $\sigma^{x,z}$ are Pauli matrices, $\lambda$ is the transverse field, and $p$ controls the strength of the additional interactions. The first two terms define the transverse-field Ising chain. The terms proportional to $p$ introduce the \ac{NNN} bond and the accompanying $\sigma^x\sigma^x$ interaction required to preserve self-duality.
+where $\sigma^{x,z}$ are Pauli matrices, $\lambda$ is the transverse field, and $p$ controls the strength of the additional interactions. The $\sigma^x\sigma^x$ term preserves self-duality under the Kramers--Wannier transformation~\cite{alcaraz2016}, which fixes the critical point at $\lambda=1$. We work at this point throughout, so that the conformal predictions of Section~\ref{sec:cft} apply.
 
-Self-duality is what fixes the critical point without a numerical search. The Kramers--Wannier transformation maps the order variables onto disorder variables defined on the dual lattice: $\sigma^z_i\sigma^z_{i+1}\to\sigma^x_i$ and $\sigma^x_i\to\sigma^z_i\sigma^z_{i+1}$, and correspondingly $\sigma^z_i\sigma^z_{i+2}\to\sigma^x_i\sigma^x_{i+1}$ for the next-nearest bond. Each pair of terms in Eq.~\eqref{eq:annni_H} is exchanged with its partner, and the Hamiltonian returns to itself with $\lambda\to1/\lambda$ at fixed $p$. The $\sigma^x\sigma^x$ term is present precisely so that the $p$ sector closes under this map. A self-dual point is a fixed point of the transformation, so if the chain has a single transition it must sit at $\lambda=1$ for every $p$. Alcaraz established that the transition remains continuous and in the Ising universality class over a wide range of $p$~\cite{alcaraz2016}, which is what makes the conformal predictions of Section~\ref{sec:cft} applicable at $\lambda=1$ throughout.
-
-Throughout this work we set $\lambda=1$, where the chain is critical and the conformal predictions of Section~\ref{sec:cft} apply. At $p=0$, Eq.~\eqref{eq:annni_H} reduces to the integrable transverse-field Ising chain. For $p>0$, the additional interactions introduce a second length scale and break the free-fermion structure, as shown in Section~\ref{sec:annni:jw}.
+At $p=0$, Eq.~\eqref{eq:annni_H} reduces to the integrable transverse-field Ising chain. For $p>0$, the additional interactions break its free-fermion structure: after a \ac{JW} transformation, the \ac{NNN} bond produces a quartic term that cannot be removed by a Bogoliubov rotation, so the model is no longer integrable. See Appendix~\ref{sec:annni:jw} for more details.
 
 \subsection{Equilibrium criticality and the central charge}
 \label{sec:annni:equilibrium}
 
-From finite-size scaling, one can show that the chain remains critical and in the Ising universality class up to $p\lesssim1.5$, with central charge $c \approx 1/2$~\cite{alcaraz2016}. The same conclusion was reached independently from the lattice Virasoro generators, which identify an emergent Ising \ac{CFT} in this chain~\cite{milsted2017}. The dynamics becomes progressively more difficult to simulate as $p$ increases, as discussed in Section~\ref{sec:results}. We therefore restrict our analysis to the window $0 \le p \le 0.5$.
+Previous finite-size scaling studies find that the chain remains critical and belongs to the Ising universality class up to $p\lesssim1.5$, with central charge $c\approx1/2$~\cite{alcaraz2016}. The universality class of this same model has also been established by a different method, which extracts the conformal data directly from the lattice Hamiltonian~\cite{milsted2017}. We restrict our simulations to $0\le p\le1.5$, the range over which the model is known to remain critical and in the Ising universality class~\cite{alcaraz2016}.
 
 We verify the equilibrium universality class over this range using the ground-state entanglement. For a critical open chain of length $L$, \ac{CFT} predicts that the von Neumann entropy of a block of length $l$ scales as~\cite{holzhey1994,vidal2003,calabrese_cardy2004}
 \begin{equation}
     S_{\mathrm{vN}}(l,L) = \frac{c}{6}\,W(l,L) + k,
     \label{eq:cft_obc}
 \end{equation}
-where $W$ is the chord variable of Eq.~\eqref{eq:chord} and $k$ is a non-universal constant. The von Neumann entropy is well suited to this equilibrium calculation because \ac{DMRG} provides directly the full Schmidt spectrum of the ground state---unlike the temporal calculation in Section~\ref{sec:transverse}, which requires evaluating a matrix logarithm---and its finite-size corrections are smaller than those of higher-order R\'enyi entropies.
+where $W$ is the chord variable of Eq.~\eqref{eq:chord} and $k$ is a non-universal constant. The von Neumann entropy is well suited to this calculation because \ac{DMRG} provides the full ground-state Schmidt spectrum directly, and also has weaker finite-size corrections than the higher-order R\'enyi entropies~\cite{calabrese2010}.
 
-For each value of $p$, we obtain the ground state of a chain with $N=100$ sites and evaluate the entropy across every bond. Equation~\eqref{eq:cft_obc} predicts a linear dependence on $W(l,L)$, with slope $c/6$. The complete entanglement profile of a single ground state therefore provides an estimate of the central charge. We fit the central half of the chain, where boundary corrections are smallest; the resulting profiles are shown in Figure~\ref{fig:cft_chord}.
+For each value of $p$, we obtain the ground state of a chain with $N=400$ sites and evaluate the entropy across every bond. Equation~\eqref{eq:cft_obc} predicts a linear dependence on $W(l,L)$, so the entanglement profile of a single ground state provides an estimate of the central charge. We fit only the middle part of the chain, using the cuts satisfying $0.25L<l<0.75L$, where boundary corrections are smallest. The resulting profiles are shown in Figure~\ref{fig:cft_chord}.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{imgs/cft_chord_equilibrium.png}
-    \caption{\textbf{The equilibrium central charge is unchanged by frustration.} Ground-state entanglement profiles at $\lambda=1$ and $N=100$, for $p=0$ to $0.5$ in steps of $0.1$. Each profile is linear in the chord variable $W$ of Eq.~\eqref{eq:chord}, with slope $c/6$ as predicted by Eq.~\eqref{eq:cft_obc}. The fitted central charge ranges from $0.5070$ to $0.5081$. Its small offset from $1/2$ is already present at $p=0$ and is attributed to finite-size corrections.}
+    \includegraphics[width=0.65\textwidth]{imgs/cft_chord_equilibrium.png}
+    \caption{\textbf{Effect of \ac{NNN} interactions to the equilibrium central charge.} Ground-state entanglement profiles at $\lambda=1$ and $N=400$, for $p \in [0.0, 1.5]$. The linear dependence on the chord variable $W$ gives a central charge close to the Ising prediction $c=1/2$ at every $p$, with a small common offset from finite-size corrections. The fitted central charge ranges from $c=0.5018$ to $0.5055$.}
     \label{fig:cft_chord}
 \end{figure}
 
-The profiles follow the conformal scaling law at every coupling. The fitted central charge remains between $0.5070$ and $0.5081$ over the full range, so it barely moves as $p$ grows. The common offset from the exact value $c=1/2$ is consistent with residual finite-size corrections to Eq.~\eqref{eq:cft_obc}: it is present both at the exactly known point $p=0$ and at non-zero $p$. These results confirm that the additional interactions do not change the universality class over the range considered. Appendix~\ref{app:fss} provides an independent estimate from the finite-size scaling of the mid-chain entropy, together with a cross-check based on the R\'enyi-2 entropy.
+The profiles follow the conformal scaling law at every coupling, and the fitted central charge barely changes with $p$. Its small common offset from the exact value $c=1/2$ is consistent with residual finite-size corrections to Eq.~\eqref{eq:cft_obc}, since a similar offset is already present at the exactly solvable point $p=0$. The additional interactions therefore do not change the universality class over the range considered.
 
-The point $p=0$ provides the reference case for the dynamical analysis. In the transverse-field Ising chain, the post-quench generalized temporal entropies have been derived from \ac{CFT} and reproduced numerically~\cite{carignano_tagliacozzo2025}. We use this exact limit to calibrate the transverse contraction in Section~\ref{sec:results:validation}, before introducing the non-integrable interactions.
-
-\subsection{Fermionic form of the NNN interactions}
-\label{sec:annni:jw}
-
-The effect of the additional interactions becomes explicit after mapping the spin chain to fermions. In the convention of Eq.~\eqref{eq:annni_H}, with the transverse field along $\sigma^x$ and the order parameter along $\sigma^z$, the \ac{JW} transformation~\cite{jordan_wigner1928,fradkin2013} is
-\begin{equation}
-    \sigma^x_j = 1 - 2n_j, \qquad
-    \sigma^z_j = \big(c_j + c_j^\dagger\big)\,K_j, \qquad
-    K_j = \prod_{k<j}\big(1-2n_k\big),
-    \label{eq:annni:jwmap}
-\end{equation}
-where $c_j$ annihilates a spinless fermion, $n_j=c^\dagger_j c_j$, and the string $K_j$ enforces the fermionic anticommutation relations.
-
-The two Ising terms remain quadratic under this transformation. The transverse field becomes a chemical-potential term, while the strings associated with the \ac{NN} bond cancel and leave ordinary hopping and pairing. The $p=0$ chain is therefore a free-fermion model and can be diagonalised exactly~\cite{pfeuty1970}. At criticality, its continuum limit is the free Majorana \ac{CFT} with $c=\tfrac12$~\cite{difrancesco1997}.
-
-The terms proportional to $p$ introduce quartic fermionic contributions. The self-dual $\sigma^x_j\sigma^x_{j+1}$ term becomes the density--density factor $(1-2n_j)(1-2n_{j+1})$, which is diagonal in the occupation basis. For the \ac{NNN} bond, the Jordan--Wigner strings do not cancel completely: a parity factor remains on the intermediate site,
-\begin{equation}
-    \sigma^z_i \sigma^z_{i+2}
-    = \big(c_i^\dagger - c_i\big)\,\big(1-2n_{i+1}\big)\,\big(c_{i+2}+c_{i+2}^\dagger\big).
-    \label{eq:annni:hop}
-\end{equation}
-This term describes hopping and pairing between sites $i$ and $i+2$, with an amplitude whose sign depends on the occupation of site $i+1$. We refer to this process as parity-dressed hopping. The quartic contributions allow the fermions to scatter, so Wick's theorem no longer reduces correlation functions to two-point functions~\cite{wick1950}. Consequently, the model is genuinely interacting and no longer admits a free-fermion solution for $p\neq0$. A detailed derivation is given in Appendix~\ref{app:pairing}.
-
-The parity dependence also provides a microscopic origin for the sector structure observed in the transfer-matrix spectrum in Section~\ref{sec:results}. In particular, the additional interaction distinguishes fermionic sectors and produces a corresponding structure in the eigenvalues. The precise mechanism connecting the lattice interaction to the displaced boundary tower is not yet fully understood, and we return to this question in the conclusions.
+The profiles separate at small $W$, where the cuts lie closest to the open boundaries. Equation~\eqref{eq:cft_obc} is less accurate in this region because the boundaries introduce corrections that depend on the microscopic interactions and therefore on $p$. This is why these cuts are excluded from the fit. Towards the centre of the chain, these boundary effects weaken and the profiles converge towards the common linear behaviour predicted by \ac{CFT}. Appendix~\ref{app:fss} gives an independent estimate from the finite-size scaling of the mid-chain entropy and a cross-check using the R\'enyi-2 entropy.
 
 \subsection{Sound velocity}
 \label{sec:annni:velocity}
 
-The \ac{NNN} interaction modifies the propagation of low-energy excitations. At the critical point the excitation energy $\omega$ is linear in the lattice momentum $k$ at long wavelengths, and the slope of that dispersion is the sound velocity, $\omega=v|k|$. This velocity enters the conformal predictions of Section~\ref{sec:cft}, so it must be determined independently before the dynamical data can be compared with them. For the integrable chain, $v=2$ exactly; for $p>0$, we determine it numerically.
+The \ac{NNN} interaction modifies the propagation of low-energy excitations. At a critical point, the gap closes and the dispersion $\omega(k)$ becomes linear in the lattice momentum $k$ near the gap-closing point. Its slope defines the sound velocity through $\omega(k)=v|k|$, which sets the relativistic scale of the continuum theory. This velocity enters the conformal predictions of Section~\ref{sec:cft}, so it must be determined independently before they can be compared with the dynamical data. For the integrable chain, the exact dispersion $\omega(k)=2|\sin k|$ gives $v=2$~\cite{pfeuty1970}; for $p>0$, we determine $v$ numerically.
 
-We extract $v(p)$ from the equilibrium dispersion of periodic chains, diagonalized exactly, by identifying the lowest excitation carrying momentum in the magnetic sector. Figure~\ref{fig:velocity} shows the result at four ring sizes. The velocity grows steadily with frustration, from the exact $v=2$ at $p=0$ to $v=5.05$ at $p=0.5$ for the largest ring we reach.
+We extract $v(p)$ from the equilibrium dispersion of periodic chains, obtained by exact diagonalization, by identifying the lowest excitation with non-zero momentum. Because exact diagonalization is restricted to finite rings, we extrapolate the velocities obtained from five system sizes using their leading $1/N^2$ finite-size dependence. This procedure reproduces the exact result at $p=0$ and is then applied at each non-zero coupling $p$.
 
-The dependence on $p$ is close to linear. Fitting $v=K_0+K_1p$ over $0\le p\le0.5$ leaves residuals below $0.03$ at every size, so the line is a good description but not an exact one. Its coefficients still move with the ring size, from $(K_0,K_1)=(2.00,5.68)$ at $N=10$ to $(2.01,6.13)$ at $N=16$, the intercept settling near the exact value $v(0)=2$ while the slope is still drifting upward. We therefore use the measured $v(p)$ at fixed $N=12$ throughout, rather than the fitted line, and treat the remaining size dependence as part of the uncertainty on any quantity that needs the velocity. Appendix~\ref{app:velocity} gives the construction and its validation.
-
-The additional interaction therefore changes a non-universal scale that must be included when testing the universal conformal predictions.
+The velocity grows steadily from $2.000$ at $p=0$ to $10.799$ at $p=1.5$, as shown in Figure~\ref{fig:velocity}. We use the independently extrapolated value at each coupling in all subsequent conversions. Although the velocity is non-universal, it is not a fitted parameter in our analysis: it is fixed by the model and determined from the equilibrium spectrum. Appendix~\ref{app:velocity} describes the dispersion calculation, extrapolation and validation in detail.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.72\textwidth]{imgs/nb4_velocity_vs_p.png}
-    \caption{\textbf{The sound velocity grows with frustration.} $v(p)$ at $\lambda=1$, from the equilibrium dispersion of periodic rings of $N=10$ to $16$ sites. The dashed line is the linear fit at $N=16$ and the dotted line marks the exact Ising value $v=2$ at $p=0$.}
+    \includegraphics[width=0.65\textwidth]{imgs/nb4_velocity_vs_p.png}
+    \caption{\textbf{The sound velocity grows with frustration.} $v(p)$ at $\lambda=1$, from the equilibrium dispersion of periodic rings of $N=10$ to $18$ sites (coloured circles), together with the values extrapolated to the thermodynamic limit (black diamonds), which are the ones used throughout. The dotted line marks the exact Ising value $v=2$ at $p=0$.}
     \label{fig:velocity}
 \end{figure}
-
-Having established that the model remains in the Ising universality class and determined the coupling-dependent velocity, we now consider the quench from the completely polarised state. The next section constructs the time-evolution MPO, whose rotation defines the transfer matrix of Section~\ref{sec:transverse} for this model.

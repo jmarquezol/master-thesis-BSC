@@ -2,15 +2,15 @@
 \section{Results}
 \label{sec:results}
 
-The four predictions of Section~\ref{sec:cft:temporal} are now confronted with the simulations. All of them are measured on the ANNNI-type chain of Eq.~\eqref{eq:annni_H} at $\lambda=1$, quenched from $\ket{X+}^{\otimes N}$, with the frustration $p$ tuned from the integrable Ising point $p=0$ up to $p=0.5$. A window, in what follows, is the interval of evolution times over which a quantity can be fitted. It opens once $T$ is long enough for the conformal asymptotics to hold, and closes when the numerics stop resolving the object being fitted. The predictions split into two families, and this section follows that split. The entropy route goes through the eigenvectors: the generalized R\'enyi-2 entropy of Eq.~\eqref{eq:s2gen} is compared with the conformal profile of Eq.~\eqref{eq:cft:chord}. The spectral route goes through the eigenvalues alone. It carries three of the predictions: emergent dual unitarity, the central charge from the phase curvature of $\lambda_0$ (Eq.~\eqref{eq:cft:eq3}), and the boundary exponent from the first gap (Eq.~\eqref{eq:cft:eq4}). In each route the integrable point is measured first, where every prediction has an exact target~\cite{carignano_tagliacozzo2025}, and frustration is switched on afterwards. The last subsection returns to the boundary exponent, whose measurement uncovered a feature of the interacting spectrum.
+The four predictions of Section~\ref{sec:cft:temporal} are now confronted with the simulations. All of them are measured on the ANNNI-type chain of Eq.~\eqref{eq:annni_H} at $\lambda=1$, quenched from $\ket{X+}^{\otimes N}$, with the frustration $p$ tuned from the integrable Ising point $p=0$ up to $p=0.5$. A window, in what follows, is the interval of evolution times over which a quantity can be fitted. It opens once $T$ is long enough for the conformal asymptotics to hold, and closes when the numerics stop resolving the object being fitted. The predictions split into two families, and this section follows that split. The entropy route goes through the eigenvectors: the generalized R\'enyi-2 entropy of Eq.~\eqref{eq:s2gen} is compared with the conformal profile of Eq.~\eqref{eq:cft:chord}. The spectral route goes through the eigenvalues alone. It carries three of the predictions: emergent dual unitarity, the central charge from the phase curvature of $\lambda_0$ (Eq.~\eqref{eq:cft:eq3}), and the boundary exponent from the first gap (Eq.~\eqref{eq:cft:eq4}). In each route the integrable point is measured first, where every prediction has an exact target~\cite{carignano_tagliacozzo2025}, and frustration is switched on afterwards.
 
-Unless stated otherwise, all runs use the VD2 time-evolution MPO of Section~\ref{sec:mporep} with $\delta t=0.1$, the regulator $\beta_0=0.2$ ($N_\beta=4$, Section~\ref{sec:cft:boundary}), and the initial state $\ket{X+}$. The temporal states come from the block power method of Section~\ref{sec:numerics}, with $k=4$ at maximum bond dimension $\chi=64$ and larger blocks where the spectrum demands them---for instance, the deep spectra of Section~\ref{sec:results:tower} use $k=8$. Every eigenvalue-based measurement uses the measured sound velocity $v(p)$ of Appendix~\ref{app:velocity}.
+Unless stated otherwise, all runs use the \textit{VD2} time-evolution MPO of Section~\ref{sec:mporep} with $\delta t=0.1$, the regulator $\beta_0=0.2$ ($N_\beta=4$, Section~\ref{sec:cft:boundary}), and the initial state $\ket{X+}$. The temporal states come from the block power method of Section~\ref{sec:numerics}, with $k=4$ at maximum bond dimension $\chi=64$ and larger blocks where the spectrum demands them---the deep spectra behind the boundary-tower measurements use $k=8$. Every eigenvalue-based measurement uses the measured sound velocity $v(p)$ of Appendix~\ref{app:velocity}.
 
 \subsection{The entropy route}
 \label{sec:results:validation}
 \label{sec:results:wall}
 
-At $p=0$ the generalized temporal entropy follows the conformal prediction over the full simulated window. Figure~\ref{fig:domes_p0} shows the R\'enyi-2 profiles: the real part collapses onto the chord curves of Eq.~\eqref{eq:cft:chord} with $c=\tfrac12$, and the imaginary part forms the predicted plateau. The plateau sits above $\pi c/16$ at every time we reach, and falls as $T$ grows, from $0.130$ at $T=4$ to $0.118$ at $T=15$. This is the finite-time correction of Ref.~\cite{boucomas2026}, which decays as $T^{-1/2}$. Fitting that form over $T=4$ to $15$ and extrapolating to infinite time gives $c=0.55$, an absolute estimate that needs no reference model.
+At $p=0$ the generalized temporal entropy follows the conformal prediction over the full simulated window. Figure~\ref{fig:domes_p0} shows the R\'enyi-2 profiles: the real part collapses onto the chord curves of Eq.~\eqref{eq:cft:chord} with $c=\tfrac12$, and the imaginary part forms the predicted plateau. The plateau sits above $\pi c/16$ at every time we reach, and falls as $T$ grows, from $0.130$ at $T=4$ to $0.118$ at $T=15$. This is the finite-time correction that decays as $T^{-1/2}$~\cite{boucomas2026}. Fitting that form over $T=4$ to $15$ and extrapolating to infinite time gives $c=0.55$, an absolute estimate that needs no reference model.
 
 \begin{figure}[htbp]
     \centering
@@ -19,32 +19,12 @@ At $p=0$ the generalized temporal entropy follows the conformal prediction over 
     \label{fig:domes_p0}
 \end{figure}
 
-Switching on frustration, the dome remains conformal inside a window that shrinks with $p$. We extract the R\'enyi-2 slope over $T=4$--$9$ at $p=0.1$ and calibrate it against $p=0$, so that the non-universal finite-$T$, finite-$\chi$ and finite-$\delta t$ prefactors cancel in the ratio of Eq.~\eqref{eq:cft:calibratio}. This gives
-\begin{equation}
-    c(p=0.1) = 0.47 \pm 0.05,
-    \label{eq:results:headline}
-\end{equation}
-with per-time values between $0.42$ and $0.56$, consistent with the Ising value. The quoted uncertainty is the sample standard deviation of these per-time reads. At $p=0.3$ and $p=0.5$ the entropy stops being usable at $T\approx3$ and $T\approx2$. These times are too short for the conformal asymptotics to apply in the first place, so no central charge can be extracted from the entropy at those couplings, and we do not quote one. They are omitted from Figure~\ref{fig:wall} for the same reason.
-
-At $p=0.1$ the window closes for a reason we can identify. Figure~\ref{fig:wall}a shows the phase rigidity of the dominant pair, Eq.~\eqref{eq:rigidity}, falling geometrically at every coupling and faster as $p$ grows. It reaches its floor at $T=9$ for $p=0.1$, which is where the profiles leave the conformal line in Figure~\ref{fig:wall}b. The left and right eigenvectors have coalesced there, so the entropy built from them is no longer well defined, whatever the solver does.
-
-Past the wall the iteration no longer converges to the physical eigenvectors, so the profiles it returns are not entropies of the state we intend to compute. Their shape carries no physical meaning and we do not interpret it. We use only the time at which the profile stops following the conformal line, which is what locates the wall. Appendix~\ref{app:wall:shape} shows the profiles on either side of that time.
-
-The eigenvalues are not affected at the same time: the ladder of Section~\ref{sec:results:spectral} continues past $T=9$ at $p=0.1$ and gives central charges consistent with $\tfrac12$ there. This is the asymmetry of Section~\ref{sec:reach}, where an eigenvalue is protected by its own overlap and an eigenvector is not.
-
-We tested at $p=0.1$ whether this onset depends on the numerical resolution, by halving the bond dimension, tightening the truncation cutoff, and replacing the \ac{RTM} truncation with the \ac{RDM} one. Table~\ref{tab:wall_controls} lists the dome peaks. They agree to three decimals with one another and all break at the same time, one rung later than the cluster arm quoted above. Varying the regulator between $\beta_0=0.1$ and $0.8$ does not move it either (Appendix~\ref{app:wall:eps}). All of this was measured at one coupling and one bond dimension, so a much larger $\chi$ remains untested. Past $T=9$ at $p=0.1$ we read the physics from the eigenvalues alone. The controls were run locally and the arm quoted above on the cluster; the one-rung difference between them is not understood and is left open.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\textwidth]{imgs/res_wall.png}
-    \caption{\textbf{Where the eigenvector route ends.} (a) Phase rigidity of the dominant pair against $T$: a geometric collapse at every $p$, steeper as frustration grows. (b) Profiles against the chord variable. A conformal profile is a straight line here, which is what $p=0$ (circles) gives at every computed time and $p=0.1$ (squares) up to $T=9$. The dashed lines are fits to those points, one per coupling; they are offset vertically because the additive constant $s_0$ of Eq.~\eqref{eq:cft:chord} is non-universal and differs between couplings, so only their slopes carry $c$. The detached points at $T\ge10$ come from an iteration that no longer converges to the physical eigenvectors, and their shape is not interpreted.}
-    \label{fig:wall}
-\end{figure}
+With frustration switched on, the entropy measurements are being regenerated on the corrected transfer-matrix column of Section~\ref{sec:mporep:exp}, and the frustrated windows and central charges of this route are \textit{[OPEN]}.
 
 \subsection{The spectral route}
 \label{sec:results:spectral}
 
-The eigenvalue-only mode of Section~\ref{sec:blockpm} carries the spectral measurements far past the wall: to $T=20$ at $p=0$, the longest ladder we ran rather than a limit of the method. That reach is not sensitive to the regulator, since the rigidity that ends the entropy route falls at the same rate for every $\beta_0$ tested (Appendix~\ref{app:wall:eps}) and the eigenvalues do not depend on it. Figure~\ref{fig:spectral_p0}a traces $\lambda_0$ in the complex plane over that whole ladder: the modulus is constant at $1.487$ while the phase winds---the emergent dual unitarity of Section~\ref{sec:cft:temporal}. Figure~\ref{fig:spectral_p0}b shows the central charge from the same eigenvalue: the corrected fit of Eq.~\eqref{eq:cft:eq3} returns $c=0.48$. A longer window also improves the fit itself: with rungs out to $T=20$ the parameters of Eq.~\eqref{eq:cft:eq3} are individually resolved, and the constant term of Eq.~\eqref{eq:cft:eq3}, left free, converges to $B=-3.141$, matching the branch shift $-\pi$ expected from the definition $\lambda_0=\log(-\mu_0)$. The Casimir coefficient can also be checked against an independent calculation: for the critical Ising chain, where $c=\tfrac12$ and $v=2$ exactly, Eq.~\eqref{eq:cft:eq3} gives $|C|=\kappa/v=\pi c/(48)=\pi/96=0.0327$, the value obtained with a separate implementation of the method in Ref.~\cite{boucomas2026}. We measure $|C|=0.0318$, within $3\%$.
+The eigenvalue-only mode of Section~\ref{sec:blockpm} carries the spectral measurements to $T=20$ at $p=0$, the longest ladder we ran rather than a limit of the method. Figure~\ref{fig:spectral_p0}a traces $\lambda_0$ in the complex plane over that whole ladder: the modulus is constant at $1.487$ while the phase winds---the emergent dual unitarity of Section~\ref{sec:cft:temporal}. Figure~\ref{fig:spectral_p0}b shows the central charge from the same eigenvalue: the corrected fit of Eq.~\eqref{eq:cft:eq3} returns $c=0.48$. A longer window also improves the fit itself: with rungs out to $T=20$ the parameters of Eq.~\eqref{eq:cft:eq3} are individually resolved, and the constant term of Eq.~\eqref{eq:cft:eq3}, left free, converges to $B=-3.141$, matching the branch shift $-\pi$ expected from the definition $\lambda_0=\log(-\mu_0)$. The Casimir coefficient can also be checked against an independent calculation: for the critical Ising chain, where $c=\tfrac12$ and $v=2$ exactly, Eq.~\eqref{eq:cft:eq3} gives $|C|=\kappa/v=\pi c/(48)=\pi/96=0.0327$, the value obtained with a separate implementation of the method~\cite{boucomas2026}. We measure $|C|=0.0318$, within $3\%$.
 
 \begin{figure}[htbp]
     \centering
@@ -53,36 +33,16 @@ The eigenvalue-only mode of Section~\ref{sec:blockpm} carries the spectral measu
     \label{fig:spectral_p0}
 \end{figure}
 
-The boundary exponent distinguishes the two boundary conditions of Section~\ref{sec:cft:temporal}. Fitting Eq.~\eqref{eq:cft:eq4} to the first spectral gap over $T=2$--$9$ gives $x_1=0.49$ for the free boundary ($\ket{X+}$) and $x_1=1.97$ for the fixed one ($\ket{Up}$), against the exact values $\tfrac12$ and $2$ (Figure~\ref{fig:x1_p0}).
+The boundary exponent distinguishes the two boundary conditions of Section~\ref{sec:cft:temporal}. Fitting Eq.~\eqref{eq:cft:eq4} to the first spectral gap over $T=2$--$9$ gives $x_1=0.496$ for the free boundary ($\ket{X+}$) and $x_1=1.996$ for the fixed one ($\ket{Up}$), against the exact values $\tfrac12$ and $2$ (Figure~\ref{fig:x1_p0}).
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.65\textwidth]{imgs/res_x1_p0.png}
-    \caption{\textbf{The boundary exponent at the integrable point.} The first spectral gap converted into a dimension, $x_1=v\,T\,\mathrm{Im}(\lambda_1-\lambda_0)/\pi$, against $T$ for the free and fixed boundary states. Grey lines mark the exact values $\tfrac12$ and $2$. Both approach their target from below as $T$ grows; the fits of Eq.~\eqref{eq:cft:eq4} over the whole window give $0.49$ and $1.97$.}
+    \caption{\textbf{The boundary exponent at the integrable point.} The first spectral gap converted into a dimension, $x_1=v\,T\,\mathrm{Im}(\lambda_1-\lambda_0)/\pi$, against $T$ for the free and fixed boundary states. Grey lines mark the exact values $\tfrac12$ and $2$. Both approach their target from below as $T$ grows; the fits of Eq.~\eqref{eq:cft:eq4} over the whole window give $0.496$ and $1.996$.}
     \label{fig:x1_p0}
 \end{figure}
 
-At $p\neq0$ the eigenvalues remain measurable after the entropy has failed, but identifying the right one becomes harder. Figure~\ref{fig:partner_gap} shows why. The leading eigenvalue always has a companion of almost equal modulus, which is expected: the phase gap between them is $\pi x/(v\,T)$ and shrinks as $T$ grows, so their moduli approach. The companion is a different state at each coupling. At $p=0$ it is the first boundary excitation, and the approach is slow. At $p\neq0$ it belongs to the displaced family of Section~\ref{sec:results:tower}, and from $T\approx4$ the two moduli agree to within two per cent.
-
-Once the moduli are that close, the largest-modulus rule no longer identifies the physical eigenvalue. In Figure~\ref{fig:partner_gap} the ratio crosses one at $T\approx6$ for $p=0.1$ and at $T\approx4$ for $p=0.3$. Two readings of this crossing are possible. It may be the degeneracy the conformal prediction requires, in which case only the selection rule has to change. It may instead be a loss of convergence in the subleading member. The tracked branch continues to wind at the expected rate afterwards, which is consistent with the first reading, but we have not measured enough to decide between them. We leave the point open pending the finer ladders. The phase-predicted tracking of Section~\ref{sec:reach} is what keeps the branch: it follows the physical eigenvalue to $T=11$ at $p=0.1$. At $p\ge0.3$ the ladder in $T$ is too coarse for that prediction, the branch is lost after a few rungs, and we report no eigenvalue central charge at those couplings.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.65\textwidth]{imgs/res_partner_gap.png}
-    \caption{\textbf{The leading spectral gap under frustration.} Modulus ratio between the leading eigenvalue and the next block member against $T$, per coupling. At $p=0$ the companion is the first boundary rung and the gap closes slowly; at $p\neq0$ it is the $\pi$-displaced partner: the ratio reaches within two per cent of one from $T\approx4$ and crosses it where the partner overtakes the physical branch in modulus.}
-    \label{fig:partner_gap}
-\end{figure}
-
-Figure~\ref{fig:eq3_p} shows the same fit at $p=0.1$. The branch constant again converges to $-\pi$, and over the same $T\le9$ window the measured velocity $v(0.1)=2.60$ gives $c=0.54$, consistent with the Ising value at the accuracy the integrable point itself achieves, where the same construction returns $0.48$.
-
-The fit window at $p=0.1$ must end where the branch tracking ends. The constant $B$ of Eq.~\eqref{eq:cft:eq3} provides the practical check: while it holds at $-\pi$ the window is sound, and it drifts away exactly where the tracking begins to lose the physical eigenvalue. Over $T\le9$ the fit gives $B=-3.144$ and $c=0.54$; extending to $T\le11$ moves $B$ to $-3.148$ and halves the Casimir coefficient, dropping the read to $c=0.32$. Table~\ref{tab:cp} collects the measured universal data.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\textwidth]{imgs/res_eq3_p.png}
-    \caption{\textbf{The eigenvalue route to the central charge.} $\mathrm{Im}\,\lambda_0$ divided by $T$, with the branch shift $-\pi$ restored, fitted with Eq.~\eqref{eq:cft:eq3} at $p=0$ and $p=0.1$. Both fitted over $T\le9$, the window on which the free constant $B$ holds at $-\pi$; $c=24\,v\,|C|/\pi$ gives $0.48$ at $p=0$ and $0.54$ at $p=0.1$.}
-    \label{fig:eq3_p}
-\end{figure}
+At $p\neq0$ the spectral ladders are being regenerated on the corrected column, and the central charges and boundary exponents at the frustrated couplings are \textit{[OPEN]}. The resolution they demand is fixed in advance by Eq.~\eqref{eq:cft:eq4}: every boundary dimension is read from a phase gap of order $\pi x/(v\,T)$, so raising $p$ from $0$ to $1.5$ raises the velocity from $2.00$ to $10.80$ and compresses the same operator content into a phase window five times narrower. Table~\ref{tab:cp} collects the universal data measured so far.
 
 \begin{table}[!htbp]
     \centering
@@ -90,42 +50,14 @@ The fit window at $p=0.1$ must end where the branch tracking ends. The constant 
     \hline
     $p$ & R\'enyi-2 slope $c$ & eigenvalue-route $c$ & boundary exponent $x_1$ \\
     \hline
-    $0$   & $\tfrac12$ (calibration) & $0.48$ & $0.49$ \\
-    $0.1$ & $0.53$ & $0.54$ & $0.47$ \\
+    $0$   & $\tfrac12$ (calibration) & $0.485$ & $0.496$ \\
+    $0.1$ & \textit{[OPEN]} & \textit{[OPEN]} & \textit{[OPEN]} \\
     $0.3$ & \textit{[OPEN]} & \textit{[OPEN]} & \textit{[OPEN]} \\
     $0.5$ & \textit{[OPEN]} & \textit{[OPEN]} & \textit{[OPEN]} \\
-    $1.0$--$1.5$ & \multicolumn{3}{c}{\textit{[method wall: near-exact top-spectrum degeneracy]}} \\
+    $1.0$ & \textit{[OPEN]} & \textit{[OPEN]} & \textit{[OPEN]} \\
+    $1.5$ & \textit{[OPEN]} & \textit{[OPEN]} & \textit{[OPEN]} \\
     \hline
     \end{tabular}
-    \caption{\textbf{Universal data versus frustration.} All three measurements agree with the Ising values at both computed couplings, the eigenvalue-route entries being read over $T\le9$ (Section~\ref{sec:results:spectral}). The $p=0.3,\,0.5$ rows remain open. The finer cluster ladders have since been run and do not close them: the leading pair is already close to degenerate at the shortest time we simulate, with the phase rigidity falling from $0.29$ at $p=0$ to $0.05$ at $p=0.3$ and $0.014$ at $p=0.5$ at $T=2$, so neither route has a well-conditioned window at those couplings. At $p\ge1$ the top of the spectrum is degenerate to machine precision and the physical branch cannot be resolved.}
+    \caption{\textbf{Universal data versus frustration.} The integrable point is measured on ladders reaching $T=20$ and agrees with the exact Ising values. The frustrated rows are being regenerated on the corrected transfer-matrix column and remain open.}
     \label{tab:cp}
 \end{table}
-
-\subsection{The momentum-\texorpdfstring{$\pi$}{pi} displaced boundary tower}
-\label{sec:results:tower}
-
-Read naively, the boundary-exponent measurement fails at $p\neq0$. Taking the subleading eigenvalue nearest $\lambda_0$ in phase, as at the integrable point, Eq.~\eqref{eq:cft:eq4} returns $x_1\approx\tfrac32$ at $p=0.1$---a heavier operator than the free-boundary $\tfrac12$, as if the lightest state had disappeared from the spectrum.
-
-The lightest state is present in the spectrum, at a phase Eq.~\eqref{eq:cft:eq4} does not account for. Figure~\ref{fig:tower} shows the $k=8$ block in the complex plane, divided by $\lambda_0$ so that the relative phase of each eigenvalue is its angle from the positive real axis. The eigenvalues form two groups. Those near the positive real axis have dimensions $x=2,3,4$: this is the identity family, the one Eq.~\eqref{eq:cft:eq4} was written for. The remaining eigenvalues sit near $-1$, that is at a relative phase of $\pi$, and their dimensions measured from that point are $x=\tfrac12,\tfrac32,\tfrac52$, the boundary operators of the odd sector. The lightest operator is among them.
-
-Each group is therefore read from its own reference point. For a state near $\lambda_0$ the gap is measured from zero, as in Eq.~\eqref{eq:cft:eq4}. For a state on the far side it is measured from $\pi$, which gives $x = v\,T\,(\pi-|\Delta\varphi|)/\pi$. Read this way, the same data give $x_1=0.49$ at $p=0$ and $x_1=0.47$ at $p=0.1$, the free-boundary value at both couplings. The earlier failure was one of assignment, not of the physics.
-
-The same figure shows two further things. As $T$ grows the points approach the unit circle and the two groups separate more clearly, which is the emergent dual unitarity of Section~\ref{sec:cft:temporal}. The spacings within the identity family can also be inverted to give the velocity: at $p=0.1$ they imply $v=2.70,\,2.60,\,2.56$, against the equilibrium value $2.60$.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\textwidth]{imgs/res_tower_spectrum.png}
-    \caption{\textbf{The two boundary ladders in the deep spectrum.} The $k=8$ block at $p=0.1$ in the complex plane, in units of $\lambda_0$ (black star on the positive real axis; dashed guide circle of radius one). Each point is annotated with its dimension, read from its own side. Blue circles: the even (identity) ladder, extending from $\lambda_0$ and converging on $x=2,3,4$. Red diamonds: the odd (boundary-fermion) ladder, entering from the opposite side of the circle and converging on $x=\tfrac12,\tfrac32,\tfrac52$. The drift of all points towards the circle as $T$ grows is the emergent dual unitarity of Section~\ref{sec:cft:temporal}.}
-    \label{fig:tower}
-\end{figure}
-
-Figure~\ref{fig:tower_p} shows the same reading along the eigenvalue ladders. At $p=0$ the full free-boundary ladder $\{\tfrac12,\tfrac32,2\}$ sits near $\lambda_0$ and holds flat from $T=2$ to $20$; there is no displaced family, as expected for free fermions. At $p=0.1$ the ladder splits: the identity operator $x=2$ stays near $\lambda_0$ while the odd operators $\{\tfrac12,\tfrac32\}$ appear on the $\pi$ side, flat in $T$ up to $T\approx11$. Turning on the interaction is what moves the odd ladder. The displacement follows from the parity-dressed hopping of Section~\ref{sec:annni:jw}, where the \ac{NNN} term attaches a momentum $\pi$ to the odd-fermion-parity sector. Appendix~\ref{app:pairing} derives it and explains why a free-fermion chain cannot produce it. At $p\ge0.3$ the reading is not yet conclusive. The subleading block members are the least converged, and within the short trackable window the two families are no longer cleanly separated, so those couplings are left to the finer ladders.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\textwidth]{imgs/res_tower_across_p.png}
-    \caption{\textbf{The displaced tower appears with the interaction.} Boundary dimensions read from the eigenvalue ladders with the measured $v(p)$, blue for states near $\lambda_0$ and red for states read from the $\pi$ side; dashed lines mark $x=\tfrac12,\tfrac32,2,3$. At $p=0$ the whole ladder sits near $\lambda_0$; at $p=0.1$ the odd operators have moved to the $\pi$ side and stay flat in $T$.}
-    \label{fig:tower_p}
-\end{figure}
-
-The two ladders also explain why frustration makes the extraction harder. Every boundary dimension is read from a phase gap, and Eq.~\eqref{eq:cft:eq4} fixes that gap at $\pi x/(v\,T)$. The velocity therefore sets the scale on which the spectrum is spread out. Raising $p$ from $0$ to $0.5$ raises $v$ from $1.98$ to $4.93$, so the same operators are compressed into a phase window two and a half times narrower, and the displaced ladder puts a second family inside it. Resolving them asks more of the solver precisely where the block is least well conditioned. This is the origin of every limitation reported above: the shrinking windows, the earlier wall, and the tracking that fails at $p\ge0.3$. The universal content, wherever it can be measured, remains that of the Ising boundary \ac{CFT}; what frustration changes is how much of it stays resolvable.

@@ -1,9 +1,9 @@
 \FloatBarrier
-\section{Numerical Methods}
+\section{The Block Power Method}
 \label{sec:numerics}
 \label{sec:nonhermitian}
 
-The transverse contraction is controlled by the leading spectrum of the transfer matrix $\mathcal{E}$, as shown in Eq.~\eqref{eq:contraction}. The numerical problem is therefore to extract its leading eigenvectors while keeping the bond dimension of their \ac{tMPS} representation under control. This becomes more difficult at long times, when the leading eigenvalues approach one another in modulus (Section~\ref{sec:transverse:eigenproblem}). To mitigate this problem, we implement a block power method that evolves several states simultaneously.
+Section~\ref{sec:transverse} reduced the dynamics to the leading eigenpairs of the transfer matrix $\mathcal{E}$. This section presents the algorithm we use to obtain them: a block power method that iterates several temporal states at once and returns the dominant eigenvalues together with their left and right eigenvectors, identified and ordered for the comparison with the \ac{CFT} predictions. The implementation details are collected in Appendix~\ref{app:blockpm}.
 
 The right and left eigenvectors of $\mathcal{E}$ satisfy
 \begin{equation}
@@ -12,9 +12,9 @@ The right and left eigenvectors of $\mathcal{E}$ satisfy
   \bra{L_i}\mathcal{E}=\mu_i\bra{L_i}.
   \label{eq:nonhermitian_eigenproblem}
 \end{equation}
-Because $\mathcal{E}$ is non-normal (Section~\ref{sec:mporep:fsm}), the left eigenvectors $\bra{L_i}$ and the right eigenvectors $\ket{R_i}$ are different objects, and neither set is orthogonal on its own. The two sets are orthogonal to each other, $\braket{L_i}{R_j}\propto\delta_{ij}$, and this is the pairing we use throughout. The bra notation carries no extra convention here. Each $\bra{L_i}$ is a row object from the start, defined by $\bra{L_i}\mathcal{E}=\mu_i\bra{L_i}$. Pairing it with a column $\ket{R_j}$ is then an ordinary contraction of the network, with no conjugation anywhere. Numerically, the left states are propagated with the transpose $\mathcal{E}^{\mathsf T}$.
+Because $\mathcal{E}$ is non-normal (Section~\ref{sec:mporep:fsm}), the left and right eigenvectors are different objects, and neither set is orthogonal on its own; instead, the two sets are biorthogonal, $\braket{L_i}{R_j}\propto\delta_{ij}$. The bra notation involves no conjugation: $\bra{L_i}$ is a row vector, and $\braket{L_i}{R_j}$ is the direct contraction of the two temporal networks. Numerically, the left states are propagated with the transpose $\mathcal{E}^{\mathsf T}$, which is the matrix form of the left equation above.
 
-We order the complex eigenvalues by modulus and denote the dominant one by $\mu_0$. Its modulus determines the Loschmidt rate, its phase encodes the central charge, and the gap to $\mu_1$ gives access to the boundary operator content. The generalized temporal entropies instead depend on the dominant pair $(\bra{L_0},\ket{R_0})$. The calculation must therefore recover both the eigenvalues and the individual left and right eigenvectors within the leading block. Further implementation details are given in Appendix~\ref{app:blockpm}.
+The dominant eigenvalue $\mu_0$ carries the Loschmidt rate in its modulus and the central charge in its phase, the gaps to the subleading eigenvalues carry the boundary operator content, and the generalized temporal entropies are built from the dominant pair $(\bra{L_0},\ket{R_0})$. The calculation must therefore resolve the leading eigenvalues individually, identify $\mu_0$ among them, and order the rest so that they can be matched to the conformal tower; how this is done is described in Section~\ref{sec:reach}.
 
 \subsection{The block power method}
 \label{sec:blockpm}
@@ -88,14 +88,14 @@ Finally, we validate the implementation at bond dimensions for which $\mathcal{E
 \subsection{Selecting the physical branch and testing convergence}
 \label{sec:reach}
 
-The block returns $k$ Ritz values at each evolution time, and the physical $\mu_0$ has to be identified among them. It is normally the one of largest modulus. At $p\neq0$ the block also holds the displaced partner of Section~\ref{sec:results:tower}, whose modulus approaches that of the physical branch and can exceed it, so modulus alone becomes insufficient. The phase still separates the two, because it winds with $T$ at a rate set by the sound velocity. The physical branch advances by a nearly constant amount per rung. Its phase at the next rung can therefore be predicted from the rungs already accepted, and the block member closest to that prediction is selected. Appendix~\ref{app:selector} gives the procedure and the conditions under which it fails.
+The block returns $k$ Ritz values at each evolution time, and the physical $\mu_0$ has to be identified among them. We take the eigenvalue of largest modulus, and use continuity with the preceding rung to break the tie when two moduli agree to within one per cent. Such ties are produced by the conformal spectrum itself: as $T$ grows the moduli of the tower states approach a common value, which is the emergent dual unitarity of Section~\ref{sec:cft:temporal}. The subleading eigenvalues are then ordered by their phase distance from $\mu_0$, the order in which the conformal tower arranges them. Appendix~\ref{app:selector} records the full procedure and its safeguards.
 
 Eigenvalues and eigenvectors then lose accuracy at different points, which determines how far each measurement can be trusted. First-order perturbation theory for a non-Hermitian matrix~\cite{wilkinson1965} gives the two sensitivities, and they differ (Appendix~\ref{app:conditioning}). The shift of an eigenvalue is controlled by its own biorthogonal overlap $\braket{L_j}{R_j}$ and involves no eigenvalue difference. The mixing of an eigenvector with its neighbours is divided by $\mu_i-\mu_j$, so it grows as soon as two eigenvalues approach. Eigenvalues therefore survive past the point where the eigenvectors, and any quantity built from them, have stopped being meaningful. The remaining protection is measured by the phase rigidity of a biorthogonal pair,
 \begin{equation}
     r_j = \frac{|\braket{L_j}{R_j}|}{\lVert L_j\rVert\,\lVert R_j\rVert},
     \label{eq:rigidity}
 \end{equation}
-the normalized overlap between the left and right eigenvector of the same eigenvalue. For a Hermitian matrix the two coincide and $r_j=1$. As two eigenvectors rotate towards a common direction $r_j$ falls towards zero, and at $r_j=0$ they have coalesced: the matrix is defective and has no complete eigenbasis. Two eigenvalues can approach each other without their eigenvectors coalescing, and the eigenvalues alone do not distinguish the two cases, whereas $r_j$ does. Appendix~\ref{app:wall} develops the consequences.
+the normalized overlap between the left and right eigenvector of the same eigenvalue. For a Hermitian matrix the two coincide and $r_j=1$; as the left and right eigenvectors of a non-normal matrix rotate towards a common direction, $r_j$ falls towards zero. We monitor it as the conditioning diagnostic of the eigenvector route (Appendix~\ref{app:conditioning}).
 
 Finally, we test whether an observed limitation is physical or resolution dependent by repeating representative calculations at half the bond dimension, with a tighter truncation cutoff, and with \ac{RDM} rather than \ac{RTM} truncation. We attribute a feature to the transfer matrix only if it persists under all three changes.
 
@@ -116,15 +116,13 @@ Ratios remove more than the normalization. A single phase gap contains a univers
 \end{equation}
 is independent of all three at once, since $\beta_0$, the velocity and the normalization cancel between numerator and denominator. It therefore probes the operator content without any external input and provides the cleanest measurement available to us.
 
-Not every quantity can be turned into a ratio of this kind. The entropy slope of Eq.~\eqref{eq:cft:chord} measures $c$ directly, but at finite $(T,\chi,\delta t)$ the measured slope does not directly give the continuum value: finite-time, truncation and Trotter corrections multiply it,
-\textit{esta ecuacion no es muy bonita, podemos decir algo de que slope0 = 1/2 y por tanto el fit directamente da el resultado de c, o darle una vuelta...}
+Not every quantity can be turned into a ratio of this kind. The entropy slope of Eq.~\eqref{eq:cft:chord} measures $c$ directly, but at finite $(T,\chi,\delta t)$ the measured slope is the continuum coefficient multiplied by a correction factor,
 \begin{equation}
-  \mathrm{slope}(p; T, \chi, \delta t) = \frac{c(p)}{8}\,K(T,\chi,\delta t,\beta_0) + \text{(subleading)},
+  \mathrm{slope}(p) = \frac{c(p)}{8}\,K(T,\chi,\delta t,\beta_0),
   \label{eq:cft:calib}
 \end{equation}
-where $K$ collects the corrections that two models in the same universality class share when run through the same pipeline. Two routes deal with $K$. The first is calibration: a reference model with $c$ known exactly is run at matched $(T,\chi,\delta t,\beta_0)$, and the ratio of slopes cancels the common factor,
+where $K$ collects the finite-time, truncation and Trotter corrections, which two models in the same universality class share when run through the same pipeline at matched parameters. The integrable point of the chain makes this factor measurable: there $c=\tfrac12$ exactly, so the measured $\mathrm{slope}(0)$ determines $K$ itself. Dividing the two slopes then cancels it,
 \begin{equation}
   c(p) \approx \frac{1}{2}\,\frac{\mathrm{slope}(p)}{\mathrm{slope}(0)}.
   \label{eq:cft:calibratio}
-\end{equation}
-For us the reference is the integrable point of the chain studied in Section~\ref{sec:annni}, whose central charge is exactly $\tfrac12$. The cancellation is exact only for corrections common to both runs. It therefore assumes that the two models share a universality class, which is part of what the measurement is meant to establish. Coupling-dependent subleading terms do not cancel and set the residual uncertainty. The calibrated number is a consistency check rather than an independent determination. The second route uses the fact that the functional form of the corrections is itself fixed by the \ac{CFT}~\cite{boucomas2026}, so they can be included explicitly in the fit and $c$ extracted absolutely, without a reference. The costs differ: the absolute route needs a window in $T$ long enough to separate the correction from the leading term, while calibration works at shorter times but needs the reference simulation.
+\end{equation} The cancellation is exact only for corrections common to both runs. It therefore assumes that the two models share a universality class, which is part of what the measurement is meant to establish. Coupling-dependent subleading terms do not cancel and set the residual uncertainty. The calibrated number is a consistency check rather than an independent determination. The second route uses the fact that the functional form of the corrections is itself fixed by the \ac{CFT}~\cite{boucomas2026}, so they can be included explicitly in the fit and $c$ extracted absolutely, without a reference. The costs differ: the absolute route needs a window in $T$ long enough to separate the correction from the leading term, while calibration works at shorter times but needs the reference simulation.
