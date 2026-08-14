@@ -2,7 +2,7 @@
 
 julia_version = "1.12.5"
 manifest_format = "2.0"
-project_hash = "d9dc74024887d23364f03d7758fccd2c43285425"
+project_hash = "82cb65bfba0f6a51297f556acac08770dabd2dab"
 
 [[deps.ADTypes]]
 git-tree-sha1 = "bbc22a9a08a0ef6460041086d8a7b27940ed4ffd"
@@ -929,9 +929,9 @@ version = "1.12.0"
 
 [[deps.KrylovKit]]
 deps = ["LinearAlgebra", "PackageExtensionCompat", "Printf", "Random", "VectorInterface"]
-git-tree-sha1 = "1ab4539f47bee7e5045f679e5136ccaa3c8c40c3"
+git-tree-sha1 = "a3babd26e875e83b461e1c0f945bff52701e8181"
 uuid = "0b1a1467-8014-51b9-945f-bf0ae24f4b77"
-version = "0.10.3"
+version = "0.10.4"
 weakdeps = ["ChainRulesCore"]
 
     [deps.KrylovKit.extensions]

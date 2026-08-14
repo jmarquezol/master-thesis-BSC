@@ -1,11 +1,21 @@
 # Wall-scan sweeps on the cluster
 
-These jobs run the transfer-matrix sweeps behind the temporal-CFT analysis. Each one walks a
-ladder of evolution times `T` and saves after every rung, so if a job hits the walltime you just
-resubmit the same script and it resumes where it stopped.
+Each job walks a ladder of evolution times T and saves after every rung. If a job hits the
+walltime, resubmit the same script: it resumes where it stopped.
 
 `wall_scan_cluster.jl` is the driver; the `submit_*.slurm` files are thin wrappers. Everything in
-this folder is a job to run now. Finished ones are in `archive/done/`.
+this folder is a job to run now. Finished or superseded ones are in `archive/`.
+
+## What changed (August 14)
+
+We found that the transfer-matrix column used so far was not the true bulk tensor of our model
+once the NNN interaction is on: it was missing a memory channel. The corrected construction is
+selected with `WALL_COLUMN=bulk5`, which the `*_bulk.slurm` scripts set themselves. Their results
+go to separate `*_bulk.jld2` caches, so nothing mixes with earlier data.
+
+Because of this, the old p != 0 scripts are superseded and live in `archive/legacy_column/`.
+Please do not run them; if any are already in the queue, cancel them. The p = 0 job is unaffected
+(both constructions are identical there).
 
 ## Setup
 
@@ -19,69 +29,41 @@ julia --project=. -e 'using Pkg; Pkg.instantiate()'
 If you already have the repository: `git checkout main && git pull`. Do not update the packages —
 `Manifest.toml` pins ITransverse to a specific commit and floating it has broken runs before.
 
-No checkpoint files are needed this round: every job starts from `T = 2` and writes its own
-checkpoint as it goes.
-
 ## Submitting
 
 From inside `cluster/`:
 
 ```
 cd cluster
-julia --project=.. wall_scan_cluster.jl preflight    # must print "preflight OK"
+julia --project=.. wall_scan_cluster.jl preflight    # must print "preflight OK ... site dim 7"
 
-sbatch submit_rtm_eigs_p0.0_fine.slurm
-sbatch submit_ksec_p0.1_plus.slurm
-sbatch submit_ksec_p0.1_minus.slurm
-sbatch submit_ksec_p0.3_plus.slurm
-sbatch submit_ksec_p0.3_minus.slurm
-sbatch submit_ksec_p0.5_plus.slurm
-sbatch submit_ksec_p0.5_minus.slurm
-sbatch submit_tower_p0.1.slurm        
-sbatch submit_tower_p0.3.slurm        
-sbatch submit_tower_p0.5.slurm        
+sbatch submit_rtm_eigs_p0.0_fine.slurm    # highest priority, unchanged from before
+
+sbatch submit_ent_p0.1_bulk.slurm         # entropy arms, corrected column
+sbatch submit_ent_p0.3_bulk.slurm
+sbatch submit_ent_p0.5_bulk.slurm
+
+sbatch submit_ksec_p0.1_plus_bulk.slurm   # sector eigenvalue ladders, corrected column
+sbatch submit_ksec_p0.1_minus_bulk.slurm
+sbatch submit_ksec_p0.3_plus_bulk.slurm
+sbatch submit_ksec_p0.3_minus_bulk.slurm
+sbatch submit_ksec_p0.5_plus_bulk.slurm
+sbatch submit_ksec_p0.5_minus_bulk.slurm
+
+sbatch submit_tower_p0.1_bulk.slurm       # deep k=8 blocks for the tower figure
+sbatch submit_tower_p0.5_bulk.slurm
 ```
 
-Every script runs the preflight itself, so a broken environment fails in a minute instead of
-erroring every rung. All jobs write their own cache, so they can all run at the same time.
+The corrected column is more expensive (site dimension 13 instead of 7, roughly 2-4x per rung),
+so these first ladders stop at T=12 (towers at T=8). To extend one later, raise the Tmax at the
+bottom of its script and resubmit — it continues from its checkpoint.
 
-## What the jobs are
+## Where things land
 
-**`rtm_eigs_p0.0_fine`** — half-integer eigenvalue rungs at the integrable point, to `T = 18`.
-The p=0.1 fine and unit ladders disagree by twenty per cent on the central charge, and this is the
-control at the coupling where the answer is known. The most valuable job in the queue.
+- results: `results/data/cluster/sweep_<label>_bulk.jld2`  (this is the folder to send back)
+- checkpoints: `cluster/checkpoints/` — never delete these; a cold restart corrupts the entropy
+  ladders
+- logs: `cluster/logs/`
 
-**`ksec_*`** — eigenvalue ladders confined to one symmetry sector each, to `T = 18`. The transfer
-matrix has an exact Z2 symmetry whose two sectors hold the two eigenvalue families, and the
-branch-tracking failures at `p ≥ 0.3` were the two families crossing in modulus inside one run.
-Confining the run to one sector fixes the branch before the run starts. The p=0.1 pair is the control: the answer is known there, so the sector ladders must reproduce it. Each rung prints a sector
-charge that should read ±1.000. A rung reporting `stuck` past `T ≈ 4` is normal — the eigenvalue
-is still accurate there — and a resubmission resumes from the checkpoint.
-
-**`tower_*`** — k=8 blocks at small `T`, for the tower figure. Short jobs.
-
-## Where the results go
-
-Results land in `results/data/cluster/sweep_<label>.jld2` — not in `data/`, which has confused
-people before. Push them whenever; it is safe at any point:
-
-```
-git add results/data/cluster/*.jld2 && git commit -m "cluster sweep progress" && git push
-```
-
-## Watching
-
-```
-squeue -u $USER
-tail -f logs/ksec_p0.3_plus-<jobid>.out
-```
-
-Each finished rung logs one line with the time, the leading eigenvalue and the timing.
-
-## Already run
-
-The entropy arms (`sweep_ent_p*`), the mixed eigenvalue arms (`sweep_rtm_eigs_p*` and their
-half-integer `_fine` versions at p = 0.1–0.5), and the beta scans are done; their data is in
-`results/data/cluster/` and their submit scripts in `archive/done/`. The mixed eigenvalue arms at
-`p ≥ 0.3` are superseded by the `ksec` ladders, which resolve the same spectrum separated by
-family.
+If a job reports "nothing saved in data/", the results are in `results/data/cluster/`, not in a
+top-level `data/` folder.

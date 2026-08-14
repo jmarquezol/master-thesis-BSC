@@ -28,6 +28,12 @@ const LAMBDA = 1.0
 const DT     = 0.1
 const NBETA  = 4
 
+# Column extraction: legacy3 is ITransverse's 3-site build (not the true bulk tensor at p != 0),
+# bulk5 the corrected 5-site one. Set WALL_COLUMN=bulk5 in the submit script to use it; labels and
+# caches then get a _bulk suffix so the two can never mix.
+const COLUMN = Symbol(get(ENV, "WALL_COLUMN", "legacy3"))
+COLUMN in (:legacy3, :bulk5) || error("WALL_COLUMN must be legacy3 or bulk5")
+
 const CLUSTER_DIR   = joinpath(@__DIR__, "..", "results", "data", "cluster")
 const CLUSTER_CACHE = joinpath(CLUSTER_DIR, "warm_sweep.jld2")
 
@@ -57,7 +63,14 @@ function run_wall_scan(; chi::Int, label::String,
         k=4, k_retry=6,
         ksector::Union{Nothing,Tuple{Vector{Float64},Int}}=nothing,
         cachefile=CLUSTER_CACHE,
-        checkpointfile=joinpath(@__DIR__, "checkpoints", "checkpoint_$(label).jld2"))
+        checkpointfile=nothing)
+
+    if COLUMN === :bulk5
+        label = label * "_bulk"
+        cachefile = replace(cachefile, r"\.jld2$" => "_bulk.jld2")
+    end
+    checkpointfile === nothing &&
+        (checkpointfile = joinpath(@__DIR__, "checkpoints", "checkpoint_$(label).jld2"))
 
     # Spectrum-only mode: de-mix on the Schur basis and skip the eigenvector work. θ is a Rayleigh
     # quotient so it survives the wall even where the vectors do not.
@@ -98,7 +111,7 @@ function run_wall_scan(; chi::Int, label::String,
 
         try
             elapsed = @elapsed begin
-            mpo, scaffold = build_alcaraz_tmpo(T; p=p_nnn, lambda=LAMBDA, dt=DT, nbeta=nbeta, MPO_alg="VD2")
+            mpo, scaffold = build_alcaraz_tmpo(T; p=p_nnn, lambda=LAMBDA, dt=DT, nbeta=nbeta, MPO_alg="VD2", column=COLUMN)
             site_list = siteinds(scaffold)
 
             if previous_L === nothing
@@ -236,8 +249,9 @@ const RDM_LADDER     = collect(2.0:1.0:12.0)   # cold T=9 alone took 20.6h; two 
 
 if mode == "preflight"
     # Cheap environment check: same tMPO call the ladder makes on every rung.
-    mpo, scaffold = build_alcaraz_tmpo(2.0; p=0.1, lambda=LAMBDA, dt=DT, nbeta=NBETA, MPO_alg="VD2")
-    println("preflight OK — tMPO built, $(length(scaffold)) sites, maxlinkdim $(maxlinkdim(mpo))")
+    mpo, scaffold = build_alcaraz_tmpo(2.0; p=0.1, lambda=LAMBDA, dt=DT, nbeta=NBETA, MPO_alg="VD2", column=COLUMN)
+    println("preflight OK — column=$(COLUMN), tMPO built, $(length(scaffold)) sites, " *
+            "temporal site dim $(dim(siteind(mpo, 2))), maxlinkdim $(maxlinkdim(mpo))")
 elseif mode == "rtm"
     run_wall_scan(chi=64, label="rtm64_full", Ts=RTM_FULL_LADDER, p_nnn=P_NNN)
 elseif mode == "rdm"
@@ -304,7 +318,7 @@ elseif mode == "ksector"
                   ARGS[3] in ("minus", "-1", "-") ? -1 : error("sector must be plus or minus")
     Tmax = parse(Float64, ARGS[4])
     dT = length(ARGS) >= 5 ? parse(Float64, ARGS[5]) : 1.0
-    Rd = ksector_signs(p_val; dt=DT, nbeta=NBETA)
+    Rd = ksector_signs(p_val; dt=DT, nbeta=NBETA, column=COLUMN)
     lbl = "ksec_p$(p_val)_" * (sector_sign == 1 ? "plus" : "minus")
     run_wall_scan(chi=64, label=lbl, Ts=collect(2.0:dT:Tmax), p_nnn=p_val,
         eigvals_only=true, k=2, ksector=(Rd, sector_sign),
