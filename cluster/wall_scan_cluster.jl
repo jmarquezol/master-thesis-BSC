@@ -25,8 +25,11 @@ BLAS.set_num_threads(Sys.CPU_THREADS)   # BLAS-bound workload; SLURM also sets O
 # Model / sweep constants — these match NB7's master sweep and the desktop χ-scan.
 const P_NNN  = 0.1
 const LAMBDA = 1.0
-const DT     = 0.1
-const NBETA  = 4
+
+# WALL_DT lets a job halve the Trotter step (the couplings grow with p, and so does the step
+# error). NBETA follows so that beta0 = nbeta*dt/2 stays 0.2 in every job.
+const DT    = parse(Float64, get(ENV, "WALL_DT", "0.1"))
+const NBETA = round(Int, 0.4 / DT)
 
 # Column extraction: legacy3 is ITransverse's 3-site build (not the true bulk tensor at p != 0),
 # bulk5 the corrected 5-site one. Set WALL_COLUMN=bulk5 in the submit script to use it; labels and
@@ -59,7 +62,7 @@ function run_wall_scan(; chi::Int, label::String,
         cutoff=1e-12, cutoffs=[fill(1e-8, 40); 1e-10],
         trunc_mode=:rtm, basis=:eig,
         eigvals_only::Bool=false,
-        itermax=8000, stuck_after=150,
+        itermax=8000, stuck_after=150, eps_conv=1e-6,
         k=4, k_retry=6,
         ksector::Union{Nothing,Tuple{Vector{Float64},Int}}=nothing,
         cachefile=CLUSTER_CACHE,
@@ -68,6 +71,12 @@ function run_wall_scan(; chi::Int, label::String,
     if COLUMN === :bulk5
         label = label * "_bulk"
         cachefile = replace(cachefile, r"\.jld2$" => "_bulk.jld2")
+    end
+    if DT != 0.1
+        # a non-default step gets its own label, cache and checkpoint: chains of different length
+        # must never share a warm start
+        label = label * "_dt$(DT)"
+        cachefile = replace(cachefile, r"\.jld2$" => "_dt$(DT).jld2")
     end
     checkpointfile === nothing &&
         (checkpointfile = joinpath(@__DIR__, "checkpoints", "checkpoint_$(label).jld2"))
@@ -133,7 +142,7 @@ function run_wall_scan(; chi::Int, label::String,
                     k=k, k_retry=k_retry, anchor=previous_phys,
                     maxdim=chi, maxdims=collect(2:2:chi),
                     cutoff=cutoff, cutoffs=cutoffs,
-                    itermax=itermax, eps_conv=1e-6, trunc_mode=trunc_mode, basis=basis,
+                    itermax=itermax, eps_conv=eps_conv, trunc_mode=trunc_mode, basis=basis,
                     eigvals_only=eigvals_only,
                     n_track=2, stuck_after=stuck_after,
                     seedL=seedL, seedR=seedR)
@@ -145,7 +154,7 @@ function run_wall_scan(; chi::Int, label::String,
                 theta, L, R, info = block_transfer_eigs(mpo, scaffold;
                     k=k, maxdim=chi, maxdims=collect(2:2:chi),
                     cutoff=cutoff, cutoffs=cutoffs,
-                    itermax=itermax, eps_conv=1e-6, trunc_mode=trunc_mode, basis=basis,
+                    itermax=itermax, eps_conv=eps_conv, trunc_mode=trunc_mode, basis=basis,
                     eigvals_only=eigvals_only,
                     n_track=2, stuck_after=stuck_after,
                     seedL=seedL, seedR=seedR,
@@ -285,8 +294,11 @@ elseif mode == "towerscan"
     length(ARGS) >= 3 || error("towerscan needs two extra args: julia wall_scan_cluster.jl towerscan <p> <Tmax>")
     p_val = parse(Float64, ARGS[2])
     Tmax  = parse(Float64, ARGS[3])
-    run_wall_scan(chi=64, label="tower_p$(p_val)", Ts=collect(2.0:1.0:Tmax), k=8, k_retry=10,
-        trunc_mode=:rtm, p_nnn=p_val, eigvals_only=true,
+    # chi=48 and a looser tolerance: the tower figure quotes two decimals, and the corrected
+    # column's leading moduli agree to 4-5 digits between chi=40 and 48, so chi=64 at 1e-6 only
+    # burns walltime on deep-member convergence the figure never uses.
+    run_wall_scan(chi=48, label="tower_p$(p_val)", Ts=collect(2.0:1.0:Tmax), k=8, k_retry=10,
+        trunc_mode=:rtm, p_nnn=p_val, eigvals_only=true, eps_conv=1e-5,
         cachefile=joinpath(CLUSTER_DIR, "sweep_tower_p$(p_val).jld2"))
 elseif mode == "eigsweep"
     # Eigenvalues only: same configuration as `psweep` but in Schur/eigvals-only mode, skipping the
