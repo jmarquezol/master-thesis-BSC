@@ -1,0 +1,23 @@
+═══ SMOKE entsweep p=1.0 bulk5 dt=0.05 T=2 (13:16)
+__libc_start_main at /lib/x86_64-linux-gnu/libc.so.6 (unknown line)
+unknown function (ip: 0x4010b8) at /workspace/srcdir/glibc-2.17/csu/../sysdeps/x86_64/start.S
+unknown function (ip: (nil)) at (unknown file)
+Allocations: 285618750 (Pool: 285617083; Big: 1667); GC: 7425
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=297|"S=1/2,Site") <-> (dim=2|id=297|"S=1/2,Site")', normdiff = 0.21984843263788195
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=440|"Link,l=1") <-> (dim=7|id=201|"Link,l=2"), normdiff = 1.2047277503080267
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=299|"S=1/2,Site") <-> (dim=2|id=299|"S=1/2,Site")', normdiff = 0.21984843263788195
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=295|"Link,l=1") <-> (dim=7|id=446|"Link,l=2"), normdiff = 1.2056321788467517
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: [ent_p1.0_bulk_dt0.05] T=2.0  stuck@217  k=4  |θ0|=2.3406  gap=0.994  peak=0.3194  r=[0.0012,0.001,0.0011,0.00059]  2242s
+[ Info: [ent_p1.0_bulk_dt0.05] ladder complete — checkpoint kept at T=2.0 for a later extension
+[ent_p1.0_bulk_dt0.05] cache: /home/jmarquezol/Documents/masters/master-thesis-BSC/cluster/../results/data/cluster/sweep_ent_p1.0_bulk_dt0.05.jld2  (1/1 points done)
+[ Info: [ent_p1.0_bulk_dt0.05] ladder complete — checkpoint kept at T=2.0 for a later extension
+[ent_p1.0_bulk_dt0.05] cache: /home/jmarquezol/Documents/masters/master-thesis-BSC/cluster/../results/data/cluster/sweep_ent_p1.0_bulk_dt0.05.jld2  (1/1 points done)
+RERUN-DONE

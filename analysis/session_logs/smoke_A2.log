@@ -1,0 +1,5 @@
+═══ SMOKE towerscan p=0.5 bulk5 T=2 (10:16)
+__libc_start_main at /lib/x86_64-linux-gnu/libc.so.6 (unknown line)
+unknown function (ip: 0x4010b8) at /workspace/srcdir/glibc-2.17/csu/../sysdeps/x86_64/start.S
+unknown function (ip: (nil)) at (unknown file)
+Allocations: 677632911 (Pool: 677631244; Big: 1667); GC: 24855

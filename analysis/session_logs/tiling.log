@@ -1,0 +1,5 @@
+p=0.1 WII  : linkdims(full)=[3, 4, 4, 4, 3]  dim(tiled bond)=3  |A-B|/|A| = 3.404e-01
+p=0.1 VD2  : linkdims(full)=[7, 13, 13, 13, 7]  dim(tiled bond)=7  |A-B|/|A| = 3.422e-01
+p=0.5 WII  : linkdims(full)=[3, 4, 4, 4, 3]  dim(tiled bond)=3  |A-B|/|A| = 3.473e-01
+p=0.5 VD2  : linkdims(full)=[7, 13, 13, 13, 7]  dim(tiled bond)=7  |A-B|/|A| = 3.522e-01
+ALLDONE

@@ -1,0 +1,53 @@
+Trotter drift: |psi| after 8 VD2 layers on |X+>, N=100
+
+  p     dt       after 1      after 8     
+  0.5   0.10     1.002621     1.021468    
+  0.5   0.05     1.000128     1.000924    
+  1.0   0.10     1.027982     1.563452    
+  1.0   0.05     1.001476     1.019156    
+  1.5   0.10     1.130979     6.963777    
+  1.5   0.05     1.006633     1.091031    
+
+v_inf extrapolation at the tier-2 couplings
+
+  ring p=1.0 N=10  v=2.2979
+ERROR: LoadError: ArgumentError: reducing over an empty collection is not allowed; consider supplying `init` to the reducer
+Stacktrace:
+  [1] _empty_reduce_error()
+    @ Base ./reduce.jl:311
+  [2] mapreduce_empty(f::Function, op::Base.BottomRF{typeof(Base._rf_findmin)}, T::Type)
+    @ Base ./reduce.jl:313
+  [3] reduce_empty(op::Base.MappingRF{Base.var"#_findmin##0#_findmin##1"{typeof(identity)}, Base.BottomRF{typeof(Base._rf_findmin)}}, ::Type{Pair{Int64, Int64}})
+    @ Base ./reduce.jl:350
+  [4] reduce_empty_iter
+    @ ./reduce.jl:373 [inlined]
+  [5] reduce_empty_iter
+    @ ./reduce.jl:372 [inlined]
+  [6] foldl_impl
+    @ ./reduce.jl:41 [inlined]
+  [7] mapfoldl_impl
+    @ ./reduce.jl:36 [inlined]
+  [8] mapfoldl
+    @ ./reduce.jl:167 [inlined]
+  [9] _findmin
+    @ ./reduce.jl:907 [inlined]
+ [10] findmin
+    @ ./reducedim.jl:1122 [inlined]
+ [11] _findmin
+    @ ./reduce.jl:936 [inlined]
+ [12] findmin
+    @ ./reducedim.jl:1099 [inlined]
+ [13] argmin
+    @ ./reducedim.jl:1246 [inlined]
+ [14] ring_velocity(N::Int64, p::Float64)
+    @ Main /tmp/claude-1000/-home-jmarquezol-Documents-masters-master-thesis-BSC/f70d3b4a-ae69-4e64-b402-7d1d122d79e4/scratchpad/tier2_precheck.jl:60
+ [15] top-level scope
+    @ /tmp/claude-1000/-home-jmarquezol-Documents-masters-master-thesis-BSC/f70d3b4a-ae69-4e64-b402-7d1d122d79e4/scratchpad/tier2_precheck.jl:71
+ [16] include(mod::Module, _path::String)
+    @ Base ./Base.jl:306
+ [17] exec_options(opts::Base.JLOptions)
+    @ Base ./client.jl:317
+ [18] _start()
+    @ Base ./client.jl:550
+in expression starting at /tmp/claude-1000/-home-jmarquezol-Documents-masters-master-thesis-BSC/f70d3b4a-ae69-4e64-b402-7d1d122d79e4/scratchpad/tier2_precheck.jl:68
+ALLDONE

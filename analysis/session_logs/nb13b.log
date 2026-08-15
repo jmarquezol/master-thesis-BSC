@@ -1,0 +1,202 @@
+[NbConvertApp] Converting notebook NBs/13_bulk_column.ipynb to notebook
+Starting kernel event loops.
+[0mTraceback (most recent call last):
+  File "/home/jmarquezol/.local/bin/jupyter-nbconvert", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/jmarquezol/.local/lib/python3.12/site-packages/jupyter_core/application.py", line 284, in launch_instance
+    super().launch_instance(argv=argv, **kwargs)
+  File "/home/jmarquezol/.local/lib/python3.12/site-packages/traitlets/config/application.py", line 1082, in launch_instance
+    app.start()
+  File "/home/jmarquezol/.local/lib/python3.12/site-packages/nbconvert/nbconvertapp.py", line 420, in start
+    self.convert_notebooks()
+  File "/home/jmarquezol/.local/lib/python3.12/site-packages/nbconvert/nbconvertapp.py", line 597, in convert_notebooks
+    self.convert_single_notebook(notebook_filename)
+  File "/home/jmarquezol/.local/lib/python3.12/site-packages/nbconvert/nbconvertapp.py", line 563, in convert_single_notebook
+    output, resources = self.export_single_notebook(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jmarquezol/.local/lib/python3.12/site-packages/nbconvert/nbconvertapp.py", line 487, in export_single_notebook
+    output, resources = self.exporter.from_filename(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jmarquezol/.local/lib/python3.12/site-packages/nbconvert/exporters/exporter.py", line 201, in from_filename
+    return self.from_file(f, resources=resources, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jmarquezol/.local/lib/python3.12/site-packages/nbconvert/exporters/exporter.py", line 220, in from_file
+    return self.from_notebook_node(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jmarquezol/.local/lib/python3.12/site-packages/nbconvert/exporters/notebook.py", line 36, in from_notebook_node
+    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jmarquezol/.local/lib/python3.12/site-packages/nbconvert/exporters/exporter.py", line 154, in from_notebook_node
+    nb_copy, resources = self._preprocess(nb_copy, resources)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jmarquezol/.local/lib/python3.12/site-packages/nbconvert/exporters/exporter.py", line 353, in _preprocess
+    nbc, resc = preprocessor(nbc, resc)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jmarquezol/.local/lib/python3.12/site-packages/nbconvert/preprocessors/base.py", line 48, in __call__
+    return self.preprocess(nb, resources)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jmarquezol/.local/lib/python3.12/site-packages/nbconvert/preprocessors/execute.py", line 103, in preprocess
+    self.preprocess_cell(cell, resources, index)
+  File "/home/jmarquezol/.local/lib/python3.12/site-packages/nbconvert/preprocessors/execute.py", line 124, in preprocess_cell
+    cell = self.execute_cell(cell, index, store_history=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jmarquezol/.local/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/jmarquezol/.local/lib/python3.12/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/jmarquezol/.local/lib/python3.12/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# leading eigenvalue of both columns at the same points, largest modulus (what the echo selects)
+mu0_cache = "../results/data/nb13_mu0.jld2"
+mu0 = isfile(mu0_cache) ? load(mu0_cache, "mu0") : Dict{Tuple{Float64,Symbol,Float64},ComplexF64}()
+for p in (0.0, 0.1, 0.3, 0.5), col in (:legacy3, :bulk5), T in (1.0, 2.0, 3.0)
+    haskey(mu0, (p, col, T)) && continue
+    p == 0.0 && col == :bulk5 && continue        # identical operator at p=0, reuse legacy
+    mpo, scaffold = build_alcaraz_tmpo(T; p=p, nbeta=4, column=col)
+    theta, _, _, info = block_transfer_eigs(mpo, scaffold; k=4, maxdim=64, cutoff=1e-12,
+                                            eigvals_only=true, itermax=300)
+    mu0[(p, col, T)] = theta[argmax(abs.(theta))]
+    jldsave(mu0_cache; mu0)
+    @printf("mu0 p=%.1f %-8s T=%.0f  |mu0|=%.6f  (%s)\n", p, col, T, abs(mu0[(p, col, T)]), info[:reason])
+end
+
+println()
+@printf("%-5s %-4s %-10s %-13s %-13s\n", "p", "T", "krylov", "legacy dev", "bulk dev")
+for p in (0.0, 0.1, 0.3, 0.5), T in (1.0, 2.0, 3.0)
+    ell = ell_inf[(p, T)]
+    d3 = -log(abs(mu0[(p, :legacy3, T)])) - ell
+    d5 = p == 0.0 ? d3 : -log(abs(mu0[(p, :bulk5, T)])) - ell
+    @printf("%-5.1f %-4.0f %-10.5f %+-13.5f %+-13.5f\n", p, T, ell, d3, d5)
+end
+------------------
+
+----- stderr -----
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on physical(space) => bond(time) indices
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mTensor symmetric (dim=2|id=508|"S=1/2,Site") <-> (dim=2|id=508|"S=1/2,Site")'
+----- stdout -----
+mu0 p=0.0 legacy3  T=1  |mu0|=1.511328  (stuck)
+----- stderr -----
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on bond(space) => phys(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=3|id=691|"Link,l=1") <-> (dim=3|id=679|"Link,l=2"), normdiff = 0.944688073151956
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on physical(space) => bond(time) indices
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mTensor symmetric (dim=2|id=143|"S=1/2,Site") <-> (dim=2|id=143|"S=1/2,Site")'
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on bond(space) => phys(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=3|id=821|"Link,l=1") <-> (dim=3|id=745|"Link,l=2"), normdiff = 0.10493384159131464
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+----- stdout -----
+mu0 p=0.0 legacy3  T=2  |mu0|=1.496348  (stuck)
+----- stderr -----
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on physical(space) => bond(time) indices
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mTensor symmetric (dim=2|id=240|"S=1/2,Site") <-> (dim=2|id=240|"S=1/2,Site")'
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on bond(space) => phys(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=3|id=856|"Link,l=1") <-> (dim=3|id=646|"Link,l=2"), normdiff = 0.944688073151956
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on physical(space) => bond(time) indices
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mTensor symmetric (dim=2|id=100|"S=1/2,Site") <-> (dim=2|id=100|"S=1/2,Site")'
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on bond(space) => phys(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=3|id=241|"Link,l=1") <-> (dim=3|id=952|"Link,l=2"), normdiff = 0.10493384159131464
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+----- stdout -----
+mu0 p=0.0 legacy3  T=3  |mu0|=1.492246  (maxiter)
+----- stderr -----
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on physical(space) => bond(time) indices
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mTensor symmetric (dim=2|id=323|"S=1/2,Site") <-> (dim=2|id=323|"S=1/2,Site")'
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on bond(space) => phys(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=3|id=998|"Link,l=1") <-> (dim=3|id=507|"Link,l=2"), normdiff = 0.944688073151956
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on physical(space) => bond(time) indices
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mTensor symmetric (dim=2|id=61|"S=1/2,Site") <-> (dim=2|id=61|"S=1/2,Site")'
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on bond(space) => phys(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=3|id=49|"Link,l=1") <-> (dim=3|id=339|"Link,l=2"), normdiff = 0.10493384159131464
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+----- stdout -----
+mu0 p=0.1 legacy3  T=1  |mu0|=1.568863  (refreshed)
+----- stderr -----
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on physical(space) => bond(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=2|id=680|"S=1/2,Site") <-> (dim=2|id=680|"S=1/2,Site")', normdiff = 0.2034249757191385
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on bond(space) => phys(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=7|id=992|"Link,l=1") <-> (dim=7|id=306|"Link,l=2"), normdiff = 1.1566412865695994
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on physical(space) => bond(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=2|id=137|"S=1/2,Site") <-> (dim=2|id=137|"S=1/2,Site")', normdiff = 0.2034249757191385
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on bond(space) => phys(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=7|id=322|"Link,l=1") <-> (dim=7|id=88|"Link,l=2"), normdiff = 1.4350175351861996
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+----- stdout -----
+mu0 p=0.1 legacy3  T=2  |mu0|=1.556951  (stuck)
+----- stderr -----
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on physical(space) => bond(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=2|id=462|"S=1/2,Site") <-> (dim=2|id=462|"S=1/2,Site")', normdiff = 0.2034249757191385
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on bond(space) => phys(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=7|id=684|"Link,l=1") <-> (dim=7|id=404|"Link,l=2"), normdiff = 1.1566412865695994
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on physical(space) => bond(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=2|id=939|"S=1/2,Site") <-> (dim=2|id=939|"S=1/2,Site")', normdiff = 0.2034249757191385
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on bond(space) => phys(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=7|id=376|"Link,l=1") <-> (dim=7|id=866|"Link,l=2"), normdiff = 1.4350175351861996
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+----- stdout -----
+mu0 p=0.1 legacy3  T=3  |mu0|=1.552938  (stuck)
+----- stderr -----
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on physical(space) => bond(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=2|id=726|"S=1/2,Site") <-> (dim=2|id=726|"S=1/2,Site")', normdiff = 0.2034249757191385
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on bond(space) => phys(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=7|id=397|"Link,l=1") <-> (dim=7|id=354|"Link,l=2"), normdiff = 1.1566412865695994
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on physical(space) => bond(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=2|id=973|"S=1/2,Site") <-> (dim=2|id=973|"S=1/2,Site")', normdiff = 0.2034249757191385
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on bond(space) => phys(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=7|id=941|"Link,l=1") <-> (dim=7|id=589|"Link,l=2"), normdiff = 1.4350175351861996
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+----- stderr -----
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on physical(space) => bond(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=2|id=441|"S=1/2,Site") <-> (dim=2|id=441|"S=1/2,Site")', normdiff = 0.2034249757191385
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on bond(space) => phys(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=7|id=397|"Link,l=1") <-> (dim=7|id=476|"Link,l=2"), normdiff = 1.1566412865695994
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on physical(space) => bond(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=2|id=417|"S=1/2,Site") <-> (dim=2|id=417|"S=1/2,Site")', normdiff = 0.2034249757191385
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mChecking symmetry MPO tensor on bond(space) => phys(time) indices
+[33m[1m┌ [22m[39m[33m[1mWarning: [22m[39mTensor *not* symmetric (dim=7|id=110|"Link,l=1") <-> (dim=7|id=99|"Link,l=2"), normdiff = 1.4350175351861996
+[33m[1m└ [22m[39m[90m@ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93[39m
+------------------
+
+UndefVarError: `permute` not defined in `Main`
+Hint: It looks like two or more modules export different bindings with this name, resulting in ambiguity. Try explicitly importing it from a particular module, or qualifying the name with the module it should come from.
+Hint: a global variable of this name also exists in SparseArrays.
+Hint: a global variable of this name also exists in ITensors.
+
+Stacktrace:
+ [1] [0m[1mbulk_fwtmpoblocks[22m[0m[1m([22m[90mtp[39m::[0mtMPOParams[90m{Float64, ComplexF64, AlcarazParams, AlcarazVD2}[39m; [90mnsites[39m::[0mInt64[0m[1m)[22m
+[90m   @[39m [35mMain[39m [90m~/Documents/masters/master-thesis-BSC/src/[39m[90m[4mtransverse_tools.jl:30[24m[39m
+ [2] [0m[1mbulk_fwtmpoblocks[22m
+[90m   @[39m [90m~/Documents/masters/master-thesis-BSC/src/[39m[90m[4mtransverse_tools.jl:16[24m[39m[90m [inlined][39m
+ [3] 
+[90m   @[39m [35mMain[39m [90m~/Documents/masters/master-thesis-BSC/src/[39m[90m[4mtransverse_tools.jl:50[24m[39m
+ [4] 
+[90m   @[39m [35mMain[39m [90m~/Documents/masters/master-thesis-BSC/src/[39m[90m[4mtransverse_tools.jl:72[24m[39m
+ [5] [0m[1mbuild_alcaraz_tmpo[22m
+[90m   @[39m [90m~/Documents/masters/master-thesis-BSC/src/[39m[90m[4mtransverse_tools.jl:68[24m[39m[90m [inlined][39m
+ [6] top-level scope
+[90m   @[39m [90m./[39m[90m[4mIn[4]:7[24m[39m
+ [7] [0m[1meval[22m[0m[1m([22m[90mm[39m::[0mModule, [90me[39m::[0mAny[0m[1m)[22m
+[90m   @[39m [90mCore[39m [90m./[39m[90m[4mboot.jl:489[24m[39m
+Some type information was truncated. Use `show(err)` to see complete types.
+
+ALLDONE

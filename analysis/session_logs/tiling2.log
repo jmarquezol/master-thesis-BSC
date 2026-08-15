@@ -1,0 +1,5 @@
+p=0.1 WII  : bulk-tensor tiling  |A-B|/|A| = 0.000e+00   (interior link dim 4)
+p=0.1 VD2  : bulk-tensor tiling  |A-B|/|A| = 0.000e+00   (interior link dim 13)
+p=0.5 WII  : bulk-tensor tiling  |A-B|/|A| = 0.000e+00   (interior link dim 4)
+p=0.5 VD2  : bulk-tensor tiling  |A-B|/|A| = 0.000e+00   (interior link dim 13)
+ALLDONE

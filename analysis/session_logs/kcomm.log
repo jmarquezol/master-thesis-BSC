@@ -1,0 +1,102 @@
+p=0.5 bulk5    |EK-KE|/|E| = 9.40e-17   (d=13, signs -11-11-11-11-11-11-1)
+p=0.5 legacy3  |EK-KE|/|E| = 5.46e-17   (d=7, signs -11-1-111-1)
+p=0.1 bulk5    |EK-KE|/|E| = 5.47e-17   (d=13, signs 1-11-11-11-11-11-11)
+p=0.1 legacy3  |EK-KE|/|E| = 3.47e-17   (d=7, signs 1-111-1-11)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=456|"S=1/2,Site") <-> (dim=2|id=456|"S=1/2,Site")', normdiff = 0.27616420236277306
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=775|"Link,l=1") <-> (dim=7|id=855|"Link,l=2"), normdiff = 1.3391131620216263
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=391|"S=1/2,Site") <-> (dim=2|id=391|"S=1/2,Site")', normdiff = 0.27616420236277306
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=967|"Link,l=1") <-> (dim=7|id=253|"Link,l=2"), normdiff = 1.564254623300947
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=652|"S=1/2,Site") <-> (dim=2|id=652|"S=1/2,Site")', normdiff = 0.27616420236277306
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=608|"Link,l=1") <-> (dim=7|id=961|"Link,l=2"), normdiff = 1.3391131620216263
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=21|"S=1/2,Site") <-> (dim=2|id=21|"S=1/2,Site")', normdiff = 0.27616420236277306
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=458|"Link,l=1") <-> (dim=7|id=190|"Link,l=2"), normdiff = 1.564254623300947
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=343|"S=1/2,Site") <-> (dim=2|id=343|"S=1/2,Site")', normdiff = 0.27616420236277306
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=451|"Link,l=1") <-> (dim=7|id=261|"Link,l=2"), normdiff = 1.3391131620216263
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=536|"S=1/2,Site") <-> (dim=2|id=536|"S=1/2,Site")', normdiff = 0.27616420236277306
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=97|"Link,l=1") <-> (dim=7|id=858|"Link,l=2"), normdiff = 1.564254623300947
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=245|"S=1/2,Site") <-> (dim=2|id=245|"S=1/2,Site")', normdiff = 0.27616420236277306
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=537|"Link,l=1") <-> (dim=7|id=848|"Link,l=2"), normdiff = 1.3391131620216263
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=354|"S=1/2,Site") <-> (dim=2|id=354|"S=1/2,Site")', normdiff = 0.27616420236277306
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=617|"Link,l=1") <-> (dim=7|id=761|"Link,l=2"), normdiff = 1.564254623300947
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=23|"S=1/2,Site") <-> (dim=2|id=23|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=698|"Link,l=1") <-> (dim=7|id=550|"Link,l=2"), normdiff = 1.1566412865695994
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=8|"S=1/2,Site") <-> (dim=2|id=8|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=258|"Link,l=1") <-> (dim=7|id=817|"Link,l=2"), normdiff = 1.4350175351861996
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=42|"S=1/2,Site") <-> (dim=2|id=42|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=629|"Link,l=1") <-> (dim=7|id=177|"Link,l=2"), normdiff = 1.1566412865695994
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=594|"S=1/2,Site") <-> (dim=2|id=594|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=378|"Link,l=1") <-> (dim=7|id=172|"Link,l=2"), normdiff = 1.4350175351861996
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=150|"S=1/2,Site") <-> (dim=2|id=150|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=514|"Link,l=1") <-> (dim=7|id=863|"Link,l=2"), normdiff = 1.1566412865695994
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=130|"S=1/2,Site") <-> (dim=2|id=130|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=977|"Link,l=1") <-> (dim=7|id=429|"Link,l=2"), normdiff = 1.4350175351861996
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=943|"S=1/2,Site") <-> (dim=2|id=943|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=704|"Link,l=1") <-> (dim=7|id=689|"Link,l=2"), normdiff = 1.1566412865695994
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=793|"S=1/2,Site") <-> (dim=2|id=793|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=698|"Link,l=1") <-> (dim=7|id=742|"Link,l=2"), normdiff = 1.4350175351861996
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+KCOMM-DONE
+DONE

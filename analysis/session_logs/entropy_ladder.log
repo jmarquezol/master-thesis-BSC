@@ -1,0 +1,123 @@
+LADDER-START 17:33
+Renyi-2 temporal entropies, production column vs corrected bulk column
+c_Re from the chord slope, Im plateau against the CFT target pi*c/16 = 0.0982 at c=1/2
+
+p     column      T     c_Re      Im plateau reason   
+0.1   corrected   6.0   0.8404    0.1277    converged
+
+[1069349] signal 15: Terminated
+in expression starting at /tmp/claude-1000/-home-jmarquezol-Documents-masters-master-thesis-BSC/f70d3b4a-ae69-4e64-b402-7d1d122d79e4/scratchpad/entropy_ladder_T8.jl:67
+unknown function (ip: 0x7a9b21898e4f) at /lib/x86_64-linux-gnu/libc.so.6
+pthread_cond_wait at /lib/x86_64-linux-gnu/libc.so.6 (unknown line)
+uv_cond_wait at /workspace/srcdir/libuv/src/unix/thread.c:822
+ijl_task_get_next at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/scheduler.c:523
+poptask at ./task.jl:1216
+wait at ./task.jl:1228
+#wait#398 at ./condition.jl:141
+_trywait at ./asyncevent.jl:163
+profile_printing_listener at ./Base.jl:332
+#start_profile_listener##0 at ./Base.jl:352
+jfptr_YY.start_profile_listenerYY.YY.0_6779.1 at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/lib/julia/sys.so (unknown line)
+jl_apply at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/julia.h:2391 [inlined]
+start_task at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/task.c:1252
+unknown function (ip: (nil)) at (unknown file)
+zgemm_oncopy_ZEN at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/bin/../lib/julia/libopenblas64_.so (unknown line)
+inner_thread at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/bin/../lib/julia/libopenblas64_.so (unknown line)
+exec_blas at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/bin/../lib/julia/libopenblas64_.so (unknown line)
+gemm_driver.isra.0 at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/bin/../lib/julia/libopenblas64_.so (unknown line)
+zgemm_thread_cn at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/bin/../lib/julia/libopenblas64_.so (unknown line)
+zgemm_64_ at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/bin/../lib/julia/libopenblas64_.so (unknown line)
+zgeqrt3_64_ at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/bin/../lib/julia/libopenblas64_.so (unknown line)
+zgeqrt_64_ at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/bin/../lib/julia/libopenblas64_.so (unknown line)
+geqrt! at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/lapack.jl:479
+geqrt! at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/lapack.jl:746 [inlined]
+#qr!#299 at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/qr.jl:291 [inlined]
+qr! at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/qr.jl:291 [inlined]
+qr! at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/qr.jl:336 [inlined]
+#_qr#303 at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/qr.jl:432 [inlined]
+_qr at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/qr.jl:432 [inlined]
+#qr#300 at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/qr.jl:425
+qr at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/qr.jl:422 [inlined]
+qr at /home/jmarquezol/.julia/packages/NDTensors/gWcwD/src/lib/Expose/src/functions/linearalgebra.jl:2 [inlined]
+qx at /home/jmarquezol/.julia/packages/NDTensors/gWcwD/src/linearalgebra/linearalgebra.jl:337
+#qr#92 at /home/jmarquezol/.julia/packages/NDTensors/gWcwD/src/linearalgebra/linearalgebra.jl:323 [inlined]
+qr at /home/jmarquezol/.julia/packages/NDTensors/gWcwD/src/linearalgebra/linearalgebra.jl:321
+unknown function (ip: 0x7a9add7929ba) at (unknown file)
+#qx#336 at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:520
+qx at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:494 [inlined]
+#qr#332 at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:480 [inlined]
+qr at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:479
+unknown function (ip: 0x7a9add78ccb2) at (unknown file)
+#qr#324 at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:464
+qr at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:464 [inlined]
+#factorize_qr#339 at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:580
+factorize_qr at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:572 [inlined]
+#factorize#343 at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:858
+factorize at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:761
+unknown function (ip: 0x7a9add78a8dd) at (unknown file)
+#orthogonalize!#418 at /home/jmarquezol/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1628
+orthogonalize! at /home/jmarquezol/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1609 [inlined]
+#truncate!#422 at /home/jmarquezol/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1710
+truncate! at /home/jmarquezol/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1701 [inlined]
+#truncate!#421 at /home/jmarquezol/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1698
+truncate! at /home/jmarquezol/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1697 [inlined]
+#lincomb_mps#28 at /home/jmarquezol/Documents/masters/master-thesis-BSC/src/transverse_tools.jl:85
+lincomb_mps at /home/jmarquezol/Documents/masters/master-thesis-BSC/src/transverse_tools.jl:78 [inlined]
+#block_transfer_eigs#30 at /home/jmarquezol/Documents/masters/master-thesis-BSC/src/transverse_tools.jl:265
+block_transfer_eigs at /home/jmarquezol/Documents/masters/master-thesis-BSC/src/transverse_tools.jl:150 [inlined]
+#entropy_profile#79 at /tmp/claude-1000/-home-jmarquezol-Documents-masters-master-thesis-BSC/f70d3b4a-ae69-4e64-b402-7d1d122d79e4/scratchpad/entropy_ladder_T8.jl:34
+entropy_profile at /tmp/claude-1000/-home-jmarquezol-Documents-masters-master-thesis-BSC/f70d3b4a-ae69-4e64-b402-7d1d122d79e4/scratchpad/entropy_ladder_T8.jl:30
+unknown function (ip: 0x7a9addbb3e0a) at (unknown file)
+top-level scope at /tmp/claude-1000/-home-jmarquezol-Documents-masters-master-thesis-BSC/f70d3b4a-ae69-4e64-b402-7d1d122d79e4/scratchpad/entropy_ladder_T8.jl:72
+jl_toplevel_eval_flex at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/toplevel.c:1024
+jl_toplevel_eval_flex at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/toplevel.c:975
+ijl_toplevel_eval at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/toplevel.c:1047
+ijl_toplevel_eval_in at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/toplevel.c:1092
+eval at ./boot.jl:489
+include_string at ./loading.jl:2870
+_include at ./loading.jl:2930
+include at ./Base.jl:306
+exec_options at ./client.jl:317
+_start at ./client.jl:550
+jfptr__start_74358.1 at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/lib/julia/sys.so (unknown line)
+jl_apply at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/julia.h:2391 [inlined]
+true_main at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/jlapi.c:971
+jl_repl_entrypoint at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/jlapi.c:1139
+main at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/cli/loader_exe.c:58
+unknown function (ip: 0x7a9b2182a1c9) at /lib/x86_64-linux-gnu/libc.so.6
+__libc_start_main at /lib/x86_64-linux-gnu/libc.so.6 (unknown line)
+unknown function (ip: 0x4010b8) at /workspace/srcdir/glibc-2.17/csu/../sysdeps/x86_64/start.S
+unknown function (ip: (nil)) at (unknown file)
+Allocations: 1287868104 (Pool: 1287866463; Big: 1641); GC: 29590
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=860|"S=1/2,Site") <-> (dim=2|id=860|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=794|"Link,l=1") <-> (dim=7|id=410|"Link,l=2"), normdiff = 1.1566412865695994
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=845|"S=1/2,Site") <-> (dim=2|id=845|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=554|"Link,l=1") <-> (dim=7|id=492|"Link,l=2"), normdiff = 1.4350175351861996
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+┌ Warning: norm² is 1.456857627810725e47 + 4.360718064785109e32im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 9.807756935843798e46 + 2.1803590323925546e32im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.934981553635664e13 + 0.0771484375im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.277879769949702e13 - 0.078125im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 6.320915175813977e12 + 0.01611328125im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 6.509601618114773e11 - 0.00146484375im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.8193232231246796e11 - 0.000713348388671875im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.9902226926077075e11 - 0.0007901191711425781im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 2.8243712576541786e10 - 6.389617919921875e-5im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246
+┌ Warning: norm² is 1.6305786475339355e10 + 3.62396240234375e-5im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1246

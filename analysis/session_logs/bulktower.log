@@ -1,0 +1,187 @@
+p=0.0 T=2.0   phys dim 3 (production) vs 3 (bulk fix)
+   production  reason=maxiter   partners=3/8  tower_gap=0.8898
+      |mu|=1.49635  dphi/pi=+0.0000  tower
+      |mu|=1.33138  dphi/pi=+0.1130  tower
+      |mu|=1.00224  dphi/pi=+0.3434  tower
+      |mu|=0.90507  dphi/pi=+0.4573  tower
+      |mu|=0.75740  dphi/pi=+0.6021  partner
+      |mu|=0.37294  dphi/pi=+0.6277  partner
+      |mu|=0.19954  dphi/pi=+0.8510  partner
+      |mu|=0.00617  dphi/pi=+0.1380  tower
+   bulk fix    reason=stuck     partners=2/8  tower_gap=0.8898
+      |mu|=1.49635  dphi/pi=+0.0000  tower
+      |mu|=1.33138  dphi/pi=+0.1130  tower
+      |mu|=1.00228  dphi/pi=+0.3434  tower
+      |mu|=0.89182  dphi/pi=+0.4567  tower
+      |mu|=0.36153  dphi/pi=+0.8008  partner
+      |mu|=0.24231  dphi/pi=+0.3129  tower
+      |mu|=0.08251  dphi/pi=+0.8360  partner
+      |mu|=0.06194  dphi/pi=-0.1856  tower
+p=0.0 T=3.0   phys dim 3 (production) vs 3 (bulk fix)
+   production  reason=stuck     partners=3/8  tower_gap=0.9466
+      |mu|=1.49225  dphi/pi=+0.0000  tower
+      |mu|=1.41254  dphi/pi=+0.0795  tower
+      |mu|=1.25247  dphi/pi=+0.2419  tower
+      |mu|=1.18735  dphi/pi=+0.3218  tower
+      |mu|=1.03951  dphi/pi=+0.4109  tower
+      |mu|=0.98506  dphi/pi=+0.5016  partner
+      |mu|=0.92348  dphi/pi=+0.6789  partner
+      |mu|=0.46219  dphi/pi=+0.5348  partner
+   bulk fix    reason=maxiter   partners=2/8  tower_gap=0.9466
+      |mu|=1.49225  dphi/pi=+0.0000  tower
+      |mu|=1.41254  dphi/pi=+0.0795  tower
+      |mu|=1.25233  dphi/pi=+0.2419  tower
+      |mu|=1.18586  dphi/pi=+0.3212  tower
+      |mu|=1.03203  dphi/pi=+0.4172  tower
+      |mu|=1.00158  dphi/pi=+0.4934  tower
+      |mu|=0.89142  dphi/pi=+0.6501  partner
+      |mu|=0.33922  dphi/pi=+0.8126  partner
+p=0.1 T=2.0   phys dim 7 (production) vs 13 (bulk fix)
+   production  reason=maxiter   partners=4/8  tower_gap=0.6513
+      |mu|=1.55695  dphi/pi=+0.0000  tower
+      |mu|=1.46320  dphi/pi=-0.9124  partner
+      |mu|=1.13535  dphi/pi=-0.7291  partner
+      |mu|=1.01407  dphi/pi=+0.3665  tower
+      |mu|=0.75270  dphi/pi=-0.5597  partner
+      |mu|=0.46087  dphi/pi=-0.0021  tower
+      |mu|=0.25874  dphi/pi=+0.6631  partner
+      |mu|=0.10696  dphi/pi=+0.0667  tower
+   bulk fix    reason=stuck     partners=3/8  tower_gap=0.9290
+      |mu|=1.56189  dphi/pi=+0.0000  tower
+      |mu|=1.55634  dphi/pi=+0.5583  partner
+      |mu|=1.45100  dphi/pi=+0.0892  tower
+      |mu|=1.14152  dphi/pi=+0.2752  tower
+      |mu|=1.01748  dphi/pi=+0.3720  tower
+      |mu|=0.56091  dphi/pi=+0.7141  partner
+      |mu|=0.35615  dphi/pi=-0.0130  tower
+      |mu|=0.11962  dphi/pi=+0.6339  partner
+p=0.1 T=3.0   phys dim 7 (production) vs 13 (bulk fix)
+   production  reason=maxiter   partners=4/8  tower_gap=0.8631
+      |mu|=1.55294  dphi/pi=+0.0000  tower
+      |mu|=1.51924  dphi/pi=-0.9404  partner
+      |mu|=1.38581  dphi/pi=-0.8138  partner
+      |mu|=1.34031  dphi/pi=+0.2501  tower
+      |mu|=1.13593  dphi/pi=-0.6759  partner
+      |mu|=1.13292  dphi/pi=+0.3914  tower
+      |mu|=1.09478  dphi/pi=+0.5445  partner
+      |mu|=0.60009  dphi/pi=-0.4230  tower
+   bulk fix    reason=stuck     partners=1/8  tower_gap=0.9679
+      |mu|=1.55922  dphi/pi=+0.0000  tower
+      |mu|=1.50925  dphi/pi=+0.0610  tower
+      |mu|=1.38663  dphi/pi=+0.1893  tower
+      |mu|=1.33692  dphi/pi=+0.2535  tower
+      |mu|=1.15686  dphi/pi=+0.3919  tower
+      |mu|=1.13800  dphi/pi=+0.3335  tower
+      |mu|=0.94958  dphi/pi=+0.5517  partner
+      |mu|=0.61905  dphi/pi=-0.0239  tower
+p=0.5 T=2.0   phys dim 7 (production) vs 13 (bulk fix)
+   production  reason=stuck     partners=4/8  tower_gap=0.8650
+      |mu|=1.89539  dphi/pi=+0.0000  tower
+      |mu|=1.63951  dphi/pi=+0.2452  tower
+      |mu|=1.58862  dphi/pi=-0.8593  partner
+      |mu|=1.58285  dphi/pi=+0.9968  partner
+      |mu|=1.56445  dphi/pi=+0.0560  tower
+      |mu|=1.43176  dphi/pi=+0.1261  tower
+      |mu|=1.36926  dphi/pi=-0.8464  partner
+      |mu|=1.34987  dphi/pi=+0.9668  partner
+   bulk fix    reason=maxiter   partners=0/8  tower_gap=0.9825
+      |mu|=1.86392  dphi/pi=+0.0000  tower
+      |mu|=1.83139  dphi/pi=+0.0477  tower
+      |mu|=1.65050  dphi/pi=+0.1535  tower
+      |mu|=1.54268  dphi/pi=+0.2126  tower
+      |mu|=1.37721  dphi/pi=+0.2410  tower
+      |mu|=1.26079  dphi/pi=+0.3031  tower
+      |mu|=1.12976  dphi/pi=+0.3121  tower
+      |mu|=0.87625  dphi/pi=+0.3999  tower
+p=0.5 T=3.0   phys dim 7 (production) vs 13 (bulk fix)
+   production  reason=maxiter   partners=4/8  tower_gap=0.8488
+      |mu|=2.24861  dphi/pi=+0.0000  tower
+      |mu|=1.90859  dphi/pi=-0.1170  tower
+      |mu|=1.75615  dphi/pi=+0.8241  partner
+      |mu|=1.65351  dphi/pi=-0.0569  tower
+      |mu|=1.59508  dphi/pi=+0.9162  partner
+      |mu|=1.53051  dphi/pi=+0.8549  partner
+      |mu|=1.52666  dphi/pi=+0.9573  partner
+      |mu|=1.46163  dphi/pi=-0.1604  tower
+   bulk fix    reason=stuck     partners=0/8  tower_gap=0.9942
+      |mu|=1.86385  dphi/pi=+0.0000  tower
+      |mu|=1.85313  dphi/pi=+0.0314  tower
+      |mu|=1.80292  dphi/pi=+0.0993  tower
+      |mu|=1.78407  dphi/pi=+0.1350  tower
+      |mu|=1.68067  dphi/pi=+0.1720  tower
+      |mu|=1.63534  dphi/pi=+0.2163  tower
+      |mu|=1.60830  dphi/pi=+0.3106  tower
+      |mu|=1.23523  dphi/pi=+0.2364  tower
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=643|"S=1/2,Site") <-> (dim=2|id=643|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=483|"Link,l=1") <-> (dim=3|id=792|"Link,l=2"), normdiff = 0.944688073151956
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=756|"S=1/2,Site") <-> (dim=2|id=756|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=182|"Link,l=1") <-> (dim=3|id=919|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=476|"S=1/2,Site") <-> (dim=2|id=476|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=767|"Link,l=1") <-> (dim=3|id=508|"Link,l=2"), normdiff = 0.944688073151956
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=760|"S=1/2,Site") <-> (dim=2|id=760|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=889|"Link,l=1") <-> (dim=3|id=865|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=689|"S=1/2,Site") <-> (dim=2|id=689|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=124|"Link,l=1") <-> (dim=7|id=879|"Link,l=2"), normdiff = 1.1566412865695994
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=886|"S=1/2,Site") <-> (dim=2|id=886|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=834|"Link,l=1") <-> (dim=7|id=217|"Link,l=2"), normdiff = 1.4350175351861996
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=743|"S=1/2,Site") <-> (dim=2|id=743|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=621|"Link,l=1") <-> (dim=7|id=443|"Link,l=2"), normdiff = 1.1566412865695994
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=834|"S=1/2,Site") <-> (dim=2|id=834|"S=1/2,Site")', normdiff = 0.2034249757191385
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=749|"Link,l=1") <-> (dim=7|id=772|"Link,l=2"), normdiff = 1.4350175351861996
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=672|"S=1/2,Site") <-> (dim=2|id=672|"S=1/2,Site")', normdiff = 0.27616420236277306
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=383|"Link,l=1") <-> (dim=7|id=504|"Link,l=2"), normdiff = 1.3391131620216263
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=200|"S=1/2,Site") <-> (dim=2|id=200|"S=1/2,Site")', normdiff = 0.27616420236277306
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=126|"Link,l=1") <-> (dim=7|id=617|"Link,l=2"), normdiff = 1.564254623300947
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=290|"S=1/2,Site") <-> (dim=2|id=290|"S=1/2,Site")', normdiff = 0.27616420236277306
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=985|"Link,l=1") <-> (dim=7|id=585|"Link,l=2"), normdiff = 1.3391131620216263
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=640|"S=1/2,Site") <-> (dim=2|id=640|"S=1/2,Site")', normdiff = 0.27616420236277306
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=52|"Link,l=1") <-> (dim=7|id=607|"Link,l=2"), normdiff = 1.564254623300947
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+┌ Warning: log(norm²) is 0.15588401088119463 + 2.600242539412841e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.20056283603078895 + 2.7738234035534373e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+ALLDONE

@@ -1,0 +1,143 @@
+p=0.5 T=2.0   phys dim 7 (production) vs 13 (bulk fix)
+   production  reason=stuck     partners=4/8  tower_gap=0.9541
+      |mu|=1.89540  dphi/pi=+0.0000  tower
+      |mu|=1.80847  dphi/pi=+0.1584  tower
+      |mu|=1.58294  dphi/pi=+0.9967  partner
+      |mu|=1.58161  dphi/pi=-0.8647  partner
+      |mu|=1.57322  dphi/pi=+0.0559  tower
+      |mu|=1.47868  dphi/pi=-0.0760  tower
+      |mu|=1.40971  dphi/pi=-0.9868  partner
+      |mu|=1.37065  dphi/pi=-0.8504  partner
+   bulk fix    reason=stuck     partners=0/8  tower_gap=0.9825
+      |mu|=1.86392  dphi/pi=+0.0000  tower
+      |mu|=1.83139  dphi/pi=+0.0477  tower
+      |mu|=1.65048  dphi/pi=+0.1534  tower
+      |mu|=1.55985  dphi/pi=+0.2128  tower
+      |mu|=1.39877  dphi/pi=+0.3564  tower
+      |mu|=1.37480  dphi/pi=+0.2434  tower
+      |mu|=1.24850  dphi/pi=+0.2923  tower
+      |mu|=1.01905  dphi/pi=+0.4056  tower
+
+[430406] signal 15: Terminated
+in expression starting at /tmp/claude-1000/-home-jmarquezol-Documents-masters-master-thesis-BSC/f70d3b4a-ae69-4e64-b402-7d1d122d79e4/scratchpad/tower_p05.jl:51
+unknown function (ip: 0x7319eca98e4f) at /lib/x86_64-linux-gnu/libc.so.6
+pthread_cond_wait at /lib/x86_64-linux-gnu/libc.so.6 (unknown line)
+uv_cond_wait at /workspace/srcdir/libuv/src/unix/thread.c:822
+ijl_task_get_next at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/scheduler.c:523
+poptask at ./task.jl:1216
+wait at ./task.jl:1228
+#wait#398 at ./condition.jl:141
+_trywait at ./asyncevent.jl:163
+profile_printing_listener at ./Base.jl:332
+#start_profile_listener##0 at ./Base.jl:352
+jfptr_YY.start_profile_listenerYY.YY.0_6779.1 at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/lib/julia/sys.so (unknown line)
+jl_apply at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/julia.h:2391 [inlined]
+start_task at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/task.c:1252
+unknown function (ip: (nil)) at (unknown file)
+zgemm_kernel_r_ZEN at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/bin/../lib/julia/libopenblas64_.so (unknown line)
+inner_thread at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/bin/../lib/julia/libopenblas64_.so (unknown line)
+exec_blas at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/bin/../lib/julia/libopenblas64_.so (unknown line)
+gemm_driver.isra.0 at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/bin/../lib/julia/libopenblas64_.so (unknown line)
+zgemm_thread_nc at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/bin/../lib/julia/libopenblas64_.so (unknown line)
+zgemm_64_ at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/bin/../lib/julia/libopenblas64_.so (unknown line)
+zlarfb_64_ at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/bin/../lib/julia/libopenblas64_.so (unknown line)
+zgeqrt_64_ at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/bin/../lib/julia/libopenblas64_.so (unknown line)
+geqrt! at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/lapack.jl:479
+geqrt! at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/lapack.jl:746 [inlined]
+#qr!#299 at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/qr.jl:291 [inlined]
+qr! at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/qr.jl:291 [inlined]
+qr! at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/qr.jl:336 [inlined]
+#_qr#303 at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/qr.jl:432 [inlined]
+_qr at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/qr.jl:432 [inlined]
+#qr#300 at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/qr.jl:425
+qr at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/usr/share/julia/stdlib/v1.12/LinearAlgebra/src/qr.jl:422 [inlined]
+qr at /home/jmarquezol/.julia/packages/NDTensors/gWcwD/src/lib/Expose/src/functions/linearalgebra.jl:2 [inlined]
+qx at /home/jmarquezol/.julia/packages/NDTensors/gWcwD/src/linearalgebra/linearalgebra.jl:337
+#qr#92 at /home/jmarquezol/.julia/packages/NDTensors/gWcwD/src/linearalgebra/linearalgebra.jl:323 [inlined]
+qr at /home/jmarquezol/.julia/packages/NDTensors/gWcwD/src/linearalgebra/linearalgebra.jl:321
+unknown function (ip: 0x7319a973e08a) at (unknown file)
+#qx#336 at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:520
+qx at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:494 [inlined]
+#qr#332 at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:480 [inlined]
+qr at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:479
+unknown function (ip: 0x7319a97356c2) at (unknown file)
+#qr#324 at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:464
+qr at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:464 [inlined]
+#factorize_qr#339 at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:580
+factorize_qr at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:572 [inlined]
+#factorize#343 at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:858
+factorize at /home/jmarquezol/.julia/packages/ITensors/6hc0c/src/tensor_operations/matrix_decomposition.jl:761
+unknown function (ip: 0x7319a973284d) at (unknown file)
+#orthogonalize!#418 at /home/jmarquezol/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1628
+orthogonalize! at /home/jmarquezol/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1609 [inlined]
+#truncate!#422 at /home/jmarquezol/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1710
+truncate! at /home/jmarquezol/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1701 [inlined]
+#truncate!#421 at /home/jmarquezol/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1698
+truncate! at /home/jmarquezol/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1697 [inlined]
+#lincomb_mps#24 at /home/jmarquezol/Documents/masters/master-thesis-BSC/src/transverse_tools.jl:56
+lincomb_mps at /home/jmarquezol/Documents/masters/master-thesis-BSC/src/transverse_tools.jl:49 [inlined]
+#block_transfer_eigs#26 at /home/jmarquezol/Documents/masters/master-thesis-BSC/src/transverse_tools.jl:237
+block_transfer_eigs at /home/jmarquezol/Documents/masters/master-thesis-BSC/src/transverse_tools.jl:121 [inlined]
+#spectrum#75 at /tmp/claude-1000/-home-jmarquezol-Documents-masters-master-thesis-BSC/f70d3b4a-ae69-4e64-b402-7d1d122d79e4/scratchpad/tower_p05.jl:33
+top-level scope at /tmp/claude-1000/-home-jmarquezol-Documents-masters-master-thesis-BSC/f70d3b4a-ae69-4e64-b402-7d1d122d79e4/scratchpad/tower_p05.jl:51
+jl_toplevel_eval_flex at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/toplevel.c:1024
+jl_toplevel_eval_flex at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/toplevel.c:975
+ijl_toplevel_eval at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/toplevel.c:1047
+ijl_toplevel_eval_in at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/toplevel.c:1092
+eval at ./boot.jl:489
+include_string at ./loading.jl:2870
+_include at ./loading.jl:2930
+include at ./Base.jl:306
+exec_options at ./client.jl:317
+_start at ./client.jl:550
+jfptr__start_74358.1 at /home/jmarquezol/.julia/juliaup/julia-1.12.5+0.x64.linux.gnu/lib/julia/sys.so (unknown line)
+jl_apply at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/julia.h:2391 [inlined]
+true_main at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/jlapi.c:971
+jl_repl_entrypoint at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/src/jlapi.c:1139
+main at /cache/build/builder-amdci5-3/julialang/julia-release-1-dot-12/cli/loader_exe.c:58
+unknown function (ip: 0x7319eca2a1c9) at /lib/x86_64-linux-gnu/libc.so.6
+__libc_start_main at /lib/x86_64-linux-gnu/libc.so.6 (unknown line)
+unknown function (ip: 0x4010b8) at /workspace/srcdir/glibc-2.17/csu/../sysdeps/x86_64/start.S
+unknown function (ip: (nil)) at (unknown file)
+Allocations: 2719000052 (Pool: 2718998530; Big: 1522); GC: 109547
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=933|"S=1/2,Site") <-> (dim=2|id=933|"S=1/2,Site")', normdiff = 0.27616420236277306
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=885|"Link,l=1") <-> (dim=7|id=996|"Link,l=2"), normdiff = 1.3391131620216263
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=127|"S=1/2,Site") <-> (dim=2|id=127|"S=1/2,Site")', normdiff = 0.27616420236277306
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=712|"Link,l=1") <-> (dim=7|id=160|"Link,l=2"), normdiff = 1.564254623300947
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+┌ Warning: log(norm²) is 1.3231951393307226 + 2.9644908385299266e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+┌ Warning: log(norm²) is 0.38364888079331383 - 2.2573325991799e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=678|"S=1/2,Site") <-> (dim=2|id=678|"S=1/2,Site")', normdiff = 0.27616420236277306
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=209|"Link,l=1") <-> (dim=7|id=527|"Link,l=2"), normdiff = 1.3391131620216263
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=556|"S=1/2,Site") <-> (dim=2|id=556|"S=1/2,Site")', normdiff = 0.27616420236277306
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=211|"Link,l=1") <-> (dim=7|id=583|"Link,l=2"), normdiff = 1.564254623300947
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+┌ Warning: log(norm²) is 0.8949444181250523 + 2.2328911088727573e-15im, which is not real up to a relative tolerance of 2.220446049250313e-15 and an absolute tolerance of 2.220446049250313e-15. Taking the real part, which may not be accurate.
+└ @ ITensorMPS ~/.julia/packages/ITensorMPS/fZDBz/src/abstractmps.jl:1271
+p=0.5 T=3.0   phys dim 7 (production) vs 13 (bulk fix)
+   production  reason=maxiter   partners=4/8  tower_gap=0.9377
+      |mu|=1.90858  dphi/pi=+0.0000  tower
+      |mu|=1.78970  dphi/pi=+0.3703  tower
+      |mu|=1.77693  dphi/pi=+0.9357  partner
+      |mu|=1.75658  dphi/pi=+0.9411  partner
+      |mu|=1.69151  dphi/pi=+0.0116  tower
+      |mu|=1.68275  dphi/pi=+0.0819  tower
+      |mu|=1.54618  dphi/pi=-0.9880  partner
+      |mu|=1.28190  dphi/pi=-0.9489  partner
+ALLDONE
