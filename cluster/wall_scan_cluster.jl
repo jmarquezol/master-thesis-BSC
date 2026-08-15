@@ -20,7 +20,9 @@ ENV["GKSwstype"] = "100"   # headless GR backend (src/thesislib.jl unconditional
 include(joinpath(@__DIR__, "..", "src", "thesislib.jl"))
 
 using LinearAlgebra, Printf
-BLAS.set_num_threads(Sys.CPU_THREADS)   # BLAS-bound workload; SLURM also sets OPENBLAS_NUM_THREADS
+# BLAS-bound workload. WALL_BLAS_THREADS caps the threads so parallel local jobs do not
+# oversubscribe the cores; on SLURM it is unset and every core is used.
+BLAS.set_num_threads(parse(Int, get(ENV, "WALL_BLAS_THREADS", string(Sys.CPU_THREADS))))
 
 # Model / sweep constants — these match NB7's master sweep and the desktop χ-scan.
 const P_NNN  = 0.1
@@ -62,7 +64,7 @@ function run_wall_scan(; chi::Int, label::String,
         cutoff=1e-12, cutoffs=[fill(1e-8, 40); 1e-10],
         trunc_mode=:rtm, basis=:eig,
         eigvals_only::Bool=false,
-        itermax=8000, stuck_after=150, eps_conv=1e-6,
+        itermax=8000, stuck_after=150, eps_conv=1e-6, itermin_floor=20,
         k=4, k_retry=6,
         ksector::Union{Nothing,Tuple{Vector{Float64},Int}}=nothing,
         cachefile=CLUSTER_CACHE,
@@ -142,7 +144,7 @@ function run_wall_scan(; chi::Int, label::String,
                     k=k, k_retry=k_retry, anchor=previous_phys,
                     maxdim=chi, maxdims=collect(2:2:chi),
                     cutoff=cutoff, cutoffs=cutoffs,
-                    itermax=itermax, eps_conv=eps_conv, trunc_mode=trunc_mode, basis=basis,
+                    itermax=itermax, eps_conv=eps_conv, itermin=itermin_floor, trunc_mode=trunc_mode, basis=basis,
                     eigvals_only=eigvals_only,
                     n_track=2, stuck_after=stuck_after,
                     seedL=seedL, seedR=seedR)
@@ -154,7 +156,7 @@ function run_wall_scan(; chi::Int, label::String,
                 theta, L, R, info = block_transfer_eigs(mpo, scaffold;
                     k=k, maxdim=chi, maxdims=collect(2:2:chi),
                     cutoff=cutoff, cutoffs=cutoffs,
-                    itermax=itermax, eps_conv=eps_conv, trunc_mode=trunc_mode, basis=basis,
+                    itermax=itermax, eps_conv=eps_conv, itermin=itermin_floor, trunc_mode=trunc_mode, basis=basis,
                     eigvals_only=eigvals_only,
                     n_track=2, stuck_after=stuck_after,
                     seedL=seedL, seedR=seedR,
@@ -297,8 +299,11 @@ elseif mode == "towerscan"
     # chi=48 and a looser tolerance: the tower figure quotes two decimals, and the corrected
     # column's leading moduli agree to 4-5 digits between chi=40 and 48, so chi=64 at 1e-6 only
     # burns walltime on deep-member convergence the figure never uses.
+    # itermin=80 keeps the looser 1e-5 tolerance from accepting a rung while the truncation
+    # schedule is still in its loose phase (first 40 iterations at 1e-8): a T=2 smoke converged
+    # at iteration 64 onto a value 7.6% above three corroborated runs.
     run_wall_scan(chi=48, label="tower_p$(p_val)", Ts=collect(2.0:1.0:Tmax), k=8, k_retry=10,
-        trunc_mode=:rtm, p_nnn=p_val, eigvals_only=true, eps_conv=1e-5,
+        trunc_mode=:rtm, p_nnn=p_val, eigvals_only=true, eps_conv=1e-5, itermin_floor=80,
         cachefile=joinpath(CLUSTER_DIR, "sweep_tower_p$(p_val).jld2"))
 elseif mode == "eigsweep"
     # Eigenvalues only: same configuration as `psweep` but in Schur/eigvals-only mode, skipping the
