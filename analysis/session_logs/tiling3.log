@@ -1,6 +1,0 @@
-p=0.00 VD2  : temporal phys dim =  3 (bulk MPO bond  3)   |A-B|/|A| = 0.000e+00
-p=0.05 VD2  : temporal phys dim =  7 (bulk MPO bond 13)   |A-B|/|A| = 3.419e-01
-p=0.10 VD2  : temporal phys dim =  7 (bulk MPO bond 13)   |A-B|/|A| = 3.422e-01
-p=0.30 VD2  : temporal phys dim =  7 (bulk MPO bond 13)   |A-B|/|A| = 3.450e-01
-p=0.50 VD2  : temporal phys dim =  7 (bulk MPO bond 13)   |A-B|/|A| = 3.522e-01
-ALLDONE

@@ -1,5 +1,0 @@
-═══ SMOKE entsweep p=0.1 bulk5 T=2..3 (10:16)
-[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
-[ Info: [ent_p0.1_bulk] T=3.0  converged@55  k=4  |θ0|=1.5592  gap=0.968  peak=0.2324  r=[0.0088,0.0077,0.0069,0.0057]  2462s
-[ Info: [ent_p0.1_bulk] ladder complete — checkpoint kept at T=3.0 for a later extension
-[ent_p0.1_bulk] cache: /home/jmarquezol/Documents/masters/master-thesis-BSC/cluster/../results/data/cluster/sweep_ent_p0.1_bulk.jld2  (2/2 points done)
