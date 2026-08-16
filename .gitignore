@@ -31,6 +31,7 @@ NBs/*.ipynb.bak
 THESIS_REWORK_STATE.md
 findingsfromothersession.md
 .claude/
+.vscode/
 literature/
 analysis/
 .DS_Store
