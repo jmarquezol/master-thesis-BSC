@@ -1,8 +1,11 @@
 /*.log
 results/logs/
 
-# Claude process/meta files: kept locally for session context, not tracked in the repo
+# Assistant process/meta files: kept locally for session context, not tracked in the repo
 CLAUDE.md
+GEMINI.md
+AGENTS.md
+.agents/
 PHASE6.md
 eigvec_robustness_report.md
 next_steps.md
