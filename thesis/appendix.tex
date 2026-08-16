@@ -355,6 +355,19 @@ Over the range studied the extrapolated velocity is close to linear in $p$: fitt
 
 That the temporal transfer matrix really carries this $p$-dependent velocity was checked separately with the anisotropic XY control, whose velocity $v(\gamma)=2\gamma$ is known exactly. At $\gamma=0.5,\,1,\,1.5$ the measured first-gap slopes are $a_1 = 1.481,\,0.782,\,0.520$ against the exact $\pi/(4\gamma) = 1.571,\,0.785,\,0.524$, giving $x_1 = 0.471,\,0.498,\,0.496$; pinning $v=2$ instead would force $a_1=0.785$ at every $\gamma$ and disagree with two of the three measured slopes. The pipeline recovers $x_1=\tfrac12$ only when fed the correct $v(\gamma)$, which confirms that the method is velocity-faithful.
 
+\subsection{Fit windows and the controls behind the quoted numbers}
+\label{app:errors}
+
+The central charges of Table~\ref{tab:cp} come from least-squares fits, and two conventions fix them: which times enter the fit, and what is held fixed. This appendix records both, together with the checks that show how far each number can move.
+
+The window has no unique start, and the choice matters. Moving the first fitted time later shortens the ladder and pushes the extrapolation upwards, because the $1/T$ and $1/T^{2}$ terms of Eq.~\eqref{eq:cft:eq3} become degenerate over a short range. Scanning the window start moves the result by $0.014$ at $p=0$, $0.024$ at $p=0.1$ and $0.21$ at $p=0.3$. Every value quoted is taken from the widest window that passes the consistency test below, because that window has the most points and the least degeneracy between the two correction terms. The window ends where the phase of $\mu_0$ stops advancing at a constant rate: over $T=2.2$ to $4.5$ at $p=0.5$ that rate is $1.8326$ with a spread of $0.0008$, and beyond it the rate scatters. That criterion is sharper than any test on $|\mu_0|$ or on the rigidity, and it is what sets the windows in Table~\ref{tab:cp}.
+
+The branch constant of Eq.~\eqref{eq:cft:eq3} is pinned rather than fitted. Its value is known from the definition $\lambda_0=\log(-\mu_0)$, and where the window is long enough to determine it independently the fit returns $B/\pi=-1.000$, so pinning costs nothing and removes a parameter that a short window cannot constrain. The phase itself is unwrapped over the whole ladder before any window is applied: unwrapping inside a window discards the absolute branch, and the pinned fit is then meaningless.
+
+Three controls bound how far the numbers can move. Repeating a ladder at $\chi=128$ changes the imaginary plateau by about $2\%$ and $|\mu_0|$ by less than $10^{-4}$, while the chord slope of the real part moves by up to $0.12$; this is why the entropy measurements are read from the plateau and not from the slope. Halving the Trotter step, with $N_\beta$ doubled so that $\beta_0$ is unchanged, moves the plateau by under $1\%$ well inside the window and by $18\%$ at its edge. Repeating a single rung with five independent random seeds spreads the plateau by $3\%$ and the chord slope by $12\%$, while $|\mu_0|$ agrees to $1.3\times10^{-4}$, so the spectral route is far less exposed to the seed than the entropy route. The sound velocity enters linearly, and the extrapolation that produces it returns $1.99994$ against the exact $2$ at the integrable point.
+
+For the absolute entropy result of Eq.~\eqref{eq:res:c_entropy_p0} the correction law is a further choice, since it is not known in advance. The plateau is fitted with a constant, with $a+b\,T^{-1/2}$, with $a+b/T$ and with $a+b/T+c/T^{2}$, and the four are compared by corrected Akaike information. Over $T=2$ to $24$ the constant is rejected by a difference of $21$, while the $T^{-1/2}$ and two-term forms differ by less than $1$ and give $0.506$ and $0.511$. Over the short window $T\le11$ the same comparison cannot separate any of the four, which is why the long ladder is necessary.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \FloatBarrier
