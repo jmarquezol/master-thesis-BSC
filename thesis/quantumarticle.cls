@@ -321,14 +321,13 @@ class for Quantum - the open journal for quantum science (https://quantum-journa
           }
 	}
 	% Define a revtex-style openone symbol
-	\IfFileExists{dsfont.sty}{
-		\RequirePackage{dsfont}
-		\DeclareRobustCommand\openone{\mathds{1}}
-		\providecommand{\mathbbm}{\mathds}
+	\IfFileExists{bbm.sty}{
+		\RequirePackage{bbm}
+		\DeclareRobustCommand\openone{\mathbbm{1}}
 	}{
-		\IfFileExists{bbm.sty}{
-			\RequirePackage{bbm}
-			\DeclareRobustCommand\openone{\mathbbm{1}}
+		\IfFileExists{dsfont.sty}{
+			\RequirePackage{dsfont}
+			\DeclareRobustCommand\openone{\mathds{1}}
 		}{
 			% This uses a similar technique to {revtex4-1}'s openone,
 			% namely two overstruck numeral 1s, but implemented using mboxes

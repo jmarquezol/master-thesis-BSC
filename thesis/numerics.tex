@@ -1,4 +1,3 @@
-% !TeX root = main.tex
 \FloatBarrier
 \section{The Block Power Method}
 \label{sec:numerics}
@@ -19,7 +18,7 @@ Different outputs of the calculation require different parts of this eigensystem
 
 \subsection{The algorithm}
 \label{sec:blockpm}
-hola
+
 A single-vector power method is sufficient when only the dominant eigenpair is required. It therefore provides the Loschmidt rate, the central charge obtained from the phase of $\mu_0$, and the dominant left and right states used in the entropy calculation. Extracting the boundary operator content also requires the subleading eigenvalues, whose separations decrease as $T$ grows. We resolve these eigenvalues by iterating a block of $k$ states. The block converges to the leading $k$-dimensional invariant subspace at a rate controlled by $|\mu_{k+1}/\mu_k|$; near-degeneracies among eigenvalues within the block therefore do not slow the convergence of the subspace. The projected eigenproblem then resolves the individual eigenpairs within this subspace.
 
 The block method evolves $k$ right states $\ket{R_j}$ and $k$ left states $\bra{L_j}$, each represented as a \ac{tMPS}. We initialise the two blocks independently with random complex tensors. Algorithm~\ref{alg:blockpm} summarises one iteration, and Figure~\ref{fig:blockpm} shows the tensor-network operations used to apply and project the transfer matrix.
@@ -32,18 +31,18 @@ The block method evolves $k$ right states $\ket{R_j}$ and $k$ left states $\bra{
 \end{figure}
 
 \begin{algorithm}[H]
-  \caption{\textbf{Block power method} for the $k$ dominant eigenpairs of $\mathcal{E}$.}
-  \label{alg:blockpm}
-  \begin{algorithmic}[1]
-    \State $\ket{R_j},\ \bra{L_j} \gets$ random complex \acp{tMPS}, \quad $j=1,\dots,k$
-    \Repeat
-    \State $\ket{\tilde R_j} \gets \operatorname{truncate}_\chi\big(\mathcal{E}\ket{R_j}\big)$, \qquad $\bra{\tilde L_j} \gets \operatorname{truncate}_\chi\big(\bra{L_j}\,\mathcal{E}\big)$ \Comment{apply}
-    \State $S_{ij} \gets \braket{L_i}{R_j}$, \qquad $M_{ij} \gets \braket{L_i}{\tilde R_j}=\bra{L_i}\mathcal{E}\ket{R_j}$ \Comment{project}
-    \State solve $M v=\theta\,S v$ for Ritz values $\theta_1,\dots,\theta_k$ and coefficients $V$, $U$
-    \State $\ket{R_j} \gets \operatorname{truncate}_\chi\big(\textstyle\sum_i V_{ij}\ket{\tilde R_i}\big)$, \qquad $\bra{L_j} \gets \operatorname{truncate}_\chi\big(\textstyle\sum_i U_{ij}\bra{\tilde L_i}\big)$ \Comment{de-mix}
-    \State normalise every block member
-    \Until{the leading Ritz values stop changing within tolerance}
-  \end{algorithmic}
+\caption{\textbf{Block power method} for the $k$ dominant eigenpairs of $\mathcal{E}$.}
+\label{alg:blockpm}
+\begin{algorithmic}[1]
+\State $\ket{R_j},\ \bra{L_j} \gets$ random complex \acp{tMPS}, \quad $j=1,\dots,k$
+\Repeat
+  \State $\ket{\tilde R_j} \gets \operatorname{truncate}_\chi\big(\mathcal{E}\ket{R_j}\big)$, \qquad $\bra{\tilde L_j} \gets \operatorname{truncate}_\chi\big(\bra{L_j}\,\mathcal{E}\big)$ \Comment{apply}
+  \State $S_{ij} \gets \braket{L_i}{R_j}$, \qquad $M_{ij} \gets \braket{L_i}{\tilde R_j}=\bra{L_i}\mathcal{E}\ket{R_j}$ \Comment{project}
+  \State solve $M v=\theta\,S v$ for Ritz values $\theta_1,\dots,\theta_k$ and coefficients $V$, $U$
+  \State $\ket{R_j} \gets \operatorname{truncate}_\chi\big(\textstyle\sum_i V_{ij}\ket{\tilde R_i}\big)$, \qquad $\bra{L_j} \gets \operatorname{truncate}_\chi\big(\textstyle\sum_i U_{ij}\bra{\tilde L_i}\big)$ \Comment{de-mix}
+  \State normalise every block member
+\Until{the leading Ritz values stop changing within tolerance}
+\end{algorithmic}
 \end{algorithm}
 
 The first step applies the transfer matrix to each member of the right block and its transpose to each member of the left block,
