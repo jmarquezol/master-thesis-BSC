@@ -23,65 +23,50 @@ If you already have the repository: `git checkout main && git pull`. Do not upda
 
 ## Submitting
 
-From inside `cluster/`, in this order. The queue was reorganised on 2026-08-16 after the local runs
-showed which route survives frustration; see "What changed" below before resubmitting anything.
+From inside `cluster/`. The spectral arms carry the central charge at p != 0 and matter most if the
+queue has to be cut short.
 
 ```
 cd cluster
 julia --project=.. wall_scan_cluster.jl preflight    # must print "preflight OK"
 
-sbatch submit_eigs_p0.1_bulk.slurm        # spectral arms: the route that works at p != 0
-sbatch submit_eigs_p0.3_bulk.slurm
-sbatch submit_eigs_p0.5_bulk.slurm
-sbatch submit_eigs_p1.0_bulk.slurm
-sbatch submit_eigs_p1.5_bulk.slurm
+for p in 0.0 0.1 0.3 0.5 1.0 1.5; do
+    sbatch submit_eigs_p${p}_bulk.slurm       # central charge from the eigenvalue phase
+done
 
-sbatch submit_ent_p0.0_bulk.slurm         # entropy arms: p=0 carries the absolute result
-sbatch submit_ent_p0.1_bulk.slurm
-sbatch submit_ent_p0.3_bulk.slurm
-sbatch submit_ent_p0.5_bulk.slurm
+for p in 0.0 0.1 0.3 0.5 1.0 1.5; do
+    sbatch submit_ent_p${p}_bulk.slurm        # temporal entropy
+done
 
-sbatch submit_rtm_eigs_p0.0_fine.slurm    # p=0 spectral control
-
-sbatch submit_tower_p0.1_bulk.slurm       # k=8 blocks for the boundary tower
-sbatch submit_tower_p0.3_bulk.slurm
-sbatch submit_tower_p0.5_bulk.slurm
-sbatch submit_tower_p1.0_bulk.slurm
-sbatch submit_tower_p1.5_bulk.slurm
+for p in 0.0 0.1 0.3 0.5 1.0 1.5; do
+    sbatch submit_tower_p${p}_bulk.slurm      # boundary dimensions
+done
 ```
 
-## What changed on 2026-08-16, and why
+## Notes
 
-**Added: five spectral arms at p != 0.** The queue had none. The eigenvalues are Rayleigh quotients,
-accurate to second order in the eigenvector error, so the spectral route survives frustration where
-the entropy route does not. It is what measures the central charge at p != 0.
+Three routes per coupling: `eigsweep` for the central charge from the eigenvalue phase, `entsweep`
+for the temporal entropy, `towerscan` for the boundary dimensions.
 
-**Every sweep now runs at dT = 0.5 or finer.** What limits these fits is the number of points inside
-the window, not the reach in T. At p=0.3 an integer ladder gave c = 0.41 with residuals 1.2e-3;
-adding half-integer rungs over the same range gave c = 0.51 with residuals 3.7e-4. Densify, do not
-extend.
+`dT` must be a multiple of the Trotter step, since the chain holds T/dt + nbeta sites. dT=0.5 works
+at dt=0.1, dT=0.25 needs dt=0.05. The driver refuses anything else.
 
-**Tmax cut to just past the usable window.** Measured locally, the last trustworthy rung is T ~ 20
-at p=0, 11 at p=0.1, 7 at p=0.3, 4 at p=0.5. Rungs past that come back broken, so the walltime they
-used is better spent inside the window.
+Half-integer rungs matter more than reach. At p=0.3 an integer ladder gave c=0.41 with residuals
+1.2e-3; the same range at dT=0.5 gave c=0.51 with residuals 3.7e-4.
 
-**The p = 1.0 and 1.5 jobs keep headroom above that**, because the conformal predictions are
-asymptotic in T and those windows are short in absolute terms. The data say short windows there are
-not a problem in themselves: at T=2 the measured x1 misses 1/2 by 2.3% at p=0.1, 0.5% at p=0.3 and
-0.3% at p=0.5, so at fixed T the more frustrated couplings are the more conformal ones, which is
-what the rising velocity would predict. But the one rung we have at p=1.0 sits at T=1.2 and is the
-worst of the set, so there is a floor in absolute T. Do not shorten these two further.
+Targets are Tmax 20 for the eigenvalue arms, 18 for the entropy arms and 8 for the towers, with p=0
+at 24 on both routes. These are targets, not expectations: a walltime kill costs only the rung in
+flight. The p=0 entropy arm runs longest because the finite-time correction converges slowly there
+— fitting it over T<=14 gives c=0.578, over T<=18 gives 0.561, over T<=24 gives 0.514.
 
-**Superseded (moved to `archive/superseded_2026-08-16/`).** The entropy arms at p = 1.0 and 1.5:
-their window closes around T ~ 2-3, so the arm returns almost nothing usable. The four `_dt0.1`
-Trotter twins: the norm drift after eight VD2 layers is already 1.56 and 6.96 at those couplings, so
-they would spend two days confirming that the standard step is inadequate there.
+Which rungs are usable is decided in analysis, by the phase-advance criterion in
+`analysis/session_scripts/eq3_fits.jl`, not by where a job happened to stop.
 
-**Driver: `towerscan` now takes a dT argument**, and every sweep mode checks it. Only multiples of
-the Trotter step are realisable, because the chain holds T/dt + nbeta sites: a rung asked for T=2.25
-at dt=0.1 gets 22 sites and actually runs at 2.2. Mixing two T grids scatters every phase-derived
-read. **dT = 0.5 is safe at dt = 0.1; dT = 0.25 needs dt = 0.05.** The driver now refuses the bad
-combinations rather than running them silently.
+`WALL_RETRIES` (default 2) recomputes a rung from a fresh seed when its leading eigenvalue jumps
+away from the previous one. Failures are seed-dependent, not a hard wall.
+
+Check the thread scaling before filling 40 cores. Locally BLAS saturated at 2 threads and got slower
+beyond it; if that holds here, concurrent jobs on fewer cores each will beat one job on 40.
 
 ## Where things land
 

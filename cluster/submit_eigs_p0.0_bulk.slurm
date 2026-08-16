@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=eigs_p0.0_fine
-#SBATCH --output=logs/eigs_p0.0_fine-%j.out
-#SBATCH --error=logs/eigs_p0.0_fine-%j.err
+#SBATCH --job-name=eigs_p0.0_bulk
+#SBATCH --output=logs/eigs_p0.0_bulk-%j.out
+#SBATCH --error=logs/eigs_p0.0_bulk-%j.err
 #SBATCH --account=bsc21
 #SBATCH --qos=gp_bsccase
 #SBATCH --time=2-00:00:00
@@ -13,7 +13,7 @@
 # The fine and unit ladders disagree by 20% on c at p=0.1 and only the fine one settles, so the
 # same analysis has to be run where the answer is known. Resubmit if it hits the walltime — it
 # resumes from the last completed rung.
-# Own cache: results/data/cluster/sweep_rtm_eigs_p0.0_fine.jld2.
+# Own cache: results/data/cluster/sweep_eigs_p0.0_bulk.jld2.
 
 cd "${SLURM_SUBMIT_DIR:-.}" || exit 1
 mkdir -p logs
@@ -23,4 +23,4 @@ export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 julia --project=.. wall_scan_cluster.jl preflight || { echo "PREFLIGHT FAILED - bad environment, not starting the ladder"; exit 1; }
 
-julia --project=.. wall_scan_cluster.jl eigsweep 0.0 18 0.5
+julia --project=.. wall_scan_cluster.jl eigsweep 0.0 24 0.5
