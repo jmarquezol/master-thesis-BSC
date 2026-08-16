@@ -385,13 +385,21 @@ function run_pm_diagnosed(target_T::Float64;
         p::Float64=0.1, lambda::Float64=1.0, dt::Float64=0.1,
         maxdim::Int=256, cutoff::Float64=1e-14, eps_converged::Float64=1e-6,
         nbeta::Int=0, MPO_alg::String="VD2", alg::String="RTM",
-        itermax::Int=5000, stuck_after::Int=200, column::Symbol=:legacy3)
+        itermax::Int=5000, stuck_after::Int=200, column::Symbol=:legacy3,
+        seed::Union{Nothing,MPS}=nothing)
 
     mpo, scaffold = build_alcaraz_tmpo(target_T; p=p, lambda=lambda, dt=dt,
                                         nbeta=nbeta, MPO_alg=MPO_alg, column=column)
-    seed_mps = deepcopy(scaffold)
-    for i in eachindex(seed_mps)    # random seed to avoid subdominant-sector trap
-        seed_mps[i] = randomITensor(ComplexF64, inds(seed_mps[i]))
+    # warm start from a converged vector of the previous rung when given: it keeps the iteration in
+    # the same basin instead of re-rolling the dice. Otherwise a random seed, since the structured
+    # scaffold converges to a subdominant sector.
+    if seed === nothing
+        seed_mps = deepcopy(scaffold)
+        for i in eachindex(seed_mps)
+            seed_mps[i] = randomITensor(ComplexF64, inds(seed_mps[i]))
+        end
+    else
+        seed_mps = pad_tmps(seed, siteinds(scaffold))
     end
     normalize!(seed_mps)                    
 
@@ -430,6 +438,45 @@ function run_pm_diagnosed(target_T::Float64;
     return (L=psi_L, R=psi_R, mpo=mpo, scaffold=scaffold, lambda0=lambda0,
             niters=niters, stuck=stuck, reason=reason, final_ds=final_ds,
             ds_hist=ds_hist, chi_hist=chi_hist)
+end
+
+# imaginary plateau of a Renyi-2 profile, cooling bonds trimmed
+function plateau_im(s2, nbeta::Int=4)
+    prof = s2[nbeta ÷ 2 + 1:end - nbeta ÷ 2]
+    return mean(imag.(prof)[max(1, end ÷ 2 - 1):end ÷ 2 + 2])
+end
+
+# two runs agree if both the plateau and the leading modulus match
+runs_agree(a, b; tol, mu_tol) =
+    abs(a.plateau - b.plateau) <= tol * abs(a.plateau) &&
+    abs(abs(a.lambda0) - abs(b.lambda0)) <= mu_tol * abs(a.lambda0)
+
+"""
+    run_pm_consensus(target_T; nseeds=4, tol=0.05, mu_tol=1e-3, kwargs...) → NamedTuple
+
+Repeat the power method with fresh random seeds until two runs agree. The fixed point is
+seed-dependent once the L/R pair is ill-conditioned: at p=0, T=17 one run gave a plateau of 0.72
+and five repeats gave 0.110-0.117. Runs are accepted for agreeing with each other, never for
+agreeing with a predicted value.
+"""
+function run_pm_consensus(target_T::Float64; nseeds::Int=4, tol=0.05, mu_tol=1e-3,
+                          nbeta::Int=4, kwargs...)
+    runs = []
+    for _ in 1:nseeds
+        r = run_pm_diagnosed(target_T; nbeta=nbeta, kwargs...)
+        s2 = collect(ITransverse.gen_renyi2(r.L, r.R))
+        push!(runs, (; plateau=plateau_im(s2, nbeta), lambda0=r.lambda0, s2=s2,
+                       rigidity=1 / (norm(r.L) * norm(r.R))))
+        for prev in runs[1:end - 1]
+            runs_agree(prev, runs[end]; tol=tol, mu_tol=mu_tol) || continue
+            return (; accepted=true, prev.plateau, prev.lambda0, prev.s2, prev.rigidity,
+                      spread=abs(prev.plateau - runs[end].plateau), nruns=length(runs))
+        end
+    end
+    spread = maximum(r.plateau for r in runs) - minimum(r.plateau for r in runs)
+    last = runs[end]
+    return (; accepted=false, last.plateau, last.lambda0, last.s2, last.rigidity,
+              spread, nruns=length(runs))
 end
 
 # generalized temporal entropies from a converged power method:

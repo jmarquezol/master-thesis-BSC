@@ -25,4 +25,4 @@ export WALL_DT=0.025
 
 julia --project=.. wall_scan_cluster.jl preflight || { echo "PREFLIGHT FAILED - bad environment, not starting the ladder"; exit 1; }
 
-julia --project=.. wall_scan_cluster.jl towerscan 1.5 8
+julia --project=.. wall_scan_cluster.jl towerscan 1.5 3.5 0.25
