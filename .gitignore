@@ -1,8 +1,11 @@
 /*.log
 results/logs/
 
-# Claude process/meta files: kept locally for session context, not tracked in the repo
+# Assistant process/meta files: kept locally for session context, not tracked in the repo
 CLAUDE.md
+GEMINI.md
+AGENTS.md
+.agents/
 PHASE6.md
 eigvec_robustness_report.md
 next_steps.md
@@ -27,3 +30,8 @@ V12_REVISIONS.md
 NBs/*.ipynb.bak
 THESIS_REWORK_STATE.md
 findingsfromothersession.md
+.claude/
+.vscode/
+literature/
+analysis/
+.DS_Store

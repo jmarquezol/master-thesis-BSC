@@ -24,4 +24,4 @@ export WALL_COLUMN=bulk5
 
 julia --project=.. wall_scan_cluster.jl preflight || { echo "PREFLIGHT FAILED - bad environment, not starting the ladder"; exit 1; }
 
-julia --project=.. wall_scan_cluster.jl towerscan 0.1 8
+julia --project=.. wall_scan_cluster.jl towerscan 0.1 8 0.5

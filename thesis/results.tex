@@ -2,38 +2,106 @@
 \section{Results}
 \label{sec:results}
 
-The four predictions of Section~\ref{sec:cft:temporal} are now confronted with the simulations. All of them are measured on the ANNNI-type chain of Eq.~\eqref{eq:annni_H} at $\lambda=1$, quenched from $\ket{X+}^{\otimes N}$, with the frustration $p$ tuned from the integrable Ising point $p=0$ up to $p=0.5$. A window, in what follows, is the interval of evolution times over which a quantity can be fitted. It opens once $T$ is long enough for the conformal asymptotics to hold, and closes when the numerics stop resolving the object being fitted. The predictions split into two families, and this section follows that split. The entropy route goes through the eigenvectors: the generalized R\'enyi-2 entropy of Eq.~\eqref{eq:s2gen} is compared with the conformal profile of Eq.~\eqref{eq:cft:chord}. The spectral route goes through the eigenvalues alone. It carries three of the predictions: emergent dual unitarity, the central charge from the phase curvature of $\lambda_0$ (Eq.~\eqref{eq:cft:eq3}), and the boundary exponent from the first gap (Eq.~\eqref{eq:cft:eq4}). In each route the integrable point is measured first, where every prediction has an exact target~\cite{carignano_tagliacozzo2025}, and frustration is switched on afterwards.
+We now compare the four predictions of Section~\ref{sec:cft:temporal} with simulations of the ANNNI-type chain in Eq.~\eqref{eq:annni_H}. We set $\lambda=1$, quench from $\ket{X+}^{\otimes N}$, and vary the frustration from the integrable Ising point, $p=0$, to $p=1.5$. We define the fitting window as the range of evolution times for which the conformal asymptotics apply and the relevant numerical quantity remains resolved.
 
-Unless stated otherwise, all runs use the \textit{VD2} time-evolution MPO of Section~\ref{sec:mporep} with $\delta t=0.1$, the regulator $\beta_0=0.2$ ($N_\beta=4$, Section~\ref{sec:cft:boundary}), and the initial state $\ket{X+}$. The temporal states come from the block power method of Section~\ref{sec:numerics}, with $k=4$ at maximum bond dimension $\chi=64$ and larger blocks where the spectrum demands them---the deep spectra behind the boundary-tower measurements use $k=8$. Every eigenvalue-based measurement uses the measured sound velocity $v(p)$ of Appendix~\ref{app:velocity}.
+The analysis separates naturally into an entropy route and a spectral route. The entropy route uses the transfer-matrix eigenvectors and compares the generalized R\'enyi-2 entropy of Eq.~\eqref{eq:s2gen} with the conformal profile in Eq.~\eqref{eq:cft:chord}. The spectral route uses only the eigenvalues and tests emergent dual unitarity, extracts the central charge from the phase curvature of $\lambda_0$ through Eq.~\eqref{eq:cft:eq3}, and determines the leading boundary exponent from the first spectral gap through Eq.~\eqref{eq:cft:eq4}. We first test each prediction at the integrable point, where exact results are available~\cite{carignano_tagliacozzo2025}, and then examine how it changes with frustration.
+
+The two routes respond differently to the loss of integrability. The entropy calculation requires both the left and right eigenvectors of the transfer matrix, and its reliable window becomes short for $p\neq0$. By contrast, the spectral calculation requires only eigenvalues. Since these are obtained from Rayleigh quotients, their errors are second order in the eigenvector error, and they remain sufficiently accurate to extract the central charge throughout the range studied.
+
+Unless stated otherwise, we use the \textit{VD2} time-evolution \ac{MPO} of Section~\ref{sec:mporep} with $\delta t=0.1$, the regulator $\beta_0=0.2$ ($N_\beta=4$; Section~\ref{sec:cft:boundary}), and the initial state $\ket{X+}$. For $p=1.0$ and $p=1.5$, we reduce the Trotter step by factors of two and four, respectively, and increase $N_\beta$ to keep $\beta_0=0.2$. This reduction is required because, at $\delta t=0.1$, the norm drift after eight \textit{VD2} layers reaches $1.56$ and $6.96$, respectively (Appendix~\ref{app:mpo:comparison}). We obtain the temporal states with the power method of Section~\ref{sec:numerics}, using a maximum bond dimension $\chi=64$. Eigenvalue-based observables are converted into universal quantities using the extrapolated sound velocity $v_\infty(p)$ from Section~\ref{sec:annni:velocity}. We remove non-universal prefactors through ratios or calibration at the integrable point, as described in Appendix~\ref{app:universal}. Appendix~\ref{app:errors} specifies the fit conventions and numerical controls.
 
 \subsection{The entropy route}
 \label{sec:results:validation}
 \label{sec:results:wall}
 
-At $p=0$ the generalized temporal entropy follows the conformal prediction over the full simulated window. Figure~\ref{fig:domes_p0} shows the R\'enyi-2 profiles: the real part collapses onto the chord curves of Eq.~\eqref{eq:cft:chord} with $c=\tfrac12$, and the imaginary part forms the predicted plateau. The plateau sits above $\pi c/16$ at every time we reach, and falls as $T$ grows, from $0.130$ at $T=4$ to $0.118$ at $T=15$. This is the finite-time correction that decays as $T^{-1/2}$~\cite{boucomas2026}. Fitting that form over $T=4$ to $15$ and extrapolating to infinite time gives $c=0.55$, an absolute estimate that needs no reference model.
+At $p=0$ the generalized temporal entropy follows the conformal prediction over the full simulated window. Figure~\ref{fig:domes_p0} shows the R\'enyi-2 profiles: the real part collapses onto the chord curves of Eq.~\eqref{eq:cft:chord} with $c=\tfrac12$, and the imaginary part forms the predicted plateau.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{imgs/res_domes_p0.png}
-    \caption{\textbf{The generalized temporal entropy at the integrable point.} One colour per evolution time. (a) Re $S_2$ against $t/T$. Each dashed curve is the prediction of Eq.~\eqref{eq:cft:chord} at $c=\tfrac12$ for that $T$, not a fit: its shape is fixed by the prediction, and only its height is matched to the data, since the additive constant $s_0$ is non-universal. What is being compared is therefore the shape. (b) Im $S_2$, flat across the interior of the strip as predicted. Each dashed line here is the measured plateau of its own $T$. The plateaus fall from $0.129$ at $T=6$ to $0.122$ at $T=14$, approaching the predicted $\pi c/16=0.098$ from above as the finite-time correction decays.}
+    \caption{\textbf{The generalized temporal entropy at the integrable point.} Each colour denotes one evolution time. (a) $\mathrm{Re}\,S_2$ as a function of $t/T$. The dashed curves show Eq.~\eqref{eq:cft:chord} with $c=\tfrac12$. Their shape is fixed by the conformal prediction, while their vertical offset is matched to the data because the additive constant $s_0$ is non-universal. (b) $\mathrm{Im}\,S_2$. The entropy is approximately constant in the interior of the strip, as predicted, and each dashed line marks the measured plateau at the corresponding $T$. The plateau decreases from $0.129$ at $T=6$ to $0.122$ at $T=14$, approaching the predicted value $\pi c/16=0.098$ from above.}
     \label{fig:domes_p0}
 \end{figure}
 
-With frustration switched on, the entropy measurements are being regenerated on the corrected transfer-matrix column of Section~\ref{sec:mporep:exp}, and the frustrated windows and central charges of this route are \textit{[OPEN]}.
+The plateau remains above $\pi c/16$ over the simulated range and decreases with $T$. Resolving its asymptotic value requires a sufficiently long time series because the finite-time correction decays slowly. Over $T=2$--$11$, the plateau is nearly constant at $0.12$, and constant, $T^{-1/2}$, and $1/T$ models cannot be distinguished. Each gives $c\approx0.69$, an error of nearly $40\%$. Extending the series to $T=24$ resolves the different corrections. The $T^{-1/2}$ form predicted in Ref.~\cite{boucomas2026} extrapolates to $0.0994$, close to the exact value $\pi/32=0.0982$, and is favoured over the constant model by a corrected Akaike information difference of $21$. Repeating the calculation at $\delta t=0.05$ changes the extrapolated value by less than its variation across fit windows. The entropy route therefore gives
+\begin{equation}
+    c = 0.51
+    \qquad (p=0),
+    \label{eq:res:c_entropy_p0}
+\end{equation}
+in agreement with the exact value $\tfrac12$. This is an absolute measurement, without calibration to a reference model. An independent implementation in Ref.~\cite{boucomas2026} gives $0.518$ after including the correction and $0.67$ without it, consistent with both our corrected result and the magnitude of the uncorrected bias.
+
+The chord slope of the real part is more sensitive to truncation. Doubling the bond dimension changes the plateau by approximately $2\%$, but shifts the chord-slope estimate by up to $0.12$ at the same evolution time. We therefore extract all entropy-based estimates of $c$ from the imaginary plateau.
+
+Frustration shortens the reliable time window. Table~\ref{tab:windows} lists the last evolution time for which the plateau continues to decrease smoothly. At later times it turns upwards, indicating that the corresponding calculation is no longer reliable. The window decreases from $T\approx20$ at $p=0$ to $T\approx4$ at $p=0.5$.
+
+At $p=0.1$, the available window remains long enough to distinguish the correction laws. A fit over $T=2$--$14$ favours the $T^{-1/2}$ form over a constant by a corrected Akaike information difference of $9.6$ and gives $c=0.52$. The points at $T=12$ and $T=14$ lie beyond the single-run window and were obtained by repeating the calculation with independent seeds until two runs agreed, as described below. We exclude $T=13$ because its plateau value, $0.184$, is inconsistent with the neighbouring values $0.116$ and $0.104$. Including this point reverses the model preference, showing that the extrapolation remains sensitive to individual late-time data.
+
+For $p\geq0.3$, the time window is too short to distinguish the candidate corrections, whose extrapolated central charges range from $0.37$ to $1.25$. We therefore do not report an entropy-based central charge beyond $p=0.1$ and instead use the spectral method of Section~\ref{sec:results:spectral}.
+
+\begin{table}[!htbp]
+    \centering
+    \begin{tabular}{lccc}
+    \hline
+    $p$ & last usable $T$ & phase rigidity there & rigidity at $T=14$ \\
+    \hline
+    $0$   & $\approx20$ & $2.6\times10^{-6}$ & $1.3\times10^{-4}$ \\
+    $0.1$ & $11$        & $2.0\times10^{-8}$ & $1.6\times10^{-10}$ \\
+    $0.3$ & $7$         & $3.0\times10^{-6}$ & --- \\
+    $0.5$ & $4$         & $2.2\times10^{-4}$ & --- \\
+    \hline
+    \end{tabular}
+    \caption{\textbf{Where the entropy route stops.} The window is set by the turning point of the imaginary plateau. The phase rigidity at that point spans four orders of magnitude across couplings, so there is no single value of the rigidity at which the route fails.}
+    \label{tab:windows}
+\end{table}
+
+The loss of reliability cannot be attributed to a fixed threshold in the phase rigidity. The rigidity of the dominant eigenvector pair decreases geometrically with $T$ and does so more rapidly with frustration: at $T=14$, it is $1.3\times10^{-4}$ for $p=0$ and $1.6\times10^{-10}$ for $p=0.1$. However, its value at the last usable time spans four orders of magnitude across the couplings in Table~\ref{tab:windows}. Moreover, the numerical failures are intermittent even though the rigidity decreases monotonically. For example, at $p=0$, the calculations at $T=17$ and $T=22$ are unreliable, whereas those at $T=18$--$21$ and $T=23$ remain usable. Low rigidity therefore correlates with reduced numerical stability but does not by itself determine whether a calculation fails.
+
+The dependence on the random complex seed of the power method provides an additional source of instability. At $p=0$ and $T=17$, one run gives a plateau of $0.72$, whereas two independent repetitions give $0.117$ and $0.113$, consistent with neighbouring times. The failure is therefore associated with the fixed point reached by a particular iteration rather than with the evolution time alone. A plausible interpretation is that low rigidity increases the probability of failure: as the left and right eigenvectors become nearly orthogonal and several directions become nearly degenerate, the iteration becomes more sensitive to its initial seed. We have not established this mechanism directly. The numerical evidence supports only the more limited conclusion that the failures are seed-dependent and can often be removed by repeating the calculation. The window in Table~\ref{tab:windows} consequently denotes the range in which a single run is reliable without repetition.
+
+Beyond this single-run window, we repeat each calculation with independent random seeds until two runs agree on both the plateau and $|\mu_0|$. We do not compare candidate results with the conformal prediction when selecting a value, since doing so would bias the measurement. Reproducibility alone is insufficient: at $p=0.1$ and $T=13$, two seeds agree on a plateau of $0.184$, although the neighbouring values are substantially lower. We therefore also require the plateau to vary smoothly with $T$. This criterion assumes only that the computed quantity is smooth in time and does not use its predicted asymptotic value.
 
 \subsection{The spectral route}
 \label{sec:results:spectral}
 
-The eigenvalue-only mode of Section~\ref{sec:blockpm} carries the spectral measurements to $T=20$ at $p=0$, the longest ladder we ran rather than a limit of the method. Figure~\ref{fig:spectral_p0}a traces $\lambda_0$ in the complex plane over that whole ladder: the modulus is constant at $1.487$ while the phase winds---the emergent dual unitarity of Section~\ref{sec:cft:temporal}. Figure~\ref{fig:spectral_p0}b shows the central charge from the same eigenvalue: the corrected fit of Eq.~\eqref{eq:cft:eq3} returns $c=0.48$. A longer window also improves the fit itself: with rungs out to $T=20$ the parameters of Eq.~\eqref{eq:cft:eq3} are individually resolved, and the constant term of Eq.~\eqref{eq:cft:eq3}, left free, converges to $B=-3.141$, matching the branch shift $-\pi$ expected from the definition $\lambda_0=\log(-\mu_0)$. The Casimir coefficient can also be checked against an independent calculation: for the critical Ising chain, where $c=\tfrac12$ and $v=2$ exactly, Eq.~\eqref{eq:cft:eq3} gives $|C|=\kappa/v=\pi c/(48)=\pi/96=0.0327$, the value obtained with a separate implementation of the method~\cite{boucomas2026}. We measure $|C|=0.0318$, within $3\%$.
+The eigenvalue-only method of Section~\ref{sec:blockpm} extends the spectral calculation to $T=20$ at $p=0$. Figure~\ref{fig:spectral_p0}a shows the trajectory of $\lambda_0$ in the complex plane. Its modulus remains constant at $1.487$ while its phase winds, as predicted by emergent dual unitarity in Section~\ref{sec:cft:temporal}. We observe the same behaviour at every coupling studied, with variations in the modulus of only a few parts in $10^4$ across each fitted window.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{imgs/res_spectral_p0.png}
-    \caption{\textbf{The spectral predictions at the integrable point, $T=2$--$20$.} (a) $\lambda_0$ in the complex plane: constant modulus, winding phase. (b) The fit of Eq.~\eqref{eq:cft:eq3} to $\mathrm{Im}\,\lambda_0$, plotted after subtracting the fitted extensive term $a_0T$ so that the small Casimir contribution is visible, giving $c=0.48$.}
+    \caption{\textbf{The spectral predictions at the integrable point, $T=2$--$20$.} (a) $\lambda_0$ in the complex plane: constant modulus, winding phase. (b) The fit of Eq.~\eqref{eq:cft:eq3} to $\mathrm{Im}\,\lambda_0$, plotted after subtracting the fitted extensive term $a_0T$ so that the small Casimir contribution is visible.}
     \label{fig:spectral_p0}
 \end{figure}
 
-The boundary exponent distinguishes the two boundary conditions of Section~\ref{sec:cft:temporal}. Fitting Eq.~\eqref{eq:cft:eq4} to the first spectral gap over $T=2$--$9$ gives $x_1=0.496$ for the free boundary ($\ket{X+}$) and $x_1=1.996$ for the fixed one ($\ket{Up}$), against the exact values $\tfrac12$ and $2$ (Figure~\ref{fig:x1_p0}).
+We extract the central charge from the phase curvature using Eq.~\eqref{eq:cft:eq3}. The phase must first be unwrapped because $\mathrm{Im}\,\lambda_0$ changes by $1.3$--$1.9$ radians per unit time, depending on $p$, and is otherwise represented modulo $2\pi$ in $(-\pi,\pi]$. The sampling density within the fitting window is also important. At $p=0.3$, integer-time data give $c=0.41$ with residuals of $1.2\times10^{-3}$, whereas including half-integer times over the same interval gives $c=0.51$ with residuals of $3.7\times10^{-4}$. The fit is therefore limited primarily by the number of resolved points within the available window rather than by the maximum evolution time alone.
+
+The fitted branch constant provides an independent consistency check. When left free, it converges to $B/\pi=-1.000$ at every coupling, as expected from the definition $\lambda_0=\log(-\mu_0)$. We fix this known constant in the reported fits. For windows long enough to determine it independently, fixed and unconstrained fits give consistent results.
+
+Table~\ref{tab:cp} summarises the results. The central charge remains consistent with the Ising value throughout the range of frustration studied, including $p=1.0$ and $p=1.5$. At these two couplings, the equilibrium chord fits of Section~\ref{sec:annni:equilibrium} give $0.5036$ and $0.5055$, respectively. The dynamical and equilibrium estimates therefore agree within approximately $1\%$.
+
+The required spectral resolution increases with $p$, which contributes to the shorter windows in Table~\ref{tab:cp}. A boundary dimension is obtained from a phase gap of order $\pi x/(vT)$. As $p$ increases from $0$ to $1.5$, the velocity rises from $2.00$ to $10.80$, compressing the same operator content into a phase interval that is approximately five times narrower. The central-charge estimate is also proportional to $v$, so a fixed error in the fitted curvature produces an uncertainty approximately five times larger at $p=1.5$ than at $p=0$.
+
+\begin{table}[!htbp]
+    \centering
+    \begin{tabular}{lccccc}
+    \hline
+    $p$ & $v_\infty$ & window & spectral $c$ & $x_1$ & entropy-route $c$ \\
+    \hline
+    $0$   & $2.000$  & $T\le20$  & $0.45$ & $0.496$ & $0.51$ \\
+    $0.1$ & $2.670$  & $T\le16$  & $0.47$ & $0.497$ & $0.52$ \\
+    $0.3$ & $3.967$  & $T\le9$   & $0.51$ & $0.495$ & --- \\
+    $0.5$ & $5.212$  & $T\le4.5$ & $0.53$ & $0.497$ & --- \\
+    $1.0$ & $8.127$  & $T\le2.3$ & $0.50$ & $0.54$ & --- \\
+    $1.5$ & $10.799$ & $T\le2.2$ & $0.49$ & $0.55$ & --- \\
+    \hline
+    \end{tabular}
+    \caption{\textbf{Universal data versus frustration.} The spectral central charge comes from Eq.~\eqref{eq:cft:eq3} on ladders sampled at $\Delta T\le0.5$ inside the window, with the branch constant pinned. The boundary exponent is the first phase gap converted through Eq.~\eqref{eq:cft:eq4}. Appendix~\ref{app:errors} gives the fit windows and the controls behind these numbers. The entropy route gives an absolute central charge at $p=0$ and $p=0.1$; beyond that its window is too short, for the reason given in Section~\ref{sec:results:wall}.}
+    \label{tab:cp}
+\end{table}
+
+The leading boundary exponent distinguishes the two boundary conditions introduced in Section~\ref{sec:cft:temporal}. At the integrable point, fitting Eq.~\eqref{eq:cft:eq4} to the first spectral gap over $T=2$--$9$ gives $x_1=0.496$ for the free boundary ($\ket{X+}$) and $x_1=1.996$ for the fixed boundary ($\ket{Up}$), in agreement with the exact values $\tfrac12$ and $2$ (Figure~\ref{fig:x1_p0}). The Ising boundary tower persists when frustration is introduced. At $p=0.3$, the first three dimensions change from $0.495$, $1.577$, and $2.181$ at $T=2$ to $0.494$, $1.555$, and $2.105$ at $T=3$. At $p=0.5$, they are $0.497$, $1.591$, and $2.214$. In both cases the leading dimension is consistent with $\tfrac12$, while the higher dimensions approach $\tfrac32$ and $2$ from above as $T$ increases.
+
+At $p=1.0$ and $p=1.5$, the same procedure gives $x_1=0.537$ and $0.548$, while the second dimensions are $1.392$ and $1.481$. These values remain compatible with the Ising tower, although the leading exponent exceeds $\tfrac12$ by $8$--$10\%$. Both estimates are obtained at $T=1.2$, the shortest evolution time used in this analysis, where finite-time corrections remain appreciable. At the fixed time $T=2$, the deviation of $x_1$ from $\tfrac12$ decreases from $2.3\%$ at $p=0.1$ to $0.5\%$ at $p=0.3$ and $0.3\%$ at $p=0.5$, consistent with the increase in velocity. For $T\lesssim2$, however, the results have not yet reached their asymptotic regime. With $k=6$, the third tower member is not resolved at $p=1.0$ or $p=1.5$.
 
 \begin{figure}[htbp]
     \centering
@@ -41,23 +109,3 @@ The boundary exponent distinguishes the two boundary conditions of Section~\ref{
     \caption{\textbf{The boundary exponent at the integrable point.} The first spectral gap converted into a dimension, $x_1=v\,T\,\mathrm{Im}(\lambda_1-\lambda_0)/\pi$, against $T$ for the free and fixed boundary states. Grey lines mark the exact values $\tfrac12$ and $2$. Both approach their target from below as $T$ grows; the fits of Eq.~\eqref{eq:cft:eq4} over the whole window give $0.496$ and $1.996$.}
     \label{fig:x1_p0}
 \end{figure}
-
-At $p\neq0$ the spectral ladders are being regenerated on the corrected column, and the central charges and boundary exponents at the frustrated couplings are \textit{[OPEN]}. The resolution they demand is fixed in advance by Eq.~\eqref{eq:cft:eq4}: every boundary dimension is read from a phase gap of order $\pi x/(v\,T)$, so raising $p$ from $0$ to $1.5$ raises the velocity from $2.00$ to $10.80$ and compresses the same operator content into a phase window five times narrower. Table~\ref{tab:cp} collects the universal data measured so far.
-
-\begin{table}[!htbp]
-    \centering
-    \begin{tabular}{lccc}
-    \hline
-    $p$ & R\'enyi-2 slope $c$ & eigenvalue-route $c$ & boundary exponent $x_1$ \\
-    \hline
-    $0$   & $\tfrac12$ (calibration) & $0.485$ & $0.496$ \\
-    $0.1$ & \textit{[OPEN]} & \textit{[OPEN]} & \textit{[OPEN]} \\
-    $0.3$ & \textit{[OPEN]} & \textit{[OPEN]} & \textit{[OPEN]} \\
-    $0.5$ & \textit{[OPEN]} & \textit{[OPEN]} & \textit{[OPEN]} \\
-    $1.0$ & \textit{[OPEN]} & \textit{[OPEN]} & \textit{[OPEN]} \\
-    $1.5$ & \textit{[OPEN]} & \textit{[OPEN]} & \textit{[OPEN]} \\
-    \hline
-    \end{tabular}
-    \caption{\textbf{Universal data versus frustration.} The integrable point is measured on ladders reaching $T=20$ and agrees with the exact Ising values. The frustrated rows are being regenerated on the corrected transfer-matrix column and remain open.}
-    \label{tab:cp}
-\end{table}

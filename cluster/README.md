@@ -23,36 +23,50 @@ If you already have the repository: `git checkout main && git pull`. Do not upda
 
 ## Submitting
 
-From inside `cluster/`, in this order:
+From inside `cluster/`. The spectral arms carry the central charge at p != 0 and matter most if the
+queue has to be cut short.
 
 ```
 cd cluster
 julia --project=.. wall_scan_cluster.jl preflight    # must print "preflight OK"
 
-sbatch submit_rtm_eigs_p0.0_fine.slurm    # p=0 control, highest priority
+for p in 0.0 0.1 0.3 0.5 1.0 1.5; do
+    sbatch submit_eigs_p${p}_bulk.slurm       # central charge from the eigenvalue phase
+done
 
-sbatch submit_ent_p0.1_bulk.slurm         # entropy arms
-sbatch submit_ent_p0.3_bulk.slurm
-sbatch submit_ent_p0.5_bulk.slurm
-sbatch submit_ent_p1.0_bulk.slurm
-sbatch submit_ent_p1.5_bulk.slurm
+for p in 0.0 0.1 0.3 0.5 1.0 1.5; do
+    sbatch submit_ent_p${p}_bulk.slurm        # temporal entropy
+done
 
-sbatch submit_tower_p0.1_bulk.slurm       # k=8 blocks for the boundary-tower figure
-sbatch submit_tower_p0.3_bulk.slurm
-sbatch submit_tower_p0.5_bulk.slurm
-sbatch submit_tower_p1.0_bulk.slurm
-sbatch submit_tower_p1.5_bulk.slurm
-
-sbatch submit_ent_p1.0_bulk_dt0.1.slurm   # Trotter controls: same arms at the standard dt=0.1
-sbatch submit_ent_p1.5_bulk_dt0.1.slurm
-sbatch submit_tower_p1.0_bulk_dt0.1.slurm
-sbatch submit_tower_p1.5_bulk_dt0.1.slurm
+for p in 0.0 0.1 0.3 0.5 1.0 1.5; do
+    sbatch submit_tower_p${p}_bulk.slurm      # boundary dimensions
+done
 ```
 
-The p = 1.0 and 1.5 arms use a finer Trotter step (set inside each script; the driver adjusts the
-cooling to keep beta0 = 0.2). Their `_dt0.1` twins run the standard step on purpose, to measure
-how much the step matters at these couplings. All eight are exploratory: nothing depends on them,
-so if the queue is tight they go last.
+## Notes
+
+Three routes per coupling: `eigsweep` for the central charge from the eigenvalue phase, `entsweep`
+for the temporal entropy, `towerscan` for the boundary dimensions.
+
+`dT` must be a multiple of the Trotter step, since the chain holds T/dt + nbeta sites. dT=0.5 works
+at dt=0.1, dT=0.25 needs dt=0.05. The driver refuses anything else.
+
+Half-integer rungs matter more than reach. At p=0.3 an integer ladder gave c=0.41 with residuals
+1.2e-3; the same range at dT=0.5 gave c=0.51 with residuals 3.7e-4.
+
+Targets are Tmax 20 for the eigenvalue arms, 18 for the entropy arms and 8 for the towers, with p=0
+at 24 on both routes. These are targets, not expectations: a walltime kill costs only the rung in
+flight. The p=0 entropy arm runs longest because the finite-time correction converges slowly there
+— fitting it over T<=14 gives c=0.578, over T<=18 gives 0.561, over T<=24 gives 0.514.
+
+Which rungs are usable is decided in analysis, by the phase-advance criterion in
+`analysis/session_scripts/eq3_fits.jl`, not by where a job happened to stop.
+
+`WALL_RETRIES` (default 2) recomputes a rung from a fresh seed when its leading eigenvalue jumps
+away from the previous one. Failures are seed-dependent, not a hard wall.
+
+Check the thread scaling before filling 40 cores. Locally BLAS saturated at 2 threads and got slower
+beyond it; if that holds here, concurrent jobs on fewer cores each will beat one job on 40.
 
 ## Where things land
 

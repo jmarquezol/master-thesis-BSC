@@ -20,7 +20,9 @@ ENV["GKSwstype"] = "100"   # headless GR backend (src/thesislib.jl unconditional
 include(joinpath(@__DIR__, "..", "src", "thesislib.jl"))
 
 using LinearAlgebra, Printf
-BLAS.set_num_threads(Sys.CPU_THREADS)   # BLAS-bound workload; SLURM also sets OPENBLAS_NUM_THREADS
+# BLAS-bound workload. WALL_BLAS_THREADS caps the threads so parallel local jobs do not
+# oversubscribe the cores; on SLURM it is unset and every core is used.
+BLAS.set_num_threads(parse(Int, get(ENV, "WALL_BLAS_THREADS", string(Sys.CPU_THREADS))))
 
 # Model / sweep constants — these match NB7's master sweep and the desktop χ-scan.
 const P_NNN  = 0.1
@@ -29,11 +31,22 @@ const LAMBDA = 1.0
 # WALL_DT lets a job halve the Trotter step (the couplings grow with p, and so does the step
 # error). NBETA follows so that beta0 = nbeta*dt/2 stays 0.2 in every job.
 const DT    = parse(Float64, get(ENV, "WALL_DT", "0.1"))
+
+# The chain holds T/DT + nbeta sites, so only multiples of DT are realisable: a rung asked for
+# T=2.25 at DT=0.1 gets 22 sites and runs at 2.2. The ladder then mixes two different T grids and
+# every phase-derived read comes out scattered. dT=0.5 is safe at DT=0.1, dT=0.25 at DT=0.05.
+check_dT(dT) = isapprox(dT / DT, round(dT / DT); atol=1e-9) ? dT :
+    error("dT=$dT is not a multiple of the Trotter step DT=$DT")
 const NBETA = round(Int, 0.4 / DT)
 
 # Column extraction: legacy3 is ITransverse's 3-site build (not the true bulk tensor at p != 0),
 # bulk5 the corrected 5-site one. Set WALL_COLUMN=bulk5 in the submit script to use it; labels and
 # caches then get a _bulk suffix so the two can never mix.
+# Retries for a rung whose leading modulus jumps away from the previous one. WALL_RETRIES=0 keeps
+# the old single-shot behaviour.
+const RETRIES = parse(Int, get(ENV, "WALL_RETRIES", "2"))
+const MU_JUMP = parse(Float64, get(ENV, "WALL_MU_JUMP", "0.005"))
+
 const COLUMN = Symbol(get(ENV, "WALL_COLUMN", "legacy3"))
 COLUMN in (:legacy3, :bulk5) || error("WALL_COLUMN must be legacy3 or bulk5")
 
@@ -62,7 +75,7 @@ function run_wall_scan(; chi::Int, label::String,
         cutoff=1e-12, cutoffs=[fill(1e-8, 40); 1e-10],
         trunc_mode=:rtm, basis=:eig,
         eigvals_only::Bool=false,
-        itermax=8000, stuck_after=150, eps_conv=1e-6,
+        itermax=8000, stuck_after=150, eps_conv=1e-6, itermin_floor=20,
         k=4, k_retry=6,
         ksector::Union{Nothing,Tuple{Vector{Float64},Int}}=nothing,
         cachefile=CLUSTER_CACHE,
@@ -137,29 +150,49 @@ function run_wall_scan(; chi::Int, label::String,
                 end
             end
 
-            if ksector === nothing
-                theta, L, R, info = block_transfer_eigs_adaptive(mpo, scaffold;
-                    k=k, k_retry=k_retry, anchor=previous_phys,
-                    maxdim=chi, maxdims=collect(2:2:chi),
-                    cutoff=cutoff, cutoffs=cutoffs,
-                    itermax=itermax, eps_conv=eps_conv, trunc_mode=trunc_mode, basis=basis,
-                    eigvals_only=eigvals_only,
-                    n_track=2, stuck_after=stuck_after,
-                    seedL=seedL, seedR=seedR)
-            else
-                # one K sector only: the escalation rule looks for the family the projection
-                # removes, so it must not fire here. Truncation leaks sectors, hence project
-                # every iteration, not just the seeds.
-                Rd, sector_sign = ksector
-                theta, L, R, info = block_transfer_eigs(mpo, scaffold;
-                    k=k, maxdim=chi, maxdims=collect(2:2:chi),
-                    cutoff=cutoff, cutoffs=cutoffs,
-                    itermax=itermax, eps_conv=eps_conv, trunc_mode=trunc_mode, basis=basis,
-                    eigvals_only=eigvals_only,
-                    n_track=2, stuck_after=stuck_after,
-                    seedL=seedL, seedR=seedR,
-                    project=psi -> project_ksector(psi, Rd, sector_sign))
-                info = merge(info, Dict(:k_used => k, :escalated => false))
+            # A rung can converge onto the wrong fixed point and return a finite but wrong theta,
+            # which no exception catches. |theta_0| moves smoothly along the ladder, so a jump means
+            # this rung and not the physics: redo it from an independent random seed. The check uses
+            # only the previous rung, never a predicted value.
+            local theta, L, R, info
+            for attempt in 1:(1 + RETRIES)
+                if ksector === nothing
+                    theta, L, R, info = block_transfer_eigs_adaptive(mpo, scaffold;
+                        k=k, k_retry=k_retry, anchor=previous_phys,
+                        maxdim=chi, maxdims=collect(2:2:chi),
+                        cutoff=cutoff, cutoffs=cutoffs,
+                        itermax=itermax, eps_conv=eps_conv, itermin=itermin_floor, trunc_mode=trunc_mode, basis=basis,
+                        eigvals_only=eigvals_only,
+                        n_track=2, stuck_after=stuck_after,
+                        seedL=seedL, seedR=seedR)
+                else
+                    # one K sector only: the escalation rule looks for the family the projection
+                    # removes, so it must not fire here. Truncation leaks sectors, hence project
+                    # every iteration, not just the seeds.
+                    Rd, sector_sign = ksector
+                    theta, L, R, info = block_transfer_eigs(mpo, scaffold;
+                        k=k, maxdim=chi, maxdims=collect(2:2:chi),
+                        cutoff=cutoff, cutoffs=cutoffs,
+                        itermax=itermax, eps_conv=eps_conv, itermin=itermin_floor, trunc_mode=trunc_mode, basis=basis,
+                        eigvals_only=eigvals_only,
+                        n_track=2, stuck_after=stuck_after,
+                        seedL=seedL, seedR=seedR,
+                        project=psi -> project_ksector(psi, Rd, sector_sign))
+                    info = merge(info, Dict(:k_used => k, :escalated => false))
+                end
+                jumped = previous_phys !== nothing &&
+                    abs(abs(theta[pick_phys_robust(theta, previous_phys)[1]]) - abs(previous_phys)) >
+                        MU_JUMP * abs(previous_phys)
+                jumped || break
+                if attempt > RETRIES
+                    @warn @sprintf("[%s] T=%.2f still jumping after %d attempts, keeping it flagged",
+                                   label, T, attempt)
+                    break
+                end
+                @warn @sprintf("[%s] T=%.2f attempt %d: |theta0| jumped from %.6f, retrying with a fresh seed",
+                               label, T, attempt, abs(previous_phys))
+                seedL = nothing          # an independent draw, not a warm start from the same basin
+                seedR = nothing
             end
             k_actual = length(theta)
 
@@ -275,7 +308,7 @@ elseif mode == "psweep"
     length(ARGS) >= 3 || error("psweep needs two extra args: julia wall_scan_cluster.jl psweep <p> <Tmax> [dT]")
     p_val = parse(Float64, ARGS[2])
     Tmax  = parse(Float64, ARGS[3])
-    dT    = length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0
+    dT    = check_dT(length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0)
     run_wall_scan(chi=64, label="rtm_p$(p_val)", Ts=collect(2.0:dT:Tmax), trunc_mode=:rtm, p_nnn=p_val,
         cachefile=joinpath(CLUSTER_DIR, "sweep_rtm_p$(p_val).jld2"))
 elseif mode == "entsweep"
@@ -285,20 +318,25 @@ elseif mode == "entsweep"
     length(ARGS) >= 3 || error("entsweep needs two extra args: julia wall_scan_cluster.jl entsweep <p> <Tmax> [dT]")
     p_val = parse(Float64, ARGS[2])
     Tmax  = parse(Float64, ARGS[3])
-    dT    = length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0
+    dT    = check_dT(length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0)
     run_wall_scan(chi=64, label="ent_p$(p_val)", Ts=collect(2.0:dT:Tmax), trunc_mode=:rtm, p_nnn=p_val,
         cachefile=joinpath(CLUSTER_DIR, "sweep_ent_p$(p_val).jld2"))
 elseif mode == "towerscan"
     # Deep k=8 block at small T: the tower figure needs more members than the k=4 arms carry.
-    # Usage: julia wall_scan_cluster.jl towerscan <p> <Tmax>
-    length(ARGS) >= 3 || error("towerscan needs two extra args: julia wall_scan_cluster.jl towerscan <p> <Tmax>")
+    # Usage: julia wall_scan_cluster.jl towerscan <p> <Tmax> [dT]
+    length(ARGS) >= 3 || error("towerscan needs two extra args: julia wall_scan_cluster.jl towerscan <p> <Tmax> [dT]")
     p_val = parse(Float64, ARGS[2])
     Tmax  = parse(Float64, ARGS[3])
+    # dT<1 puts more rungs inside the window, which is what the fits are short of.
+    dT    = check_dT(length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0)
     # chi=48 and a looser tolerance: the tower figure quotes two decimals, and the corrected
     # column's leading moduli agree to 4-5 digits between chi=40 and 48, so chi=64 at 1e-6 only
     # burns walltime on deep-member convergence the figure never uses.
-    run_wall_scan(chi=48, label="tower_p$(p_val)", Ts=collect(2.0:1.0:Tmax), k=8, k_retry=10,
-        trunc_mode=:rtm, p_nnn=p_val, eigvals_only=true, eps_conv=1e-5,
+    # itermin=80 keeps the looser 1e-5 tolerance from accepting a rung while the truncation
+    # schedule is still in its loose phase (first 40 iterations at 1e-8): a T=2 smoke converged
+    # at iteration 64 onto a value 7.6% above three corroborated runs.
+    run_wall_scan(chi=48, label="tower_p$(p_val)", Ts=collect(2.0:dT:Tmax), k=8, k_retry=10,
+        trunc_mode=:rtm, p_nnn=p_val, eigvals_only=true, eps_conv=1e-5, itermin_floor=80,
         cachefile=joinpath(CLUSTER_DIR, "sweep_tower_p$(p_val).jld2"))
 elseif mode == "eigsweep"
     # Eigenvalues only: same configuration as `psweep` but in Schur/eigvals-only mode, skipping the
@@ -312,7 +350,7 @@ elseif mode == "eigsweep"
     # dT < 1 fills half-integer rungs into the SAME cache. The branch tracker follows the physical
     # eigenvalue by predicting its phase, and the phase advance per rung grows with the velocity, so
     # at larger p a unit ladder advances by more than pi and the branch can no longer be identified.
-    dT    = length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0
+    dT    = check_dT(length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0)
     # A finer ladder gets its own label, so it never shares a cache or a checkpoint with the unit
     # ladder; the analysis merges the two. Sharing them races when both run, and the warm start
     # fails when they run in sequence, since the checkpoint sits at a longer chain than the rung.
