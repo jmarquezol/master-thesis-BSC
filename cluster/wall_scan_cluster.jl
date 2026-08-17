@@ -122,7 +122,10 @@ function run_wall_scan(; chi::Int, label::String,
         # cached ones on a resubmission. Recover the last checkpoint so the warm start survives.
         if previous_L === nothing && isfile(checkpointfile)
             ckpt = load(checkpointfile, "checkpoint")
-            if ckpt.label == label && haskey(done, (label, ckpt.T)) &&
+            # only seed forwards: pad_tmps cannot shrink a vector, so a checkpoint from a longer
+            # chain than the rung being computed would abort the ladder. This happens whenever a
+            # finer dT interleaves new rungs below the last completed one.
+            if ckpt.label == label && ckpt.T < T && haskey(done, (label, ckpt.T)) &&
                     !haskey(done[(label, ckpt.T)], :error)
                 previous_L = ckpt.L
                 previous_R = ckpt.R
