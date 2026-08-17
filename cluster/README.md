@@ -9,6 +9,14 @@ memory channel at p != 0). Their results go to separate `*_bulk.jld2` caches. Th
 scripts are in `archive/legacy_column/` — do not run them, and cancel any still in the queue.
 The p = 0 job is unaffected by the fix.
 
+These jobs continue the runs of 15-16 August rather than replacing them. The labels are unchanged,
+so each ladder skips the rungs already in its cache and computes the half-integer ones between them.
+Keep the checkpoints in `cluster/checkpoints/`; they are what makes the resume warm.
+
+p = 1.5 has been dropped. It produced a single rung at T=2 in every route, one of them costing 42 h,
+and its boundary dimension came out at 0.400 against 0.505 and 0.494 at p = 1.0. The scripts are in
+`archive/dropped_p1.5/` if it is ever worth revisiting.
+
 ## Setup
 
 ```
@@ -30,15 +38,15 @@ queue has to be cut short.
 cd cluster
 julia --project=.. wall_scan_cluster.jl preflight    # must print "preflight OK"
 
-for p in 0.0 0.1 0.3 0.5 1.0 1.5; do
+for p in 0.0 0.1 0.3 0.5 1.0; do
     sbatch submit_eigs_p${p}_bulk.slurm       # central charge from the eigenvalue phase
 done
 
-for p in 0.0 0.1 0.3 0.5 1.0 1.5; do
+for p in 0.0 0.1 0.3 0.5 1.0; do
     sbatch submit_ent_p${p}_bulk.slurm        # temporal entropy
 done
 
-for p in 0.0 0.1 0.3 0.5 1.0 1.5; do
+for p in 0.0 0.1 0.3 0.5 1.0; do
     sbatch submit_tower_p${p}_bulk.slurm      # boundary dimensions
 done
 ```
@@ -61,6 +69,9 @@ flight. The p=0 entropy arm runs longest because the finite-time correction conv
 
 Which rungs are usable is decided in analysis, by the phase-advance criterion in
 `analysis/session_scripts/eq3_fits.jl`, not by where a job happened to stop.
+
+A checkpoint is only used to seed a longer chain than its own. Interleaving finer rungs below the
+last completed one would otherwise abort the ladder, since a converged vector cannot be shrunk.
 
 `WALL_RETRIES` (default 2) recomputes a rung from a fresh seed when its leading eigenvalue jumps
 away from the previous one. Failures are seed-dependent, not a hard wall.
