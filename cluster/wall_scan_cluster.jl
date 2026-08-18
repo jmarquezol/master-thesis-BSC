@@ -1,49 +1,37 @@
-# Batch driver for the wall-scan sweeps. One process walks a ladder of evolution times T for a given
-# (mode, p), warm-starting each T from the last and checkpointing as it goes, so a walltime-killed
-# job resumes where it stopped when resubmitted.
+# Walks a ladder of evolution times T for one (mode, p), saving after every rung and resuming from
+# its checkpoint when resubmitted.
 #
-#   julia --project=. cluster/wall_scan_cluster.jl <mode> [p] [Tmax]
+#   julia --project=.. wall_scan_cluster.jl <mode> <p> <Tmax> [dT]
 #
-# modes:
-#   preflight                 build one small tMPO and exit — cheap check that the env still works
-#   rtm / rdm / cutoff        the original p=0.1 truncation comparison (no extra args)
-#   psweep    <p> <Tmax> [dT]  full run (with entropy), RTM, at coupling p; dT defaults to 1
-#   eigsweep  <p> <Tmax> [dT]  eigenvalues only (no entropy) — goes past the wall; dT defaults to 1
-#   betascan  <p> <Tmax>      full run, repeated over nbeta=2..16 — the β0 regulator scan
-#   betawall  <p> <nbeta> <Tmax>   full run at ONE β0 on a long ladder — does β0 move the wall?
+#   eigsweep    eigenvalues only
+#   entsweep    entropy, one dome per block member
+#   towerscan   k=8 block for the boundary dimensions
+#   preflight   build one tMPO and exit
 #
-# Branch selection and the k escalation live in src/transverse_tools.jl; both matter once the
-# spectrum gets near-degenerate at larger p.
+# Also implemented, not in current use: psweep, ksector, betascan, betawall, rtm, rdm, cutoff.
+# Env: WALL_COLUMN (legacy3|bulk5), WALL_DT, WALL_BLAS_THREADS, WALL_RETRIES, WALL_MU_JUMP.
 
 ENV["GKSwstype"] = "100"   # headless GR backend (src/thesislib.jl unconditionally `using Plots`)
 
 include(joinpath(@__DIR__, "..", "src", "thesislib.jl"))
 
 using LinearAlgebra, Printf
-# BLAS-bound workload. WALL_BLAS_THREADS caps the threads so parallel local jobs do not
-# oversubscribe the cores; on SLURM it is unset and every core is used.
+# cap the threads so parallel jobs do not oversubscribe the cores
 BLAS.set_num_threads(parse(Int, get(ENV, "WALL_BLAS_THREADS", string(Sys.CPU_THREADS))))
 
-# Model / sweep constants — these match NB7's master sweep and the desktop χ-scan.
+
 const P_NNN  = 0.1
 const LAMBDA = 1.0
 
-# WALL_DT lets a job halve the Trotter step (the couplings grow with p, and so does the step
-# error). NBETA follows so that beta0 = nbeta*dt/2 stays 0.2 in every job.
+# NBETA follows DT so that beta0 = nbeta*dt/2 stays 0.2
 const DT    = parse(Float64, get(ENV, "WALL_DT", "0.1"))
 
-# The chain holds T/DT + nbeta sites, so only multiples of DT are realisable: a rung asked for
-# T=2.25 at DT=0.1 gets 22 sites and runs at 2.2. The ladder then mixes two different T grids and
-# every phase-derived read comes out scattered. dT=0.5 is safe at DT=0.1, dT=0.25 at DT=0.05.
+# only multiples of DT are realisable: T=2.25 at DT=0.1 gets 22 sites and runs at 2.2
 check_dT(dT) = isapprox(dT / DT, round(dT / DT); atol=1e-9) ? dT :
     error("dT=$dT is not a multiple of the Trotter step DT=$DT")
 const NBETA = round(Int, 0.4 / DT)
 
-# Column extraction: legacy3 is ITransverse's 3-site build (not the true bulk tensor at p != 0),
-# bulk5 the corrected 5-site one. Set WALL_COLUMN=bulk5 in the submit script to use it; labels and
-# caches then get a _bulk suffix so the two can never mix.
-# Retries for a rung whose leading modulus jumps away from the previous one. WALL_RETRIES=0 keeps
-# the old single-shot behaviour.
+# retries for a rung whose leading modulus jumps away from the previous one; 0 disables
 const RETRIES = parse(Int, get(ENV, "WALL_RETRIES", "2"))
 const MU_JUMP = parse(Float64, get(ENV, "WALL_MU_JUMP", "0.005"))
 
@@ -53,21 +41,18 @@ COLUMN in (:legacy3, :bulk5) || error("WALL_COLUMN must be legacy3 or bulk5")
 const CLUSTER_DIR   = joinpath(@__DIR__, "..", "results", "data", "cluster")
 const CLUSTER_CACHE = joinpath(CLUSTER_DIR, "warm_sweep.jld2")
 
-# ── the first/last nbeta/2 bonds of a gen_renyi2 profile are imaginary-time cooling, not
-#    physical real-time cuts, so trim them before reading a dome.
+# the first/last nbeta/2 bonds are imaginary-time cooling, not real-time cuts
 function trim_dome(profile, nbeta)
     half = nbeta ÷ 2
     return collect(profile[(half + 1):(end - half)])
 end
 
-# ── phase rigidity of a bi-normalized pair (block_transfer_eigs rescales each pair so that
-#    ⟨L_j|R_j⟩ = 1, so the rigidity r_j = |⟨L|R⟩|/(‖L‖‖R‖) is just 1/(‖L‖‖R‖)).
+# pairs come back bi-normalized, so the rigidity reduces to 1/(‖L‖‖R‖)
 function phase_rigidity(Lj::MPS, Rj::MPS)
     return 1.0 / (norm(Lj) * norm(Rj))
 end
 
-# ── general χ/ε scan driver, warm-started and checkpointed. The selector and escalation helpers
-#    come from src/transverse_tools.jl.
+# ladder driver; selector and k escalation live in src/transverse_tools.jl
 function run_wall_scan(; chi::Int, label::String,
         Ts=collect(2.0:1.0:14.0),
         p_nnn::Float64=P_NNN,
@@ -86,16 +71,14 @@ function run_wall_scan(; chi::Int, label::String,
         cachefile = replace(cachefile, r"\.jld2$" => "_bulk.jld2")
     end
     if DT != 0.1
-        # a non-default step gets its own label, cache and checkpoint: chains of different length
-        # must never share a warm start
+        # chains of different length must never share a warm start
         label = label * "_dt$(DT)"
         cachefile = replace(cachefile, r"\.jld2$" => "_dt$(DT).jld2")
     end
     checkpointfile === nothing &&
         (checkpointfile = joinpath(@__DIR__, "checkpoints", "checkpoint_$(label).jld2"))
 
-    # Spectrum-only mode: de-mix on the Schur basis and skip the eigenvector work. θ is a Rayleigh
-    # quotient so it survives the wall even where the vectors do not.
+    # Schur basis, no eigenvector work: θ survives where the vectors do not
     if eigvals_only
         basis = :schur
     end
@@ -118,13 +101,10 @@ function run_wall_scan(; chi::Int, label::String,
             continue
         end
 
-        # No warm blocks in memory: either a fresh process, or the first T after skipping the
-        # cached ones on a resubmission. Recover the last checkpoint so the warm start survives.
+        # nothing warm in memory: recover the checkpoint so a resubmission stays warm
         if previous_L === nothing && isfile(checkpointfile)
             ckpt = load(checkpointfile, "checkpoint")
-            # only seed forwards: pad_tmps cannot shrink a vector, so a checkpoint from a longer
-            # chain than the rung being computed would abort the ladder. This happens whenever a
-            # finer dT interleaves new rungs below the last completed one.
+            # seed forwards only: pad_tmps cannot shrink a vector
             if ckpt.label == label && ckpt.T < T && haskey(done, (label, ckpt.T)) &&
                     !haskey(done[(label, ckpt.T)], :error)
                 previous_L = ckpt.L
@@ -153,10 +133,8 @@ function run_wall_scan(; chi::Int, label::String,
                 end
             end
 
-            # A rung can converge onto the wrong fixed point and return a finite but wrong theta,
-            # which no exception catches. |theta_0| moves smoothly along the ladder, so a jump means
-            # this rung and not the physics: redo it from an independent random seed. The check uses
-            # only the previous rung, never a predicted value.
+            # a wrong fixed point returns a finite theta that no exception catches; a jump in
+            # |theta_0| from the previous rung means this rung, so redo it from a fresh seed
             local theta, L, R, info
             for attempt in 1:(1 + RETRIES)
                 if ksector === nothing
@@ -169,9 +147,7 @@ function run_wall_scan(; chi::Int, label::String,
                         n_track=2, stuck_after=stuck_after,
                         seedL=seedL, seedR=seedR)
                 else
-                    # one K sector only: the escalation rule looks for the family the projection
-                    # removes, so it must not fire here. Truncation leaks sectors, hence project
-                    # every iteration, not just the seeds.
+                    # truncation leaks sectors, so project every iteration, not just the seeds
                     Rd, sector_sign = ksector
                     theta, L, R, info = block_transfer_eigs(mpo, scaffold;
                         k=k, maxdim=chi, maxdims=collect(2:2:chi),
@@ -203,13 +179,13 @@ function run_wall_scan(; chi::Int, label::String,
             dphi, cls = classify_tower(theta; i0=i0)
             gap = tower_gap(theta; i0=i0)
 
-            # Entropy and rigidity both need the bi-normalized pairs, which :schur does not return.
+            # entropy and rigidity need the bi-normalized pairs, which :schur does not return
             if eigvals_only
                 s2_base = ComplexF64[]
                 s2_all = Vector{ComplexF64}[]
                 rigidity = Float64[]
             else
-                # one dome per member: i0 is only reliable across the whole ladder, not rung by rung
+                # one dome per member: i0 is reliable across the ladder, not rung by rung
                 s2_all = Vector{ComplexF64}[]
                 rigidity = Float64[]
                 for j in 1:k_actual
@@ -235,7 +211,7 @@ function run_wall_scan(; chi::Int, label::String,
             previous_L = L
             previous_R = R
 
-            # Only the most recent rung is needed to resume, so one file per label is enough.
+            # only the most recent rung is needed to resume
             jldsave(checkpointfile; checkpoint=(label=label, T=T, L=L, R=R))
 
             rigidity_strings = String[]
@@ -259,7 +235,7 @@ function run_wall_scan(; chi::Int, label::String,
         jldsave(cachefile; done=done)
         GC.gc()
 
-        # A broken environment fails on every rung; stop rather than error the whole ladder.
+        # a broken environment fails on every rung; stop rather than grind
         if consecutive_failures >= 2
             @error "[$label] aborting at T=$T after two consecutive failures — check the environment"
             break
@@ -272,10 +248,7 @@ function run_wall_scan(; chi::Int, label::String,
             n_ok += 1
         end
     end
-    # Keep the checkpoint even when the ladder finishes, so resubmitting with a larger Tmax later
-    # resumes warm instead of cold-starting the first new T (a cold restart is what broke the dome
-    # at T≈6 in the first array sweep). One file per label, overwritten each rung. A stale one is
-    # harmless: the resume above also checks the label and that the rung is in this cache.
+    # keep the checkpoint after the ladder finishes so a larger Tmax resumes warm rather than cold
     if n_ok == length(Ts) && isfile(checkpointfile)
         ckpt_T = load(checkpointfile, "checkpoint").T
         @info "[$label] ladder complete — checkpoint kept at T=$(ckpt_T) for a later extension"
@@ -284,7 +257,7 @@ function run_wall_scan(; chi::Int, label::String,
     return done
 end
 
-# ── entry point: dispatch on the command-line mode ──────────────────────────────────────────────
+# entry point
 mode = length(ARGS) >= 1 ? ARGS[1] : error("usage: julia wall_scan_cluster.jl <preflight|rtm|rdm|cutoff|psweep|eigsweep|betascan|betawall> [p] [nbeta] [Tmax]")
 
 const FULL_LADDER    = collect(2.0:1.0:14.0)
@@ -293,7 +266,7 @@ const RDM_LADDER     = collect(2.0:1.0:12.0)   # cold T=9 alone took 20.6h; two 
                                                 # wall suffice — extend Ts + resubmit if ever needed.
 
 if mode == "preflight"
-    # Cheap environment check: same tMPO call the ladder makes on every rung.
+    # same tMPO call the ladder makes on every rung
     mpo, scaffold = build_alcaraz_tmpo(2.0; p=0.1, lambda=LAMBDA, dt=DT, nbeta=NBETA, MPO_alg="VD2", column=COLUMN)
     println("preflight OK — column=$(COLUMN), tMPO built, $(length(scaffold)) sites, " *
             "temporal site dim $(dim(siteind(mpo, 2))), maxlinkdim $(maxlinkdim(mpo))")
@@ -305,9 +278,7 @@ elseif mode == "rdm"
 elseif mode == "cutoff"
     run_wall_scan(chi=64, label="cut_tight", cutoffs=[fill(1e-10, 40); 1e-12], Ts=FULL_LADDER, p_nnn=P_NNN)
 elseif mode == "psweep"
-    # A p-sweep job, always through the RTM route (NB9's cost comparison: RDM buys nothing
-    # physical for ~4-11x the cost, so it is not worth extending to the p-sweep at all).
-    # Usage: julia wall_scan_cluster.jl psweep <p> <Tmax>
+    # usage: psweep <p> <Tmax> [dT]
     length(ARGS) >= 3 || error("psweep needs two extra args: julia wall_scan_cluster.jl psweep <p> <Tmax> [dT]")
     p_val = parse(Float64, ARGS[2])
     Tmax  = parse(Float64, ARGS[3])
@@ -315,9 +286,7 @@ elseif mode == "psweep"
     run_wall_scan(chi=64, label="rtm_p$(p_val)", Ts=collect(2.0:dT:Tmax), trunc_mode=:rtm, p_nnn=p_val,
         cachefile=joinpath(CLUSTER_DIR, "sweep_rtm_p$(p_val).jld2"))
 elseif mode == "entsweep"
-    # Entropy arm from T=2, one dome per block member. Own cache: the old psweep runs stored only
-    # the selected dome, so their branch choice cannot be revisited.
-    # Usage: julia wall_scan_cluster.jl entsweep <p> <Tmax> [dT]
+    # usage: entsweep <p> <Tmax> [dT] — stores every dome, so the branch choice stays revisable
     length(ARGS) >= 3 || error("entsweep needs two extra args: julia wall_scan_cluster.jl entsweep <p> <Tmax> [dT]")
     p_val = parse(Float64, ARGS[2])
     Tmax  = parse(Float64, ARGS[3])
@@ -325,46 +294,32 @@ elseif mode == "entsweep"
     run_wall_scan(chi=64, label="ent_p$(p_val)", Ts=collect(2.0:dT:Tmax), trunc_mode=:rtm, p_nnn=p_val,
         cachefile=joinpath(CLUSTER_DIR, "sweep_ent_p$(p_val).jld2"))
 elseif mode == "towerscan"
-    # Deep k=8 block at small T: the tower figure needs more members than the k=4 arms carry.
-    # Usage: julia wall_scan_cluster.jl towerscan <p> <Tmax> [dT]
+    # usage: towerscan <p> <Tmax> [dT] — k=8, for the boundary dimensions
     length(ARGS) >= 3 || error("towerscan needs two extra args: julia wall_scan_cluster.jl towerscan <p> <Tmax> [dT]")
     p_val = parse(Float64, ARGS[2])
     Tmax  = parse(Float64, ARGS[3])
-    # dT<1 puts more rungs inside the window, which is what the fits are short of.
+
     dT    = check_dT(length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0)
-    # chi=48 and a looser tolerance: the tower figure quotes two decimals, and the corrected
-    # column's leading moduli agree to 4-5 digits between chi=40 and 48, so chi=64 at 1e-6 only
-    # burns walltime on deep-member convergence the figure never uses.
-    # itermin=80 keeps the looser 1e-5 tolerance from accepting a rung while the truncation
-    # schedule is still in its loose phase (first 40 iterations at 1e-8): a T=2 smoke converged
-    # at iteration 64 onto a value 7.6% above three corroborated runs.
+    # chi=48 suffices here; itermin=80 stops the loose tolerance accepting a rung while the
+    # truncation schedule is still ramping
     run_wall_scan(chi=48, label="tower_p$(p_val)", Ts=collect(2.0:dT:Tmax), k=8, k_retry=10,
         trunc_mode=:rtm, p_nnn=p_val, eigvals_only=true, eps_conv=1e-5, itermin_floor=80,
         cachefile=joinpath(CLUSTER_DIR, "sweep_tower_p$(p_val).jld2"))
 elseif mode == "eigsweep"
-    # Eigenvalues only: same configuration as `psweep` but in Schur/eigvals-only mode, skipping the
-    # eigenvector work (entropy, rigidity). The spectrum is Rayleigh-quotient-like and survives the
-    # wall, so this arm reaches larger T than the full runs — it is the right tool for dual
-    # unitarity, the Eq.(3) central charge, Eq.(4), and the tower gaps. Own cache per p.
-    # Usage: julia wall_scan_cluster.jl eigsweep <p> <Tmax>
+    # usage: eigsweep <p> <Tmax> [dT] — no eigenvector work, so it reaches larger T
     length(ARGS) >= 3 || error("eigsweep needs two extra args: julia wall_scan_cluster.jl eigsweep <p> <Tmax> [dT]")
     p_val = parse(Float64, ARGS[2])
     Tmax  = parse(Float64, ARGS[3])
-    # dT < 1 fills half-integer rungs into the SAME cache. The branch tracker follows the physical
-    # eigenvalue by predicting its phase, and the phase advance per rung grows with the velocity, so
-    # at larger p a unit ladder advances by more than pi and the branch can no longer be identified.
+    # a unit ladder advances the phase by more than pi at large p, where the branch can no longer
+    # be identified; a finer dT keeps the advance resolvable
     dT    = check_dT(length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0)
-    # A finer ladder gets its own label, so it never shares a cache or a checkpoint with the unit
-    # ladder; the analysis merges the two. Sharing them races when both run, and the warm start
-    # fails when they run in sequence, since the checkpoint sits at a longer chain than the rung.
+    # its own label, so it never shares a cache or checkpoint with the unit ladder
     lbl = dT == 1.0 ? "rtm_eigs_p$(p_val)" : "rtm_eigs_p$(p_val)_fine"
     run_wall_scan(chi=64, label=lbl, Ts=collect(2.0:dT:Tmax),
         trunc_mode=:rtm, p_nnn=p_val, eigvals_only=true,
         cachefile=joinpath(CLUSTER_DIR, "sweep_$(lbl).jld2"))
 elseif mode == "ksector"
-    # ksector <p> <plus|minus> <Tmax> [dT] — eigenvalue ladder confined to one K sector.
-    # Replaces the mixed eigsweep arms at p >= 0.3: inside a sector the displaced family does not
-    # exist, so the branch is the sector label and no pi-jump can occur.
+    # usage: ksector <p> <plus|minus> <Tmax> [dT] — one K sector, so the branch is the sector label
     length(ARGS) >= 4 || error("ksector needs <p> <plus|minus> <Tmax> [dT]")
     p_val = parse(Float64, ARGS[2])
     sector_sign = ARGS[3] in ("plus", "+1", "+") ? 1 :
@@ -378,10 +333,8 @@ elseif mode == "ksector"
         cachefile=joinpath(CLUSTER_DIR, "sweep_$(lbl).jld2"))
 
 elseif mode == "betascan"
-    # Regulator scan: same full RTM run, repeated for a few values of the imaginary-time cooling
-    # nbeta (β0 = nbeta·dt/2 = 0.1, 0.2, 0.3, 0.4 at dt=0.1). Lets us see how the CFT read depends on
-    # β0 — too small dirties the boundary, too large inflates the finite-time correction (ε2=2β0/T).
-    # Modest T, so it finishes. Usage: julia wall_scan_cluster.jl betascan <p> <Tmax>
+    # usage: betascan <p> <Tmax> — the same run repeated over nbeta, to see how the read depends
+    # on the regulator: too small dirties the boundary, too large inflates the finite-time term
     length(ARGS) >= 3 || error("betascan needs two extra args: julia wall_scan_cluster.jl betascan <p> <Tmax>")
     p_val = parse(Float64, ARGS[2])
     Tmax  = parse(Float64, ARGS[3])
@@ -391,16 +344,8 @@ elseif mode == "betascan"
             trunc_mode=:rtm, p_nnn=p_val, nbeta=nb, cachefile=betacache)
     end
 elseif mode == "betawall"
-    # Does the regulator move the wall? The β0 scan showed the modulus gaps grow linearly with β0
-    # (Eq. 14 of the 2026 paper, confirmed at R²≈0.99), and it is those gaps closing that ends the
-    # eigenvector route — so a larger β0 might buy reach. One β0 per job, long ladder (the opposite
-    # shape to betascan). Expect a modest shift at best: the enhancement carries a 1/T².
-    #
-    # Full eigenvector run on purpose — the wall is the entropy dome inflating, so eigvals_only
-    # would answer a different question. Own cache, and the ladder starts at T=2 rather than
-    # resuming betascan at T=7, because that ladder is finished and its first new rung would start
-    # cold — which is what corrupted the dome in the first array sweep.
-    # Usage: julia wall_scan_cluster.jl betawall <p> <nbeta> <Tmax>
+    # usage: betawall <p> <nbeta> <Tmax> — one regulator value on a long ladder. Full eigenvector
+    # run on purpose: eigvals_only would answer a different question.
     length(ARGS) >= 4 || error("betawall needs three extra args: julia wall_scan_cluster.jl betawall <p> <nbeta> <Tmax>")
     p_val = parse(Float64, ARGS[2])
     nb    = parse(Int, ARGS[3])

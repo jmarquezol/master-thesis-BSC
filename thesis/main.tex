@@ -22,7 +22,7 @@
 \usepackage{placeins} % Provide \FloatBarrier at section boundaries
 \usepackage[babel]{microtype}  %Improves text justification
 
-\usepackage{amsmath,amssymb,amsthm,bm,amsfonts,mathrsfs,bbm} %Useful math packages
+\usepackage{amsmath,amssymb,amsthm,bm,amsfonts,mathrsfs} %Useful math packages
 \newtheorem{theorem}{Theorem}
 
 %extras
@@ -34,9 +34,38 @@
 \usetikzlibrary{automata,arrows.meta,positioning,patterns}
 \usepackage{standalone}
 
+% placeholder for a number awaiting the production cluster run
+\newcommand{\OPEN}{\ensuremath{\mathrm{[OPEN]}}}
+
 \begin{document}
 
 \pagenumbering{Roman}   % front matter: Roman pages; switches to arabic at the Introduction
+
+% Cover page, mimicking the master's-programme template. Unnumbered, absent from the table of
+% contents, and the page counter is reset after it so it does not count towards the total.
+\begin{titlepage}
+  \thispagestyle{empty}
+  \centering
+
+  \vspace*{\fill}
+
+  \includegraphics[width=0.50\textwidth]{imgs/logo_left.png}\\[2.2cm]
+
+  {\huge\scshape Master in Quantum Science and Technology}\\[0.35cm]
+  {\LARGE Master's thesis}\\[2.0cm]
+
+  {\Huge\bfseries Universal properties from\\[0.25cm] quantum many-body dynamics\par}
+  \vspace{2.0cm}
+
+  {\LARGE Joaqu\'in G. M\'arquez Olgu\'in}\\[0.9cm]
+  {\Large\textit{Supervisor: Stefano Carignano}}
+
+  \vspace*{\fill}
+
+  \includegraphics[width=0.70\textwidth]{imgs/logo_right.png}
+
+\end{titlepage}
+\setcounter{page}{1}
 
 \title[Universal properties from quantum many-body dynamics]{Universal properties from quantum many-body dynamics}
 
@@ -49,7 +78,7 @@
 
 
 \begin{abstract}
-The Loschmidt echo---the amplitude for a quantum state to return to itself---provides a dynamical route to obtain universal properties of a critical many-body system. Analytically continuing from real to imaginary time, the echo becomes the partition function of a conformal field theory on a strip. The central charge and operator content of the corresponding conformal-field theory are then encoded in the spectrum of a transfer matrix, obtained by contracting the space--time tensor network along the space direction. The cost of this transverse contraction is governed by the temporal entanglement, which grows only logarithmically at criticality, allowing the method to reach times where conventional evolution algorithms are limited by the entanglement barrier. These results were established for integrable chains, and this thesis extends them to the non-integrable regime. We study a transverse-field Ising model extended by next-nearest-neighbour interactions, which remains critical and in the Ising universality class at weak frustration. We encode its evolution as a matrix product operator, and we resolve the leading spectrum of the resulting non-Hermitian transfer matrix with a block power method that evolves its left and right eigenvectors together. Where the method allows, we recover the conformal signatures: the central charge remains consistent with the Ising value $c=\tfrac12$, and the boundary operator content of the Ising class is reproduced. Throughout, we separate the universal quantities from the non-universal lattice constants that accompany them, and we map where and why the method reaches its limits. \textit{This is a working draft.}
+  The Loschmidt echo---the amplitude for a quantum state to return to itself---provides a dynamical route to obtain universal properties of a critical many-body system. Analytically continuing from real to imaginary time, the echo becomes the partition function of a conformal field theory on a strip. The central charge and operator content of the corresponding conformal-field theory are then encoded in the spectrum of a transfer matrix, obtained by contracting the space--time tensor network along the space direction. The cost of this transverse contraction is governed by the temporal entanglement, which grows only logarithmically at criticality, allowing the method to reach times where conventional evolution algorithms are limited by the entanglement barrier. These results were established for integrable chains, and this thesis extends them to the non-integrable regime. We study a transverse-field Ising model extended by next-nearest-neighbour interactions, which remains critical and in the Ising universality class at weak frustration. We encode its evolution as a matrix product operator, and we resolve the leading spectrum of the resulting non-Hermitian transfer matrix with a block power method that evolves its left and right eigenvectors together. Where the method allows, we recover the conformal signatures: the central charge remains consistent with the Ising value $c=\tfrac12$, and the boundary operator content of the Ising class is reproduced. Throughout, we separate the universal quantities from the non-universal lattice constants that accompany them, and we map where and why the method reaches its limits. \textit{This is a working draft.}
 \end{abstract}
 
 %
@@ -63,6 +92,11 @@ The Loschmidt echo---the amplitude for a quantum state to return to itself---pro
 \section*{Acknowledgements}
 I thank my dad, my brother, but specially to my mom, my gf Helena, my flatmates...
 
+\vspace{2\baselineskip}
+
+\section*{Note on the use of AI}
+AI assistants were used during the preparation of this thesis. Anthropic's Claude models assisted with brainstorming, preliminary drafts, debugging numerical code, and automating repetitive tasks, including the production of figures and diagrams. OpenAI's ChatGPT and Google's Gemini assisted with the organisation and clarity of the text and with identifying typographical errors. All AI-assisted material was reviewed, verified, and revised by the author, who takes full responsibility for the content of the thesis.
+
 \clearpage
 
 \tableofcontents
@@ -72,25 +106,25 @@ I thank my dad, my brother, but specially to my mom, my gf Helena, my flatmates.
 \FloatBarrier
 \section*{Acronyms}
 \begin{acronym}[TDVP]
-    \acro{CFT}{Conformal Field Theory}
-    \acro{DMRG}{Density Matrix Renormalization Group}
-    \acro{ETH}{Eigenstate Thermalization Hypothesis}
-    \acro{FSM}{finite-state machine}
-    \acro{GGE}{Generalized Gibbs Ensemble}
-    \acro{JW}{Jordan--Wigner}
-    \acro{MPO}{Matrix Product Operator}
-    \acro{MPS}{Matrix Product State}
-    \acro{NN}{nearest-neighbour}
-    \acro{NNN}{next-nearest-neighbour}
-    \acro{PEPS}{Projected Entangled-Pair State}
-    \acro{RDM}{Reduced Density Matrix}
-    \acro{RTM}{Reduced Transition Matrix}
-    \acro{SVD}{Singular Value Decomposition}
-    \acro{TDVP}{Time-Dependent Variational Principle}
-    \acro{TEBD}{Time-Evolving Block Decimation}
-    \acro{TN}{Tensor Network}
-    \acro{tMPO}{temporal Matrix Product Operator}
-    \acro{tMPS}{temporal Matrix Product State}
+  \acro{CFT}{Conformal Field Theory}
+  \acro{DMRG}{Density Matrix Renormalization Group}
+  \acro{ETH}{Eigenstate Thermalization Hypothesis}
+  \acro{FSM}{finite-state machine}
+  \acro{GGE}{Generalized Gibbs Ensemble}
+  \acro{JW}{Jordan--Wigner}
+  \acro{MPO}{Matrix Product Operator}
+  \acro{MPS}{Matrix Product State}
+  \acro{NN}{nearest-neighbour}
+  \acro{NNN}{next-nearest-neighbour}
+  \acro{PEPS}{Projected Entangled-Pair State}
+  \acro{RDM}{Reduced Density Matrix}
+  \acro{RTM}{Reduced Transition Matrix}
+  \acro{SVD}{Singular Value Decomposition}
+  \acro{TDVP}{Time-Dependent Variational Principle}
+  \acro{TEBD}{Time-Evolving Block Decimation}
+  \acro{TN}{Tensor Network}
+  \acro{tMPO}{temporal Matrix Product Operator}
+  \acro{tMPS}{temporal Matrix Product State}
 \end{acronym}
 
 \clearpage
@@ -145,25 +179,20 @@ The rest of this thesis is organized as follows. Section~\ref{sec:cft} defines t
 \section{Conclusions and Outlook}
 \label{sec:conclusions}
 
-\textit{Conclusions yet to be written.}
 
-% ── Salvaged draft points (from the old conclusions draft, kept only where they match the
-% corrected-column story; numbers wait for the cluster results) ──────────────────────────
-% • Core claim: the conformal structure that makes transverse contraction efficient at a critical
-%   point survives the loss of integrability — what the predictions require is criticality, not
-%   integrability. (Frustrated-coupling numbers: [OPEN].)
-% • At the integrable point the eigenvalues carry the central charge and boundary exponents to
-%   T = 20; the branch constant of the phase fit settles at its exact value −π over that window.
-% • Frustration compresses the spectrum: every boundary dimension is read from a phase gap
-%   ∝ 1/(vT), and v grows from 2.00 to 10.80 across the range studied, so the same operator
-%   content must be resolved inside an ever narrower phase window.
-% • Methodological contributions: (i) a translation-invariant second-order propagator for a NNN
-%   Hamiltonian (FSM representation + Van Damme exponentiation), together with the corrected
-%   extraction of the true bulk column of the transfer matrix; (ii) a left–right block power
-%   method with exact biorthogonal pairing and a Schur-stable subspace basis.
-% • Outlook, algorithmic: the de-mixing step dominates the cost of every iteration; progress there
-%   extends the reach at fixed frustration. Outlook, physical: the c(p) and x1(p) tables across
-%   the critical window, now within reach of the corrected pipeline.
+The question that motivated this thesis was whether the conformal signatures accessible through transverse contraction persist when integrability is broken. For the self-dual ANNNI-type chain and the dynamical couplings studied here, the results remain consistent with the Ising universality class. The leading transfer-matrix eigenvalue has an approximately time-independent modulus and a winding phase, as predicted by emergent dual unitarity. Its phase curvature gives a central charge compatible with $c=\tfrac12$ within the resolution of the fits, while the leading phase gaps reproduce the Ising boundary dimensions (Table~\ref{tab:cp}). These results indicate that the conformal structure used by the transverse method is not restricted to the integrable point. Within the critical regime considered, the \ac{NNN} interaction modifies the non-universal scales without changing the resolved universal content.
+
+Obtaining these results required a transfer-matrix construction suitable for longer-range interactions. We represent the Hamiltonian as a \ac{FSM}, exponentiate it with a second-order scheme, and rotate the resulting \ac{MPO} into a column of the space--time network. The standard second-order construction for \ac{NN} Hamiltonians becomes first order in the presence of \ac{NNN} terms, whereas the \textit{VD2} construction retains second-order accuracy by including the corresponding three-site clusters. We then determine the leading spectrum with a block power method that propagates left and right temporal states together and preserves their biorthogonal pairing. An eigenvalue-only variant replaces the individual eigenvectors by well-conditioned bases of the leading subspaces when the calculation does not require the eigenvectors themselves.
+
+The equilibrium analysis provides the non-universal input and an independent reference for the dynamical results. \ac{DMRG} calculations give a central charge consistent with the Ising value up to $p=1.5$, while exact diagonalisation of finite rings determines the sound velocity at each coupling (Section~\ref{sec:annni}). This velocity converts the transfer-matrix phase gaps into scaling dimensions and must therefore be determined independently. The equilibrium and dynamical estimates of the central charge are consistent within the numerical resolution of the dynamical fits, although the latter deviate from $\tfrac12$ by up to approximately ten per cent over the reported range.
+
+The entropy and spectral routes have different numerical ranges because they require different parts of the eigensystem. First-order perturbation theory shows that eigenvector mixing is inversely proportional to the separation between neighbouring eigenvalues, whereas the corresponding eigenvalue shift contains no spectral-gap denominator. As the conformal phase gaps decrease with increasing $T$, separating individual eigenvectors within the converged block becomes ill conditioned. The entropy calculation requires the dominant left and right eigenvectors and consequently loses reliability at earlier times. The spectral calculation requires only the Ritz values of the leading subspace and remains usable over a wider range.
+
+This conditioning argument explains the greater stability of the eigenvalues, but it does not fully determine when an entropy calculation fails. The phase rigidity decreases with evolution time and more rapidly at stronger coupling, yet its value at the last reliable time varies by four orders of magnitude across the couplings studied. Failures are also intermittent and depend on the random initial states: a calculation can fail at one time, converge at the next, or be recovered by repeating it with a different seed. Moreover, the bond dimension, truncation cutoff, and eigenvalue-selection rule were chosen through internal consistency tests rather than a systematic optimisation. The reported time windows should therefore be understood as the reach of the present numerical configuration, not as fundamental limits of transverse contraction.
+
+The sound velocity provides a useful indicator of this numerical reach. Boundary dimensions are extracted from phase gaps proportional to $1/(vT)$, so increasing $v$ compresses the spectrum and raises the resolution required at a fixed evolution time. Since $v$ can be measured independently in equilibrium, this compression can be estimated before performing the dynamical calculation.
+
+Several improvements follow directly from these limitations. A systematic study of the bond dimension, truncation cutoff, and eigenvalue selector is needed to determine which parameter controls convergence in each regime. The computational cost is dominated by the de-mixing and compression of the propagated block states, so reducing this cost would extend the accessible evolution times. With these improvements, the dynamical central charge $c(p)$ and leading boundary dimension $x_1(p)$ could be followed towards the boundary of the critical phase, where the equilibrium calculations remain consistent with Ising criticality but the present dynamical windows are too short for reliable fits.
 
 \clearpage
 
