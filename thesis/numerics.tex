@@ -14,14 +14,14 @@ The right and left eigenvectors of $\mathcal{E}$ satisfy
 \end{equation}
 Because $\mathcal{E}$ is non-normal (Section~\ref{sec:mporep:fsm}), its left and right eigenvectors differ, and neither set is orthogonal by itself. Instead, the two sets are biorthogonal, $\braket{L_i}{R_j}\propto\delta_{ij}$. Here the bra notation does not imply complex conjugation: $\bra{L_i}$ is a row vector, and $\braket{L_i}{R_j}$ denotes the direct contraction of the two temporal networks. We therefore propagate the left states with the transpose $\mathcal{E}^{\mathsf T}$, which implements the second equation in Eq.~\eqref{eq:nonhermitian_eigenproblem}.
 
-Different outputs of the calculation require different parts of this eigensystem. The modulus of the dominant eigenvalue $\mu_0$ determines the Loschmidt rate, while its phase encodes the central charge. Phase gaps to the subleading eigenvalues contain the boundary operator content, and the dominant pair $(\bra{L_0},\ket{R_0})$ defines the generalized temporal entropies. We must therefore resolve the leading eigenvalues individually, identify $\mu_0$, and order the remaining eigenvalues for comparison with the conformal tower.
-
 \subsection{The algorithm}
 \label{sec:blockpm}
 
-A single-vector power method is sufficient when only the dominant eigenpair is required. It therefore provides the Loschmidt rate, the central charge obtained from the phase of $\mu_0$, and the dominant left and right states used in the entropy calculation. Extracting the boundary operator content also requires the subleading eigenvalues, whose separations decrease as $T$ grows. We resolve these eigenvalues by iterating a block of $k$ states. The block converges to the leading $k$-dimensional invariant subspace at a rate controlled by $|\mu_{k+1}/\mu_k|$; near-degeneracies among eigenvalues within the block therefore do not slow the convergence of the subspace. The projected eigenproblem then resolves the individual eigenpairs within this subspace.
+The single-vector power method implemented in \texttt{ITransverse.jl}~\cite{carignano2025itransverse} computes only the dominant eigenpair. This is sufficient for computing the Loschmidt rate from the modulus of the dominant eigenvalue $\mu_0$, the central charge from its phase, and the left and right dominant states $(\bra{L_0},\ket{R_0})$ required for the generalized temporal entropies. It cannot, however, determine the boundary operator content, which is encoded in the phase gaps between $\mu_0$ and the subleading eigenvalues. Accessing these gaps requires the individual subleading eigenvalues and therefore a block power method. Their resolution becomes increasingly demanding with evolution time: from Eq.~\eqref{eq:cft:eq4}, the $i$-th phase gap scales as $\pi x_i/(vT)$, decreasing as $1/T$ at fixed coupling and becoming smaller still as the velocity increases with $p$.
 
-The block method evolves $k$ right states $\ket{R_j}$ and $k$ left states $\bra{L_j}$, each represented as a \ac{tMPS}. We initialise the two blocks independently with random complex tensors. Algorithm~\ref{alg:blockpm} summarises one iteration, and Figure~\ref{fig:blockpm} shows the tensor-network operations used to apply and project the transfer matrix.
+We resolve these closely spaced eigenvalues by iterating a block of $k$ states, which selects the leading subspace collectively. Ordering the eigenvalues by decreasing modulus, after $m$ applications of $\mathcal{E}$ the component along the first discarded eigenvector is suppressed relative to the last retained one by $(|\mu_k|/|\mu_{k-1}|)^m$. The convergence rate is therefore controlled by the separation between the retained subspace and the rest of the spectrum, rather than by gaps between eigenvalues within the block. Once this subspace has converged, a projected eigenproblem separates its individual eigenpairs.
+
+To represent the two subspaces, the block power method evolves $k$ right states $\ket{R_j}$ and $k$ left states $\bra{L_j}$, each represented as a \ac{tMPS}. We initialise the two blocks independently with random complex tensors. Algorithm~\ref{alg:blockpm} summarises one iteration, and Figure~\ref{fig:blockpm} shows the tensor-network operations used to apply and project the transfer matrix.
 
 \begin{figure}[htbp]
   \centering
@@ -31,18 +31,18 @@ The block method evolves $k$ right states $\ket{R_j}$ and $k$ left states $\bra{
 \end{figure}
 
 \begin{algorithm}[H]
-\caption{\textbf{Block power method} for the $k$ dominant eigenpairs of $\mathcal{E}$.}
-\label{alg:blockpm}
-\begin{algorithmic}[1]
-\State $\ket{R_j},\ \bra{L_j} \gets$ random complex \acp{tMPS}, \quad $j=1,\dots,k$
-\Repeat
-  \State $\ket{\tilde R_j} \gets \operatorname{truncate}_\chi\big(\mathcal{E}\ket{R_j}\big)$, \qquad $\bra{\tilde L_j} \gets \operatorname{truncate}_\chi\big(\bra{L_j}\,\mathcal{E}\big)$ \Comment{apply}
-  \State $S_{ij} \gets \braket{L_i}{R_j}$, \qquad $M_{ij} \gets \braket{L_i}{\tilde R_j}=\bra{L_i}\mathcal{E}\ket{R_j}$ \Comment{project}
-  \State solve $M v=\theta\,S v$ for Ritz values $\theta_1,\dots,\theta_k$ and coefficients $V$, $U$
-  \State $\ket{R_j} \gets \operatorname{truncate}_\chi\big(\textstyle\sum_i V_{ij}\ket{\tilde R_i}\big)$, \qquad $\bra{L_j} \gets \operatorname{truncate}_\chi\big(\textstyle\sum_i U_{ij}\bra{\tilde L_i}\big)$ \Comment{de-mix}
-  \State normalise every block member
-\Until{the leading Ritz values stop changing within tolerance}
-\end{algorithmic}
+  \caption{\textbf{Block power method} for the $k$ dominant eigenpairs of $\mathcal{E}$.}
+  \label{alg:blockpm}
+  \begin{algorithmic}[1]
+    \State $\ket{R_j},\ \bra{L_j} \gets$ random complex \acp{tMPS}, \quad $j=1,\dots,k$
+    \Repeat
+    \State $\ket{\tilde R_j} \gets \operatorname{truncate}_\chi\big(\mathcal{E}\ket{R_j}\big)$, \qquad $\bra{\tilde L_j} \gets \operatorname{truncate}_\chi\big(\bra{L_j}\,\mathcal{E}\big)$ \Comment{apply}
+    \State $S_{ij} \gets \braket{L_i}{R_j}$, \qquad $M_{ij} \gets \braket{L_i}{\tilde R_j}=\bra{L_i}\mathcal{E}\ket{R_j}$ \Comment{project}
+    \State solve $M v=\theta\,S v$ for Ritz values $\theta_1,\dots,\theta_k$ and coefficients $V$, $U$
+    \State $\ket{R_j} \gets \operatorname{truncate}_\chi\big(\textstyle\sum_i V_{ij}\ket{\tilde R_i}\big)$, \qquad $\bra{L_j} \gets \operatorname{truncate}_\chi\big(\textstyle\sum_i U_{ij}\bra{\tilde L_i}\big)$ \Comment{de-mix}
+    \State normalise every block member
+    \Until{the leading Ritz values stop changing within tolerance}
+  \end{algorithmic}
 \end{algorithm}
 
 The first step applies the transfer matrix to each member of the right block and its transpose to each member of the left block,
@@ -54,14 +54,14 @@ The first step applies the transfer matrix to each member of the right block and
   \ket{\tilde L_j} = \mathcal{E}^{\mathsf T}\ket{L_j}.
   \label{eq:blockpm_apply}
 \end{equation}
-Applying the \ac{tMPO} multiplies the bond dimension of each state by $D$, as shown in Figure~\ref{fig:blockpm}a. After each application, we use either scheme from Section~\ref{sec:transverse:truncation} to truncate the propagated state to the maximum bond dimension $\chi$, and then normalise it. This truncation bounds the cost of subsequent iterations.
+Applying the \ac{tMPO} multiplies the bond dimension of each state by $D$, as shown in Figure~\ref{fig:blockpm}a. After each application, we truncate the propagated state back to the maximum bond dimension $\chi$ using either scheme from Section~\ref{sec:transverse:truncation} and normalise it, keeping the computational cost of each iteration constant.
 
 The next step projects the eigenproblem onto the current block subspaces. We approximate a right eigenvector by
 \begin{equation}
   \ket{\psi} = \sum_{j=1}^{k} v_j \ket{R_j}.
   \label{eq:blockpm_ansatz}
 \end{equation}
-Inserting this ansatz into $\mathcal{E}\ket{\psi}=\theta\ket{\psi}$ produces a residual. We require its contraction with every member of the left block to vanish, so that $\bra{L_i}(\mathcal{E}-\theta)\ket{\psi}=0$. This condition reduces the full eigenproblem to the two $k\times k$ matrices shown in Figure~\ref{fig:blockpm}b,
+The ansatz is a combination of the current block members and not an exact eigenvector, so inserting it into $\mathcal{E}\ket{\psi}=\theta\ket{\psi}$ leaves a residual. We require its contraction with every member of the left block to vanish, so that $\bra{L_i}(\mathcal{E}-\theta)\ket{\psi}=0$. This condition reduces the full eigenproblem to the two $k\times k$ matrices shown in Figure~\ref{fig:blockpm}b,
 \begin{equation}
   S_{ij}=\braket{L_i}{R_j},
   \qquad
@@ -73,19 +73,21 @@ and the generalized eigenvalue problem
   \sum_{j} M_{ij}\,v_j = \theta \sum_{j} S_{ij}\,v_j .
   \label{eq:blockpm_smallproblem}
 \end{equation}
-The overlap matrix $S$ describes the relative orientation of the left and right subspaces, while $M$ is the transfer matrix projected between them. Solving Eq.~\eqref{eq:blockpm_smallproblem} yields the Ritz values $\theta_j$, which approximate $\mu_0,\dots,\mu_{k-1}$. It also yields the coefficient matrices $V$ and $U$ used in Algorithm~\ref{alg:blockpm}. The columns of $V$ specify the combinations of propagated right states associated with the approximate right eigenvectors, and $U$ provides the corresponding combinations for the left block. If $S$ is ill-conditioned, the oblique projection amplifies numerical errors. We therefore use the pseudoinverse regularisation described in Appendix~\ref{app:blockpm} when solving Eq.~\eqref{eq:blockpm_smallproblem}.
+The overlap matrix $S$ describes the relative orientation of the left and right subspaces, while $M$ is the transfer matrix projected between them. Solving Eq.~\eqref{eq:blockpm_smallproblem} yields approximations $\theta_j$ to $\mu_0,\dots,\mu_{k-1}$, which we order by modulus. It also yields the coefficient matrices $V$ and $U$ used in Algorithm~\ref{alg:blockpm}; the columns of $V$ specify the combinations of propagated right states associated with the approximate right eigenvectors, and $U$ provides the corresponding combinations for the left block. If $S$ is ill-conditioned, the oblique projection amplifies numerical errors, so we use the pseudoinverse regularisation described in Appendix~\ref{app:blockpm} when solving Eq.~\eqref{eq:blockpm_smallproblem}.
 
 We then use the Ritz coefficient matrices to separate the propagated blocks into approximate eigenpairs. Before the next iteration, we truncate the resulting states back to $\chi$ and normalise them. The iteration stops once the leading Ritz values remain stable within the prescribed tolerance.
 
-The tensor-network operations dominate the computational cost, whereas solving the $k\times k$ eigenproblem is negligible. Most of the cost arises from the sums used to separate the propagated block states. Appendix~\ref{app:blockpm:cost} quantifies these contributions and describes the measures used to reduce them.
+The tensor-network operations dominate the computational cost. Most of the cost arises from the sums used to separate the propagated block states. Appendix~\ref{app:blockpm:cost} quantifies these contributions and describes the measures used to reduce them.
 
 When only the eigenvalues are required, we retain the blocks as orthonormal bases of the leading invariant subspaces instead of assigning individual members to separate eigenvectors. This representation is better conditioned near degeneracies and does not change the Ritz values, as discussed in Appendix~\ref{app:blockpm:schur}. We use it for the late-time spectral measurements in Section~\ref{sec:results}.
-
-Whenever $\mathcal{E}$ is small enough to construct explicitly, we compare the block method with exact diagonalisation. The leading eigenvalues agree with this benchmark, validating the numerical pipeline (Appendix~\ref{app:blockpm:validation}).
 
 \subsection{Selecting and tracking the physical branch}
 \label{sec:reach}
 
-At each evolution time, the block method returns $k$ Ritz values from which we must identify the physical eigenvalue $\mu_0$. At the first time point, we select the value of largest modulus. This criterion is unambiguous at small $T$, where the leading spectral gap is wide. At subsequent times, we again select the value of largest modulus unless the two leading candidates agree within one per cent. In that case, we choose the candidate closest in the complex plane to the previously accepted $\mu_0$. Since the tied candidates have almost equal moduli, this criterion reduces in practice to continuity of the phase. Such near-ties are expected from the conformal spectrum: as $T$ increases, the moduli of the states in the conformal tower approach a common value because of the emergent dual unitarity discussed in Section~\ref{sec:cft:temporal}. We then order the subleading eigenvalues by their phase distance from $\mu_0$, following the ordering of the conformal tower.
+From the $k$ Ritz values returned at each evolution time, we identify the dominant eigenvalue $\mu_0$ and order the remaining tower states. At short times, where the leading spectral gap is wide, $\mu_0$ is unambiguously selected by largest modulus. At later times, emergent dual unitarity drives the tower eigenvalues towards a common modulus (Section~\ref{sec:cft:temporal}); if the two leading candidates differ in modulus by less than one per cent, we select the one closest in the complex plane to the previously accepted $\mu_0$, thereby enforcing phase continuity. The subleading eigenvalues are then ordered by increasing phase distance from $\mu_0$, matching the structure of the conformal tower.
 
-For a sequence of evolution times, the converged block at one time provides the initial state for the next. Consecutive calculations therefore begin from the same leading subspace, which helps the selection remain on a continuous spectral branch as the eigenvalues become closer. If the block contains too few tower states to resolve the required operator content, we increase its size in steps, $k=4\to6\to8$. Each larger calculation is initialised from the converged smaller block, so the additional cost is incurred only when the spectrum requires it. Appendices~\ref{app:selector} and~\ref{app:conditioning} describe the selection safeguards and conditioning diagnostics used throughout this procedure.
+When computing a ladder of evolution times, we initialise the iteration at $T+\Delta T$ with the converged block from $T$. This continuation tracks the physical branch smoothly from one time step to the next. If the block contains too few states to resolve the required operator content, we expand the block in stages ($k=4\to6\to8$), initialising each larger subspace from the converged smaller one.
+
+Convergence alone does not guarantee that the iteration reaches the physical fixed point; since the blocks are randomly initialised, different seeds can converge to different, non-physical states at long evolution times. To filter out these artefacts without biasing the results towards \ac{CFT} predictions, we apply two consistency checks. First, we require $|\mu_0|$ to vary continuously with $T$, recomputing any discontinuous point with a fresh random seed. Second, when extracting eigenvectors for the entropy, we repeat the calculation until two independent runs agree. Since two random seeds can occasionally converge to the same unphysical fixed point, reproducibility alone is insufficient; we therefore also require the accepted entropy to vary smoothly with neighbouring evolution times.
+
+We determine the upper limit of each time window from the winding of the leading eigenvalue. Along the physical branch, the phase of $\mu_0$ advances at an approximately constant rate with $T$, so any persistent departure from this rate signals that the branch is no longer resolved, and therefore sets the boundary of the usable fitting window. Appendices~\ref{app:selector} and~\ref{app:conditioning} give the corresponding selection safeguards and conditioning diagnostics.

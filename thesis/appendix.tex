@@ -247,9 +247,9 @@ We now derive Eq.~\eqref{eq:annni:hop} from the transformation in Eq.~\eqref{eq:
 The transverse field becomes a chemical-potential term directly from Eq.~\eqref{eq:annni:jwmap}. For the \ac{NN} Ising bond, the two strings overlap on all but one site and cancel telescopically, leaving the quadratic hopping-and-pairing term
 \begin{equation}
     \sigma^z_j\sigma^z_{j+1} = (c_j^\dagger-c_j)(c_{j+1}+c_{j+1}^\dagger).
-    \tag{F1}
+    \label{eq:jw_zz}
 \end{equation}
-Together with the chemical-potential term, Eq.~(F1) gives the quadratic fermionic Hamiltonian of the pure Ising chain.
+Together with the chemical-potential term, Eq.~\eqref{eq:jw_zz} gives the quadratic fermionic Hamiltonian of the pure Ising chain.
 
 Both terms proportional to $p$ are quartic. The self-dual $\sigma^x\sigma^x$ term becomes the density--density factor $(1-2n_j)(1-2n_{j+1})$. For the \ac{NNN} bond, the strings cancel on the common sites, while the intermediate site contributes one uncancelled factor $(1-2n_{i+1})=(-1)^{n_{i+1}}$. This gives Eq.~\eqref{eq:annni:hop}, in which the sign of hopping and pairing between $i$ and $i+2$ depends on the intermediate occupation.
 
@@ -261,13 +261,21 @@ Both terms proportional to $p$ are quartic. The self-dual $\sigma^x\sigma^x$ ter
 
 This appendix gives the equilibrium measurements and fitting conventions used for the numerical values quoted in the main text. These include the finite-size test of the universality class, the sound velocity, and the branch constant in the eigenvalue fit.
 
+The leading boundary exponent distinguishes the two boundary conditions of Section~\ref{sec:cft:temporal}. At the integrable point, fitting Eq.~\eqref{eq:cft:eq4} to the first spectral gap over $T=3$--$9$ gives $x_1=0.499$ for the free boundary state $\ket{X+}$ and $x_1=1.988$ for the fixed state $\ket{Up}$, in agreement with the exact values $\tfrac12$ and $2$. Figure~\ref{fig:x1_p0} shows both.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{imgs/res_x1_p0.png}
+    \caption{\textbf{The boundary exponent at the integrable point.} The first spectral gap converted into a dimension, $x_1=v\,T\,\mathrm{Im}(\lambda_1-\lambda_0)/\pi$, against $T$ for the free and fixed boundary states. Panel (a) is the free boundary state $\ket{X+}$ and panel (b) the fixed state $\ket{Up}$, side by side, each on its own scale. Dashed lines mark the exact values $\tfrac12$ and $2$. Both approach their target from below as $T$ grows, and the fits of Eq.~\eqref{eq:cft:eq4} over the same thirteen evolution times give $0.499$ and $1.988$. The window here is shorter than the one behind Table~\ref{tab:cp}, since it is cut to the range the fixed ladder covers so that the two boundary conditions are fitted over identical times; this is why the free value differs slightly from the one quoted there.}
+    \label{fig:x1_p0}
+\end{figure}
+
 \subsection{Finite-size scaling of the mid-chain entropy}
 \label{app:fss}
 
 Section~\ref{sec:annni:equilibrium} extracts the central charge from the entanglement profile at a fixed system size. An independent estimate follows from the size dependence of the entropy at the mid-chain cut. At this cut, the chord variable is maximal, $W(L/2,L)=\ln(2L/\pi)$, and Eq.~\eqref{eq:cft_obc} reduces to
 \begin{equation}
     S_{\mathrm{vN}}(L/2) = \frac{c}{6}\,\ln L + k'.
-    \tag{G0}
     \label{eq:cft_mid}
 \end{equation}
 A linear fit of the mid-chain entropy against $\ln L$ therefore has slope $c/6$. For $N=40$--$200$, this procedure gives $c\approx0.51$ at both $p=0.1$ and $p=0.5$, consistent with the profile fit in the main text and with the Ising value. These calculations use fifteen \ac{DMRG} sweeps, a bond-dimension ramp up to $400$, and a truncation cutoff of $10^{-10}$. The $N=400$ chord fit in Section~\ref{sec:annni:equilibrium} uses fifty sweeps, a maximum bond dimension of $1000$, and a cutoff of $10^{-12}$. Both calculations begin with noise-assisted sweeps.
@@ -276,7 +284,7 @@ The same ground states provide a comparison with the R\'enyi-2 entropy used in t
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.75\textwidth]{imgs/cft_L.png}
+    \includegraphics[width=0.92\textwidth]{imgs/cft_L.png}
     \caption{\textbf{Finite-size scaling of the mid-chain entropy.} Results for $p=0.1$ and $p=0.5$. The von Neumann entropy (solid lines), with slope $c/6$, gives $c\approx0.51$. The R\'enyi-2 entropy (dashed lines), computed from the same ground states and fitted with slope $c/8$, gives $c\approx0.58$ because of its larger finite-size corrections.}
     \label{fig:cft_L}
 \end{figure}
@@ -321,7 +329,7 @@ At each coupling, we fit $v(N)=v_\infty+C/N^2$ and use $v_\infty$ in the conform
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.72\textwidth]{imgs/nb4_velocity_extrapolation.png}
+  \includegraphics[width=0.95\textwidth]{imgs/nb4_velocity_extrapolation.png}
   \caption{\textbf{Extrapolation of the sound velocity.} Finite-size estimates of $v$ as a function of $1/N^2$, with fitted lines and thermodynamic intercepts (diamonds). At $p=0$, the extrapolated value agrees with the exact result $v=2$, shown by the dotted line.}
   \label{fig:velocity_extrap}
 \end{figure}
@@ -330,18 +338,31 @@ Over the range studied, the extrapolated velocity is approximately linear in $p$
 
 We also verify the velocity dependence using the anisotropic XY chain, for which $v(\gamma)=2\gamma$ is exact. At $\gamma=0.5,1,1.5$, the measured first-gap slopes are $a_1=1.481,0.782,0.520$, compared with the exact values $\pi/(4\gamma)=1.571,0.785,0.524$. Using the corresponding velocities gives $x_1=0.471,0.498,0.496$. Fixing $v=2$ would instead impose $a_1=0.785$ for all three anisotropies and would disagree with two of the measured slopes. The extraction recovers $x_1=\tfrac12$ only when the correct velocity is supplied.
 
+\subsection{The entropy profiles at stronger coupling}
+\label{app:highp}
+
+Section~\ref{sec:results:wall} shows the entropy profiles at $p=0.1$. Figure~\ref{fig:domes_hi} gives the same comparison at the remaining couplings, each to the longest evolution time reached. The real part follows the chord curve at $c=\tfrac12$ throughout, and the imaginary part is constant across the interior of the strip and lies above $\pi c/16$ by the finite-time correction, exactly as at the two couplings shown in the main text. The number of evolution times available falls as the coupling grows, since the cost of each one rises with $p$; at $p=0.5$ only four are available, which is too few to constrain the extrapolation.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{imgs/res_domes_hi.png}
+    \caption{\textbf{The generalized temporal entropy at the remaining couplings.} The comparison of Figure~\ref{fig:domes} at $p=0$, $0.3$ and $0.5$. Each row shows up to six evolution times, evenly spaced across the range the calculation reached. (a, c, e) $\mathrm{Re}\,S_2$ against $t/T$, with the dashed curves showing Eq.~\eqref{eq:cft:chord} at $c=\tfrac12$ and the non-universal constant matched to each profile. (b, d, f) $\mathrm{Im}\,S_2$, with the dashed line at $\pi c/16=0.098$ for $c=\tfrac12$. The separation between the data and that line is the finite-time correction, as in Figure~\ref{fig:domes}. The $p=1.0$ profiles use the halved Trotter step of Section~\ref{sec:results}.}
+    \label{fig:domes_hi}
+\end{figure}
+
+
 \subsection{Fit windows and the controls behind the quoted numbers}
 \label{app:errors}
 
 The central charges in Table~\ref{tab:cp} are obtained from least-squares fits. We specify here the fitting windows, the fixed parameters, and the numerical controls used to assess their stability.
 
-The start of the fitting window is not unique. Moving it to later times reduces the number of data points and increases the fitted central charge because the $1/T$ and $1/T^2$ contributions in Eq.~\eqref{eq:cft:eq3} become difficult to distinguish over a short interval. Varying the starting time changes $c$ by $0.014$ at $p=0$, $0.024$ at $p=0.1$, and $0.21$ at $p=0.3$. We report the widest window that satisfies the consistency criterion, since it contains the most data and best separates the correction terms. The upper end is set by the loss of a constant phase increment in $\mu_0$. For example, at $p=0.5$ the increment is $1.8326$ with a spread of $0.0008$ over $T=2.2$--$4.5$, but becomes irregular at later times. This criterion determines the windows in Table~\ref{tab:cp}.
+The start of the fitting window is not unique. Moving it to later times reduces the number of data points and increases the fitted central charge because the $1/T$ and $1/T^2$ contributions in Eq.~\eqref{eq:cft:eq3} become difficult to distinguish over a short interval. Varying the starting time changes $c$ by $0.014$ at $p=0$, $0.024$ at $p=0.1$, and $0.21$ at $p=0.3$. We report the widest window that satisfies the consistency criterion, since it contains the most data and best separates the correction terms. The upper end is set by the loss of a constant phase increment in $\mu_0$. At $p=0.5$, for example, the increment holds to a few parts in $10^{4}$ across the fitted window and becomes irregular beyond it. This criterion determines the windows in Table~\ref{tab:cp}.
 
-We fix the branch constant in Eq.~\eqref{eq:cft:eq3} rather than fitting it. Its value follows from $\lambda_0=\log(-\mu_0)$, and unconstrained fits over sufficiently long windows give $B/\pi=-1.000$. Fixing it removes a parameter that short windows cannot determine. The phase is unwrapped over the complete time series before selecting a fitting window; otherwise the absolute branch information would be lost.
+We fix the branch constant in Eq.~\eqref{eq:cft:eq3} rather than fitting it. Its value follows from $\lambda_0=\log(-\mu_0)$, and unconstrained fits over sufficiently long windows give $B/\pi=-1.000$ at every coupling. Fixing it removes a parameter that short windows cannot determine. The phase is unwrapped over the complete time series before selecting a fitting window; otherwise the absolute branch information would be lost.
 
 We use three numerical controls. Increasing the bond dimension to $\chi=128$ changes the imaginary plateau by approximately $2\%$ and $|\mu_0|$ by less than $10^{-4}$, but shifts the real-part chord slope by up to $0.12$. This motivates extracting the entropy result from the plateau. Halving the Trotter step while doubling $N_\beta$ to keep $\beta_0$ fixed changes the plateau by less than $1\%$ within the reliable window and by $18\%$ near its boundary. Repeating one time point with five independent random seeds produces a $3\%$ spread in the plateau and a $12\%$ spread in the chord slope, whereas $|\mu_0|$ agrees within $1.3\times10^{-4}$. The spectral estimates are therefore substantially less sensitive to the random seed. Finally, the sound velocity enters linearly, and its extrapolation gives $1.99994$ at the integrable point, compared with the exact value $2$.
 
-The absolute entropy result in Eq.~\eqref{eq:res:c_entropy_p0} also depends on the finite-time correction model. We compare a constant, $a+bT^{-1/2}$, $a+b/T$, and $a+b/T+c/T^2$ using the corrected Akaike information criterion. Over $T=2$--$24$, the constant model is disfavoured by a difference of $21$. The $T^{-1/2}$ and two-term models differ by less than $1$ and give $c=0.506$ and $0.511$, respectively. Over the shorter interval $T\leq11$, the data do not distinguish the four models, demonstrating the need for the extended time series.
+The entropy-route central charges of Section~\ref{sec:results:wall} also depend on the finite-time correction model. We compare a constant, $a+bT^{-1/2}$, $a+b/T$, and $a+b/T+c/T^2$ using the corrected Akaike information criterion. Over $T=2$--$24$, the constant model is disfavoured by a difference of $21$. The $T^{-1/2}$ and two-term models differ by less than $1$ and give $c=0.506$ and $0.511$, respectively. Over the shorter interval $T\leq11$, the data do not distinguish the four models, demonstrating the need for the extended time series.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -390,7 +411,7 @@ The local tensor has a $3\times3$ block structure. Indices $1$, $2$, and $3$ lab
 \end{equation}
 with
 \begin{align}
-  W_{11} &= \mathbbm{1} + \tilde D + \tfrac12\{\tilde D\tilde D\} + \tfrac16\{\tilde D\tilde D\tilde D\}, \\
+  W_{11} &= \mathbb{1} + \tilde D + \tfrac12\{\tilde D\tilde D\} + \tfrac16\{\tilde D\tilde D\tilde D\}, \\
   W_{12} &= \tilde C + \tfrac12\{\tilde C\tilde D\} + \tfrac16\{\tilde C\tilde D\tilde D\}, \qquad
   W_{13} = \{\tilde C\tilde C\} + \tfrac13\{\tilde C\tilde C\tilde D\}, \\
   W_{21} &= \tilde B + \tfrac12\{\tilde B\tilde D\} + \tfrac16\{\tilde B\tilde D\tilde D\}, \qquad
@@ -442,14 +463,12 @@ This appendix describes the implementation of the block power method introduced 
 Near a degeneracy, the columns of the right block become nearly linearly dependent and the metric $S$ in Eq.~\eqref{eq:blockpm_pencil} becomes ill conditioned. Direct solution of the generalised eigenvalue problem $Mv=\theta Sv$ can then produce divergent or unstable values. We instead use the pseudoinverse of $S$:
 \begin{equation}
   W = S^{+} M, \qquad W = V\,\Theta\,V^{-1},
-  \tag{D1}
 \end{equation}
 The pseudoinverse uses a relative tolerance of $10^{-12}$, so directions that have become numerically dependent are projected out rather than inverted. After sorting by modulus, the diagonal entries of $\Theta$ estimate $\mu_0,\dots,\mu_{k-1}$, and the columns of $V$ give the right mixing coefficients.
 
 The left block requires coefficients paired with the same eigenvalues. A separate diagonalisation of the transposed pencil is unreliable within a quasi-degenerate cluster because its eigenvalues can be returned in a different order, making the left--right pairing ambiguous. The coefficients can instead be obtained directly from the right decomposition. Defining $y^{\mathsf T}=u^{\mathsf T}S$ transforms the left problem into $y^{\mathsf T}W=\theta y^{\mathsf T}$, so the vectors $y$ are the rows of $V^{-1}$ and
 \begin{equation}
   u_j = \big(S^{+}\big)^{\mathsf T}\big(V^{-1}\big)^{\mathsf T} e_j ,
-  \tag{D2}
 \end{equation}
 is paired with $\theta_j$ by construction. The resulting coefficients are biorthogonal in the metric $S$, satisfying $u_i^{\mathsf T}Sv_j=\delta_{ij}$.
 
@@ -461,7 +480,6 @@ The \ac{MPS} linear combinations used for de-mixing are formed by exact direct-s
 The eigenvalue-only mode replaces the de-mixing coefficients by orthonormal bases. After sorting the Ritz values by modulus, we apply QR decompositions to the coefficient matrices:
 \begin{equation}
   V \to Q_V, \qquad U \to Q_U, \qquad Q^\dagger Q = \mathbb{1},
-  \tag{D3}
 \end{equation}
 The blocks are then rotated with $Q_V$ and $Q_U$ rather than $V$ and $U$. The first $j$ columns of each orthonormal matrix span the same ordered subspaces as the corresponding coefficient matrix, giving an ordered-Schur-like basis. This basis change does not alter the Ritz values. Under invertible recombinations $B$ and $C$, the projected matrices transform as $S\to B^{\mathsf T}SC$ and $M\to B^{\mathsf T}MC$, leaving the solutions of the pencil unchanged. It does, however, improve the conditioning of the subsequent truncation: $\mathrm{cond}(V)$ increases as the internal spectral gap closes, whereas $Q_V$ and $Q_U$ remain unitary. The two modes can therefore differ only through truncation. At $p=0.1$ and $\chi=64$, independent time series in the two bases agree in the relative moduli of the two monitored eigenvalues to $10^{-7}$--$10^{-4}$ over $T=2$--$8$. The unmonitored eigenvalues agree to $10^{-3}$--$10^{-2}$.
 
@@ -476,7 +494,7 @@ At short evolution times, the rotated transfer operator has dimension below a fe
   \centering
   \begin{tabular}{lccc}
     \hline
-    operator & dense dimension & exact $|\mu_0|,\,|\mu_1|$ & error on the leading pair \\
+    operator & dimension & exact $|\mu_0|,\,|\mu_1|$ & error \\
     \hline
     ANNNI-type, \textit{VD2}, $p=0.1$ & $343$ & $0.9598,\;0.3263$ & $1.4\times10^{-8}$ \\
     ANNNI-type, $W^{\mathrm{II}}$, $p=0.1$ & $27$ & $0.9758,\;0.3292$ & $4.6\times10^{-13}$ \\
@@ -507,7 +525,7 @@ The following options modify the numerical procedure without changing its target
 
 \textit{Warm starting.} The converged block at one evolution time is re-indexed onto the longer temporal lattice of the next point and extended with a small random tail. The iteration then needs primarily to relax the new sites. The bond cap increases in steps of two up to $\chi$, while the truncation cutoff remains at $10^{-8}$ for the first forty iterations and then decreases to $10^{-10}$. Initialising consecutive times from the same leading subspace also improves continuity in the eigenvalue selection.
 
-\textit{Block-size escalation.} At stronger frustration, a $k=4$ block can be occupied entirely by one near-degenerate cluster, leaving the subleading eigenvalue required by Eq.~\eqref{eq:cft:eq4} outside the computed subspace. The driver then increases the block size as $k=4\to6\to8$, initialising each larger calculation from the converged smaller block. The additional cost is therefore incurred only when required by the spectrum.
+\textit{Block-size escalation.} At stronger next-nearest-neighbour coupling, a $k=4$ block can be occupied entirely by one near-degenerate cluster, leaving the subleading eigenvalue required by Eq.~\eqref{eq:cft:eq4} outside the computed subspace. The driver then increases the block size as $k=4\to6\to8$, initialising each larger calculation from the converged smaller block. The additional cost is therefore incurred only when required by the spectrum.
 
 \textit{Truncation scheme.} The calculation can use either \ac{RTM} or \ac{RDM} truncation (Section~\ref{sec:transverse:truncation}). The \ac{RTM} is the default, while the better-conditioned \ac{RDM} provides a fallback and control.
 
@@ -522,6 +540,8 @@ When a numerical limitation appears, we repeat representative calculations at ha
 
 \subsection{Why eigenvalues outlive eigenvectors}
 \label{app:conditioning}
+
+The loss of reliability cannot be attributed to a fixed threshold in the phase rigidity. The rigidity of the dominant eigenvector pair decreases geometrically with $T$ and does so more rapidly as the next-nearest-neighbour coupling grows: at $T=14$, it is $1.3\times10^{-4}$ for $p=0$ and $1.6\times10^{-10}$ for $p=0.1$. However, its value at the last usable time spans four orders of magnitude across the couplings studied. Moreover, the numerical failures are intermittent even though the rigidity decreases monotonically. For example, at $p=0$, the calculations at $T=17$ and $T=22$ are unreliable, whereas those at $T=18$--$21$ and $T=23$ remain usable. Low rigidity therefore correlates with reduced numerical stability but does not by itself determine whether a calculation fails.
 
 The different numerical stability of eigenvalues and eigenvectors follows from first-order perturbation theory for non-Hermitian matrices~\cite{wilkinson1965}. We perturb $\mathcal{E}$ by $\delta\mathcal{E}$ and expand the perturbed right eigenvector as $\ket{R_i}+\sum_{j\neq i}a_{ij}\ket{R_j}$. Projection onto $\bra{L_i}$ gives the eigenvalue shift,
 \begin{equation}

@@ -697,6 +697,8 @@ function thesis_plot_theme!()
         markersize     = 6,
         framestyle     = :box,
         grid           = true,
+        foreground_color_legend = nothing,   # no box around the legend
+        background_color_legend = nothing,
         size           = (800, 480),
         dpi            = 200,
         margin         = 5Plots.mm,
@@ -706,9 +708,26 @@ function thesis_plot_theme!()
     return nothing
 end
 
-# One colour and marker per frustration value, shared by every thesis figure.
-const P_COLOR  = Dict(0.0 => :dodgerblue, 0.1 => :crimson, 0.3 => :seagreen, 0.5 => :darkorange)
-const P_MARKER = Dict(0.0 => :circle, 0.1 => :square, 0.3 => :diamond, 0.5 => :utriangle)
+"""
+    thesis_size(frac; aspect, panels)
+
+Canvas size for a figure included at `frac` of the text width. Everything in a Plots figure is
+given in pixels, so shrinking the canvas and letting LaTeX scale it back up enlarges fonts,
+markers, legend swatches and line widths together; raising the font sizes alone enlarges only the
+text and breaks the proportions. Sized so the theme's 14px labels land near 8.5pt on the page,
+against 10pt body text, whatever the panel layout.
+"""
+function thesis_size(frac::Real; aspect::Real=0.62, textwidth::Real=468)
+    target = 0.607
+    w = round(Int, frac * textwidth / target)
+    return (w, round(Int, w * aspect))
+end
+
+# One colour and marker per coupling, shared by every thesis figure.
+const P_COLOR  = Dict(0.0 => :dodgerblue, 0.1 => :crimson, 0.3 => :seagreen,
+                      0.5 => :darkorange, 1.0 => :purple)
+const P_MARKER = Dict(0.0 => :circle, 0.1 => :square, 0.3 => :diamond,
+                      0.5 => :utriangle, 1.0 => :star5)
 
 # Save a row of subplots as one figure under results/imgs/
 function plot_panels(panels...; filename::String, title::String="",
