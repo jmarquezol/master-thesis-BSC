@@ -12,12 +12,12 @@ Unless stated otherwise, all simulations use the second-order \textit{VD2} \ac{M
     \centering
     \begin{tabular}{lccccc}
         \hline
-        $p$   & $v_\infty$ & window   & spectral $c$ & $x_1$   & entropy-route $c$ \\
+        $p$   & $v_\infty$ & window    & spectral $c$ & $x_1$   & entropy-route $c$ \\
         \hline
-        $0$   & $2.000$    & $T\le20$ & $0.45$       & $0.498$ & \OPEN             \\
-        $0.1$ & $2.670$    & $T\le9$  & $0.47$       & $0.497$ & \OPEN             \\
-        $0.3$ & $3.967$    & $T\le6$  & $0.49$       & $0.493$ & \OPEN             \\
-        $0.5$ & $5.212$    & $T\le5$  & $0.53$       & $0.488$ & \OPEN             \\
+        $0$   & $2.000$    & $T\le20$  & $0.45$       & $0.498$ & \OPEN             \\
+        $0.1$ & $2.670$    & $T\le9$   & $0.47$       & $0.497$ & \OPEN             \\
+        $0.3$ & $3.967$    & $T\le6.5$ & $0.49$       & $0.493$ & \OPEN             \\
+        $0.5$ & $5.212$    & $T\le5.5$ & $0.53$       & $0.487$ & \OPEN             \\
         \hline
     \end{tabular}
     \caption{\textbf{Universal data against the \ac{NNN} coupling.} The spectral central charge comes from Eq.~\eqref{eq:cft:eq3} on ladders sampled at $\Delta T\le0.5$ inside the window, with the branch constant pinned. The boundary exponent is the first phase gap converted through Eq.~\eqref{eq:cft:eq4}. Appendix~\ref{app:errors} gives the fit windows and the controls behind these numbers. The entropy-route central charge is the extrapolated plateau of Section~\ref{sec:results:wall}.}
@@ -41,7 +41,7 @@ At every simulated time, the measured plateau lies above the asymptotic value $\
 
 We use the imaginary plateau rather than the real-part chord slope to estimate the central charge. At each evolution time, Eq.~\eqref{eq:cft:chord} predicts the plateau value directly. By contrast, extracting $c$ from the real part requires a two-parameter fit of the chord coefficient and the non-universal offset $s_0$, making the result more sensitive to the interval of the strip included in the fit.
 
-The accessible time window decreases as $p$ increases, leaving fewer points with which to determine the finite-time decay. The latest accessible times also require the repetition procedure described in Section~\ref{sec:reach}. When the available window is too short to constrain the extrapolation, we do not report an entropy-based central charge and instead use the spectral method below.
+The accessible time window decreases as $p$ increases, leaving fewer points with which to determine the finite-time decay. The latest accessible times also require the repetition procedure described in Section~\ref{sec:reach}. The repetition also measures where the route ends: the fraction of independent runs returning an unphysical profile grows with $T$ at every coupling, from the first failures at $T=18$ at the integrable point to every run at $p=0.5$, $T=6$ (Appendix~\ref{app:failures}). When the available window is too short to constrain the extrapolation, we do not report an entropy-based central charge and instead use the spectral method below.
 
 
 \subsection{The spectral route}
@@ -55,13 +55,13 @@ The accessible time window decreases as $p$ increases, leaving fewer points with
     \label{fig:circle}
 \end{wrapfigure}
 
-Using the eigenvalue-only method of Section~\ref{sec:blockpm}, we compute the spectrum up to $T=24$ at the integrable point and up to $T=20$ at the remaining couplings. Only the shorter fitting windows listed in Table~\ref{tab:cp} are used to extract universal quantities. Figure~\ref{fig:circle} shows the trajectory of $\mu_0$ in the complex plane after normalising each time series by its mean modulus. The phase winds throughout the simulated interval, while the modulus varies by less than one per cent. This behaviour is consistent with the emergent dual unitarity described in Section~\ref{sec:cft:temporal}. The corresponding central-charge fits are shown in Figure~\ref{fig:eq3}.
+Using the eigenvalue-only method of Section~\ref{sec:blockpm}, we compute the spectrum up to $T=20$ at the integrable point and up to the end of each window in Table~\ref{tab:cp} at the remaining couplings. Only the shorter fitting windows listed in Table~\ref{tab:cp} are used to extract universal quantities. Figure~\ref{fig:circle} shows the trajectory of $\mu_0$ in the complex plane after normalising each time series by its mean modulus. The phase winds throughout the simulated interval, while the modulus varies by less than one per cent. This behaviour is consistent with the emergent dual unitarity described in Section~\ref{sec:cft:temporal}. The corresponding central-charge fits are shown in Figure~\ref{fig:eq3}.
 
 We extract the central charge from the phase curvature using Eq.~\eqref{eq:cft:eq3}. Each time series is sampled with $\Delta T=0.5$ because the fit is constrained by both the extent of the window and the number of points within it. The fitting conventions are given in Appendix~\ref{app:errors}.
 
 Table~\ref{tab:cp} summarises the results. The spectral estimates remain within approximately ten per cent of the Ising value at every coupling and are consistent with $c=\tfrac12$ within the resolution of the fits. The equilibrium chord analysis of Section~\ref{sec:annni:equilibrium} gives $c\approx0.502$ over the same range. These determinations use independent data: the equilibrium estimate is obtained from the ground state, whereas the spectral estimate follows from the real-time dynamics.
 
-The sound velocity affects the calculation in two competing ways. Finite-time corrections are controlled by $vT$, so their relative magnitude decreases as $v$ grows at fixed $T$. However, the phase gaps also scale as $1/(vT)$ and therefore become more difficult to resolve. In addition, converting the fitted curvature into a central charge multiplies its numerical uncertainty by $v$. These resolution requirements cause the fitting windows in Table~\ref{tab:cp} to shorten with increasing $p$, even though finite-time corrections within those windows become smaller.
+The sound velocity has opposite effects on finite-time corrections and numerical resolution. Since the corrections to the boundary dimensions are controlled by $vT$, a larger $v$ brings the measured dimensions closer to their conformal values at fixed $T$. At the same time, the phase gaps decrease as $1/(vT)$ and become harder to resolve, while converting the fitted phase curvature into a central charge amplifies its numerical uncertainty by a factor of $v$. The fitting windows in Table~\ref{tab:cp} therefore shorten as $p$ increases, despite the smaller finite-time corrections within those windows.
 
 \begin{figure}[!tbp]
     \centering
@@ -73,7 +73,7 @@ The sound velocity affects the calculation in two competing ways. Finite-time co
 \begin{figure}[!tbp]
     \centering
     \includegraphics[width=0.8\textwidth]{imgs/res_tower.png}
-    \caption{\textbf{Boundary dimensions as a function of evolution time.} The three leading dimensions at each coupling are obtained from the phase gaps through Eq.~\eqref{eq:cft:eq4}. The series show $x_1$ (circles), $x_2$ (squares), and $x_3$ (diamonds), in ascending order; dashed lines mark the Ising values $\tfrac12$, $\tfrac32$, and $2$. The leading dimension remains close to $\tfrac12$, while the higher dimensions approach their predicted values as $T$ increases. The $p=0$ calculation uses $k=4$, and the remaining couplings use $k=8$.}
+    \caption{\textbf{Boundary dimensions as a function of evolution time.} The three leading dimensions at each coupling are obtained from the phase gaps through Eq.~\eqref{eq:cft:eq4}. The series show $x_1$ (circles), $x_2$ (squares), and $x_3$ (diamonds), in ascending order; dashed lines mark the Ising values $\tfrac12$, $\tfrac32$, and $2$. The leading dimension remains close to $\tfrac12$, while the higher dimensions approach their predicted values as $T$ increases. Every coupling uses $k=8$.}
     \label{fig:tower}
 \end{figure}
 

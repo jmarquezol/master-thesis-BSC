@@ -41,17 +41,19 @@ is ITransverse's 3-site extraction (exact only for NN models); `:bulk5` is the c
 bulk tensor. Default stays :legacy3 until :bulk5 is validated end to end.
 """
 function build_tmpo(mp::ModelParams, scheme::ExpHRecipe, target_T::Float64;
-        dt::Float64=0.1, nbeta::Int=0, init_state::String="X+", column::Symbol=:legacy3)
+        dt::Float64=0.1, nbeta::Int=0, init_state::String="X+",
+        init_state_top::String=init_state, column::Symbol=:legacy3)
     Nsteps      = round(Int, target_T / dt) + nbeta          # time-steps + nbeta cooling sites
     s           = mp.phys_site
-    init        = complex(state(s, init_state))              # single-site LEFT/RIGHT boundary
+    init        = complex(state(s, init_state))              # bottom (t=0) temporal boundary
+    init_top    = complex(state(s, init_state_top))          # top boundary; defaults to the same
     tp          = tMPOParams(mp=mp, dt=dt, nbeta=nbeta, scheme=scheme, dbeta=-im*dt, bl=init)
     column in (:legacy3, :bulk5) || error("unknown column mode $column")
     b           = column === :bulk5 ? bulk_fwtmpoblocks(tp) : FwtMPOBlocks(tp)
     # the spatial MPO's VIRTUAL bond => the temporal PHYSICAL dimension (read it dynamically)
     spatial_bond_dim = dim(inds(b.Wc, "Site,time")[1])
     time_sites  = addtags(siteinds(spatial_bond_dim, Nsteps; conserve_qns=false), "time")
-    mpo         = fw_tMPO(b, time_sites, tr=init)            # the transfer matrix (an MPO)
+    mpo         = fw_tMPO(b, time_sites, bl=init, tr=init_top)   # the transfer matrix (an MPO)
     # legacy: structured fw_tMPS seed; bulk5: random seed (fw_tMPS needs the legacy edge tensors)
     scaffold    = column === :bulk5 ?
         normalize(complex.(randomMPS(time_sites; linkdims=4))) :
@@ -67,9 +69,11 @@ existing Alcaraz notebooks/sweeps.
 """
 function build_alcaraz_tmpo(target_T::Float64;
         p::Float64=0.1, lambda::Float64=1.0, dt::Float64=0.1,
-        nbeta::Int=0, MPO_alg::String="VD2", column::Symbol=:legacy3)
+        nbeta::Int=0, MPO_alg::String="VD2", column::Symbol=:legacy3,
+        init_state::String="X+", init_state_top::String=init_state)
     recipe = Dict("WI"=>AlcarazWI(), "WII"=>AlcarazWII(), "VD2"=>AlcarazVD2())[MPO_alg]
-    return build_tmpo(AlcarazParams(lambda=lambda, p=p), recipe, target_T; dt=dt, nbeta=nbeta, column=column)
+    return build_tmpo(AlcarazParams(lambda=lambda, p=p), recipe, target_T;
+        dt=dt, nbeta=nbeta, column=column, init_state=init_state, init_state_top=init_state_top)
 end
 
 # Weighted sum Σ coeffs[i]*vecs[i]. A plain directsum of k vectors peaks at k times the input bond,
@@ -784,6 +788,21 @@ function tower_gap(theta; i0::Int=argmax(abs.(theta)))
     isempty(tower_moduli) && return NaN
     return maximum(tower_moduli) / abs(theta[i0])
 end
+
+"""
+    tower_dims(theta, T, v; i0=argmax(abs.(theta)))
+
+Convert the phase gaps of a spectrum into boundary dimensions x_i - x_0 = v·T·|Δφ_i|/π,
+sorted ascending, with the i0 entry (zero gap) dropped. This is the conversion previously
+inlined in fig_x1.jl, cluster_audit.jl and NB10.
+"""
+function tower_dims(theta, T::Real, v::Real; i0::Int=argmax(abs.(theta)))
+    gaps = [abs(phase_difference(theta[j], theta[i0])) for j in eachindex(theta) if j != i0]
+    return sort(v .* T .* gaps ./ pi)
+end
+
+# Finite-time model for a single phase gap, Δφ(T) = q1/T + q2/T³; x_i - x_0 = v·q1/π.
+@. tower_gap_model(T, q) = q[1] / T + q[2] / T^3
 
 """
     pick_phys_continuity(theta, previous_phys)
