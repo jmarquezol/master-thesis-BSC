@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=ent_p0.0_bulk
-#SBATCH --output=logs/ent_p0.0_bulk-%j.out
-#SBATCH --error=logs/ent_p0.0_bulk-%j.err
+#SBATCH --job-name=ent_p0.0_b
+#SBATCH --output=logs/ent_p0.0_b-%j.out
+#SBATCH --error=logs/ent_p0.0_b-%j.err
 #SBATCH --account=bsc21
 #SBATCH --qos=gp_bsccase
 #SBATCH --time=2-00:00:00
@@ -24,4 +24,5 @@ export WALL_COLUMN=bulk5
 
 julia --project=.. wall_scan_cluster.jl preflight || { echo "PREFLIGHT FAILED - bad environment, not starting the ladder"; exit 1; }
 
-julia --project=.. wall_scan_cluster.jl entsweep 0.0 24 0.5
+julia --project=.. wall_scan_cluster.jl fork ent_p0.0 ent_p0.0b || exit 1
+julia --project=.. wall_scan_cluster.jl entsweep 0.0 24 1.0 12 ent_p0.0b

@@ -285,14 +285,47 @@ elseif mode == "psweep"
     dT    = check_dT(length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0)
     run_wall_scan(chi=64, label="rtm_p$(p_val)", Ts=collect(2.0:dT:Tmax), trunc_mode=:rtm, p_nnn=p_val,
         cachefile=joinpath(CLUSTER_DIR, "sweep_rtm_p$(p_val).jld2"))
+elseif mode == "fork"
+    # fork <src_label> <dst_label>: seed a second interleaved chain from an existing arm's
+    # frontier, so it warm-starts from the same checkpoint without sharing cache or checkpoint.
+    # Idempotent: does nothing if the destination cache already exists.
+    length(ARGS) >= 3 || error("fork needs: julia wall_scan_cluster.jl fork <src_label> <dst_label>")
+    sfx(l) = begin
+        l2 = COLUMN === :bulk5 ? l * "_bulk" : l
+        DT != 0.1 ? l2 * "_dt$(DT)" : l2
+    end
+    slab, dlab = sfx(ARGS[2]), sfx(ARGS[3])
+    scache = joinpath(CLUSTER_DIR, "sweep_$(slab).jld2")
+    dcache = joinpath(CLUSTER_DIR, "sweep_$(dlab).jld2")
+    sckpt  = joinpath(@__DIR__, "checkpoints", "checkpoint_$(slab).jld2")
+    dckpt  = joinpath(@__DIR__, "checkpoints", "checkpoint_$(dlab).jld2")
+    if isfile(dcache)
+        @info "fork: $dcache already exists, nothing to do"
+    else
+        isfile(scache) || error("fork: source cache $scache not found")
+        isfile(sckpt) || error("fork: source checkpoint $sckpt not found")
+        src_done = load(scache, "done")
+        ck = load(sckpt, "checkpoint")
+        ck.label == slab || error("fork: checkpoint label $(ck.label) does not match $slab")
+        haskey(src_done, (slab, ck.T)) || error("fork: checkpoint rung T=$(ck.T) missing from source cache")
+        rec = src_done[(slab, ck.T)]
+        haskey(rec, :error) && error("fork: source frontier rung T=$(ck.T) is an error record")
+        dst_done = Dict{Tuple{String,Float64},Any}((dlab, ck.T) => (; rec..., label=dlab))
+        jldsave(dcache; done=dst_done)
+        jldsave(dckpt; checkpoint=(label=dlab, T=ck.T, L=ck.L, R=ck.R))
+        @info "fork: seeded $dlab from $slab at frontier T=$(ck.T)"
+    end
 elseif mode == "entsweep"
     # usage: entsweep <p> <Tmax> [dT] — stores every dome, so the branch choice stays revisable
     length(ARGS) >= 3 || error("entsweep needs two extra args: julia wall_scan_cluster.jl entsweep <p> <Tmax> [dT]")
     p_val = parse(Float64, ARGS[2])
     Tmax  = parse(Float64, ARGS[3])
     dT    = check_dT(length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0)
-    run_wall_scan(chi=64, label="ent_p$(p_val)", Ts=collect(2.0:dT:Tmax), trunc_mode=:rtm, p_nnn=p_val,
-        cachefile=joinpath(CLUSTER_DIR, "sweep_ent_p$(p_val).jld2"))
+    # optional interleaving: [T0] starts the ladder above the frontier, [label] names the chain
+    T0    = length(ARGS) >= 5 ? parse(Float64, ARGS[5]) : 2.0
+    lbl   = length(ARGS) >= 6 ? ARGS[6] : "ent_p$(p_val)"
+    run_wall_scan(chi=64, label=lbl, Ts=collect(T0:dT:Tmax), trunc_mode=:rtm, p_nnn=p_val,
+        cachefile=joinpath(CLUSTER_DIR, "sweep_$(lbl).jld2"))
 elseif mode == "towerscan"
     # usage: towerscan <p> <Tmax> [dT] — k=8, for the boundary dimensions
     length(ARGS) >= 3 || error("towerscan needs two extra args: julia wall_scan_cluster.jl towerscan <p> <Tmax> [dT]")
@@ -314,8 +347,10 @@ elseif mode == "eigsweep"
     # be identified; a finer dT keeps the advance resolvable
     dT    = check_dT(length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0)
     # its own label, so it never shares a cache or checkpoint with the unit ladder
-    lbl = dT == 1.0 ? "rtm_eigs_p$(p_val)" : "rtm_eigs_p$(p_val)_fine"
-    run_wall_scan(chi=64, label=lbl, Ts=collect(2.0:dT:Tmax),
+    T0  = length(ARGS) >= 5 ? parse(Float64, ARGS[5]) : 2.0
+    lbl = length(ARGS) >= 6 ? ARGS[6] :
+          (dT == 1.0 ? "rtm_eigs_p$(p_val)" : "rtm_eigs_p$(p_val)_fine")
+    run_wall_scan(chi=64, label=lbl, Ts=collect(T0:dT:Tmax),
         trunc_mode=:rtm, p_nnn=p_val, eigvals_only=true,
         cachefile=joinpath(CLUSTER_DIR, "sweep_$(lbl).jld2"))
 elseif mode == "ksector"

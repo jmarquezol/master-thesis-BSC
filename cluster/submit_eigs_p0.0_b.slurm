@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=eigs_p0.0_bulk
-#SBATCH --output=logs/eigs_p0.0_bulk-%j.out
-#SBATCH --error=logs/eigs_p0.0_bulk-%j.err
+#SBATCH --job-name=eigs_p0.0_b
+#SBATCH --output=logs/eigs_p0.0_b-%j.out
+#SBATCH --error=logs/eigs_p0.0_b-%j.err
 #SBATCH --account=bsc21
 #SBATCH --qos=gp_bsccase
 #SBATCH --time=2-00:00:00
@@ -23,4 +23,5 @@ export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 julia --project=.. wall_scan_cluster.jl preflight || { echo "PREFLIGHT FAILED - bad environment, not starting the ladder"; exit 1; }
 
-julia --project=.. wall_scan_cluster.jl eigsweep 0.0 24 0.5
+julia --project=.. wall_scan_cluster.jl fork rtm_eigs_p0.0_fine rtm_eigs_p0.0_fineb || exit 1
+julia --project=.. wall_scan_cluster.jl eigsweep 0.0 24 1.0 13 rtm_eigs_p0.0_fineb

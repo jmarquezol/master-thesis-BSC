@@ -59,3 +59,23 @@ Scripts under `archive/` are not to be run.
 - results: `results/data/cluster/` — the folder to send back
 - checkpoints: `cluster/checkpoints/`
 - logs: `cluster/logs/`
+
+## Queue of 2026-08-21: interleaved chains
+
+The p=1.0 arms are retired (`archive/retired_2026-08-21/`): their usable window ends near
+T=2.3 and the coupling is out of the main text. The p=0.0 and p=0.1 towers are complete
+(T=2--8) and retired with them. What remains is split so every unfinished arm advances two
+rungs per walltime round instead of one:
+
+- Every `_a` job continues the EXISTING chain (same label, same cache, same checkpoint) in
+  unit steps starting half a rung above the current frontier.
+- Every `_b` job first runs `fork <src> <srcb>`, which seeds a new chain from the source
+  arm's checkpoint and frontier record, then advances in unit steps offset by half a rung
+  from `_a`. The fork is idempotent: on resubmission it does nothing if the chain exists.
+- The two grids interleave to the original dT=0.5 ladder; the analysis side already merges
+  arms by label, so nothing downstream changes.
+
+Submit everything: `for f in submit_*.slurm; do sbatch $f; done` — no other preparation.
+Priority if the queue is tight: ent_p0.0, eigs_p0.0, then the p=0.1 pair, then the rest.
+The two remaining tower jobs (p=0.3, p=0.5) are unchanged and resume from their own
+checkpoints as before.
