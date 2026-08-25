@@ -67,6 +67,9 @@ for p in (0.0, 0.1, 0.3, 0.5)
 end
 
 println("\n=== 3. Eq.(3) on every corrected-column eigenvalue arm ===")
+# Diagnostic, not a reproduction of Table 1: each arm is fitted over its full extent with no
+# window, so these values will not match tab:cp. Section 7 applies the windows and reproduces
+# the quoted numbers.
 # spectral arms exist at p=0 and p=0.1; at higher p the tower and entropy arms carry theta_phys
 spec = Dict{Float64,Dict{Float64,Any}}()
 spec[0.0] = merge(arm("sweep_rtm_eigs_p0.0_fineb.jld2", "rtm_eigs_p0.0_fineb"),
