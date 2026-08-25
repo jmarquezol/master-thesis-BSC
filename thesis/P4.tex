@@ -7,7 +7,7 @@ For \ac{NN} Hamiltonians, the evolution operator $U(\delta t)=e^{-iH\delta t}$ i
 \subsection{The Hamiltonian as a \texorpdfstring{\ac{FSM}}{FSM}}
 \label{sec:mporep:fsm}
 
-In the \ac{FSM} representation~\cite{crosswhite2008,pirvu2010}, the Hamiltonian is encoded as an \ac{MPO} whose local tensor has a block-upper-triangular form~\cite{parker2020}. Two identity blocks propagate the initial and final states, while the on-site block $D$ generates local terms. The block row $C$ initiates interactions, the block column $B$ terminates them, and the memory block $A$ propagates unfinished interactions between their endpoints. The virtual index therefore records whether an interaction has not yet begun, is being propagated, or has terminated. For more complicated Hamiltonians, this block structure can be generated automatically from the operator~\cite{hubig2017}. For the ANNNI-type model of Eq.~\eqref{eq:annni_H}, the local tensor has bond dimension $D_W=5$ and takes the form
+In the \ac{FSM} representation~\cite{crosswhite2008,pirvu2010}, the Hamiltonian is encoded as an \ac{MPO} whose local tensor has a block-upper-triangular form~\cite{parker2020}. Two identity blocks propagate the initial and final states, while the on-site block $D$ generates local terms. The block row $C$ initiates interactions, the block column $B$ terminates them, and the memory block $A$ propagates unfinished interactions between their endpoints. The virtual index therefore records whether an interaction has not yet begun, is being propagated, or has terminated. For more complicated Hamiltonians, this block structure can be generated automatically from the operator~\cite{hubig2017}. For the \ac{ANNNI}-type model of Eq.~\eqref{eq:annni_H}, the local tensor has bond dimension $D_W=5$ and takes the form
 \begin{align}
   W_H & =
   \begin{pmatrix}
@@ -30,7 +30,7 @@ Figure~\ref{fig:fsm} represents Eq.~\eqref{eq:Wannni} through the allowed paths 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.7\linewidth]{imgs/fsm.pdf}%
-  \caption{\textbf{The Hamiltonian as a \acs{FSM}.} The nodes are the five virtual states of Eq.~\eqref{eq:Wannni}, and every path from state $1$ to state $5$ (double circle) generates one term of the Hamiltonian, applying the operator that labels each arrow. Colours mark which term is generated: the transverse field in teal, the \ac{NN} couplings in blue ($\sigma^z\sigma^z$) and orange ($\sigma^x\sigma^x$), and the \ac{NNN} coupling in purple. Grey loops apply identities before and after the term.}
+  \caption{\textbf{The Hamiltonian as a \acs{FSM}.} The nodes are the five virtual states of Eq.~\eqref{eq:Wannni}, and every path from state $1$ to state $5$ (double circle) generates one term of the Hamiltonian, applying the operator that labels each arrow. Colours mark which term is generated: the transverse field in teal, the \ac{NN} couplings in blue ($\sigma^z\sigma^z$) and orange ($\sigma^x\sigma^x$), and the \ac{NNN} coupling in purple, whose path closes through the same final $\sigma^z$ arrow as the blue pair. Grey loops apply identities before and after the term.}
   \label{fig:fsm}
 \end{figure}
 

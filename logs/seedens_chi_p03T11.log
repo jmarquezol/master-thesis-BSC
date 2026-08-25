@@ -1,0 +1,197 @@
+
+=== chi=128  p=0.3 T=11.0  (0 of 8 cached)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=65|"S=1/2,Site") <-> (dim=2|id=65|"S=1/2,Site")', normdiff = 0.22953505077375283
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=791|"Link,l=1") <-> (dim=7|id=603|"Link,l=2"), normdiff = 1.2223849630035628
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+┌ Warning: Tensor *not* symmetric (dim=2|id=849|"S=1/2,Site") <-> (dim=2|id=849|"S=1/2,Site")', normdiff = 0.22953505077375283
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=7|id=765|"Link,l=1") <-> (dim=7|id=913|"Link,l=2"), normdiff = 1.4845640750550886
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 1:26:41 ( 1.30  s/it)[K
+   Info: [2]  chi=14 | ds=0.2891261940952099 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 2:04:14 ( 1.86  s/it)[K
+   Info: [3]  chi=19 | ds=0.18282455943046427 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 3:43:02 ( 3.35  s/it)[K
+   Info: [4]  chi=26 | ds=0.21587409121722562 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 5:12:38 ( 4.70  s/it)[K
+   Info: [5]  chi=35 | ds=0.0985471906678026 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 7:41:55 ( 6.94  s/it)[K
+   Info: [6]  chi=45 | ds=0.11681352399085343 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 10:22:07 ( 9.35  s/it)[K
+   Info: [7]  chi=54 | ds=0.13054666184995095 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 14:00:06 (12.63  s/it)[K
+   Info: [8]  chi=63 | ds=0.10581088405613348 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 19:11:46 (17.32  s/it)[K
+   Info: [9]  chi=73 | ds=0.18347711815747447 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 1 days, 2:03:24 (23.51  s/it)[K
+   Info: [10]  chi=87 | ds=0.11071954790889793 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 1 days, 10:31:01 (31.15  s/it)[K
+   Info: [11]  chi=103 | ds=0.10592523231905837 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 1 days, 20:20:54 (40.03  s/it)[K
+   Info: [12]  chi=118 | ds=0.14202917268994175 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 2 days, 6:58:55 (49.65  s/it)[K
+   Info: [13]  chi=128 | ds=0.22809925594012478 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 2 days, 16:47:38 (58.52  s/it)[K
+   Info: [14]  chi=128 | ds=0.3361547902453348 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 3 days, 2:22:52 (67.19  s/it)[K
+   Info: [15]  chi=128 | ds=0.16840955368513671 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 3 days, 10:56:30 (74.95  s/it)[K
+   Info: [16]  chi=128 | ds=0.144026616206619 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 3 days, 18:31:13 (81.82  s/it)[K
+   Info: [17]  chi=128 | ds=0.13237018353926033 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 4 days, 1:46:42 (88.40  s/it)[K
+   Info: [18]  chi=128 | ds=0.12396935446394963 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 4 days, 8:00:19 (94.05  s/it)[K
+   Info: [19]  chi=128 | ds=0.16333866571785138 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   0%  ETA: 4 days, 13:14:54 (98.82  s/it)[K
+   Info: [20]  chi=128 | ds=0.13727893484941578 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 4 days, 18:15:56 ( 1.72  m/it)[K
+   Info: [21]  chi=128 | ds=0.1588348730245358 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 5 days, 6:01:57 ( 1.90  m/it)[K
+   Info: [22]  chi=128 | ds=0.08293953278869437 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 5 days, 20:14:09 ( 2.12  m/it)[K
+   Info: [23]  chi=128 | ds=0.11592375083251513 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 6 days, 8:16:17 ( 2.30  m/it)[K
+   Info: [24]  chi=128 | ds=0.1328728211848427 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 6 days, 18:36:36 ( 2.45  m/it)[K
+   Info: [25]  chi=128 | ds=0.1990052095730397 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 7 days, 2:58:20 ( 2.58  m/it)[K
+   Info: [26]  chi=126 | ds=0.16172175497954233 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 7 days, 8:07:04 ( 2.66  m/it)[K
+   Info: [27]  chi=119 | ds=0.07877732348968491 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 7 days, 12:15:39 ( 2.72  m/it)[K
+   Info: [28]  chi=114 | ds=0.06772248460852132 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 7 days, 15:10:11 ( 2.77  m/it)[K
+   Info: [29]  chi=109 | ds=0.1445647696416082 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 7 days, 17:08:00 ( 2.80  m/it)[K
+   Info: [30]  chi=105 | ds=0.20829073255863692 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 7 days, 17:30:20 ( 2.80  m/it)[K
+   Info: [31]  chi=100 | ds=0.08287204183542252 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 7 days, 16:49:41 ( 2.79  m/it)[K
+   Info: [32]  chi=93 | ds=0.12365769141306798 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 7 days, 14:55:42 ( 2.77  m/it)[K
+   Info: [33]  chi=88 | ds=0.3003915898088483 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 7 days, 10:58:50 ( 2.71  m/it)[K
+   Info: [34]  chi=83 | ds=0.16283132824123456 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 7 days, 7:01:56 ( 2.65  m/it)[K
+   Info: [35]  chi=80 | ds=0.07296570651984502 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 7 days, 3:28:30 ( 2.60  m/it)[K
+   Info: [36]  chi=79 | ds=0.09596952051617436 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 7 days, 0:09:40 ( 2.55  m/it)[K
+   Info: [37]  chi=78 | ds=0.09013141710264827 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 6 days, 20:51:20 ( 2.50  m/it)[K
+   Info: [38]  chi=78 | ds=0.18074632378600486 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 6 days, 17:37:51 ( 2.45  m/it)[K
+   Info: [39]  chi=75 | ds=0.2622412162879353 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 6 days, 14:27:12 ( 2.40  m/it)[K
+   Info: [40]  chi=72 | ds=0.2138878431194354 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 6 days, 11:21:57 ( 2.35  m/it)[K
+   Info: [41]  chi=70 | ds=0.08333389877080044 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 6 days, 8:30:02 ( 2.31  m/it)[K
+   Info: [42]  chi=71 | ds=0.08590521352421526 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 6 days, 5:49:27 ( 2.27  m/it)[K
+   Info: [43]  chi=72 | ds=0.05535793893989027 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 6 days, 3:19:19 ( 2.23  m/it)[K
+   Info: [44]  chi=76 | ds=0.04748152756046131 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 6 days, 1:04:23 ( 2.20  m/it)[K
+   Info: [45]  chi=79 | ds=0.09938656500509097 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 5 days, 23:05:24 ( 2.17  m/it)[K
+   Info: [46]  chi=83 | ds=0.12115338053765357 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 5 days, 21:12:04 ( 2.14  m/it)[K
+   Info: [47]  chi=83 | ds=0.20797920770970357 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 5 days, 19:17:12 ( 2.11  m/it)[K
+   Info: [48]  chi=84 | ds=0.13821825800865795 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 5 days, 17:35:58 ( 2.09  m/it)[K
+   Info: [49]  chi=85 | ds=0.10696325497986975 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 5 days, 15:56:20 ( 2.06  m/it)[K
+   Info: [50]  chi=85 | ds=0.187204536404879 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 5 days, 14:14:40 ( 2.04  m/it)[K
+   Info: [51]  chi=84 | ds=0.08198991894107316 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 5 days, 12:35:45 ( 2.02  m/it)[K
+   Info: [52]  chi=84 | ds=0.07498869444237277 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 5 days, 11:02:38 ( 1.99  m/it)[K
+   Info: [53]  chi=85 | ds=0.06371155057745997 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 5 days, 9:41:19 ( 1.97  m/it)[K
+   Info: [54]  chi=85 | ds=0.08167821466358438 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 5 days, 8:19:19 ( 1.95  m/it)[K
+   Info: [55]  chi=87 | ds=0.15713190476472488 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 5 days, 7:04:28 ( 1.93  m/it)[K
+   Info: [56]  chi=87 | ds=0.07562413044518451 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 5 days, 5:47:53 ( 1.91  m/it)[K
+   Info: [57]  chi=87 | ds=0.03927126609882736 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 5 days, 4:28:34 ( 1.89  m/it)[K
+   Info: [58]  chi=84 | ds=0.06816447503143716 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   1%  ETA: 5 days, 2:56:47 ( 1.87  m/it)[K
+   Info: [59]  chi=81 | ds=0.10158993049289343 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   2%  ETA: 5 days, 1:23:05 ( 1.85  m/it)[K
+   Info: [60]  chi=79 | ds=0.04051347354721363 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   2%  ETA: 4 days, 23:51:32 ( 1.83  m/it)[K
+   Info: [61]  chi=76 | ds=0.04216186632540961 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=114, cutoff=1.0e-12, maxdim=128, normalize=overlap)   2%  ETA: 4 days, 22:19:10 ( 1.80  m/it)[K
+   Info: [62]  chi=73 | ds=0.05185224547315764 | <R|Rprev> = NaN[K[A
+[61935] signal 15: Terminated: 15
+in expression starting at /Users/jmarquezol/Desktop/masters/master-thesis-BSC/scripts/analysis/seedens_chi.jl:15
+__psynch_cvwait at /usr/lib/system/libsystem_kernel.dylib (unknown line)
+unknown function (ip: 0x0) at (unknown file)
+gc_mark_outrefs at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-XG3Q6T6R70.0/build/default-honeycrisp-XG3Q6T6R70-0/julialang/julia-release-1-dot-12/src/gc-stock.c:2250 [inlined]
+gc_mark_loop_serial_ at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-XG3Q6T6R70.0/build/default-honeycrisp-XG3Q6T6R70-0/julialang/julia-release-1-dot-12/src/gc-stock.c:2518
+gc_mark_loop_serial at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-XG3Q6T6R70.0/build/default-honeycrisp-XG3Q6T6R70-0/julialang/julia-release-1-dot-12/src/gc-stock.c:2541
+_jl_gc_collect at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-XG3Q6T6R70.0/build/default-honeycrisp-XG3Q6T6R70-0/julialang/julia-release-1-dot-12/src/gc-stock.c:3073
+ijl_gc_collect at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-XG3Q6T6R70.0/build/default-honeycrisp-XG3Q6T6R70-0/julialang/julia-release-1-dot-12/src/gc-stock.c:3471
+maybe_collect at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-XG3Q6T6R70.0/build/default-honeycrisp-XG3Q6T6R70-0/julialang/julia-release-1-dot-12/src/gc-stock.c:350 [inlined]
+jl_gc_small_alloc_inner at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-XG3Q6T6R70.0/build/default-honeycrisp-XG3Q6T6R70-0/julialang/julia-release-1-dot-12/src/gc-stock.c:726 [inlined]
+jl_gc_small_alloc_noinline at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-XG3Q6T6R70.0/build/default-honeycrisp-XG3Q6T6R70-0/julialang/julia-release-1-dot-12/src/gc-stock.c:784 [inlined]
+jl_gc_alloc_ at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-XG3Q6T6R70.0/build/default-honeycrisp-XG3Q6T6R70-0/julialang/julia-release-1-dot-12/src/gc-stock.c:798
+jl_alloc_genericmemory_unchecked at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-XG3Q6T6R70.0/build/default-honeycrisp-XG3Q6T6R70-0/julialang/julia-release-1-dot-12/src/genericmemory.c:41
+GenericMemory at ./boot.jl:588 [inlined]
+Array at ./boot.jl:647 [inlined]
+Array at ./boot.jl:660 [inlined]
+similar at ./abstractarray.jl:867 [inlined]
+similar at ./abstractarray.jl:866 [inlined]
+similar at ./broadcast.jl:228 [inlined]
+similar at ./broadcast.jl:227 [inlined]
+copy at ./broadcast.jl:919 [inlined]
+materialize at ./broadcast.jl:894 [inlined]
+broadcast_preserving_zero_d at ./broadcast.jl:883 [inlined]
+conj at ./abstractarraymath.jl:210
+conj at /Users/jmarquezol/.julia/packages/NDTensors/gWcwD/src/tensorstorage/tensorstorage.jl:52 [inlined]
+conj at /Users/jmarquezol/.julia/packages/NDTensors/gWcwD/src/tensor/tensor.jl:250 [inlined]
+dag at /Users/jmarquezol/.julia/packages/ITensors/6hc0c/src/itensor.jl:1815
+unknown function (ip: 0x1683583ab) at (unknown file)
+dag at /Users/jmarquezol/.julia/packages/ITensors/6hc0c/src/itensor.jl:1819
+#dag#176 at /Users/jmarquezol/.julia/packages/ITensors/6hc0c/src/itensor.jl:1845 [inlined]
+dag at /Users/jmarquezol/.julia/packages/ITensors/6hc0c/src/itensor.jl:1834 [inlined]
+#_tlrcontract_rtm_right#157 at /Users/jmarquezol/.julia/packages/ITransverse/8pmYI/src/truncation_sweeps/rtm_lr_contract.jl:180
+_tlrcontract_rtm_right at /Users/jmarquezol/.julia/packages/ITransverse/8pmYI/src/truncation_sweeps/rtm_lr_contract.jl:120 [inlined]
+#tlrcontract#155 at /Users/jmarquezol/.julia/packages/ITransverse/8pmYI/src/truncation_sweeps/rtm_lr_contract.jl:21
+tlrcontract at /Users/jmarquezol/.julia/packages/ITransverse/8pmYI/src/truncation_sweeps/rtm_lr_contract.jl:6 [inlined]
+#tlrapply#142 at /Users/jmarquezol/.julia/packages/ITransverse/8pmYI/src/truncation_sweeps/trunclr_apply.jl:76 [inlined]
+tlrapply at /Users/jmarquezol/.julia/packages/ITransverse/8pmYI/src/truncation_sweeps/trunclr_apply.jl:75
+unknown function (ip: 0x17a0d01af) at (unknown file)
+#tlrapply#151 at /Users/jmarquezol/.julia/packages/ITransverse/8pmYI/src/truncation_sweeps/trunclr_apply.jl:152
+tlrapply at /Users/jmarquezol/.julia/packages/ITransverse/8pmYI/src/truncation_sweeps/trunclr_apply.jl:152 [inlined]
+powermethod_lr at /Users/jmarquezol/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:120
+#run_pm_diagnosed#53 at /Users/jmarquezol/Desktop/masters/master-thesis-BSC/src/transverse_tools.jl:423
+run_pm_diagnosed at /Users/jmarquezol/Desktop/masters/master-thesis-BSC/src/transverse_tools.jl:388 [inlined]
+top-level scope at /Users/jmarquezol/Desktop/masters/master-thesis-BSC/scripts/analysis/seedens_chi.jl:24
+jl_toplevel_eval_flex at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-XG3Q6T6R70.0/build/default-honeycrisp-XG3Q6T6R70-0/julialang/julia-release-1-dot-12/src/toplevel.c:1024
+jl_toplevel_eval_flex at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-XG3Q6T6R70.0/build/default-honeycrisp-XG3Q6T6R70-0/julialang/julia-release-1-dot-12/src/toplevel.c:975
+ijl_toplevel_eval at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-XG3Q6T6R70.0/build/default-honeycrisp-XG3Q6T6R70-0/julialang/julia-release-1-dot-12/src/toplevel.c:1047 [inlined]
+ijl_toplevel_eval_in at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-XG3Q6T6R70.0/build/default-honeycrisp-XG3Q6T6R70-0/julialang/julia-release-1-dot-12/src/toplevel.c:1092
+eval at ./boot.jl:489
+include_string at ./loading.jl:2870
+_include at ./loading.jl:2930
+include at ./Base.jl:306
+exec_options at ./client.jl:317
+_start at ./client.jl:550
+jfptr__start_56280.1 at /Users/jmarquezol/.julia/juliaup/julia-1.12.5+0.aarch64.apple.darwin14/Julia-1.12.app/Contents/Resources/julia/lib/julia/sys.dylib (unknown line)
+jl_apply at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-XG3Q6T6R70.0/build/default-honeycrisp-XG3Q6T6R70-0/julialang/julia-release-1-dot-12/src/./julia.h:2391 [inlined]
+true_main at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-XG3Q6T6R70.0/build/default-honeycrisp-XG3Q6T6R70-0/julialang/julia-release-1-dot-12/src/jlapi.c:971
+jl_repl_entrypoint at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-XG3Q6T6R70.0/build/default-honeycrisp-XG3Q6T6R70-0/julialang/julia-release-1-dot-12/src/jlapi.c:1139
+unknown function (ip: 0x0) at (unknown file)
+Allocations: 181571372 (Pool: 181569748; Big: 1624); GC: 6505
