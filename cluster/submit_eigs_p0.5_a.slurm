@@ -4,7 +4,7 @@
 #SBATCH --error=logs/eigs_p0.5_a-%j.err
 #SBATCH --account=bsc21
 #SBATCH --qos=gp_bsccase
-#SBATCH --time=2-00:00:00
+#SBATCH --time=24:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=40
