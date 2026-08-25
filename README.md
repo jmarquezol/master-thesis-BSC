@@ -12,31 +12,46 @@ This programme was established for integrable chains (Carignano & Tagliacozzo; B
 H = -Σ_i [ σᶻ_i σᶻ_{i+1} + λ σˣ_i + p (σᶻ_i σᶻ_{i+2} + λ σˣ_i σˣ_{i+1}) ]
 ```
 
-which is genuinely interacting for any `p > 0` but remains critical and in the Ising universality class up to `p ≲ 1.5`. The equilibrium checks confirm this directly (the ground-state central charge stays at the Ising value across the whole range), and the dynamical measurements at the integrable point reproduce every conformal prediction. The frustrated couplings are being recomputed on a corrected construction of the transfer-matrix column; those results, from the cluster sweeps in `cluster/`, complete the story.
+which is genuinely interacting for any `p > 0` but remains critical and in the Ising universality class up to `p ≲ 1.5`. The answer is yes: the equilibrium checks place the model in the Ising class across the whole range, and the dynamical measurements — on a corrected construction of the transfer-matrix column (`column=:bulk5`), from the cluster sweeps in `cluster/` — return the central charge through two independent routes and seven members of the boundary operator spectrum at every coupling studied.
 
 ## What is in the repository
 
-- `thesis/` — the LaTeX manuscript. The source of truth is edited in Overleaf and synced here as `BSC-TFMvN.zip`.
-- `NBs/` — the work as a notebook series, in order: model and benchmarks, the time-evolution MPO, temporal entropies, the equilibrium DMRG checks and the sound velocity, the spectrum and central-charge measurements, and the validation of the corrected transfer-matrix column (`13_bulk_column`).
+- `thesis/` — the LaTeX manuscript (compiled with tectonic; figures included as PDF).
+- `notebooks/` — the guided tour, six notebooks in reading order: the model and its equilibrium properties, the method and its validation, the temporal entropies and the wall, the spectral route to the central charge, the boundary operator spectrum, and the numerical controls. Every cell loads shipped caches and calls library or script code — nothing heavy runs in a notebook.
 - `src/` — the Julia library everything uses (`include("src/thesislib.jl")`): model Hamiltonians, the temporal-MPO construction including the corrected bulk-column extraction, the block power method, and the entropy routines.
-- `cluster/` — the SLURM jobs for MareNostrum, with their own README.
-- `results/` — cached data and figures; every figure regenerates from the notebook that owns it.
-- `other_models/` — exploratory notebooks (XXZ, tricritical), off the main line.
+- `scripts/figures/` — one script per thesis figure; `make_all.jl` regenerates every plot as PNG + PDF + SVG under `figures/` and syncs the PDFs into `thesis/imgs/`.
+- `scripts/analysis/` — the numbers behind the thesis tables, split in two kinds. **Readers** take the shipped caches and print a result: `cluster_audit.jl` recomputes every value in the results table and shows where each one comes from, and `entropy_c.jl`, `eq3_windows.jl`, `chi_check.jl`, `deficit_tests.jl`, `mixedbc_analysis.jl`, `battery_report.jl` and `dtreport.jl` do the same for the individual controls. **Producers** are the runs that made those caches — the equilibrium ED and DMRG, the entropy and boundary ladders, the exponential-MPO benchmark, and the robustness controls (seed ensembles, cutoff scan, Trotter step, bond dimension, block size, warm starts). Every cache under `data/local/` has one, named in its header.
+- `data/cluster/` — the production caches from the MareNostrum sweeps; `data/local/` — the local caches (equilibrium DMRG/ED, validation runs, controls).
+- `figures/` — the generated figures (SVG is the Inkscape-editable version).
+- `cluster/` — the SLURM jobs, with their own README.
+- `presentation/` — the beamer draft for the defense.
 - `ITensorExpMPOv2.jl/` — a fork of [tipfom/ITensorExpMPO.jl](https://github.com/tipfom/ITensorExpMPO.jl); all upstream work is @tipfom's, and this thesis adds the second-order VD2 kernel (Van Damme et al.) so the NNN model evolves at genuine second order.
 
-## Running it
+## Reproducing the results
 
-```julia
-julia --project=.
-include("src/thesislib.jl")
+```bash
+julia --project=. -e 'using Pkg; Pkg.instantiate()'   # Manifest pins ITransverse to the tested commit
 
-mpo, scaffold = build_alcaraz_tmpo(4.0; p=0.1, nbeta=4, column=:bulk5)   # corrected transfer matrix
-theta, L, R, info = block_transfer_eigs(mpo, scaffold; k=4)              # leading eigenpairs
-mp = AlcarazParams(lambda=1.0, p=0.1)
-compute_entropies(mp, 4.0; scheme=AlcarazVD2(), nbeta=4, column=:bulk5)  # Rényi-2 temporal entropy
+julia --project=. scripts/analysis/cluster_audit.jl   # every number in the results table, with its provenance
+julia --project=. scripts/analysis/extend_window.jl   # the fitting windows, and the rungs selected for them
+julia --project=. scripts/figures/make_all.jl         # every thesis plot, PNG + PDF + SVG
 ```
 
-`column=:bulk5` selects the corrected bulk-column extraction; the long sweeps cache to `results/data/` as they go, so an interrupted run resumes where it stopped.
+Then read the notebooks in order (Julia 1.12 kernel); they execute in minutes because everything they show is cached.
+
+Regenerating a cache is a different matter — those are the long runs. Each producer says in its header what it writes and roughly what it costs, checkpoints as it goes, and skips whatever is already on disk, so an interrupted run resumes and a finished one costs nothing:
+
+```bash
+julia --project=. scripts/analysis/equilibrium_velocity.jl      # sound velocity, exact diagonalisation
+julia --project=. scripts/analysis/bulk_column_mu0.jl           # the transfer-matrix column test
+julia --project=. scripts/analysis/svpm_ladder.jl p00           # one entropy arm (see the script for the list)
+julia --project=. scripts/analysis/mixedbc_ladder.jl upup       # one boundary pair
+julia --project=. scripts/analysis/cutrerun.jl                  # the cutoff control, whole grid
+```
+
+The production sweeps behind the main text are not local runs at all: they are the SLURM jobs in `cluster/`, which write to `data/cluster/`.
+
+One convention matters everywhere: for an NNN model the transfer-matrix column must be built from a five-site patch (`build_alcaraz_tmpo(...; column=:bulk5)`). The legacy three-site extraction silently drops a memory channel — notebook 2 demonstrates the difference.
 
 ## Credits and references
 

@@ -36,7 +36,7 @@ The spectral arms matter most if the queue has to be cut short.
 
 ## Do not delete
 
-- `results/data/cluster/` — the results, and what each job reads to skip work already done
+- `data/cluster/` — the results, and what each job reads to skip work already done
 - `cluster/checkpoints/` — what makes a resubmission resume warm
 
 A resubmitted job reuses both, so deleting either means recomputing every rung from T=2.
@@ -56,7 +56,7 @@ Scripts under `archive/` are not to be run.
 
 ## Where things land
 
-- results: `results/data/cluster/` — the folder to send back
+- results: `data/cluster/` — the folder to send back
 - checkpoints: `cluster/checkpoints/`
 - logs: `cluster/logs/`
 

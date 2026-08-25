@@ -38,7 +38,7 @@ const MU_JUMP = parse(Float64, get(ENV, "WALL_MU_JUMP", "0.005"))
 const COLUMN = Symbol(get(ENV, "WALL_COLUMN", "legacy3"))
 COLUMN in (:legacy3, :bulk5) || error("WALL_COLUMN must be legacy3 or bulk5")
 
-const CLUSTER_DIR   = joinpath(@__DIR__, "..", "results", "data", "cluster")
+const CLUSTER_DIR   = joinpath(@__DIR__, "..", "data", "cluster")
 const CLUSTER_CACHE = joinpath(CLUSTER_DIR, "warm_sweep.jld2")
 
 # the first/last nbeta/2 bonds are imaginary-time cooling, not real-time cuts

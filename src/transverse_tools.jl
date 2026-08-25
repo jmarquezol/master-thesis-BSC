@@ -450,6 +450,33 @@ function plateau_im(s2, nbeta::Int=4)
     return mean(imag.(prof)[max(1, end ÷ 2 - 1):end ÷ 2 + 2])
 end
 
+"""
+    ensemble_profile(p, T; nbeta=4) → NamedTuple or nothing
+
+Representative Renyi-2 profile for one rung of the single-vector seed ensembles in
+`data/local/controls/`. A seed counts as physical when its imaginary plateau falls inside the band
+used in Appendix app:failures, and among those we return the profile whose plateau is closest to
+their median, so a figure shows the same run the quoted number comes from. Local caches are stored
+untrimmed, so the nbeta/2 cooling bonds at each end are dropped here.
+
+Returns `nothing` when the rung has no cache or when no seed is physical.
+"""
+function ensemble_profile(p::Real, T::Real; nbeta::Int=4,
+                          root=normpath(joinpath(@__DIR__, "..")))
+    file = joinpath(root, "data", "local", "controls",
+                    "seedens_p$(float(p))_T$(float(T)).jld2")
+    isfile(file) || return nothing
+    res = load(file, "res")
+    good = [r for r in values(res) if 0.05 < r.plateau < 0.20]
+    isempty(good) && return nothing
+
+    plateaus = [r.plateau for r in good]
+    pick = good[argmin(abs.(plateaus .- median(plateaus)))]
+    trim = nbeta ÷ 2
+    return (s2=collect(pick.s2)[(trim + 1):(end - trim)], plateau=pick.plateau,
+            nseeds=length(res), ngood=length(good))
+end
+
 # two runs agree if both the plateau and the leading modulus match
 runs_agree(a, b; tol, mu_tol) =
     abs(a.plateau - b.plateau) <= tol * abs(a.plateau) &&
@@ -619,7 +646,8 @@ function tdvp_loschmidt_amplitude(N::Int, target_times::Vector{Float64};
         cachefile::Union{String,Nothing}=nothing)
 
     # Cache file path (build a default name from p and N if none was given)
-    cf   = isnothing(cachefile) ? "results/data/tdvp_loschmidt_p$(p)_N$(N).jld2" : cachefile
+    cf   = isnothing(cachefile) ?
+           normpath(joinpath(@__DIR__, "..", "data", "local", "tdvp_loschmidt_p$(p)_N$(N).jld2")) : cachefile
     done = isfile(cf) ? load(cf, "done") : Dict{Float64,Any}()   # resume from disk, or start fresh
 
     # Set up real-space problem
@@ -663,7 +691,7 @@ end
     crashsafe_sweep(f, Ts; cachefile) → done::Dict
 
 Calls `done[T] = f(T)` for each T (sorted), saving a JLD2 checkpoint after every T
-and skipping already-cached T. Use a results/data/ path for `cachefile`.
+and skipping already-cached T. Use a data/local/ path for `cachefile`.
 """
 function crashsafe_sweep(f::Function, Ts; cachefile::String)
     done = isfile(cachefile) ? load(cachefile, "done") : Dict{Float64, Any}()
@@ -733,13 +761,30 @@ const P_COLOR  = Dict(0.0 => :dodgerblue, 0.1 => :crimson, 0.3 => :seagreen,
 const P_MARKER = Dict(0.0 => :circle, 0.1 => :square, 0.3 => :diamond,
                       0.5 => :utriangle, 1.0 => :star5)
 
-# Save a row of subplots as one figure under results/imgs/
+# Save a row of subplots as one figure under figures/
 function plot_panels(panels...; filename::String, title::String="",
                      fig_size::Tuple{Int,Int}=(500*length(panels), 480))
-    mkpath("results/imgs")
+    dir = normpath(joinpath(@__DIR__, "..", "figures"))
+    mkpath(dir)
     plt = plot(panels...; layout=(1, length(panels)), size=fig_size,   # one row, N columns
                plot_title=title, margin=5Plots.mm)
-    savefig(plt, joinpath("results", "imgs", filename))
+    savefig(plt, joinpath(dir, filename))
+    return plt
+end
+
+"""
+    save_thesis_figure(plt, name)
+
+Save a thesis figure under `figures/` in the three formats we keep: PNG for quick viewing,
+PDF for `\\includegraphics` in LaTeX, and SVG for editing in Inkscape.
+"""
+function save_thesis_figure(plt, name::AbstractString)
+    dir = normpath(joinpath(@__DIR__, "..", "figures"))
+    mkpath(dir)
+    for ext in ("png", "pdf", "svg")
+        savefig(plt, joinpath(dir, "$name.$ext"))
+    end
+    println("wrote figures/$name.{png,pdf,svg}")
     return plt
 end
 

@@ -13,7 +13,7 @@
 # CORRECTED COLUMN (WALL_COLUMN=bulk5): temporal site dimension 13 instead of 7, roughly 2-4x the
 # cost per iteration of the legacy runs. Tmax is deliberately modest for this first calibration
 # round; resubmit with a larger Tmax to extend — the ladder resumes from its own checkpoint.
-# Own cache: results/data/cluster/sweep_tower_p0.5_bulk.jld2 — never shared with a legacy cache.
+# Own cache: data/cluster/sweep_tower_p0.5_bulk.jld2 — never shared with a legacy cache.
 
 cd "${SLURM_SUBMIT_DIR:-.}" || exit 1
 mkdir -p logs

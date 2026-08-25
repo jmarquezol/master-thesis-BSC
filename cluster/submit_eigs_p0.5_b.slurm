@@ -15,7 +15,7 @@
 # dT<1 is deliberate. What limits the Eq.(3) fit is the number of points inside the window, not
 # the reach in T: at p=0.3 an integer ladder gave c=0.41 with residuals 1.2e-3, and adding the
 # half-integer rungs over the same range gave c=0.51 with residuals 3.7e-4.
-# Own cache: results/data/cluster/sweep_rtm_eigs_p0.5_bulk.jld2
+# Own cache: data/cluster/sweep_rtm_eigs_p0.5_bulk.jld2
 
 cd "${SLURM_SUBMIT_DIR:-.}" || exit 1
 mkdir -p logs

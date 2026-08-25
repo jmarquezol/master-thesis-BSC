@@ -13,7 +13,7 @@
 # The fine and unit ladders disagree by 20% on c at p=0.1 and only the fine one settles, so the
 # same analysis has to be run where the answer is known. Resubmit if it hits the walltime — it
 # resumes from the last completed rung.
-# Own cache: results/data/cluster/sweep_eigs_p0.0_bulk.jld2.
+# Own cache: data/cluster/sweep_eigs_p0.0_bulk.jld2.
 
 cd "${SLURM_SUBMIT_DIR:-.}" || exit 1
 mkdir -p logs
