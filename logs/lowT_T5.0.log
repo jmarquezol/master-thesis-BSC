@@ -1,0 +1,1542 @@
+
+=== dt=0.1 p=0.0 T=5.0  (0 of 20 cached)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=968|"S=1/2,Site") <-> (dim=2|id=968|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=610|"Link,l=1") <-> (dim=3|id=723|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=657|"S=1/2,Site") <-> (dim=2|id=657|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=362|"Link,l=1") <-> (dim=3|id=198|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:06:39 ( 0.10  s/it)[K
+   Info: [2]  chi=8 | ds=0.24948367900406795 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:01:19 (19.82 ms/it)[K
+   Info: [20]  chi=6 | ds=0.019557526981162088 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:55 (13.95 ms/it)[K
+   Info: [36]  chi=8 | ds=0.005075456532657174 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:46 (11.65 ms/it)[K
+   Info: [52]  chi=8 | ds=0.001416990772921345 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:41 (10.42 ms/it)[K
+   Info: [68]  chi=8 | ds=0.0013226690011298725 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:37 ( 9.57 ms/it)[K
+   Info: [85]  chi=8 | ds=0.0002690083845926089 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:35 ( 9.08 ms/it)[K
+   Info: [101]  chi=8 | ds=0.0003939870095310827 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:34 ( 8.70 ms/it)[K
+   Info: [117]  chi=8 | ds=9.138416324128151e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:38 ( 9.87 ms/it)[K
+   Info: [133]  chi=8 | ds=0.00017866626620832715 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:38 ( 9.99 ms/it)[K
+   Info: [147]  chi=8 | ds=0.000200370344012768 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:37 ( 9.65 ms/it)[K
+   Info: [163]  chi=8 | ds=0.00018466033568642626 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:36 ( 9.35 ms/it)[K
+   Info: [179]  chi=8 | ds=6.570471279157553e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:34 ( 9.06 ms/it)[K
+   Info: [196]  chi=8 | ds=0.00017507668453164982 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:33 ( 8.83 ms/it)[K
+   Info: [213]  chi=8 | ds=0.00018185983354512825 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:33 ( 8.63 ms/it)[K
+   Info: [230]  chi=8 | ds=0.0001858693596871186 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:32 ( 8.45 ms/it)[K
+   Info: [247]  chi=8 | ds=0.00019279210117773005 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:31 ( 8.27 ms/it)[K
+   Info: [265]  chi=8 | ds=0.00018240674222869124 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:30 ( 8.17 ms/it)[K
+   Info: [281]  chi=8 | ds=0.00018483393684598504 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:30 ( 8.12 ms/it)[K
+   Info: [296]  chi=8 | ds=6.537838704764876e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:30 ( 8.14 ms/it)[K
+   Info: [310]  chi=8 | ds=0.00018140739461591782 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:30 ( 8.22 ms/it)[K
+   Info: [323]  chi=8 | ds=0.00018139354510593453 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:30 ( 8.27 ms/it)[K
+   Info: [334]  chi=8 | ds=0.0001863318322620211 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:30 ( 8.18 ms/it)[K
+   Info: [350]  chi=8 | ds=0.0002229265948522352 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:29 ( 8.09 ms/it)[K
+   Info: [367]  chi=8 | ds=0.00018533507175100272 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:29 ( 8.00 ms/it)[K
+   Info: [384]  chi=8 | ds=0.00018718003719553344 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:29 ( 7.92 ms/it)[K
+   Info: [401]  chi=8 | ds=0.00018139048500831478 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:28 ( 7.84 ms/it)[K
+   Info: [418]  chi=8 | ds=0.0001596974225047676 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:28 ( 7.79 ms/it)[K
+   Info: [435]  chi=8 | ds=0.00018977249863105783 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:27 ( 7.74 ms/it)[K
+   Info: [451]  chi=8 | ds=0.00018633688894531542 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:27 ( 7.69 ms/it)[K
+   Info: [468]  chi=8 | ds=0.00019261302546236259 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:27 ( 7.76 ms/it)[K
+   Info: [483]  chi=8 | ds=0.0001596973318926942 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:28 ( 8.07 ms/it)[K
+   Info: [493]  chi=8 | ds=0.00022292935472945086 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:28 ( 8.05 ms/it)[K
+   Info: [509]  chi=8 | ds=0.0001596973316672079 | <R|Rprev> = NaN[K[A  seed  1  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @519)  26 s
+┌ Warning: PM Stuck after 301/519 steps | ds=0.00022292935943257763 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=737|"S=1/2,Site") <-> (dim=2|id=737|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=866|"Link,l=1") <-> (dim=3|id=561|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=508|"S=1/2,Site") <-> (dim=2|id=508|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=367|"Link,l=1") <-> (dim=3|id=765|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:52 (12.98 ms/it)[K
+   Info: [8]  chi=14 | ds=0.12167978252805267 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:37 ( 9.28 ms/it)[K
+   Info: [22]  chi=8 | ds=0.10197053829097619 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:32 ( 8.08 ms/it)[K
+   Info: [38]  chi=8 | ds=0.017310842483679423 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:29 ( 7.47 ms/it)[K
+   Info: [55]  chi=8 | ds=0.012984470096117598 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:28 ( 7.18 ms/it)[K
+   Info: [72]  chi=7 | ds=0.0027421443525239564 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:27 ( 6.97 ms/it)[K
+   Info: [89]  chi=8 | ds=0.006470893536764666 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:26 ( 6.80 ms/it)[K
+   Info: [106]  chi=8 | ds=0.0027897868157991113 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:26 ( 6.69 ms/it)[K
+   Info: [123]  chi=8 | ds=0.0006291918143345177 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:25 ( 6.61 ms/it)[K
+   Info: [140]  chi=8 | ds=0.0008800439268957794 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:25 ( 6.56 ms/it)[K
+   Info: [157]  chi=8 | ds=0.0004359229063417569 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:25 ( 6.54 ms/it)[K
+   Info: [174]  chi=8 | ds=0.00019629960175726602 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:25 ( 6.50 ms/it)[K
+   Info: [191]  chi=8 | ds=0.00010498122127577947 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:25 ( 6.54 ms/it)[K
+   Info: [206]  chi=8 | ds=0.00023280826629057394 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:25 ( 6.53 ms/it)[K
+   Info: [222]  chi=8 | ds=0.00020333528943738965 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:24 ( 6.50 ms/it)[K
+   Info: [239]  chi=8 | ds=0.00019441195858538318 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:24 ( 6.51 ms/it)[K
+   Info: [255]  chi=8 | ds=0.00018886873583656705 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:24 ( 6.48 ms/it)[K
+   Info: [272]  chi=8 | ds=0.0001797935688514496 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:24 ( 6.48 ms/it)[K
+   Info: [288]  chi=8 | ds=0.00017578745984137 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:24 ( 6.57 ms/it)[K
+   Info: [304]  chi=8 | ds=0.00019463911149486535 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:26 ( 7.11 ms/it)[K
+   Info: [316]  chi=8 | ds=0.00018534315399965084 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:26 ( 7.12 ms/it)[K
+   Info: [331]  chi=8 | ds=0.00018257419203815406 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:26 ( 7.12 ms/it)[K
+   Info: [347]  chi=8 | ds=0.0001848422755593715 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:26 ( 7.08 ms/it)[K
+   Info: [363]  chi=8 | ds=0.00018144207635106824 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:26 ( 7.06 ms/it)[K
+   Info: [379]  chi=8 | ds=0.00017533164068062046 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:25 ( 6.99 ms/it)[K
+   Info: [397]  chi=8 | ds=0.00018977075782056207 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:25 ( 6.95 ms/it)[K
+   Info: [414]  chi=8 | ds=6.53630156337015e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:25 ( 6.92 ms/it)[K
+   Info: [431]  chi=8 | ds=0.00017534292962362308 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.88 ms/it)[K
+   Info: [448]  chi=8 | ds=0.00018246223027562625 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.85 ms/it)[K
+   Info: [465]  chi=8 | ds=0.00018633638650222828 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.82 ms/it)[K
+   Info: [482]  chi=8 | ds=0.0001926132180355422 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.79 ms/it)[K
+   Info: [499]  chi=8 | ds=0.0001943202966792068 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:24 ( 6.77 ms/it)[K
+   Info: [516]  chi=8 | ds=0.00018483500233423822 | <R|Rprev> = NaN[K[A  seed  2  plateau= 0.1299  |mu0|=1.489583  rig=4.22e-02  (stuck @529)  4 s
+┌ Warning: PM Stuck after 301/529 steps | ds=0.00018483507055322423 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=876|"S=1/2,Site") <-> (dim=2|id=876|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=816|"Link,l=1") <-> (dim=3|id=285|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=800|"S=1/2,Site") <-> (dim=2|id=800|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=573|"Link,l=1") <-> (dim=3|id=498|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:35 ( 8.68 ms/it)[K
+   Info: [12]  chi=11 | ds=0.07143464054880524 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:30 ( 7.61 ms/it)[K
+   Info: [27]  chi=8 | ds=0.09586335753064198 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:28 ( 7.12 ms/it)[K
+   Info: [43]  chi=9 | ds=0.011090436146454233 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:27 ( 6.93 ms/it)[K
+   Info: [59]  chi=8 | ds=0.0028655398427283596 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.74 ms/it)[K
+   Info: [76]  chi=8 | ds=0.0013777266182769532 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.66 ms/it)[K
+   Info: [92]  chi=8 | ds=0.0005972129118949621 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:26 ( 6.59 ms/it)[K
+   Info: [109]  chi=8 | ds=0.0010482913684884965 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:25 ( 6.56 ms/it)[K
+   Info: [126]  chi=8 | ds=0.0005266165515439292 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:25 ( 6.51 ms/it)[K
+   Info: [143]  chi=8 | ds=0.00015768664765525298 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:25 ( 6.63 ms/it)[K
+   Info: [158]  chi=8 | ds=0.00018594073469579975 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:29 ( 7.62 ms/it)[K
+   Info: [171]  chi=8 | ds=0.00015499231889715137 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:29 ( 7.54 ms/it)[K
+   Info: [187]  chi=8 | ds=0.00019056444243470416 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:28 ( 7.50 ms/it)[K
+   Info: [202]  chi=8 | ds=0.0001907271720549275 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:28 ( 7.40 ms/it)[K
+   Info: [219]  chi=8 | ds=0.0001638275806991052 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:28 ( 7.32 ms/it)[K
+   Info: [235]  chi=8 | ds=0.00018357281682257476 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:27 ( 7.22 ms/it)[K
+   Info: [253]  chi=8 | ds=0.0001861158466724966 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:27 ( 7.15 ms/it)[K
+   Info: [270]  chi=8 | ds=0.00022261686582825124 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:26 ( 7.08 ms/it)[K
+   Info: [287]  chi=8 | ds=0.0001853311900671395 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:26 ( 7.03 ms/it)[K
+   Info: [304]  chi=8 | ds=0.00018721124580611814 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:26 ( 6.98 ms/it)[K
+   Info: [321]  chi=8 | ds=0.00018137831843734187 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.94 ms/it)[K
+   Info: [338]  chi=8 | ds=0.0001597152836420035 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:25 ( 6.90 ms/it)[K
+   Info: [355]  chi=8 | ds=0.00018978556957560677 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:25 ( 6.87 ms/it)[K
+   Info: [372]  chi=8 | ds=6.536972476176017e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:25 ( 6.84 ms/it)[K
+   Info: [388]  chi=8 | ds=0.00019261255514246844 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:25 ( 6.82 ms/it)[K
+   Info: [405]  chi=8 | ds=0.00019431984030804372 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.79 ms/it)[K
+   Info: [422]  chi=8 | ds=0.00018483520240042406 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.76 ms/it)[K
+   Info: [439]  chi=8 | ds=0.00022292903570031442 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.74 ms/it)[K
+   Info: [455]  chi=8 | ds=0.00015969750214173128 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.72 ms/it)[K
+   Info: [472]  chi=8 | ds=0.00018977245241214025 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.70 ms/it)[K
+   Info: [489]  chi=8 | ds=6.536607671073225e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.69 ms/it)[K
+   Info: [505]  chi=8 | ds=0.00019261301812123488 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.67 ms/it)[K
+   Info: [522]  chi=8 | ds=0.0001943203210834632 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.65 ms/it)[K
+   Info: [539]  chi=8 | ds=0.00018483505867372685 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  14%  ETA: 0:00:23 ( 6.64 ms/it)[K
+   Info: [556]  chi=8 | ds=0.00022292935912204825 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  14%  ETA: 0:00:23 ( 6.63 ms/it)[K
+   Info: [573]  chi=8 | ds=0.00018533580603274924 | <R|Rprev> = NaN[K[A  seed  3  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @582)  4 s
+┌ Warning: PM Stuck after 301/582 steps | ds=0.00022292936063517121 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=897|"S=1/2,Site") <-> (dim=2|id=897|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=767|"Link,l=1") <-> (dim=3|id=237|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=174|"S=1/2,Site") <-> (dim=2|id=174|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=974|"Link,l=1") <-> (dim=3|id=667|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:39 ( 9.84 ms/it)[K
+   Info: [11]  chi=11 | ds=0.2082749231162746 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:30 ( 7.61 ms/it)[K
+   Info: [28]  chi=9 | ds=0.07834387018817546 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:30 ( 7.48 ms/it)[K
+   Info: [43]  chi=7 | ds=0.010448394166352348 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:28 ( 7.00 ms/it)[K
+   Info: [61]  chi=8 | ds=0.003383244046498146 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:27 ( 6.79 ms/it)[K
+   Info: [78]  chi=8 | ds=0.0061418509287172185 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.70 ms/it)[K
+   Info: [95]  chi=8 | ds=0.004032161010113611 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:26 ( 6.66 ms/it)[K
+   Info: [111]  chi=8 | ds=0.0010704651111056451 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:26 ( 6.62 ms/it)[K
+   Info: [127]  chi=8 | ds=0.0013703574821642972 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:25 ( 6.56 ms/it)[K
+   Info: [144]  chi=8 | ds=0.00034143748870929524 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:25 ( 6.53 ms/it)[K
+   Info: [161]  chi=8 | ds=0.00023840139802022708 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:25 ( 6.51 ms/it)[K
+   Info: [177]  chi=8 | ds=0.00018430285204776298 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:25 ( 6.50 ms/it)[K
+   Info: [193]  chi=8 | ds=0.0002173522474250289 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:25 ( 6.47 ms/it)[K
+   Info: [210]  chi=8 | ds=0.00020338129416141992 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:24 ( 6.46 ms/it)[K
+   Info: [226]  chi=8 | ds=0.0001735144245400555 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:24 ( 6.45 ms/it)[K
+   Info: [242]  chi=8 | ds=0.0002254981363548625 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:24 ( 6.42 ms/it)[K
+   Info: [259]  chi=8 | ds=0.0001869952106119399 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:24 ( 6.41 ms/it)[K
+   Info: [276]  chi=8 | ds=0.0001874397935218708 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:24 ( 6.40 ms/it)[K
+   Info: [293]  chi=8 | ds=0.00018189434955262485 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:24 ( 6.38 ms/it)[K
+   Info: [310]  chi=8 | ds=0.0001599579182205435 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:23 ( 6.38 ms/it)[K
+   Info: [326]  chi=8 | ds=0.00018243899023484555 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:23 ( 6.37 ms/it)[K
+   Info: [342]  chi=8 | ds=0.00018478034404523225 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:23 ( 6.36 ms/it)[K
+   Info: [359]  chi=8 | ds=0.00022294872167061275 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:23 ( 6.36 ms/it)[K
+   Info: [375]  chi=8 | ds=0.00015970721449154457 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:23 ( 6.35 ms/it)[K
+   Info: [392]  chi=8 | ds=0.00018978105026756786 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.81 ms/it)[K
+   Info: [407]  chi=8 | ds=0.00018483504734712053 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.81 ms/it)[K
+   Info: [424]  chi=8 | ds=0.00022293096519498956 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.78 ms/it)[K
+   Info: [441]  chi=8 | ds=0.00018533654123253918 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.79 ms/it)[K
+   Info: [458]  chi=8 | ds=0.00018718005536977333 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.78 ms/it)[K
+   Info: [474]  chi=8 | ds=6.536632533346576e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.76 ms/it)[K
+   Info: [491]  chi=8 | ds=0.0001753416099323779 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:24 ( 6.75 ms/it)[K
+   Info: [507]  chi=8 | ds=0.00019432028099752863 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.74 ms/it)[K
+   Info: [523]  chi=8 | ds=0.00018718016024643624 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.75 ms/it)[K
+   Info: [538]  chi=8 | ds=0.00018633691250935502 | <R|Rprev> = NaN[K[A  seed  4  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @541)  4 s
+┌ Warning: PM Stuck after 301/541 steps | ds=0.0002229293661517584 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=508|"S=1/2,Site") <-> (dim=2|id=508|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=498|"Link,l=1") <-> (dim=3|id=645|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=284|"S=1/2,Site") <-> (dim=2|id=284|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=781|"Link,l=1") <-> (dim=3|id=163|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:33 ( 8.36 ms/it)[K
+   Info: [12]  chi=12 | ds=0.10966546925890944 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:29 ( 7.38 ms/it)[K
+   Info: [28]  chi=9 | ds=0.033279778634783264 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:28 ( 6.97 ms/it)[K
+   Info: [44]  chi=8 | ds=0.005941455352736935 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:27 ( 6.74 ms/it)[K
+   Info: [61]  chi=8 | ds=0.0007074729253214729 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.63 ms/it)[K
+   Info: [78]  chi=8 | ds=0.0006178317601838179 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.53 ms/it)[K
+   Info: [95]  chi=8 | ds=0.00045594713687358013 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:25 ( 6.51 ms/it)[K
+   Info: [111]  chi=8 | ds=0.00021332089972458945 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:25 ( 6.49 ms/it)[K
+   Info: [127]  chi=8 | ds=0.0001655523802539527 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:25 ( 6.47 ms/it)[K
+   Info: [143]  chi=8 | ds=0.00020855780442430305 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:25 ( 6.48 ms/it)[K
+   Info: [159]  chi=8 | ds=0.0001999771770728742 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:25 ( 6.46 ms/it)[K
+   Info: [176]  chi=8 | ds=0.00019474343755487844 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:24 ( 6.43 ms/it)[K
+   Info: [193]  chi=8 | ds=0.00018094765610043861 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:24 ( 6.43 ms/it)[K
+   Info: [209]  chi=8 | ds=7.16229270950608e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:24 ( 6.42 ms/it)[K
+   Info: [225]  chi=8 | ds=0.00019323230781542744 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:24 ( 6.41 ms/it)[K
+   Info: [241]  chi=8 | ds=0.00018564907089213545 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:27 ( 7.16 ms/it)[K
+   Info: [257]  chi=8 | ds=0.0001894967391780078 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:27 ( 7.14 ms/it)[K
+   Info: [275]  chi=8 | ds=0.00018137872079093675 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:26 ( 7.05 ms/it)[K
+   Info: [293]  chi=8 | ds=0.0001852818654123345 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:26 ( 7.06 ms/it)[K
+   Info: [309]  chi=8 | ds=0.00018982163070957458 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:26 ( 7.00 ms/it)[K
+   Info: [326]  chi=8 | ds=6.537483290677826e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:25 ( 6.96 ms/it)[K
+   Info: [343]  chi=8 | ds=0.00017534707650290748 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:25 ( 6.92 ms/it)[K
+   Info: [360]  chi=8 | ds=0.0001824668551245745 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:25 ( 6.88 ms/it)[K
+   Info: [377]  chi=8 | ds=0.00018633726688443986 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:25 ( 6.86 ms/it)[K
+   Info: [393]  chi=8 | ds=0.00022292795807032917 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:25 ( 6.83 ms/it)[K
+   Info: [410]  chi=8 | ds=0.00018533510174834067 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.81 ms/it)[K
+   Info: [426]  chi=8 | ds=0.0001897723721326905 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.79 ms/it)[K
+   Info: [442]  chi=8 | ds=0.00018633706849457976 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.78 ms/it)[K
+   Info: [458]  chi=8 | ds=0.00022292935946388592 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.77 ms/it)[K
+   Info: [474]  chi=8 | ds=0.00015969738144561152 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.76 ms/it)[K
+   Info: [490]  chi=8 | ds=0.00018246257554976886 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:24 ( 6.85 ms/it)[K
+   Info: [506]  chi=8 | ds=0.00018483504639388304 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:24 ( 6.83 ms/it)[K
+   Info: [522]  chi=8 | ds=0.0001813904162911717 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:24 ( 6.82 ms/it)[K
+   Info: [538]  chi=8 | ds=0.00017534170626243295 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  14%  ETA: 0:00:23 ( 6.79 ms/it)[K
+   Info: [555]  chi=8 | ds=0.0001824625914607081 | <R|Rprev> = NaN[K[A  seed  5  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @562)  4 s
+┌ Warning: PM Stuck after 301/562 steps | ds=0.00022292936203827107 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=453|"S=1/2,Site") <-> (dim=2|id=453|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=414|"Link,l=1") <-> (dim=3|id=434|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=889|"S=1/2,Site") <-> (dim=2|id=889|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=858|"Link,l=1") <-> (dim=3|id=809|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:37 ( 9.32 ms/it)[K
+   Info: [11]  chi=12 | ds=0.14461803642769658 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:32 ( 8.00 ms/it)[K
+   Info: [26]  chi=9 | ds=0.021006484259025515 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:29 ( 7.32 ms/it)[K
+   Info: [43]  chi=8 | ds=0.03838905420640987 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:27 ( 6.92 ms/it)[K
+   Info: [60]  chi=8 | ds=0.007179573371400516 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:36 ( 9.07 ms/it)[K
+   Info: [77]  chi=8 | ds=0.0029411368398561955 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:33 ( 8.54 ms/it)[K
+   Info: [96]  chi=8 | ds=0.0021199278642669572 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:31 ( 8.04 ms/it)[K
+   Info: [115]  chi=8 | ds=0.0017639953794200691 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:30 ( 7.88 ms/it)[K
+   Info: [132]  chi=8 | ds=0.0011750012402476084 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:30 ( 7.67 ms/it)[K
+   Info: [149]  chi=8 | ds=0.00021053442293916813 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:29 ( 7.48 ms/it)[K
+   Info: [167]  chi=8 | ds=0.00014883080053318398 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:28 ( 7.35 ms/it)[K
+   Info: [184]  chi=8 | ds=0.0001770243263068405 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:27 ( 7.22 ms/it)[K
+   Info: [202]  chi=8 | ds=0.00020840195965321495 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:27 ( 7.13 ms/it)[K
+   Info: [219]  chi=8 | ds=0.00022406340742275876 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:27 ( 7.06 ms/it)[K
+   Info: [236]  chi=8 | ds=0.00016285060316312272 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:26 ( 6.98 ms/it)[K
+   Info: [253]  chi=8 | ds=0.0001842825726586783 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:26 ( 6.93 ms/it)[K
+   Info: [270]  chi=8 | ds=0.00018156631811439006 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:26 ( 6.88 ms/it)[K
+   Info: [287]  chi=8 | ds=0.00015902641508913629 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.84 ms/it)[K
+   Info: [304]  chi=8 | ds=0.00018944095489337176 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.80 ms/it)[K
+   Info: [321]  chi=8 | ds=6.539756703657917e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.76 ms/it)[K
+   Info: [338]  chi=8 | ds=0.0001752409396555965 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:25 ( 6.73 ms/it)[K
+   Info: [355]  chi=8 | ds=0.00018241315140699044 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:24 ( 6.70 ms/it)[K
+   Info: [372]  chi=8 | ds=0.0001863340064300889 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.68 ms/it)[K
+   Info: [389]  chi=8 | ds=0.00019260346346328117 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.65 ms/it)[K
+   Info: [406]  chi=8 | ds=0.00019431568758432327 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.62 ms/it)[K
+   Info: [423]  chi=8 | ds=0.00018483535154623087 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.60 ms/it)[K
+   Info: [440]  chi=8 | ds=0.0002229279485957969 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.58 ms/it)[K
+   Info: [457]  chi=8 | ds=0.00018533508360718542 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.55 ms/it)[K
+   Info: [474]  chi=8 | ds=0.0001871800776263033 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.90 ms/it)[K
+   Info: [491]  chi=8 | ds=0.00018139024442953566 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:24 ( 6.88 ms/it)[K
+   Info: [508]  chi=8 | ds=0.00015969726280540275 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:24 ( 6.86 ms/it)[K
+   Info: [524]  chi=8 | ds=0.000182462577820508 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  14%  ETA: 0:00:24 ( 6.84 ms/it)[K
+   Info: [541]  chi=8 | ds=0.00018633689953984067 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  14%  ETA: 0:00:23 ( 6.81 ms/it)[K
+   Info: [558]  chi=8 | ds=0.00019261302802142666 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  14%  ETA: 0:00:23 ( 6.78 ms/it)[K
+   Info: [576]  chi=8 | ds=0.00018246259230592088 | <R|Rprev> = NaN[K[A  seed  6  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @583)  4 s
+┌ Warning: PM Stuck after 301/583 steps | ds=0.00022292935800438674 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=999|"S=1/2,Site") <-> (dim=2|id=999|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=132|"Link,l=1") <-> (dim=3|id=219|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=923|"S=1/2,Site") <-> (dim=2|id=923|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=425|"Link,l=1") <-> (dim=3|id=223|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:34 ( 8.42 ms/it)[K
+   Info: [12]  chi=11 | ds=0.06255318494390738 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:30 ( 7.45 ms/it)[K
+   Info: [27]  chi=10 | ds=0.016692301303797008 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:28 ( 7.02 ms/it)[K
+   Info: [43]  chi=8 | ds=0.035274035308395936 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.71 ms/it)[K
+   Info: [60]  chi=8 | ds=0.013003692715295001 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.57 ms/it)[K
+   Info: [77]  chi=8 | ds=0.0055730546767746025 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:25 ( 6.45 ms/it)[K
+   Info: [95]  chi=8 | ds=0.0020804729814478673 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:25 ( 6.36 ms/it)[K
+   Info: [112]  chi=8 | ds=0.00032450812277873275 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:24 ( 6.32 ms/it)[K
+   Info: [129]  chi=8 | ds=0.000684320433653629 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:24 ( 6.28 ms/it)[K
+   Info: [147]  chi=8 | ds=0.0003597606195477887 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:24 ( 6.26 ms/it)[K
+   Info: [164]  chi=8 | ds=0.00015714605764238776 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:24 ( 6.25 ms/it)[K
+   Info: [181]  chi=8 | ds=0.0001462469038148173 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:24 ( 6.22 ms/it)[K
+   Info: [198]  chi=8 | ds=0.00014216256801025118 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:23 ( 6.20 ms/it)[K
+   Info: [215]  chi=8 | ds=0.00019047952067197116 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:23 ( 6.18 ms/it)[K
+   Info: [232]  chi=8 | ds=7.229684811696502e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:23 ( 6.17 ms/it)[K
+   Info: [249]  chi=8 | ds=0.00022729546321098582 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:23 ( 6.16 ms/it)[K
+   Info: [266]  chi=8 | ds=0.00018451901476190802 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:23 ( 6.15 ms/it)[K
+   Info: [283]  chi=8 | ds=0.00018755272751813656 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.78 ms/it)[K
+   Info: [300]  chi=8 | ds=0.00018107267562350593 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.79 ms/it)[K
+   Info: [315]  chi=8 | ds=0.0001926692946297992 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.78 ms/it)[K
+   Info: [331]  chi=8 | ds=0.00018524786303308893 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:25 ( 6.74 ms/it)[K
+   Info: [348]  chi=8 | ds=0.00018715879793851364 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:24 ( 6.71 ms/it)[K
+   Info: [365]  chi=8 | ds=0.00018137902786674598 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.67 ms/it)[K
+   Info: [383]  chi=8 | ds=0.0001853435484384658 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.64 ms/it)[K
+   Info: [400]  chi=8 | ds=0.00018718283852003914 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.61 ms/it)[K
+   Info: [417]  chi=8 | ds=0.0001813913284821611 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.58 ms/it)[K
+   Info: [434]  chi=8 | ds=0.00015969845893282208 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.56 ms/it)[K
+   Info: [451]  chi=8 | ds=0.00018977284259735772 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.54 ms/it)[K
+   Info: [468]  chi=8 | ds=6.536605073170776e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.52 ms/it)[K
+   Info: [485]  chi=8 | ds=0.00017534181615741495 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.50 ms/it)[K
+   Info: [502]  chi=8 | ds=0.00018246263334564805 | <R|Rprev> = NaN[K[A  seed  7  plateau= 0.1299  |mu0|=1.489583  rig=4.22e-02  (stuck @518)  3 s
+┌ Warning: PM Stuck after 301/518 steps | ds=0.00018483507255107057 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=250|"S=1/2,Site") <-> (dim=2|id=250|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=469|"Link,l=1") <-> (dim=3|id=489|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=858|"S=1/2,Site") <-> (dim=2|id=858|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=95|"Link,l=1") <-> (dim=3|id=703|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:38 ( 9.54 ms/it)[K
+   Info: [11]  chi=12 | ds=0.2426302641053703 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:33 ( 8.22 ms/it)[K
+   Info: [25]  chi=9 | ds=0.04155081595037291 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:30 ( 7.55 ms/it)[K
+   Info: [41]  chi=8 | ds=0.0137532286282388 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:28 ( 7.09 ms/it)[K
+   Info: [58]  chi=8 | ds=0.009831086121105503 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:27 ( 6.85 ms/it)[K
+   Info: [75]  chi=8 | ds=0.006569647676031298 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.72 ms/it)[K
+   Info: [92]  chi=8 | ds=0.002166559643979604 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:26 ( 6.63 ms/it)[K
+   Info: [109]  chi=8 | ds=0.0008996766030678893 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:25 ( 6.54 ms/it)[K
+   Info: [126]  chi=8 | ds=0.0010259975352634454 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:25 ( 6.48 ms/it)[K
+   Info: [143]  chi=8 | ds=0.00033584114220663874 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:29 ( 7.56 ms/it)[K
+   Info: [160]  chi=8 | ds=0.0002085268273117613 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:29 ( 7.48 ms/it)[K
+   Info: [176]  chi=8 | ds=0.00016294431352203986 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:28 ( 7.40 ms/it)[K
+   Info: [192]  chi=8 | ds=0.00022533767192134402 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:28 ( 7.28 ms/it)[K
+   Info: [209]  chi=8 | ds=0.0001589111342578109 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:27 ( 7.18 ms/it)[K
+   Info: [226]  chi=8 | ds=0.00018173051939562868 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:27 ( 7.10 ms/it)[K
+   Info: [243]  chi=8 | ds=0.00017830733485957317 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:26 ( 7.03 ms/it)[K
+   Info: [260]  chi=8 | ds=0.00019093783530177433 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:26 ( 6.97 ms/it)[K
+   Info: [277]  chi=8 | ds=0.00019386652573871732 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:26 ( 6.92 ms/it)[K
+   Info: [294]  chi=8 | ds=0.00018482599604319194 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.88 ms/it)[K
+   Info: [311]  chi=8 | ds=0.00022277827232819458 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.86 ms/it)[K
+   Info: [327]  chi=8 | ds=0.00015977045489623531 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:25 ( 6.85 ms/it)[K
+   Info: [343]  chi=8 | ds=0.00018247790918290985 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:25 ( 6.80 ms/it)[K
+   Info: [361]  chi=8 | ds=6.535120291192853e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:25 ( 6.77 ms/it)[K
+   Info: [378]  chi=8 | ds=0.00017534852499745401 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.74 ms/it)[K
+   Info: [395]  chi=8 | ds=0.00018246132288135541 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.71 ms/it)[K
+   Info: [412]  chi=8 | ds=0.0001863343471820711 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.68 ms/it)[K
+   Info: [430]  chi=8 | ds=0.00017534046973299855 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.65 ms/it)[K
+   Info: [447]  chi=8 | ds=0.00018246241333363944 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.62 ms/it)[K
+   Info: [465]  chi=8 | ds=6.536598624368173e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.60 ms/it)[K
+   Info: [483]  chi=8 | ds=0.00015969722024533617 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.58 ms/it)[K
+   Info: [500]  chi=8 | ds=0.00018977238427186904 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.55 ms/it)[K
+   Info: [518]  chi=8 | ds=0.00018139042089315716 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.54 ms/it)[K
+   Info: [535]  chi=8 | ds=0.00015969734385967715 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  14%  ETA: 0:00:23 ( 6.56 ms/it)[K
+   Info: [552]  chi=8 | ds=0.00018977243086415463 | <R|Rprev> = NaN[K[A  seed  8  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @558)  4 s
+┌ Warning: PM Stuck after 301/558 steps | ds=0.0002229293601104798 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=358|"S=1/2,Site") <-> (dim=2|id=358|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=623|"Link,l=1") <-> (dim=3|id=677|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=86|"S=1/2,Site") <-> (dim=2|id=86|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=998|"Link,l=1") <-> (dim=3|id=735|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:40 (10.01 ms/it)[K
+   Info: [10]  chi=11 | ds=0.1267990733616602 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:30 ( 7.57 ms/it)[K
+   Info: [27]  chi=8 | ds=0.03559355238263716 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:29 ( 7.36 ms/it)[K
+   Info: [42]  chi=7 | ds=0.0054726317270430425 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:27 ( 6.91 ms/it)[K
+   Info: [60]  chi=8 | ds=0.006416631113487781 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.61 ms/it)[K
+   Info: [78]  chi=8 | ds=0.005000693338402473 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:25 ( 6.46 ms/it)[K
+   Info: [96]  chi=8 | ds=0.001930974573373434 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:25 ( 6.41 ms/it)[K
+   Info: [113]  chi=8 | ds=0.00048328364065597373 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:24 ( 6.32 ms/it)[K
+   Info: [131]  chi=8 | ds=0.000587010538879218 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:24 ( 6.28 ms/it)[K
+   Info: [148]  chi=8 | ds=0.0003241010097159158 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:24 ( 6.23 ms/it)[K
+   Info: [166]  chi=8 | ds=0.00016141868848462693 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:24 ( 6.20 ms/it)[K
+   Info: [183]  chi=8 | ds=0.00020042905159811664 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:23 ( 6.18 ms/it)[K
+   Info: [200]  chi=8 | ds=0.00019857509047660482 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:23 ( 6.16 ms/it)[K
+   Info: [218]  chi=8 | ds=0.00018522071542537155 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:23 ( 6.15 ms/it)[K
+   Info: [235]  chi=8 | ds=6.678490030370687e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:23 ( 6.14 ms/it)[K
+   Info: [253]  chi=8 | ds=0.000161236189391456 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:23 ( 6.12 ms/it)[K
+   Info: [271]  chi=8 | ds=0.00018640085528831563 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:23 ( 6.11 ms/it)[K
+   Info: [288]  chi=8 | ds=0.0001815859683609311 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:23 ( 6.12 ms/it)[K
+   Info: [305]  chi=8 | ds=0.00015959574533130905 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:22 ( 6.12 ms/it)[K
+   Info: [322]  chi=8 | ds=0.00018969866015539072 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:22 ( 6.11 ms/it)[K
+   Info: [339]  chi=8 | ds=6.535975055627086e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:22 ( 6.10 ms/it)[K
+   Info: [356]  chi=8 | ds=0.00017532587614255135 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:22 ( 6.10 ms/it)[K
+   Info: [373]  chi=8 | ds=0.00018245142872941322 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:22 ( 6.11 ms/it)[K
+   Info: [390]  chi=8 | ds=0.00018633458732431052 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.55 ms/it)[K
+   Info: [406]  chi=8 | ds=0.00022293117671090545 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.56 ms/it)[K
+   Info: [423]  chi=8 | ds=0.0001853367750218604 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.52 ms/it)[K
+   Info: [441]  chi=8 | ds=0.00018483491083620684 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.52 ms/it)[K
+   Info: [459]  chi=8 | ds=0.0001926131499863093 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.50 ms/it)[K
+   Info: [476]  chi=8 | ds=0.00019432046288292426 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.48 ms/it)[K
+   Info: [494]  chi=8 | ds=0.00018633685994640103 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.46 ms/it)[K
+   Info: [511]  chi=8 | ds=0.00019261302138373626 | <R|Rprev> = NaN[K[A  seed  9  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @523)  3 s
+┌ Warning: PM Stuck after 301/523 steps | ds=0.00022292936908441252 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=130|"S=1/2,Site") <-> (dim=2|id=130|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=489|"Link,l=1") <-> (dim=3|id=912|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=325|"S=1/2,Site") <-> (dim=2|id=325|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=341|"Link,l=1") <-> (dim=3|id=44|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:34 ( 8.47 ms/it)[K
+   Info: [12]  chi=10 | ds=0.2517128308777299 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:29 ( 7.39 ms/it)[K
+   Info: [28]  chi=9 | ds=0.06785413593700262 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:27 ( 6.86 ms/it)[K
+   Info: [45]  chi=8 | ds=0.010558400466901707 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.66 ms/it)[K
+   Info: [62]  chi=8 | ds=0.002438626417689993 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.51 ms/it)[K
+   Info: [79]  chi=8 | ds=0.003933853388886854 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:25 ( 6.42 ms/it)[K
+   Info: [96]  chi=8 | ds=0.0019456594977129704 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:25 ( 6.38 ms/it)[K
+   Info: [113]  chi=8 | ds=0.00043762405883207567 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:25 ( 6.34 ms/it)[K
+   Info: [130]  chi=8 | ds=0.0007012356624064298 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:24 ( 6.30 ms/it)[K
+   Info: [147]  chi=8 | ds=0.0003192964403950782 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:24 ( 6.30 ms/it)[K
+   Info: [164]  chi=8 | ds=0.00018232321368749638 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:24 ( 6.28 ms/it)[K
+   Info: [181]  chi=8 | ds=0.000167753113527902 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:24 ( 6.24 ms/it)[K
+   Info: [199]  chi=8 | ds=0.0001988248219638722 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:24 ( 6.28 ms/it)[K
+   Info: [215]  chi=8 | ds=0.00019439587797398516 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:24 ( 6.25 ms/it)[K
+   Info: [232]  chi=8 | ds=0.0001888255561266483 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:23 ( 6.24 ms/it)[K
+   Info: [249]  chi=8 | ds=0.00022129530153291999 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:23 ( 6.23 ms/it)[K
+   Info: [266]  chi=8 | ds=0.0001852870890413083 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:25 ( 6.85 ms/it)[K
+   Info: [282]  chi=8 | ds=0.00018938649376698535 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:25 ( 6.83 ms/it)[K
+   Info: [299]  chi=8 | ds=6.527877053846831e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.81 ms/it)[K
+   Info: [315]  chi=8 | ds=0.00019269783399711304 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.76 ms/it)[K
+   Info: [333]  chi=8 | ds=0.0001824035152158121 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:25 ( 6.73 ms/it)[K
+   Info: [350]  chi=8 | ds=0.00018631656976120237 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:24 ( 6.70 ms/it)[K
+   Info: [367]  chi=8 | ds=0.00019261002255588355 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.69 ms/it)[K
+   Info: [383]  chi=8 | ds=0.0001853413848382779 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.67 ms/it)[K
+   Info: [399]  chi=8 | ds=0.00018977252315943716 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.66 ms/it)[K
+   Info: [415]  chi=8 | ds=0.00018633507369292257 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.64 ms/it)[K
+   Info: [432]  chi=8 | ds=0.0001926137490726454 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.62 ms/it)[K
+   Info: [449]  chi=8 | ds=0.00019432028165022874 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.60 ms/it)[K
+   Info: [466]  chi=8 | ds=0.00018483488516807256 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.58 ms/it)[K
+   Info: [483]  chi=8 | ds=0.00022292942639146052 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.57 ms/it)[K
+   Info: [499]  chi=8 | ds=0.00015969735975485122 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.57 ms/it)[K
+   Info: [515]  chi=8 | ds=0.00018246256395404448 | <R|Rprev> = NaN[K[A  seed 10  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @522)  3 s
+┌ Warning: PM Stuck after 301/522 steps | ds=0.00022292936585688317 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=341|"S=1/2,Site") <-> (dim=2|id=341|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=443|"Link,l=1") <-> (dim=3|id=334|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=123|"S=1/2,Site") <-> (dim=2|id=123|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=352|"Link,l=1") <-> (dim=3|id=649|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:33 ( 8.34 ms/it)[K
+   Info: [12]  chi=11 | ds=0.07065175513090752 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:29 ( 7.23 ms/it)[K
+   Info: [28]  chi=8 | ds=0.017743874641058643 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:27 ( 6.79 ms/it)[K
+   Info: [45]  chi=8 | ds=0.008880946051878724 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.56 ms/it)[K
+   Info: [62]  chi=8 | ds=0.002745344327164112 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.51 ms/it)[K
+   Info: [79]  chi=8 | ds=0.0009058560948784766 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:25 ( 6.50 ms/it)[K
+   Info: [95]  chi=8 | ds=0.0010441265644621778 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:25 ( 6.45 ms/it)[K
+   Info: [112]  chi=8 | ds=0.0002123877025518306 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:25 ( 6.39 ms/it)[K
+   Info: [129]  chi=8 | ds=0.00019593769925019267 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:24 ( 6.34 ms/it)[K
+   Info: [146]  chi=8 | ds=0.00013644587992878154 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:28 ( 7.38 ms/it)[K
+   Info: [163]  chi=8 | ds=0.00018073415395336578 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:28 ( 7.29 ms/it)[K
+   Info: [180]  chi=8 | ds=0.000178575393415481 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:28 ( 7.25 ms/it)[K
+   Info: [195]  chi=8 | ds=0.00015429529299204603 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:27 ( 7.13 ms/it)[K
+   Info: [213]  chi=8 | ds=0.0001808229865373212 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:27 ( 7.05 ms/it)[K
+   Info: [230]  chi=8 | ds=0.00017565035443067867 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:26 ( 6.99 ms/it)[K
+   Info: [247]  chi=8 | ds=0.00016119181146545536 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:26 ( 6.93 ms/it)[K
+   Info: [264]  chi=8 | ds=0.00018984470792038355 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:26 ( 6.87 ms/it)[K
+   Info: [281]  chi=8 | ds=6.518045958606167e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:25 ( 6.81 ms/it)[K
+   Info: [299]  chi=8 | ds=0.00015957225989293722 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.78 ms/it)[K
+   Info: [315]  chi=8 | ds=0.00018246081113815205 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.75 ms/it)[K
+   Info: [332]  chi=8 | ds=0.000186305702996159 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:25 ( 6.73 ms/it)[K
+   Info: [348]  chi=8 | ds=0.00022291486594794296 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:24 ( 6.70 ms/it)[K
+   Info: [365]  chi=8 | ds=0.000185336865570096 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.67 ms/it)[K
+   Info: [382]  chi=8 | ds=0.00018718379825755083 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.64 ms/it)[K
+   Info: [399]  chi=8 | ds=0.0001813886101676987 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.62 ms/it)[K
+   Info: [416]  chi=8 | ds=0.0001596976452491461 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.60 ms/it)[K
+   Info: [433]  chi=8 | ds=0.00018977294722921645 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.57 ms/it)[K
+   Info: [450]  chi=8 | ds=6.536626599074058e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.56 ms/it)[K
+   Info: [467]  chi=8 | ds=0.00017534171970179369 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.54 ms/it)[K
+   Info: [484]  chi=8 | ds=0.00018246264493149145 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.52 ms/it)[K
+   Info: [501]  chi=8 | ds=0.0001863369430699091 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.51 ms/it)[K
+   Info: [518]  chi=8 | ds=0.00019261302336204267 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:22 ( 6.49 ms/it)[K
+   Info: [536]  chi=8 | ds=0.000182462587228982 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  14%  ETA: 0:00:22 ( 6.52 ms/it)[K
+   Info: [552]  chi=8 | ds=0.00018483505613242635 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  14%  ETA: 0:00:23 ( 6.79 ms/it)[K
+   Info: [565]  chi=8 | ds=0.00018483505128741307 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  14%  ETA: 0:00:23 ( 6.79 ms/it)[K
+   Info: [580]  chi=8 | ds=6.536608565996249e-5 | <R|Rprev> = NaN[K[A  seed 11  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @582)  4 s
+┌ Warning: PM Stuck after 301/582 steps | ds=0.00022292936195456026 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=42|"S=1/2,Site") <-> (dim=2|id=42|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=447|"Link,l=1") <-> (dim=3|id=344|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=171|"S=1/2,Site") <-> (dim=2|id=171|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=103|"Link,l=1") <-> (dim=3|id=762|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:39 ( 9.67 ms/it)[K
+   Info: [11]  chi=11 | ds=0.3283508673015232 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:32 ( 7.98 ms/it)[K
+   Info: [26]  chi=9 | ds=0.09500488604376439 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:28 ( 7.16 ms/it)[K
+   Info: [44]  chi=8 | ds=0.022179708842255397 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:27 ( 6.83 ms/it)[K
+   Info: [61]  chi=8 | ds=0.0012587586670866902 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.66 ms/it)[K
+   Info: [78]  chi=8 | ds=0.002839107178396416 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.55 ms/it)[K
+   Info: [95]  chi=8 | ds=0.002799651437752848 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:25 ( 6.43 ms/it)[K
+   Info: [113]  chi=8 | ds=0.000794021439263104 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:25 ( 6.37 ms/it)[K
+   Info: [130]  chi=8 | ds=0.0003859505392048712 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:24 ( 6.33 ms/it)[K
+   Info: [147]  chi=8 | ds=0.00040420837921217867 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:24 ( 6.28 ms/it)[K
+   Info: [165]  chi=8 | ds=0.0002542632777494669 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:24 ( 6.25 ms/it)[K
+   Info: [182]  chi=8 | ds=0.00018618993569063935 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:24 ( 6.25 ms/it)[K
+   Info: [199]  chi=8 | ds=0.0001770393680105009 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:24 ( 6.24 ms/it)[K
+   Info: [216]  chi=8 | ds=0.00023332043752599674 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:23 ( 6.24 ms/it)[K
+   Info: [233]  chi=8 | ds=0.00016935732279754756 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:23 ( 6.23 ms/it)[K
+   Info: [250]  chi=8 | ds=0.0001810387006155878 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:23 ( 6.22 ms/it)[K
+   Info: [267]  chi=8 | ds=0.00018540041623793524 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:23 ( 6.20 ms/it)[K
+   Info: [285]  chi=8 | ds=0.0001751480705778352 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:23 ( 6.19 ms/it)[K
+   Info: [303]  chi=8 | ds=0.0001897037302811544 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:23 ( 6.17 ms/it)[K
+   Info: [320]  chi=8 | ds=6.528818496429056e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:23 ( 6.18 ms/it)[K
+   Info: [337]  chi=8 | ds=0.00017536602727041828 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:22 ( 6.17 ms/it)[K
+   Info: [354]  chi=8 | ds=0.00018245004950401267 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:24 ( 6.66 ms/it)[K
+   Info: [370]  chi=8 | ds=0.0001848487855772296 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.66 ms/it)[K
+   Info: [388]  chi=8 | ds=0.00019261725215069525 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.64 ms/it)[K
+   Info: [406]  chi=8 | ds=0.00018246240538677405 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.60 ms/it)[K
+   Info: [424]  chi=8 | ds=6.536537992624103e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.57 ms/it)[K
+   Info: [442]  chi=8 | ds=0.00015969676377625142 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.54 ms/it)[K
+   Info: [460]  chi=8 | ds=0.00018718033173559245 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.53 ms/it)[K
+   Info: [477]  chi=8 | ds=0.0001813904700513902 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.51 ms/it)[K
+   Info: [495]  chi=8 | ds=0.0001853357450397608 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.49 ms/it)[K
+   Info: [512]  chi=8 | ds=0.00018718009732421326 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.49 ms/it)[K
+   Info: [529]  chi=8 | ds=0.0001813904287447654 | <R|Rprev> = NaN[K[A  seed 12  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @543)  4 s
+┌ Warning: PM Stuck after 301/543 steps | ds=0.00022292936943013597 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=522|"S=1/2,Site") <-> (dim=2|id=522|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=253|"Link,l=1") <-> (dim=3|id=548|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=342|"S=1/2,Site") <-> (dim=2|id=342|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=759|"Link,l=1") <-> (dim=3|id=925|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:35 ( 8.78 ms/it)[K
+   Info: [12]  chi=12 | ds=0.14394492445798204 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:30 ( 7.65 ms/it)[K
+   Info: [27]  chi=9 | ds=0.02208178650250875 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:30 ( 7.48 ms/it)[K
+   Info: [42]  chi=8 | ds=0.007675683536164546 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:28 ( 7.04 ms/it)[K
+   Info: [59]  chi=8 | ds=0.006678385103096818 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:27 ( 6.77 ms/it)[K
+   Info: [77]  chi=8 | ds=0.0035254770168708927 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.61 ms/it)[K
+   Info: [95]  chi=8 | ds=0.0008095208409616417 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:25 ( 6.51 ms/it)[K
+   Info: [112]  chi=8 | ds=0.00044503566170062125 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:25 ( 6.46 ms/it)[K
+   Info: [129]  chi=8 | ds=0.00045029216243996917 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:25 ( 6.42 ms/it)[K
+   Info: [146]  chi=8 | ds=0.00013355210912502358 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:24 ( 6.38 ms/it)[K
+   Info: [163]  chi=8 | ds=0.00014726748907578635 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:24 ( 6.35 ms/it)[K
+   Info: [180]  chi=8 | ds=0.0001343468280463611 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:24 ( 6.34 ms/it)[K
+   Info: [197]  chi=8 | ds=0.00018891359973727262 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:27 ( 7.17 ms/it)[K
+   Info: [213]  chi=8 | ds=0.00016443250877995474 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:27 ( 7.13 ms/it)[K
+   Info: [229]  chi=8 | ds=0.0001913163976596799 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:27 ( 7.09 ms/it)[K
+   Info: [246]  chi=8 | ds=6.571374945218977e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:26 ( 7.02 ms/it)[K
+   Info: [263]  chi=8 | ds=0.00017612189818227986 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:26 ( 6.97 ms/it)[K
+   Info: [280]  chi=8 | ds=0.00018277815333156422 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:26 ( 6.89 ms/it)[K
+   Info: [298]  chi=8 | ds=6.535024499620956e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.83 ms/it)[K
+   Info: [316]  chi=8 | ds=0.00015975333497908473 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.79 ms/it)[K
+   Info: [333]  chi=8 | ds=0.00018982379184306897 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:25 ( 6.74 ms/it)[K
+   Info: [351]  chi=8 | ds=0.0001814158380617492 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:24 ( 6.73 ms/it)[K
+   Info: [367]  chi=8 | ds=0.00017534568690025232 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.70 ms/it)[K
+   Info: [384]  chi=8 | ds=0.00018246764047802344 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.68 ms/it)[K
+   Info: [401]  chi=8 | ds=0.00018633817460644853 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.66 ms/it)[K
+   Info: [418]  chi=8 | ds=0.00019261376733981095 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.63 ms/it)[K
+   Info: [435]  chi=8 | ds=0.00019432104562999708 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.61 ms/it)[K
+   Info: [452]  chi=8 | ds=0.00018483526439816433 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.58 ms/it)[K
+   Info: [469]  chi=8 | ds=0.0002229294124315162 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.56 ms/it)[K
+   Info: [486]  chi=8 | ds=0.00018533587751790037 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.54 ms/it)[K
+   Info: [504]  chi=8 | ds=0.00018483502707866695 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.52 ms/it)[K
+   Info: [521]  chi=8 | ds=0.00022292935740908515 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:22 ( 6.50 ms/it)[K
+   Info: [539]  chi=8 | ds=0.0001943203218670586 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  14%  ETA: 0:00:22 ( 6.48 ms/it)[K
+   Info: [557]  chi=8 | ds=0.00018633691839353705 | <R|Rprev> = NaN[K[A  seed 13  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @560)  4 s
+┌ Warning: PM Stuck after 301/560 steps | ds=0.00022292935879442144 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=643|"S=1/2,Site") <-> (dim=2|id=643|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=750|"Link,l=1") <-> (dim=3|id=918|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=855|"S=1/2,Site") <-> (dim=2|id=855|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=2|"Link,l=1") <-> (dim=3|id=71|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:36 ( 9.10 ms/it)[K
+   Info: [11]  chi=11 | ds=0.06259278976884475 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:30 ( 7.64 ms/it)[K
+   Info: [27]  chi=8 | ds=0.014478484133507274 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:45 (11.43 ms/it)[K
+   Info: [41]  chi=8 | ds=0.005060503521698179 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:40 (10.12 ms/it)[K
+   Info: [57]  chi=8 | ds=0.005090999468485902 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:36 ( 9.21 ms/it)[K
+   Info: [75]  chi=8 | ds=0.0014983431646622414 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:34 ( 8.61 ms/it)[K
+   Info: [92]  chi=8 | ds=0.0005074155968185501 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:32 ( 8.19 ms/it)[K
+   Info: [109]  chi=8 | ds=0.0006485760406088614 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:30 ( 7.86 ms/it)[K
+   Info: [127]  chi=8 | ds=0.00031498361538317976 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:29 ( 7.64 ms/it)[K
+   Info: [144]  chi=8 | ds=0.0001916082245146944 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:29 ( 7.45 ms/it)[K
+   Info: [162]  chi=8 | ds=0.00020027670394073827 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:28 ( 7.28 ms/it)[K
+   Info: [180]  chi=8 | ds=0.00018098824229806354 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:27 ( 7.17 ms/it)[K
+   Info: [197]  chi=8 | ds=0.00018540457158433554 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:27 ( 7.07 ms/it)[K
+   Info: [215]  chi=8 | ds=0.00018181208830592155 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:26 ( 6.99 ms/it)[K
+   Info: [232]  chi=8 | ds=0.00016117336328480558 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:26 ( 6.91 ms/it)[K
+   Info: [250]  chi=8 | ds=0.00018643902495063536 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:26 ( 6.85 ms/it)[K
+   Info: [267]  chi=8 | ds=0.00018156788029899396 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:25 ( 6.79 ms/it)[K
+   Info: [285]  chi=8 | ds=0.00018538463629647062 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.75 ms/it)[K
+   Info: [302]  chi=8 | ds=0.00018724876951370373 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.71 ms/it)[K
+   Info: [319]  chi=8 | ds=0.0001813638092166281 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:24 ( 6.68 ms/it)[K
+   Info: [336]  chi=8 | ds=0.0001597072122216936 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:24 ( 6.65 ms/it)[K
+   Info: [353]  chi=8 | ds=0.00018978253631574127 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:24 ( 6.62 ms/it)[K
+   Info: [370]  chi=8 | ds=6.53687535962233e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.59 ms/it)[K
+   Info: [387]  chi=8 | ds=0.00017534229081184183 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.57 ms/it)[K
+   Info: [404]  chi=8 | ds=0.00018246355789153235 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.53 ms/it)[K
+   Info: [422]  chi=8 | ds=6.536577098789631e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.51 ms/it)[K
+   Info: [440]  chi=8 | ds=0.00015969729887654882 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.88 ms/it)[K
+   Info: [456]  chi=8 | ds=0.00018246246712882996 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.86 ms/it)[K
+   Info: [475]  chi=8 | ds=0.00018139050838439363 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.84 ms/it)[K
+   Info: [493]  chi=8 | ds=0.00018533578207613477 | <R|Rprev> = NaN[K[A  seed 14  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @502)  3 s
+┌ Warning: PM Stuck after 301/502 steps | ds=0.0002229293687209255 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=936|"S=1/2,Site") <-> (dim=2|id=936|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=254|"Link,l=1") <-> (dim=3|id=840|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=804|"S=1/2,Site") <-> (dim=2|id=804|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=748|"Link,l=1") <-> (dim=3|id=151|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:35 ( 8.74 ms/it)[K
+   Info: [12]  chi=11 | ds=0.1514707608523369 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:29 ( 7.39 ms/it)[K
+   Info: [28]  chi=8 | ds=0.0436771449900559 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:27 ( 6.92 ms/it)[K
+   Info: [45]  chi=8 | ds=0.009950078306275367 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.64 ms/it)[K
+   Info: [62]  chi=8 | ds=0.006688320042067986 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:25 ( 6.49 ms/it)[K
+   Info: [79]  chi=8 | ds=0.001956600711215062 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:25 ( 6.35 ms/it)[K
+   Info: [97]  chi=8 | ds=0.002463700101069888 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:24 ( 6.30 ms/it)[K
+   Info: [114]  chi=8 | ds=0.0011000875331115267 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:24 ( 6.28 ms/it)[K
+   Info: [131]  chi=8 | ds=0.0001256303371439671 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:24 ( 6.26 ms/it)[K
+   Info: [148]  chi=8 | ds=0.00027348231529222833 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:24 ( 6.25 ms/it)[K
+   Info: [165]  chi=8 | ds=0.00014823565105492875 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:24 ( 6.23 ms/it)[K
+   Info: [182]  chi=8 | ds=7.55780094885139e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:24 ( 6.21 ms/it)[K
+   Info: [199]  chi=8 | ds=0.00019940359271608532 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:23 ( 6.18 ms/it)[K
+   Info: [217]  chi=8 | ds=0.00018396428810008025 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:23 ( 6.16 ms/it)[K
+   Info: [234]  chi=8 | ds=0.00016073345867095856 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:23 ( 6.14 ms/it)[K
+   Info: [251]  chi=8 | ds=0.00018852197414731542 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:23 ( 6.13 ms/it)[K
+   Info: [268]  chi=8 | ds=6.477341754929089e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:23 ( 6.14 ms/it)[K
+   Info: [285]  chi=8 | ds=0.00017534837410704274 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:23 ( 6.13 ms/it)[K
+   Info: [302]  chi=8 | ds=0.00018226717535185788 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:23 ( 6.12 ms/it)[K
+   Info: [319]  chi=8 | ds=0.0001862258996502275 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:22 ( 6.13 ms/it)[K
+   Info: [336]  chi=8 | ds=0.00019262573746015033 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:24 ( 6.63 ms/it)[K
+   Info: [352]  chi=8 | ds=0.0001853566599960832 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:24 ( 6.63 ms/it)[K
+   Info: [369]  chi=8 | ds=0.00018718862825206628 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.62 ms/it)[K
+   Info: [387]  chi=8 | ds=0.00022292965584136404 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.59 ms/it)[K
+   Info: [404]  chi=8 | ds=0.00018533314859381367 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.56 ms/it)[K
+   Info: [421]  chi=8 | ds=0.00018717855285155238 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.53 ms/it)[K
+   Info: [439]  chi=8 | ds=0.00022292893154585158 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.51 ms/it)[K
+   Info: [456]  chi=8 | ds=0.0001853359324192061 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.52 ms/it)[K
+   Info: [473]  chi=8 | ds=0.00018718027776443158 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.51 ms/it)[K
+   Info: [490]  chi=8 | ds=0.0001813903744827261 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.49 ms/it)[K
+   Info: [507]  chi=8 | ds=0.0001596973557599357 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:22 ( 6.47 ms/it)[K
+   Info: [524]  chi=8 | ds=0.0001897724456397798 | <R|Rprev> = NaN[K[A  seed 15  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @530)  3 s
+┌ Warning: PM Stuck after 301/530 steps | ds=0.00022292936388590423 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=758|"S=1/2,Site") <-> (dim=2|id=758|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=910|"Link,l=1") <-> (dim=3|id=367|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=366|"S=1/2,Site") <-> (dim=2|id=366|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=45|"Link,l=1") <-> (dim=3|id=491|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:34 ( 8.46 ms/it)[K
+   Info: [12]  chi=12 | ds=0.10968242033447426 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:29 ( 7.38 ms/it)[K
+   Info: [28]  chi=8 | ds=0.03992451469308872 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:28 ( 6.98 ms/it)[K
+   Info: [44]  chi=8 | ds=0.08141580133027587 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.72 ms/it)[K
+   Info: [61]  chi=8 | ds=0.016924092111081257 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.54 ms/it)[K
+   Info: [78]  chi=8 | ds=0.005229780410136109 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:25 ( 6.43 ms/it)[K
+   Info: [96]  chi=8 | ds=0.0011663800852278472 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:25 ( 6.34 ms/it)[K
+   Info: [114]  chi=8 | ds=0.0005124251790660228 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:24 ( 6.28 ms/it)[K
+   Info: [132]  chi=8 | ds=0.0006736946091022711 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:24 ( 6.27 ms/it)[K
+   Info: [149]  chi=8 | ds=0.00041551086355984257 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:24 ( 6.22 ms/it)[K
+   Info: [167]  chi=8 | ds=0.00014438052077681007 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:24 ( 6.18 ms/it)[K
+   Info: [185]  chi=8 | ds=0.0002401217287846258 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:24 ( 6.27 ms/it)[K
+   Info: [201]  chi=8 | ds=0.00013787796220066095 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:26 ( 6.95 ms/it)[K
+   Info: [215]  chi=8 | ds=7.60526905214387e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:26 ( 6.89 ms/it)[K
+   Info: [233]  chi=8 | ds=0.00019885558137477943 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:26 ( 6.84 ms/it)[K
+   Info: [250]  chi=8 | ds=0.00019054008835084346 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:25 ( 6.80 ms/it)[K
+   Info: [267]  chi=8 | ds=6.548852267135308e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:25 ( 6.72 ms/it)[K
+   Info: [286]  chi=8 | ds=0.00018563657495884733 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.67 ms/it)[K
+   Info: [304]  chi=8 | ds=0.00018451497787330684 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:24 ( 6.62 ms/it)[K
+   Info: [322]  chi=8 | ds=0.00019249339231863782 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:24 ( 6.58 ms/it)[K
+   Info: [340]  chi=8 | ds=0.00018247490450773451 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:24 ( 6.54 ms/it)[K
+   Info: [358]  chi=8 | ds=6.538333873756796e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:24 ( 6.51 ms/it)[K
+   Info: [376]  chi=8 | ds=0.0001597142826749165 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:23 ( 6.49 ms/it)[K
+   Info: [394]  chi=8 | ds=0.00018717203198514998 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:23 ( 6.47 ms/it)[K
+   Info: [411]  chi=8 | ds=0.00018139171863840176 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.45 ms/it)[K
+   Info: [428]  chi=8 | ds=0.0001596960130192393 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.43 ms/it)[K
+   Info: [445]  chi=8 | ds=0.00018977163075528658 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.41 ms/it)[K
+   Info: [462]  chi=8 | ds=6.536605797319295e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.39 ms/it)[K
+   Info: [480]  chi=8 | ds=0.000159697466472708 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:22 ( 6.38 ms/it)[K
+   Info: [498]  chi=8 | ds=0.00018718002527018385 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:22 ( 6.36 ms/it)[K
+   Info: [515]  chi=8 | ds=0.0001813904751319928 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:22 ( 6.35 ms/it)[K
+   Info: [533]  chi=8 | ds=0.00018533580206425704 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  14%  ETA: 0:00:22 ( 6.33 ms/it)[K
+   Info: [550]  chi=8 | ds=0.0001871801421217123 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  14%  ETA: 0:00:22 ( 6.32 ms/it)[K
+   Info: [568]  chi=8 | ds=0.00022292936637091643 | <R|Rprev> = NaN[K[A  seed 16  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @581)  4 s
+┌ Warning: PM Stuck after 301/581 steps | ds=0.00022292935870649178 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=985|"S=1/2,Site") <-> (dim=2|id=985|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=293|"Link,l=1") <-> (dim=3|id=80|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=313|"S=1/2,Site") <-> (dim=2|id=313|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=890|"Link,l=1") <-> (dim=3|id=343|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:30 ( 7.56 ms/it)[K
+   Info: [14]  chi=11 | ds=0.059425286086936535 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:56 (13.97 ms/it)[K
+   Info: [25]  chi=8 | ds=0.028989525593980492 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:43 (10.90 ms/it)[K
+   Info: [42]  chi=8 | ds=0.024207991832153497 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:38 ( 9.71 ms/it)[K
+   Info: [58]  chi=8 | ds=0.009044168687465381 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:34 ( 8.77 ms/it)[K
+   Info: [76]  chi=8 | ds=0.004846274272456319 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:32 ( 8.21 ms/it)[K
+   Info: [94]  chi=8 | ds=0.0019832948274124407 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:30 ( 7.81 ms/it)[K
+   Info: [112]  chi=8 | ds=0.00035573852176837284 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:29 ( 7.53 ms/it)[K
+   Info: [130]  chi=8 | ds=0.00026805428512199914 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:28 ( 7.35 ms/it)[K
+   Info: [147]  chi=8 | ds=0.000288223370463081 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:28 ( 7.19 ms/it)[K
+   Info: [165]  chi=8 | ds=0.00012943219006444906 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:27 ( 7.07 ms/it)[K
+   Info: [182]  chi=8 | ds=0.00018810676599756437 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:27 ( 6.97 ms/it)[K
+   Info: [199]  chi=8 | ds=0.00019625946257118 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:26 ( 6.93 ms/it)[K
+   Info: [216]  chi=8 | ds=0.0001688247906566076 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:26 ( 6.87 ms/it)[K
+   Info: [233]  chi=8 | ds=0.0001933962902059827 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:26 ( 6.82 ms/it)[K
+   Info: [250]  chi=8 | ds=0.00019602847570643345 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:25 ( 6.77 ms/it)[K
+   Info: [267]  chi=8 | ds=0.00018562546761502485 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:25 ( 6.74 ms/it)[K
+   Info: [284]  chi=8 | ds=0.00022292431339898666 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.69 ms/it)[K
+   Info: [302]  chi=8 | ds=0.00019417949620803565 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:24 ( 6.65 ms/it)[K
+   Info: [319]  chi=8 | ds=0.00018474848977001468 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:24 ( 6.61 ms/it)[K
+   Info: [337]  chi=8 | ds=0.00019259495962886675 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:24 ( 6.58 ms/it)[K
+   Info: [354]  chi=8 | ds=0.00019433488387454734 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:24 ( 6.55 ms/it)[K
+   Info: [371]  chi=8 | ds=0.00018484772863136545 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.53 ms/it)[K
+   Info: [388]  chi=8 | ds=0.0002229257998869194 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:23 ( 6.52 ms/it)[K
+   Info: [405]  chi=8 | ds=0.0001853368546195222 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.50 ms/it)[K
+   Info: [422]  chi=8 | ds=0.00018718136566175936 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:25 ( 6.90 ms/it)[K
+   Info: [438]  chi=8 | ds=6.536601698201028e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.89 ms/it)[K
+   Info: [456]  chi=8 | ds=0.00015969752486266753 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.87 ms/it)[K
+   Info: [474]  chi=8 | ds=0.0001871799687030995 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.84 ms/it)[K
+   Info: [491]  chi=8 | ds=0.00018139051266019557 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:24 ( 6.81 ms/it)[K
+   Info: [508]  chi=8 | ds=0.00015969732732779018 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:24 ( 6.78 ms/it)[K
+   Info: [526]  chi=8 | ds=0.00018718014555074713 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  14%  ETA: 0:00:23 ( 6.76 ms/it)[K
+   Info: [543]  chi=8 | ds=0.00018139041181108873 | <R|Rprev> = NaN[K[A  seed 17  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @557)  4 s
+┌ Warning: PM Stuck after 301/557 steps | ds=0.00022292935748513543 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=899|"S=1/2,Site") <-> (dim=2|id=899|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=12|"Link,l=1") <-> (dim=3|id=268|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=404|"S=1/2,Site") <-> (dim=2|id=404|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=783|"Link,l=1") <-> (dim=3|id=565|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:36 ( 9.11 ms/it)[K
+   Info: [11]  chi=11 | ds=0.05350900166548611 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:31 ( 7.84 ms/it)[K
+   Info: [26]  chi=9 | ds=0.026290709894264075 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:29 ( 7.29 ms/it)[K
+   Info: [42]  chi=8 | ds=0.04077206268501669 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:27 ( 6.93 ms/it)[K
+   Info: [59]  chi=8 | ds=0.00923260337287446 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.73 ms/it)[K
+   Info: [76]  chi=8 | ds=0.006395597811425846 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.62 ms/it)[K
+   Info: [93]  chi=8 | ds=0.0037862156511241363 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:25 ( 6.53 ms/it)[K
+   Info: [110]  chi=8 | ds=0.0003955186320080406 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:25 ( 6.50 ms/it)[K
+   Info: [126]  chi=8 | ds=0.0013963814665137741 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:25 ( 6.55 ms/it)[K
+   Info: [142]  chi=8 | ds=0.00045496175471926303 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:25 ( 6.57 ms/it)[K
+   Info: [157]  chi=8 | ds=0.00034571794949145307 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:25 ( 6.56 ms/it)[K
+   Info: [173]  chi=8 | ds=0.00016482005905527064 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:25 ( 6.52 ms/it)[K
+   Info: [190]  chi=8 | ds=0.00015679358528641885 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:25 ( 6.49 ms/it)[K
+   Info: [207]  chi=8 | ds=0.00016659595044188347 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:24 ( 6.47 ms/it)[K
+   Info: [223]  chi=8 | ds=0.000188292712389182 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:24 ( 6.45 ms/it)[K
+   Info: [240]  chi=8 | ds=0.00022588571791093415 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:24 ( 6.44 ms/it)[K
+   Info: [257]  chi=8 | ds=0.00018721249232245274 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:27 ( 7.11 ms/it)[K
+   Info: [272]  chi=8 | ds=0.0001818966782877185 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:26 ( 7.12 ms/it)[K
+   Info: [291]  chi=8 | ds=0.00018199264234830537 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:26 ( 7.07 ms/it)[K
+   Info: [308]  chi=8 | ds=0.0001600039966070943 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:26 ( 7.08 ms/it)[K
+   Info: [324]  chi=8 | ds=0.00018243836164866245 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:26 ( 7.04 ms/it)[K
+   Info: [340]  chi=8 | ds=0.00018477262066274314 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:25 ( 6.98 ms/it)[K
+   Info: [358]  chi=8 | ds=0.00019258719184800377 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:25 ( 6.94 ms/it)[K
+   Info: [375]  chi=8 | ds=0.00019432210266412397 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:25 ( 6.91 ms/it)[K
+   Info: [392]  chi=8 | ds=0.00018484318873135397 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:25 ( 6.88 ms/it)[K
+   Info: [408]  chi=8 | ds=0.00018139549765139318 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:25 ( 6.86 ms/it)[K
+   Info: [424]  chi=8 | ds=0.00017534251721906813 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.84 ms/it)[K
+   Info: [440]  chi=8 | ds=0.00019431940265146608 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.81 ms/it)[K
+   Info: [457]  chi=8 | ds=0.0001848350239761487 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.79 ms/it)[K
+   Info: [474]  chi=8 | ds=0.00022292912284538335 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.78 ms/it)[K
+   Info: [490]  chi=8 | ds=0.0001596974589473943 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:24 ( 6.77 ms/it)[K
+   Info: [506]  chi=8 | ds=0.00018246260913301615 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.75 ms/it)[K
+   Info: [523]  chi=8 | ds=0.00018633695210823475 | <R|Rprev> = NaN[K[A  seed 18  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @539)  4 s
+┌ Warning: PM Stuck after 301/539 steps | ds=0.00022292936521350892 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=744|"S=1/2,Site") <-> (dim=2|id=744|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=203|"Link,l=1") <-> (dim=3|id=730|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=449|"S=1/2,Site") <-> (dim=2|id=449|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=475|"Link,l=1") <-> (dim=3|id=907|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:35 ( 8.74 ms/it)[K
+   Info: [12]  chi=12 | ds=0.043321717083906974 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:31 ( 7.87 ms/it)[K
+   Info: [27]  chi=9 | ds=0.023390676570423208 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:30 ( 7.46 ms/it)[K
+   Info: [42]  chi=10 | ds=0.05859890903415382 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:29 ( 7.28 ms/it)[K
+   Info: [57]  chi=9 | ds=0.028709368928689166 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:28 ( 7.15 ms/it)[K
+   Info: [73]  chi=9 | ds=0.002221082699030985 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:27 ( 7.02 ms/it)[K
+   Info: [89]  chi=8 | ds=0.018313284218502313 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:28 ( 7.13 ms/it)[K
+   Info: [105]  chi=8 | ds=0.017574704252352857 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:33 ( 8.37 ms/it)[K
+   Info: [118]  chi=8 | ds=0.014986000381695286 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:31 ( 8.11 ms/it)[K
+   Info: [135]  chi=8 | ds=0.0016808394966417728 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:31 ( 7.94 ms/it)[K
+   Info: [151]  chi=8 | ds=0.0036163378971216797 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:30 ( 7.75 ms/it)[K
+   Info: [168]  chi=8 | ds=0.0019823686529230056 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:29 ( 7.59 ms/it)[K
+   Info: [185]  chi=8 | ds=0.00032947454182952196 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:28 ( 7.46 ms/it)[K
+   Info: [202]  chi=8 | ds=0.0006080133439892998 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:28 ( 7.36 ms/it)[K
+   Info: [219]  chi=8 | ds=0.0003016770505224198 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:27 ( 7.27 ms/it)[K
+   Info: [236]  chi=8 | ds=0.00018547210899744204 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:27 ( 7.22 ms/it)[K
+   Info: [252]  chi=8 | ds=0.00020842079412120018 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:27 ( 7.15 ms/it)[K
+   Info: [269]  chi=8 | ds=0.00017947877827373393 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:26 ( 7.09 ms/it)[K
+   Info: [286]  chi=8 | ds=0.0001816233604057249 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:26 ( 7.03 ms/it)[K
+   Info: [303]  chi=8 | ds=0.0001833176901586686 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:26 ( 6.98 ms/it)[K
+   Info: [320]  chi=8 | ds=0.00018311200654086424 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:25 ( 6.94 ms/it)[K
+   Info: [337]  chi=8 | ds=0.00015949629853462266 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:25 ( 6.91 ms/it)[K
+   Info: [354]  chi=8 | ds=0.0001894227000972526 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:25 ( 6.88 ms/it)[K
+   Info: [370]  chi=8 | ds=0.00018639499829087303 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:25 ( 6.86 ms/it)[K
+   Info: [386]  chi=8 | ds=0.00022283065658024181 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:25 ( 6.84 ms/it)[K
+   Info: [402]  chi=8 | ds=0.00015974362257398234 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.83 ms/it)[K
+   Info: [418]  chi=8 | ds=0.00018247155881734312 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.81 ms/it)[K
+   Info: [434]  chi=8 | ds=0.00018482299309474648 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:24 ( 6.79 ms/it)[K
+   Info: [451]  chi=8 | ds=0.00022293038671361565 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.77 ms/it)[K
+   Info: [468]  chi=8 | ds=0.00018533298414469268 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:24 ( 6.75 ms/it)[K
+   Info: [485]  chi=8 | ds=0.00018717825461456172 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:24 ( 6.72 ms/it)[K
+   Info: [502]  chi=8 | ds=0.00018139091697300103 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:23 ( 6.71 ms/it)[K
+   Info: [519]  chi=8 | ds=0.00015969709566077128 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:24 ( 7.03 ms/it)[K
+   Info: [535]  chi=8 | ds=0.00018246274922784078 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  14%  ETA: 0:00:24 ( 7.01 ms/it)[K
+   Info: [552]  chi=8 | ds=0.0001863369123364933 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  14%  ETA: 0:00:24 ( 6.99 ms/it)[K
+   Info: [568]  chi=8 | ds=0.00022292930316902826 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  15%  ETA: 0:00:24 ( 6.96 ms/it)[K
+   Info: [585]  chi=8 | ds=0.00018533578437740506 | <R|Rprev> = NaN[K[A  seed 19  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @594)  4 s
+┌ Warning: PM Stuck after 301/594 steps | ds=0.00022292936633427907 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=392|"S=1/2,Site") <-> (dim=2|id=392|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=563|"Link,l=1") <-> (dim=3|id=781|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=801|"S=1/2,Site") <-> (dim=2|id=801|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=229|"Link,l=1") <-> (dim=3|id=319|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:33 ( 8.40 ms/it)[K
+   Info: [12]  chi=10 | ds=0.1375255010653098 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:30 ( 7.49 ms/it)[K
+   Info: [27]  chi=10 | ds=0.06788353666508717 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:27 ( 6.92 ms/it)[K
+   Info: [44]  chi=7 | ds=0.02274833667515863 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:26 ( 6.65 ms/it)[K
+   Info: [61]  chi=8 | ds=0.0034398284181077626 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:25 ( 6.48 ms/it)[K
+   Info: [79]  chi=8 | ds=0.0010339280923932215 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:25 ( 6.37 ms/it)[K
+   Info: [97]  chi=8 | ds=0.0016701660915711125 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:24 ( 6.30 ms/it)[K
+   Info: [114]  chi=8 | ds=0.0010993970408839093 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   3%  ETA: 0:00:24 ( 6.27 ms/it)[K
+   Info: [131]  chi=8 | ds=0.00023487863278026655 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:24 ( 6.22 ms/it)[K
+   Info: [149]  chi=8 | ds=0.00021617792333572527 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   4%  ETA: 0:00:24 ( 6.21 ms/it)[K
+   Info: [166]  chi=8 | ds=0.00017795195569125788 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:24 ( 6.18 ms/it)[K
+   Info: [183]  chi=8 | ds=0.00016656878404996966 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:23 ( 6.16 ms/it)[K
+   Info: [200]  chi=8 | ds=0.00019234718942073847 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   5%  ETA: 0:00:23 ( 6.16 ms/it)[K
+   Info: [217]  chi=8 | ds=0.00018529427590729952 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:23 ( 6.14 ms/it)[K
+   Info: [235]  chi=8 | ds=0.00018701159450040805 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   6%  ETA: 0:00:23 ( 6.13 ms/it)[K
+   Info: [253]  chi=8 | ds=0.00018525209510356078 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:23 ( 6.12 ms/it)[K
+   Info: [270]  chi=8 | ds=0.00022228705990190445 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   7%  ETA: 0:00:23 ( 6.11 ms/it)[K
+   Info: [288]  chi=8 | ds=0.00019469141530870093 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:23 ( 6.10 ms/it)[K
+   Info: [305]  chi=8 | ds=0.0001849160668059291 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:24 ( 6.65 ms/it)[K
+   Info: [322]  chi=8 | ds=0.00022296874684069046 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   8%  ETA: 0:00:24 ( 6.63 ms/it)[K
+   Info: [340]  chi=8 | ds=0.00019428509494634483 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:24 ( 6.63 ms/it)[K
+   Info: [356]  chi=8 | ds=0.00018718645037174575 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)   9%  ETA: 0:00:24 ( 6.60 ms/it)[K
+   Info: [373]  chi=8 | ds=0.0001813995108248534 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:24 ( 6.57 ms/it)[K
+   Info: [390]  chi=8 | ds=0.0001597026733456408 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  10%  ETA: 0:00:23 ( 6.54 ms/it)[K
+   Info: [408]  chi=8 | ds=0.00018717823976777126 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.51 ms/it)[K
+   Info: [425]  chi=8 | ds=0.00018139016380269712 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.49 ms/it)[K
+   Info: [442]  chi=8 | ds=0.00015969684151284635 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  11%  ETA: 0:00:23 ( 6.47 ms/it)[K
+   Info: [459]  chi=8 | ds=0.0001897722586082784 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.45 ms/it)[K
+   Info: [477]  chi=8 | ds=0.00018139042464460076 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  12%  ETA: 0:00:23 ( 6.43 ms/it)[K
+   Info: [495]  chi=8 | ds=0.00018533576175439048 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:22 ( 6.41 ms/it)[K
+   Info: [513]  chi=8 | ds=0.00018483508443911667 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  13%  ETA: 0:00:22 ( 6.40 ms/it)[K
+   Info: [530]  chi=8 | ds=0.00022292935037027117 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=54, cutoff=1.0e-12, maxdim=64, normalize=overlap)  14%  ETA: 0:00:22 ( 6.39 ms/it)[K
+   Info: [548]  chi=8 | ds=0.00019432031474020395 | <R|Rprev> = NaN[K[A  seed 20  plateau= 0.1298  |mu0|=1.489585  rig=4.22e-02  (stuck @556)  4 s
+┌ Warning: PM Stuck after 301/556 steps | ds=0.0002229293577792335 | chi=8)
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/power_method/pm.jl:151
+
+SEEDENS-DONE

@@ -1,0 +1,344 @@
+
+=== dt=0.1 p=0.0 T=3.0  (0 of 20 cached)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=361|"S=1/2,Site") <-> (dim=2|id=361|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=866|"Link,l=1") <-> (dim=3|id=8|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=661|"S=1/2,Site") <-> (dim=2|id=661|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=69|"Link,l=1") <-> (dim=3|id=365|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:05:45 (86.40 ms/it)[K
+   Info: [2]  chi=6 | ds=0.06252505336882941 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:27 ( 6.78 ms/it)[K
+   Info: [64]  chi=6 | ds=0.00023031991693833742 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:22 ( 5.62 ms/it)[K
+   Info: [97]  chi=6 | ds=6.930815848460448e-6 | <R|Rprev> = NaN[K[A  seed  1  plateau= 0.1316  |mu0|=1.492248  rig=1.54e-01  (converged @107)  23 s
+[ Info: PM Converged after 107 steps | ds=6.842351086833176e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=786|"S=1/2,Site") <-> (dim=2|id=786|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=350|"Link,l=1") <-> (dim=3|id=509|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=669|"S=1/2,Site") <-> (dim=2|id=669|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=59|"Link,l=1") <-> (dim=3|id=35|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   0%  ETA: 0:00:25 ( 6.38 ms/it)[K
+   Info: [16]  chi=6 | ds=0.06536827111921628 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:18 ( 4.61 ms/it)[K
+   Info: [44]  chi=6 | ds=0.0013389944438059187 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:29 ( 7.34 ms/it)[K
+   Info: [72]  chi=6 | ds=0.00010506103902496733 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:25 ( 6.47 ms/it)[K
+   Info: [100]  chi=6 | ds=2.5439670955362814e-6 | <R|Rprev> = NaN[K[A  seed  2  plateau= 0.1316  |mu0|=1.492247  rig=1.54e-01  (converged @106)  1 s
+[ Info: PM Converged after 106 steps | ds=9.699164003063032e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=147|"S=1/2,Site") <-> (dim=2|id=147|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=195|"Link,l=1") <-> (dim=3|id=660|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=676|"S=1/2,Site") <-> (dim=2|id=676|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=913|"Link,l=1") <-> (dim=3|id=308|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.46 ms/it)[K
+   Info: [29]  chi=6 | ds=0.004615135767734757 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.50 ms/it)[K
+   Info: [58]  chi=6 | ds=0.0002794666164224191 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:14 ( 3.49 ms/it)[K
+   Info: [87]  chi=6 | ds=1.7508767107932144e-5 | <R|Rprev> = NaN[K[A  seed  3  plateau= 0.1316  |mu0|=1.492251  rig=1.54e-01  (converged @104)  0 s
+[ Info: PM Converged after 104 steps | ds=7.852422246878987e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=262|"S=1/2,Site") <-> (dim=2|id=262|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=919|"Link,l=1") <-> (dim=3|id=539|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=201|"S=1/2,Site") <-> (dim=2|id=201|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=281|"Link,l=1") <-> (dim=3|id=598|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.52 ms/it)[K
+   Info: [29]  chi=6 | ds=0.004755142474677454 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.48 ms/it)[K
+   Info: [59]  chi=6 | ds=9.880999426858939e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:14 ( 3.49 ms/it)[K
+   Info: [88]  chi=6 | ds=1.2811825055303316e-6 | <R|Rprev> = NaN[K[A  seed  4  plateau= 0.1316  |mu0|=1.492237  rig=1.54e-01  (converged @95)  0 s
+[ Info: PM Converged after 95 steps | ds=8.301371616781239e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=61|"S=1/2,Site") <-> (dim=2|id=61|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=257|"Link,l=1") <-> (dim=3|id=796|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=159|"S=1/2,Site") <-> (dim=2|id=159|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=295|"Link,l=1") <-> (dim=3|id=613|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:17 ( 4.22 ms/it)[K
+   Info: [24]  chi=6 | ds=0.02476537351895458 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:15 ( 3.86 ms/it)[K
+   Info: [53]  chi=6 | ds=0.0006402196157955231 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:14 ( 3.68 ms/it)[K
+   Info: [83]  chi=6 | ds=3.768165974649129e-5 | <R|Rprev> = NaN[K[A  seed  5  plateau= 0.1316  |mu0|=1.492245  rig=1.54e-01  (converged @110)  0 s
+[ Info: PM Converged after 110 steps | ds=8.001689481007546e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=827|"S=1/2,Site") <-> (dim=2|id=827|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=42|"Link,l=1") <-> (dim=3|id=413|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=824|"S=1/2,Site") <-> (dim=2|id=824|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=692|"Link,l=1") <-> (dim=3|id=268|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.49 ms/it)[K
+   Info: [29]  chi=6 | ds=0.0010838216145507146 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.43 ms/it)[K
+   Info: [59]  chi=6 | ds=6.148929481641918e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:13 ( 3.41 ms/it)[K
+   Info: [89]  chi=6 | ds=4.595182667377351e-6 | <R|Rprev> = NaN[K[A  seed  6  plateau= 0.1316  |mu0|=1.492249  rig=1.54e-01  (converged @92)  0 s
+[ Info: PM Converged after 92 steps | ds=7.822666265866474e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=193|"S=1/2,Site") <-> (dim=2|id=193|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=827|"Link,l=1") <-> (dim=3|id=434|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=72|"S=1/2,Site") <-> (dim=2|id=72|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=900|"Link,l=1") <-> (dim=3|id=953|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:13 ( 3.34 ms/it)[K
+   Info: [30]  chi=6 | ds=0.0042304640237584845 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:13 ( 3.36 ms/it)[K
+   Info: [60]  chi=6 | ds=6.322062101948855e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:13 ( 3.35 ms/it)[K
+   Info: [91]  chi=6 | ds=2.6920629244697736e-6 | <R|Rprev> = NaN[K[A  seed  7  plateau= 0.1316  |mu0|=1.492250  rig=1.54e-01  (converged @97)  0 s
+[ Info: PM Converged after 97 steps | ds=9.180220248428128e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=986|"S=1/2,Site") <-> (dim=2|id=986|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=313|"Link,l=1") <-> (dim=3|id=410|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=228|"S=1/2,Site") <-> (dim=2|id=228|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=973|"Link,l=1") <-> (dim=3|id=499|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.50 ms/it)[K
+   Info: [29]  chi=6 | ds=0.0010370919225002329 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:13 ( 3.39 ms/it)[K
+   Info: [60]  chi=6 | ds=3.218505510826919e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:13 ( 3.38 ms/it)[K
+   Info: [90]  chi=6 | ds=2.448312308112044e-6 | <R|Rprev> = NaN[K[A  seed  8  plateau= 0.1316  |mu0|=1.492250  rig=1.54e-01  (converged @92)  0 s
+[ Info: PM Converged after 92 steps | ds=6.92613377983875e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=557|"S=1/2,Site") <-> (dim=2|id=557|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=357|"Link,l=1") <-> (dim=3|id=785|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=29|"S=1/2,Site") <-> (dim=2|id=29|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=469|"Link,l=1") <-> (dim=3|id=363|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.52 ms/it)[K
+   Info: [29]  chi=6 | ds=0.00402178228534078 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.51 ms/it)[K
+   Info: [58]  chi=6 | ds=8.270882967131854e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:14 ( 3.48 ms/it)[K
+   Info: [88]  chi=6 | ds=2.024187533922195e-6 | <R|Rprev> = NaN[K[A  seed  9  plateau= 0.1316  |mu0|=1.492248  rig=1.54e-01  (converged @95)  0 s
+[ Info: PM Converged after 95 steps | ds=6.71165277577046e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=120|"S=1/2,Site") <-> (dim=2|id=120|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=309|"Link,l=1") <-> (dim=3|id=610|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=887|"S=1/2,Site") <-> (dim=2|id=887|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=838|"Link,l=1") <-> (dim=3|id=455|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:13 ( 3.32 ms/it)[K
+   Info: [31]  chi=6 | ds=0.004869053139699986 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:13 ( 3.34 ms/it)[K
+   Info: [61]  chi=6 | ds=0.00024246391363580422 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:13 ( 3.37 ms/it)[K
+   Info: [91]  chi=6 | ds=1.2283703074933428e-5 | <R|Rprev> = NaN[K[A  seed 10  plateau= 0.1316  |mu0|=1.492246  rig=1.54e-01  (converged @107)  0 s
+[ Info: PM Converged after 107 steps | ds=8.94298530229598e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=552|"S=1/2,Site") <-> (dim=2|id=552|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=113|"Link,l=1") <-> (dim=3|id=851|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=740|"S=1/2,Site") <-> (dim=2|id=740|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=555|"Link,l=1") <-> (dim=3|id=860|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.53 ms/it)[K
+   Info: [29]  chi=6 | ds=0.005652858373548897 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.51 ms/it)[K
+   Info: [58]  chi=6 | ds=0.00019567724027536038 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:14 ( 3.51 ms/it)[K
+   Info: [87]  chi=6 | ds=2.0139466658686267e-5 | <R|Rprev> = NaN[K[A  seed 11  plateau= 0.1316  |mu0|=1.492247  rig=1.54e-01  (converged @108)  0 s
+[ Info: PM Converged after 108 steps | ds=9.152586267768825e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=150|"S=1/2,Site") <-> (dim=2|id=150|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=629|"Link,l=1") <-> (dim=3|id=32|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=595|"S=1/2,Site") <-> (dim=2|id=595|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=140|"Link,l=1") <-> (dim=3|id=460|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.47 ms/it)[K
+   Info: [29]  chi=6 | ds=0.00034609176697109056 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.48 ms/it)[K
+   Info: [58]  chi=6 | ds=2.634224485953407e-5 | <R|Rprev> = NaN[K[A  seed 12  plateau= 0.1316  |mu0|=1.492245  rig=1.54e-01  (converged @80)  0 s
+[ Info: PM Converged after 80 steps | ds=7.51567582835122e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=251|"S=1/2,Site") <-> (dim=2|id=251|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=318|"Link,l=1") <-> (dim=3|id=44|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=551|"S=1/2,Site") <-> (dim=2|id=551|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=576|"Link,l=1") <-> (dim=3|id=967|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.64 ms/it)[K
+   Info: [28]  chi=6 | ds=0.005009206225977558 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.49 ms/it)[K
+   Info: [58]  chi=6 | ds=0.00016777855754535054 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:13 ( 3.44 ms/it)[K
+   Info: [88]  chi=6 | ds=1.1229310537541615e-5 | <R|Rprev> = NaN[K[A  seed 13  plateau= 0.1316  |mu0|=1.492252  rig=1.54e-01  (converged @103)  0 s
+[ Info: PM Converged after 103 steps | ds=7.853743833052818e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=814|"S=1/2,Site") <-> (dim=2|id=814|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=399|"Link,l=1") <-> (dim=3|id=775|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=157|"S=1/2,Site") <-> (dim=2|id=157|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=622|"Link,l=1") <-> (dim=3|id=40|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:13 ( 3.36 ms/it)[K
+   Info: [31]  chi=6 | ds=0.0013152250860271053 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:13 ( 3.30 ms/it)[K
+   Info: [62]  chi=6 | ds=4.6352008687411406e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:13 ( 3.28 ms/it)[K
+   Info: [93]  chi=6 | ds=2.3015341523713317e-6 | <R|Rprev> = NaN[K[A  seed 14  plateau= 0.1316  |mu0|=1.492248  rig=1.54e-01  (converged @100)  0 s
+[ Info: PM Converged after 100 steps | ds=6.473278891805379e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=410|"S=1/2,Site") <-> (dim=2|id=410|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=775|"Link,l=1") <-> (dim=3|id=911|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=323|"S=1/2,Site") <-> (dim=2|id=323|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=207|"Link,l=1") <-> (dim=3|id=559|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.62 ms/it)[K
+   Info: [28]  chi=6 | ds=0.005514042382392836 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.43 ms/it)[K
+   Info: [59]  chi=6 | ds=0.0002511176431529982 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:13 ( 3.38 ms/it)[K
+   Info: [91]  chi=6 | ds=4.537056820130836e-6 | <R|Rprev> = NaN[K[A  seed 15  plateau= 0.1316  |mu0|=1.492244  rig=1.54e-01  (converged @104)  0 s
+[ Info: PM Converged after 104 steps | ds=8.431268190278729e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=390|"S=1/2,Site") <-> (dim=2|id=390|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=101|"Link,l=1") <-> (dim=3|id=488|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=479|"S=1/2,Site") <-> (dim=2|id=479|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=847|"Link,l=1") <-> (dim=3|id=948|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.46 ms/it)[K
+   Info: [29]  chi=6 | ds=0.017830775256529263 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:13 ( 3.32 ms/it)[K
+   Info: [61]  chi=6 | ds=0.0017921780227160289 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:21 ( 5.49 ms/it)[K
+   Info: [92]  chi=6 | ds=2.1588625301327546e-5 | <R|Rprev> = NaN[K[A  seed 16  plateau= 0.1316  |mu0|=1.492244  rig=1.54e-01  (converged @123)  1 s
+[ Info: PM Converged after 123 steps | ds=8.797189499087921e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=149|"S=1/2,Site") <-> (dim=2|id=149|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=811|"Link,l=1") <-> (dim=3|id=390|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=104|"S=1/2,Site") <-> (dim=2|id=104|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=106|"Link,l=1") <-> (dim=3|id=615|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:13 ( 3.28 ms/it)[K
+   Info: [31]  chi=6 | ds=0.00198532382464478 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:14 ( 3.60 ms/it)[K
+   Info: [60]  chi=6 | ds=0.00027870130228457857 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:13 ( 3.45 ms/it)[K
+   Info: [92]  chi=6 | ds=5.24164617521361e-6 | <R|Rprev> = NaN[K[A  seed 17  plateau= 0.1316  |mu0|=1.492245  rig=1.54e-01  (converged @106)  0 s
+[ Info: PM Converged after 106 steps | ds=5.449910736032848e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=776|"S=1/2,Site") <-> (dim=2|id=776|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=814|"Link,l=1") <-> (dim=3|id=86|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=271|"S=1/2,Site") <-> (dim=2|id=271|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=881|"Link,l=1") <-> (dim=3|id=579|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:13 ( 3.28 ms/it)[K
+   Info: [31]  chi=6 | ds=0.005555764454801104 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:13 ( 3.38 ms/it)[K
+   Info: [60]  chi=6 | ds=0.00031689431503323373 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:13 ( 3.40 ms/it)[K
+   Info: [90]  chi=6 | ds=9.697419935172924e-6 | <R|Rprev> = NaN[K[A  seed 18  plateau= 0.1316  |mu0|=1.492247  rig=1.54e-01  (converged @108)  0 s
+[ Info: PM Converged after 108 steps | ds=4.93888834385281e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=54|"S=1/2,Site") <-> (dim=2|id=54|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=541|"Link,l=1") <-> (dim=3|id=284|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=69|"S=1/2,Site") <-> (dim=2|id=69|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=55|"Link,l=1") <-> (dim=3|id=623|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.51 ms/it)[K
+   Info: [29]  chi=6 | ds=0.0012344091037467253 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.49 ms/it)[K
+   Info: [58]  chi=6 | ds=5.259957633108048e-5 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:13 ( 3.45 ms/it)[K
+   Info: [88]  chi=6 | ds=2.9507228169745048e-6 | <R|Rprev> = NaN[K[A  seed 19  plateau= 0.1316  |mu0|=1.492253  rig=1.54e-01  (converged @91)  0 s
+[ Info: PM Converged after 91 steps | ds=8.315833639471748e-7 | chi=6)
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=689|"S=1/2,Site") <-> (dim=2|id=689|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=745|"Link,l=1") <-> (dim=3|id=558|"Link,l=2"), normdiff = 0.9446880731519559
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[ Info: Checking symmetry MPO tensor on physical(space) => bond(time) indices
+[ Info: Tensor symmetric (dim=2|id=828|"S=1/2,Site") <-> (dim=2|id=828|"S=1/2,Site")'
+[ Info: Checking symmetry MPO tensor on bond(space) => phys(time) indices
+┌ Warning: Tensor *not* symmetric (dim=3|id=551|"Link,l=1") <-> (dim=3|id=6|"Link,l=2"), normdiff = 0.10493384159131464
+└ @ ITransverse ~/.julia/packages/ITransverse/8pmYI/src/ITenUtils/itensor_utils.jl:93
+[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.58 ms/it)[K
+   Info: [28]  chi=6 | ds=0.025846968655275138 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   1%  ETA: 0:00:14 ( 3.50 ms/it)[K
+   Info: [58]  chi=6 | ds=0.0013857097526160933 | <R|Rprev> = NaN[K[A
+[K[A[PM LR|RTM] L=34, cutoff=1.0e-12, maxdim=64, normalize=overlap)   2%  ETA: 0:00:14 ( 3.47 ms/it)[K
+   Info: [88]  chi=6 | ds=1.3323517578767152e-5 | <R|Rprev> = NaN[K[A  seed 20  plateau= 0.1316  |mu0|=1.492240  rig=1.54e-01  (converged @113)  0 s
+[ Info: PM Converged after 113 steps | ds=9.319041078814649e-7 | chi=6)
+
+SEEDENS-DONE

@@ -1,0 +1,1868 @@
+% ============================================================================
+% Master's defense — Universal Properties from Quantum Many-Body Dynamics
+% Joaquín G. Márquez Olguín · Supervisor: Stefano Carignano (BSC)
+%
+% ---------------------------------------------------------------------------
+% HOW THIS FILE WORKS (first time with Beamer? read this)
+%
+% Beamer is the LaTeX document class for presentations: instead of sections
+% and paragraphs, the document is a sequence of
+%     \begin{frame}{Frame Title} ... \end{frame}
+% blocks, and each block becomes ONE slide of the PDF. Inside a frame you
+% write ordinary LaTeX: equations, \includegraphics, itemize, etc.
+%
+% The file is organised top to bottom as:
+%   1. preamble      — packages and the figure search path (\graphicspath)
+%   2. theme         — colours, background, frame-title look, footer.
+%                      Beamer is themed by overriding named "templates"
+%                      (\setbeamertemplate{...}) and colours
+%                      (\setbeamercolor{...}); each one below has a comment.
+%   3. macros        — small shorthands used in the slides (\E, \idea, ...)
+%   4. main frames   — the 24 numbered slides, in talk order
+%   5. backup frames — the unnumbered Q&A slides, after the conclusions
+%
+% Frequently used pieces inside frames:
+%   \begin{columns}[c] \begin{column}{0.5\textwidth} ... — side-by-side
+%     layout; [c] centres the two columns vertically on each other.
+%   \note{...} — the speaker script. It is NOT shown on the slide; it is
+%     only compiled into a notes view (see [NOTES] below to rehearse).
+%   \vfill — stretches vertical space evenly, used to spread content out.
+%
+% Page numbering trick (bottom of the file): backup slides must not count.
+% Beamer numbers every frame with the counter "framenumber" and prints the
+% grand total as \inserttotalframenumber. So after the conclusions we SAVE
+% the counter, let the backup frames run (the footer shows the word
+% "backup" for them instead of a number), and RESTORE the counter at the
+% very end — the printed total is then the number of main slides only.
+%
+% Build (from defense/):
+%   PATH="$HOME/.venvs/thesis/bin:$PATH" tectonic -X compile main.tex --only-cached
+% (--only-cached: the tectonic package server was unreachable; everything
+%  this file needs is already in the local cache.)
+%
+% To rehearse with the speaker notes next to each slide, uncomment the two
+% [NOTES] lines below and recompile.
+% ============================================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usepackage[british]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{bbold}     % blackboard-bold digits: \mathbb{1} as in the thesis
+% only bbold5..bbold10 are in the local package cache; make every size >= 10pt
+% scale bbold10 instead of requesting bbold12 (which the offline cache lacks)
+\DeclareFontFamily{U}{bbold}{}
+\DeclareFontShape{U}{bbold}{m}{n}{<->bbold10}{}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{patterns,calc,shapes.geometric}
+% [NOTES] uncomment to show speaker notes on a second screen:
+% \usepackage{pgfpages}
+% \setbeameroption{show notes on second screen=right}
+
+\graphicspath{{imgs/}{../thesis/imgs/}}
+
+% ---- palette (from the user's PPT theme) -------------------------------------
+\definecolor{ink}{RGB}{31,42,54}       % text, frame titles
+\definecolor{accent}{RGB}{5,141,199}   % structure, taglines
+\definecolor{blob}{RGB}{169,220,235}   % background gradients
+\definecolor{hl}{RGB}{196,98,22}       % orange highlights only
+% colours of the fermionised Hamiltonian terms (backup B1), matching the FSM figure
+\definecolor{jwnn}{RGB}{40,80,150}
+\definecolor{jwfield}{RGB}{40,130,70}
+\definecolor{jwnnn}{RGB}{150,60,150}
+\definecolor{jwxx}{RGB}{196,98,22}
+
+% Each \setbeamercolor line overrides one of Beamer's named colour slots:
+\setbeamercolor{normal text}{fg=ink,bg=white}        % body text on white
+\setbeamercolor{structure}{fg=accent}                % "structure" = bullets, enum numbers, etc.
+\setbeamercolor{frametitle}{fg=ink,bg=}              % slide titles: dark ink, NO coloured bar (empty bg)
+\setbeamercolor{title}{fg=ink,bg=}                   % (title-page slot; we build ours by hand anyway)
+\setbeamercolor{block title}{bg=accent!10,fg=accent!80!black}  % \begin{block} header tint
+\setbeamercolor{block body}{bg=accent!4,fg=ink}                % \begin{block} body tint
+\setbeamertemplate{navigation symbols}{}             % kill the tiny nav icons Beamer adds by default
+\setbeamertemplate{blocks}[rounded][shadow=false]    % rounded blocks, flat (no fake 3D shadow)
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+% bullet symbols, drawn in the accent colour:
+\setbeamertemplate{itemize item}{\textcolor{accent}{\raisebox{0.12ex}{\scriptsize$\blacktriangleright$}}}
+\setbeamertemplate{itemize subitem}{\textcolor{accent!70}{--}}
+
+% ---- background: white + soft cyan radial blobs ------------------------------
+% Beamer redraws the "background" template behind every slide. Ours is a
+% TikZ picture: a white 16cm x 9cm canvas (the paper size at 16:9) with
+% radially shaded circles that fade to white — the soft blobs of the PPT
+% style. \bgblobs is the default; \bgtitle (bigger blobs + dot texture) is
+% swapped in locally for the title slide only.
+% Paper is 160mm x 90mm (aspectratio=169); coordinates below are in cm.
+\newcommand{\bgblobs}{% content frames: subtle, pushed into the corners
+  \begin{tikzpicture}
+    \useasboundingbox (0,0) rectangle (16,9);
+    \shade[shading=radial, inner color=blob!50, outer color=white]
+      (16.2,9.2) circle (2.1);
+    \shade[shading=radial, inner color=blob!35, outer color=white]
+      (-0.2,-0.2) circle (1.9);
+  \end{tikzpicture}}
+\newcommand{\bgtitle}{% title frame: larger blobs + faint dot grid (PPT look)
+  \begin{tikzpicture}
+    \useasboundingbox (0,0) rectangle (16,9);
+    \fill[pattern=dots, pattern color=black!9] (0.4,5.6) rectangle (6.8,8.8);
+    \shade[shading=radial, inner color=blob!85, outer color=white]
+      (13.6,7.9) circle (4.0);
+    \shade[shading=radial, inner color=blob!60, outer color=white]
+      (0.9,0.7) circle (3.0);
+  \end{tikzpicture}}
+\setbeamertemplate{background}{\bgblobs}
+
+% ---- frame title: ink, left, short accent rule -------------------------------
+\setbeamertemplate{frametitle}{%
+  \vspace*{0.42cm}%
+  {\usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}\insertframetitle\par}%
+  \vspace*{0.08cm}%
+  {\color{accent}\rule{2.6cm}{1.5pt}}\par\vspace*{-0.05cm}}
+
+% ---- footer: name | short title | page (hidden for backup frames) ------------
+% \newif creates a true/false switch. \inappendixtrue is flipped right
+% before the backup frames; the footer checks it and prints "backup"
+% instead of the page number there.
+\newif\ifinappendix
+% Madrid-style footer: three coloured boxes (author | short title | date+page),
+% rebuilt by hand so the "backup" behaviour and our palette are kept.
+\definecolor{footnavy}{RGB}{31,64,110}
+\setbeamercolor{author in head/foot}{bg=footnavy,fg=white}
+\setbeamercolor{title in head/foot}{bg=footnavy!75!white,fg=white}
+\setbeamercolor{date in head/foot}{bg=footnavy!55!white,fg=white}
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{%
+\begin{beamercolorbox}[wd=.24\paperwidth,ht=2.4ex,dp=1.1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\scriptsize Joaquín G. Márquez
+  \end{beamercolorbox}%
+\begin{beamercolorbox}[wd=.52\paperwidth,ht=2.4ex,dp=1.1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\scriptsize Universal Properties from Quantum Many-Body Dynamics\strut%
+  \end{beamercolorbox}%
+\begin{beamercolorbox}[wd=.24\paperwidth,ht=2.4ex,dp=1.1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\scriptsize September 2026\hspace*{1.6em}
+    \ifinappendix backup\else\insertframenumber{} / \inserttotalframenumber\fi\hspace*{2ex}
+  \end{beamercolorbox}}%
+  \vskip0pt}
+
+% ---- shorthand ---------------------------------------------------------------
+% Small macros so the slide source stays readable:
+%   \E            the transfer matrix, \Lech the Loschmidt echo
+%   \ket/\bra/\braket   Dirac notation
+%   \idea{...}    the one-line "main idea" tagline (bold, accent colour)
+%   \resultsbanner  the tiny Table-1 strip pinned at the bottom of results
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\Lech}{\mathcal{L}}
+\newcommand{\Tr}{\mathrm{Tr}}
+\newcommand{\ket}[1]{\left|#1\right\rangle}
+\newcommand{\bra}[1]{\left\langle#1\right|}
+\newcommand{\braket}[2]{\left\langle#1\middle|#2\right\rangle}
+% one-line "main idea" tagline
+\newcommand{\idea}[1]{\begin{center}\color{accent!80!black}\textbf{#1}\end{center}}
+% one cell of the slide-21 entropy grid: figure + its extracted result
+\newcommand{\domecell}[3]{%
+  \begin{minipage}{0.487\textwidth}\centering
+    \includegraphics[width=\textwidth]{#1}\\[-0.2ex]
+    {\footnotesize\color{accent!80!black} $c = #2$ \ (#3)}%
+  \end{minipage}}
+
+% ---- results tables -----------------------------------------------------------
+% \resultsbanner: the full Table 1 (used on the Results opener and the
+% conclusions). Each results slide instead shows only its own columns via the
+% three mini-tables below.
+\newcommand{\entropyminitable}{%
+  {\centering\footnotesize
+  \setlength{\tabcolsep}{5pt}\renewcommand{\arraystretch}{1.05}%
+  \begin{tabular}{@{}ccc@{}}
+  \toprule
+  $p$ & window & $c$ (entropy)\\
+  \midrule
+  $0$   & $4\le T\le 22$ & $0.49\pm0.01$\\
+  $0.1$ & $4\le T\le 13$ & $0.50\pm0.04$\\
+  $0.3$ & $2\le T\le 9$  & $0.53\pm0.04$\\
+  $0.5$ & $2\le T\le 5$  & $0.58\pm0.04$\\
+  \bottomrule
+  \end{tabular}\par}}
+\newcommand{\spectralminitable}{%
+  {\centering\footnotesize
+  \setlength{\tabcolsep}{5pt}\renewcommand{\arraystretch}{1.05}%
+  \begin{tabular}{@{}ccc@{}}
+  \toprule
+  $p$ & window & $c$ (spectral)\\
+  \midrule
+  $0$   & $2\le T\le 22$ & $0.45$\\
+  $0.1$ & $2\le T\le 17$ & $0.47$\\
+  $0.3$ & $2\le T\le 10$ & $0.49$\\
+  $0.5$ & $2\le T\le 6$  & $0.53$\\
+  \bottomrule
+  \end{tabular}\par}}
+\newcommand{\towerminitable}{%
+  {\centering\footnotesize
+  \setlength{\tabcolsep}{5pt}\renewcommand{\arraystretch}{1.05}%
+  \begin{tabular}{@{}cc@{}}
+  \toprule
+  $p$ & $x_1$\\
+  \midrule
+  $0$   & $0.498$\\
+  $0.1$ & $0.497$\\
+  $0.3$ & $0.493$\\
+  $0.5$ & $0.487$\\
+  \bottomrule
+  \end{tabular}\par}}
+\newcommand{\resultsbanner}{%
+  \vfill
+  {\centering\tiny
+  \setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.05}%
+  \begin{tabular}{@{}ccccccc@{}}
+  \toprule
+  $p$ & $v_\infty$ & entropy window & $c$ (entropy) & spectral window & $c$ (spectral) & $x_1$\\
+  \midrule
+  $0$   & $2.00$ & $4\le T\le 22$ & $0.49\pm0.01$ & $2\le T\le 22$ & $0.45$ & $0.498$\\
+  $0.1$ & $2.67$ & $4\le T\le 13$ & $0.50\pm0.04$ & $2\le T\le 17$ & $0.47$ & $0.497$\\
+  $0.3$ & $3.97$ & $2\le T\le 9$  & $0.53\pm0.04$ & $2\le T\le 10$ & $0.49$ & $0.493$\\
+  $0.5$ & $5.21$ & $2\le T\le 5$  & $0.58\pm0.04$ & $2\le T\le 6$  & $0.53$ & $0.487$\\
+  \bottomrule
+  \end{tabular}\par}%
+}
+
+\title{Universal Properties from Quantum Many-Body Dynamics}
+\author{Joaquín G. Márquez Olguín}
+
+\begin{document}
+
+% ============================================================================
+% 1 · TITLE
+% ============================================================================
+% The braces { ... } around this frame limit the background swap to it.
+% [plain] removes the footer from this slide only.
+{\setbeamertemplate{background}{\bgtitle}%
+\begin{frame}[plain]
+  \vspace*{2.0cm}
+  \begin{center}
+    {\LARGE\bfseries\color{ink} Universal Properties from\\[0.25ex]
+      Quantum Many-Body Dynamics}\\[1.4ex]
+    {\color{accent}\rule{4.8cm}{1.6pt}}\\[1.4ex]
+    {\normalsize\color{ink!70} Master's Thesis Defence}
+  \end{center}
+  \vfill
+  % bottom band: author block left-aligned, logos (equal size) right-aligned
+  \begin{columns}[b]
+    \begin{column}{0.60\textwidth}
+      \raggedright
+      {\normalsize\color{ink} Joaquín G. Márquez Olguín}\\[0.6ex]
+      {\small\color{ink!70} Supervisor: Stefano Carignano}\\[0.4ex]
+      {\small\color{ink!70} Barcelona Supercomputing Center $\cdot$ September 2026}
+    \end{column}
+    \begin{column}{0.40\textwidth}
+      \centering
+      \includegraphics[width=4.6cm]{logo_bsc.png}\\[1.0ex]
+      \includegraphics[width=4.6cm]{logo_mqst.png}
+    \end{column}
+  \end{columns}
+  \vspace*{0.75cm}
+  \note{Good morning. Today I will present my master's thesis, carried out at
+  the Barcelona Supercomputing Center under the supervision of Stefano
+  Carignano. The central question: can the universal, equilibrium data of a
+  critical spin chain --- its central charge and boundary operator content ---
+  be extracted purely from its far-from-equilibrium real-time dynamics, in a
+  model that is not integrable? The answer, as I will show, is yes.}
+\end{frame}}
+
+% ============================================================================
+% 2 · MOTIVATION I — curse of dimensionality
+% ============================================================================
+\begin{frame}{Simulating Quantum Many-Body Systems}
+  \vfill
+  \begin{center}
+    \includegraphics[width=0.86\textwidth]{motivation_tn.pdf}
+  \end{center}
+  \vfill
+  \idea{tensor networks organise a state by its entanglement}
+  \begin{center}
+    equilibrium in 1D is solved: MPS $+$ DMRG (area law)
+  \end{center}
+  \vfill
+  \note{Before the physics, the computational problem. A generic many-body
+  wavefunction needs d to the N coefficients --- the curse of dimensionality:
+  storing, let alone evolving, an arbitrary state is hopeless beyond a few
+  tens of spins. Tensor networks are the way out: instead of all coefficients,
+  keep a network of small tensors whose bond dimension chi controls how much
+  entanglement the ansatz can carry --- entanglement becomes the organising
+  principle. For one dimension this programme is essentially complete in
+  equilibrium: ground states of local gapped Hamiltonians obey an area law
+  --- entanglement across a cut saturates --- so matrix product states
+  capture them with polynomial resources, and DMRG made them the
+  state-of-the-art tool of the field.}
+\end{frame}
+
+% ============================================================================
+% 3 · MOTIVATION II — the entanglement barrier
+% ============================================================================
+\begin{frame}{What About Dynamics? The Entanglement Barrier}
+  \begin{columns}[c]
+    \begin{column}{0.46\textwidth}
+      \[
+        \text{quench} \;\Rightarrow\; S_x(t) \sim t
+        \;\Rightarrow\; \chi \sim e^{\,c t}
+      \]
+      \begin{center}
+        TEBD / TDVP: excellent at short times\\ --- then the wall
+      \end{center}
+      \idea{this work: time evolution that avoids the barrier,\\
+            for quenches to a critical point in 1D}
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      \centering
+      \includegraphics[width=0.9\textwidth]{entanglement_barrier.png}
+    \end{column}
+  \end{columns}
+  \note{But we care about dynamics, and there the same idea runs into a wall.
+  After a global quench, entanglement across spatial cuts grows linearly in
+  time --- towards volume law --- so the bond dimension a matrix-product
+  simulation needs grows exponentially. The figure is our own measurement:
+  the maximum bond dimension a TDVP simulation requests as a function of
+  time. It explodes and slams into the cap --- here two hundred and
+  fifty-six --- after which the simulation is simply wrong. TEBD and TDVP
+  are excellent at short times, but this entanglement barrier is not an
+  implementation detail; it is the physics of quenched entanglement growth.
+  This thesis is about a different way of doing time evolution --- one that
+  avoids the barrier entirely when we quench to a critical point in one
+  dimension.}
+\end{frame}
+
+% ============================================================================
+% 4 · OUTLINE
+% ============================================================================
+\begin{frame}{Outline}
+  \Large
+  \begin{enumerate}\setlength{\itemsep}{0.75em}
+    \item The Loschmidt echo and the CFT mapping
+    \item Transverse contraction and the CFT predictions
+    \item The model and its equilibrium properties
+    \item Numerical methods
+    \item Results
+  \end{enumerate}
+  \note{The plan. First, the dynamical object --- the Loschmidt echo --- and
+  its mapping to a conformal field theory on a strip. Second, the transverse
+  contraction: how the dynamics becomes an eigenproblem for a transfer
+  matrix, and the CFT predictions that come with it --- for its spectrum and
+  for the temporal entropies. Third, the non-integrable chain we test on and
+  the two equilibrium inputs we measure independently. Fourth, the numerical
+  machinery: the evolution operator and the two power iterations. And
+  finally the results: two routes to the central charge, the boundary
+  operator tower, and the boundary selection rules.}
+\end{frame}
+
+% ============================================================================
+% 5 · THE LOSCHMIDT ECHO — one visual identity
+% ============================================================================
+\begin{frame}{The Loschmidt Echo}
+  \vfill
+  \begin{center}
+    \includegraphics[width=0.97\textwidth]{echo_identity.pdf}
+  \end{center}
+  \vfill
+  \begin{center}
+    \small $\tau = \beta_0 + it$: real-time evolution with a cooling
+    regulator $\beta_0$ \qquad strip width $\,2\beta = 2v\,(\beta_0 + iT)$
+  \end{center}
+  \vfill
+  \note{The object of the whole thesis, in one line. The Loschmidt echo: the
+  amplitude for the initial state to return to itself after evolving for a
+  time t. Three ways of reading the same object. Left: the definition.
+  Middle: writing the evolution as a path integral and Trotterising it, the
+  echo is the contraction of a two-dimensional tensor network --- one axis
+  space, one axis time; the open circles at top and bottom are the initial
+  product state closing the path integral. Right: in the scaling limit this
+  network is the partition function of a two-dimensional CFT on a strip.
+  The checklist of what makes the mapping work: (1) we give time a small
+  real part, tau equals beta-nought plus i t --- a Wick rotation with a
+  cooling regulator; beta-nought filters the high-energy content and makes
+  the continuation well defined --- the cream bands in both pictures. (2)
+  The initial product state sits at the two edges: boundaries of the
+  geometry. (3) Under renormalisation those boundaries flow to conformal
+  boundary states --- Cardy states, written B. (4) The strip width is
+  complex: two v times beta-nought plus i T, growing linearly with time.
+  (5) The sound velocity v converts lattice time into CFT geometry --- it
+  is non-universal, and we measure it independently in equilibrium. (6) The
+  quench must end at a critical point, and we work directly in the
+  thermodynamic limit. Everything that follows exploits this identity.}
+\end{frame}
+
+% ============================================================================
+% 6 · TRANSVERSE ROTATION
+% ============================================================================
+\begin{frame}{The Transverse Rotation}
+  \begin{columns}[c]
+    \begin{column}{0.46\textwidth}
+      \centering
+      \includegraphics[width=0.88\textwidth]{rotation_network.pdf}
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      \centering
+      \includegraphics[width=0.94\textwidth]{rotation.pdf}\\[1.2ex]
+      {\small virtual space $\to$ physical \emph{time}\\
+        physical space $\to$ virtual direction}
+      \idea{translation invariance $\Rightarrow$ every column is\\ the same
+        operator: the transfer matrix $\E$}
+    \end{column}
+  \end{columns}
+  \note{Here is the change of perspective. The network is fixed --- nothing
+  moves --- but we read it column by column instead of row by row: we
+  contract along space, not along time. Concretely, the roles of the
+  indices swap, as the figure shows: legs that were virtual bonds of the
+  evolution operator become the physical indices of states living along the
+  time direction, and the physical spatial legs become the virtual
+  direction we contract over. The payoff of translation invariance is that
+  every column of the network is identical: a single column transfer
+  matrix, itself a matrix product operator acting on temporal states. The
+  entire dynamics is now encoded in one operator, applied over and over.}
+\end{frame}
+
+% ============================================================================
+% 7 · EIGENPROBLEM
+% ============================================================================
+\begin{frame}{Dynamics as an Eigenproblem}
+  \begin{columns}[c]
+    \begin{column}{0.46\textwidth}
+      \[
+        \Lech(T) \;=\; \bra{b_L}\,\E^{\,N}\ket{b_R}
+        \;\xrightarrow[\;N\to\infty\;]{}\; c_0\,\mu_0^{\,N}
+      \]
+      \vspace{0.3em}
+      \[
+        \E\E^\dagger \neq \E^\dagger\E:
+        \qquad
+        \begin{aligned}
+          \bra{L}\E &= \mu_0 \bra{L}\\
+          \E\ket{R} &= \mu_0 \ket{R}
+        \end{aligned}
+      \]
+      \idea{everything reduces to the dominant pair and\\ the spectrum of the
+        non-Hermitian transfer matrix $\E$}
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      \centering
+      \includegraphics[width=0.92\textwidth,height=0.68\textheight,keepaspectratio]{eigenproblem.pdf}\\[0.3ex]
+      {\footnotesize $b_L$, $b_R$: random seeds --- the power method
+        converges them to $\bra{L}$, $\ket{R}$}
+    \end{column}
+  \end{columns}
+  \note{Once every column is the same operator, contracting the network
+  means applying the transfer matrix N times between two boundary columns.
+  And applying the same operator many times is a power iteration: in the
+  thermodynamic limit the echo per site is governed by the dominant
+  eigenvalue --- the echo becomes c-nought times mu-nought to the N. So
+  the contraction problem has become an eigenvalue problem. One essential
+  caveat: this operator represents real-time evolution, so it is
+  non-normal --- it does not commute with its adjoint. Its left and right
+  dominant eigenvectors are genuinely different objects, obtained from the
+  two sides, and they pair through the bilinear overlap without complex
+  conjugation. Everything in this thesis reduces to computing the dominant
+  pair --- and, later, the subleading spectrum --- of this non-Hermitian
+  transfer matrix. And because of the CFT mapping, we know what that
+  spectrum should be. That is the next slide.}
+\end{frame}
+
+% ============================================================================
+% 8 · PREDICTIONS I — the spectrum of E
+% ============================================================================
+\begin{frame}{CFT Predictions I --- the Leading Eigenvalue}
+  \[
+    \E = e^{-\hat H}\;\;(a=1),\qquad
+    \hat H = \frac{\pi}{\beta}\Big(L_0 - \frac{c}{24}\Big)
+    \qquad\Longrightarrow\qquad
+    \mu_i = \exp\Big[-\frac{\pi}{\beta}\Big(x_i - \frac{c}{24}\Big)\Big]
+  \]
+  \vfill
+  1.\ emergent dual unitarity --- the moduli lock:
+  \[
+    \frac{|\mu_i|}{|\mu_0|} = 1 - \frac{b_i}{T^2}
+    \;\longrightarrow\; 1
+  \]
+  \vfill
+  2.\ the dominant phase --- the expression we fit:
+  \[
+    \frac{\operatorname{Im}\lambda_0}{T}
+    = a_0 - \frac{\pi c}{24\, v\, T^{2}}
+    \;\Rightarrow\; c,
+    \qquad \lambda_0 = \log(-\mu_0)
+  \]
+  \vfill
+  \note{Why do we know the spectrum? Because on the strip the CFT fixes the
+  generator: the strip Hamiltonian is pi over beta times L-nought minus c
+  over twenty-four --- L-nought's eigenvalues are the boundary scaling
+  dimensions, the shift is the Casimir anomaly. The transfer matrix advances
+  one lattice spacing, set to one, so its eigenvalues are these exponentials
+  with the complex width beta equal to v times two beta-nought plus i T in
+  the denominator. Expanding one over beta: the imaginary part is order one
+  over T and feeds the phases; the real part is order beta-nought over T
+  squared and feeds the moduli. Two predictions for the leading eigenvalue
+  follow. First, emergent dual unitarity: any modulus difference carries at
+  least one power of beta-nought over T squared, so the moduli of the whole
+  tower lock onto one circle as T grows --- the sketch shows the subleading
+  values sitting slightly inside at finite T, by exactly that order.
+  Second, the phase of the dominant eigenvalue: its expansion gives a
+  linear, non-universal term a-nought and a universal curvature minus pi c
+  over twenty-four v T squared --- that is literally the expression we fit
+  to measure the central charge.}
+\end{frame}
+
+% ============================================================================
+% 9 · PREDICTIONS II — boundary operator content
+% ============================================================================
+\begin{frame}{CFT Predictions II --- Boundary Operator Content}
+  \begin{columns}[c]
+    \begin{column}{0.52\textwidth}
+      \[
+        \Delta\theta_\alpha \;=\; \arg\mu_\alpha - \arg\mu_0
+        \;=\; \frac{\pi v\, x_\alpha}{T}
+      \]
+      \idea{each subleading eigenvalue $\;\longleftrightarrow\;$\\ one boundary
+        operator of the CFT}
+      \begin{center}
+        Ising with free boundaries:\\
+        $x_\alpha \in \big\{\tfrac12,\ \tfrac32,\ 2,\ \tfrac52,\ \dots\big\}$
+      \end{center}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \centering
+      \includegraphics[width=0.85\textwidth]{spectrum_sketch.pdf}
+    \end{column}
+  \end{columns}
+  \note{And the rest of the spectrum. All the non-universal pieces of the
+  level energies --- the bulk and boundary free-energy terms, and even the
+  Casimir shift --- are identical for every level, so they cancel in
+  differences. The phase difference between eigenvalue alpha and the
+  dominant one is pi v times x-alpha over T: pure universal content. Each
+  subleading eigenvalue of the transfer matrix is one boundary operator of
+  the CFT, and tracking the phase gaps in time measures the boundary
+  scaling dimensions directly. For the Ising class with free boundaries the
+  predicted ladder is one half, three halves, two, five halves and so on
+  --- that ladder is the target the block method will be aimed at. No more
+  detail needed here; the point is simply that the spectrum does not just
+  contain c: it contains the full operator content.}
+\end{frame}
+
+% ============================================================================
+% 9 · RTM + PREDICTIONS II
+% ============================================================================
+\begin{frame}{Temporal Entropies from the Cut: the RTM}
+  \begin{center}
+    \includegraphics[width=0.76\textwidth,height=0.54\textheight,keepaspectratio]{rtm_strip.pdf}
+  \end{center}
+  \vfill
+  \[
+    \mathcal{T}_t \;=\; \frac{\Tr_{>t}\,\ket{R}\bra{L}}{\braket{L}{R}}
+    \qquad\qquad
+    S_2^{\mathrm{gen}}(t)
+    \;=\; -\ln \Tr\!\left(\mathcal{T}_t^{\,2}\right)
+  \]
+  \vfill
+  \note{The transverse picture comes with its own natural density-matrix
+  object. Cut the boundary vectors at a temporal site t: tracing out
+  everything beyond the cut --- pairing the right eigenvector's ket with
+  the left eigenvector's bra, normalised by their overlap --- gives the
+  reduced transition matrix. It is not Hermitian, and the Renyi-2 entropy
+  built from it is complex: the generalised temporal entropy. The cut, as
+  the figure shows, is a cut of the strip anchored at its edge --- and
+  edge-anchored geometry is solved in boundary CFT, which is why this
+  object comes with a sharp prediction: the next slide.}
+\end{frame}
+
+% ============================================================================
+% 11 · PREDICTIONS III — the temporal entropy
+% ============================================================================
+\begin{frame}{CFT Predictions III --- the Temporal Entropy}
+  \vfill
+  \[
+    \operatorname{Re} S_2^{\mathrm{gen}}(t)
+    \;=\; s_0 + \frac{c}{8}\,
+      \log\!\Big[\frac{2T}{\pi}\sin\frac{\pi t}{T}\Big]
+    \qquad \text{(chord dome)}
+  \]
+  \vfill
+  \[
+    \operatorname{Im} S_2^{\mathrm{gen}}(t)
+    \;=\; \frac{\pi c}{16}
+    \qquad \text{(constant plateau)}
+  \]
+  \vfill
+  \idea{logarithmic in $T$ $\;\Rightarrow\;$ polynomial resources}
+  \vfill
+  \note{And here is what the CFT says the generalised entropy must look
+  like, split into real and imaginary parts. The real part follows the
+  chord profile: the logarithm of sine, with coefficient c over eight ---
+  a dome over the strip, whose shape is completely fixed once c is known.
+  The imaginary part is even simpler: a position-independent constant, pi
+  c over sixteen --- a flat plateau across the interior of the strip. Both
+  come from the same twist-operator one-point function at the edge-anchored
+  cut, evaluated by the method of images; the constant is the imaginary
+  part of log i picked up in the continuation to real time. And notice the
+  structural fact that makes the whole programme viable: the expression
+  grows only logarithmically with T. Temporal entanglement is logarithmic
+  where spatial entanglement was linear --- polynomial resources, the
+  barrier from the motivation avoided. These two shapes, dome and plateau,
+  are the entropy-route targets for the results.}
+\end{frame}
+
+% ============================================================================
+% 12 · THE MODEL + its equilibrium central charge
+% ============================================================================
+\begin{frame}{The ANNNI-type Chain Stays in the Ising Class}
+  \[
+    H = -\sum_i\Big[\sigma^z_i\sigma^z_{i+1} + \lambda\,\sigma^x_i
+      + p\big(\sigma^z_i\sigma^z_{i+2} + \lambda\,\sigma^x_i\sigma^x_{i+1}\big)\Big],
+    \qquad \lambda = 1
+  \]
+  \begin{columns}[c]
+    \begin{column}{0.40\textwidth}
+      ground-state entanglement of an open chain:
+      \[
+        S_{\mathrm{vN}}(l,L) = \frac{c}{6}\,
+        \log\!\Big[\frac{2L}{\pi}\sin\frac{\pi l}{L}\Big] + k
+      \]
+      \idea{DMRG ground states, $N=400$,\\ fit over the middle half of the
+        chain}
+    \end{column}
+    \begin{column}{0.58\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{cft_chord_equilibrium.pdf}
+    \end{column}
+  \end{columns}
+  \note{The testbed: transverse-field Ising plus a next-nearest-neighbour
+  coupling p, in the self-dual combination that keeps lambda equal to one
+  critical for every p; for any p greater than zero the model is
+  non-integrable. Does it stay in the Ising universality class? We answer
+  that directly with the ground state. For a critical open chain the von
+  Neumann entropy of a block follows the chord law shown on the left ---
+  a straight line in the chord variable with slope c over six. We compute
+  DMRG ground states at four hundred sites, evaluate the entropy at every
+  cut, and fit the middle half of the chain, where boundary corrections
+  are smallest. The plot shows all eight couplings, p zero to one point
+  five: every profile collapses onto the chord law, and every fitted
+  central charge --- the parenthesised numbers in the legend --- sits at
+  zero point five zero within half a per cent. The deviation of c from
+  one half stays negligible as p varies: the whole self-dual line is
+  Ising, and c equals one half is the sharp target for the dynamical
+  measurements.}
+\end{frame}
+
+% ============================================================================
+% 13 · EQUILIBRIUM VELOCITY
+% ============================================================================
+\begin{frame}{The Sound Velocity}
+  \begin{columns}[c]
+    \begin{column}{0.44\textwidth}
+      lowest excitation at the smallest\\ non-zero momentum on a ring:
+      \[
+        v(N) = \frac{N}{2\pi}\big[E_1(2\pi/N)-E_1(0)\big]
+      \]
+      extrapolation, exponent fixed at $p=0$\\ where $v=2$ exactly:
+      \[
+        v(N) = v_\infty + \frac{C}{N^2}
+      \]
+      \idea{rings of $N=10$--$18$, diagonalised exactly;\\
+        $v_\infty$ used in every conversion}
+    \end{column}
+    \begin{column}{0.54\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{velocity_vs_p.pdf}
+    \end{column}
+  \end{columns}
+  \note{Second equilibrium input: the sound velocity, the factor that
+  converts lattice time into CFT lengths --- it enters every strip width
+  and every fit. The estimator: place the chain on periodic rings,
+  diagonalise exactly, and take the energy difference between the lowest
+  excitations at the smallest non-zero momentum and at zero momentum,
+  divided by that momentum --- this same-tower difference cancels the
+  unknown operator dimension, so no knowledge of the spectrum is needed.
+  Rings reach ten to eighteen sites, far from the thermodynamic limit, so
+  we extrapolate with one over N squared --- an exponent fixed empirically
+  at the integrable point, where v equals two exactly and the
+  extrapolation lands within six times ten to the minus five. The plot:
+  finite-size estimates in colour, extrapolated values as black diamonds
+  --- from two at p zero to ten point eight at p one point five. Keep the
+  growth in mind: all CFT signals scale as v over T, so a growing
+  velocity compresses every measurement into shorter usable windows.}
+\end{frame}
+
+
+% ============================================================================
+% 13 · TRANSLATION-INVARIANT MPO
+% ============================================================================
+\begin{frame}{A Translation-Invariant Evolution Operator}
+  \begin{columns}[c]
+    \begin{column}{0.46\textwidth}
+      \centering
+      \includegraphics[width=0.9\textwidth]{rotation_network.pdf}
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      \begin{center}
+        every column must be the \emph{same} operator
+      \end{center}
+      \idea{$U(\delta t)$ must be built from\\ \textbf{one repeated bulk
+        tensor} $W$,\\ exactly translation invariant}
+      \begin{center}
+        a second-order construction\\ sustains $\delta t = 0.1$
+      \end{center}
+    \end{column}
+  \end{columns}
+  \note{Now the machinery, and the network itself makes the constraint
+  obvious: look at the Loschmidt-echo network again. The transverse
+  contraction extracts ONE column and applies it at every position ---
+  which only makes sense if every column is identical. One column of the
+  network is one site of the evolution operator, so U of delta t must be
+  built from a single repeated bulk tensor W, exactly translation
+  invariant --- the standard circuit constructions do not have this
+  property, so we build the operator directly as a translation-invariant
+  MPO. The second demand is accuracy per layer: every extra temporal site
+  costs one truncation per power-method sweep and the errors compound, so
+  we want the largest time step the construction can support --- a
+  second-order construction sustains delta t of zero point one. The next
+  two slides build exactly that operator.}
+\end{frame}
+
+% ============================================================================
+% 14 · FSM
+% ============================================================================
+\begin{frame}{The Hamiltonian as a Finite State Machine}
+  \begin{columns}[c]
+    \begin{column}{0.46\textwidth}
+      \footnotesize
+      \[
+        W_H =
+        \begin{pmatrix}
+          \mathbb{1} & C & D          \\
+          0          & A & B          \\
+          0          & 0 & \mathbb{1}
+        \end{pmatrix}
+      \]
+      \[
+        =
+        \begin{pmatrix}
+          \mathbb{1} & -\sigma^z  & -p\lambda\,\sigma^x & -p\,\sigma^z & -\lambda\,\sigma^x \\
+          0          & 0          & 0                   & 0            & \sigma^z           \\
+          0          & 0          & 0                   & 0            & \sigma^x           \\
+          0          & \mathbb{1} & 0                   & 0            & 0                  \\
+          0          & 0          & 0                   & 0            & \mathbb{1}
+        \end{pmatrix}
+      \]
+      \begin{center}
+        $D_W = 1 + 3\ \text{channels} + 1 = 5$\\[0.2ex]
+        {\footnotesize\color{ink!70} idle $+$ \{pending $\sigma^z$, pending
+          $\sigma^x\sigma^x$, NNN waiting\} $+$ done}
+      \end{center}
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{fsm.pdf}
+    \end{column}
+  \end{columns}
+  \note{The starting point of the construction is the Hamiltonian itself as
+  an MPO, and the right picture is a finite state machine. Scanning the
+  chain site by site, the virtual index remembers how much of an
+  interaction term has been started and not yet finished: an idle level, a
+  completed level, and in between one memory state per interaction channel
+  --- for our chain three: the pending sigma-z string, the pending
+  sigma-x-sigma-x string, and the NNN term waiting out its skipped middle
+  site. Bond dimension five in total. Every path of the machine from the
+  first to the last level generates exactly one term of the Hamiltonian.
+  The tensor is block upper-triangular --- and that triangular structure is
+  exactly what the exponentiation constructions manipulate next.}
+\end{frame}
+
+% ============================================================================
+% 15 · VD2
+% ============================================================================
+\begin{frame}{Exponentiating the MPO: the VD2 Construction}
+  \begin{columns}[c]
+    \begin{column}{0.40\textwidth}
+      \[
+        e^{\tau H} = \mathbb{1} + \tau\sum_x H_x
+      \]
+      \vspace{-1.1em}
+      \[
+        \qquad + \frac{\tau^2}{2}
+          \underbrace{\sum_{x,y} H_x H_y}_{\substack{\text{incl.\ overlapping}\\ \text{pairs}}}
+        + \dots
+      \]
+      \begin{center}
+        kept through \textbf{2nd order}\\[1.2ex]
+        {\footnotesize\color{ink!70}
+          construction of Van Damme et al.,\\ SciPost Phys.\ \textbf{17}, 135 (2024)}\\[1.2ex]
+        {\footnotesize\color{ink!70}
+          bond $= 1+\chi_H+\chi_H^2 = 13$\\ measured order $2.00$}
+      \end{center}
+    \end{column}
+    \begin{column}{0.58\textwidth}
+      \centering
+      \includegraphics[width=\textwidth,height=0.78\textheight,keepaspectratio]{vd2_panel_b.pdf}
+    \end{column}
+  \end{columns}
+  \note{The evolution operator itself, kept simple. Left: what the
+  exponential demands --- at second order, ALL products of two local
+  terms, including the pairs that overlap on a site; the construction is
+  second order precisely because it keeps those. We use the
+  second-order member of the family of Van Damme and coauthors, which
+  organises the expansion by the spatial overlap of the local terms.
+  Right: the pair machine of H squared, with the two folds: the disjoint
+  sectors return to the start with tau over two, and the sector reachable
+  only by overlapping terms returns with tau squared over two --- that
+  fold is exactly what the cheaper operators are missing. The price is
+  the bond dimension: one scalar plus three single-memory plus nine
+  double-memory states, thirteen, which after the rotation becomes the
+  physical dimension of the temporal chain. The measured convergence
+  order is two point zero zero. The explicit tensor, the walk-level
+  details and the order table are all in the backup.}
+\end{frame}
+
+% ============================================================================
+% 17 · ONE TENSOR FROM THE BULK
+% ============================================================================
+\begin{frame}{One Tensor from the Bulk}
+  \begin{center}
+    \includegraphics[width=0.88\textwidth,height=0.62\textheight,keepaspectratio]{bulk_extract.pdf}
+  \end{center}
+  \vfill
+  \idea{the column must be a tensor a bulk site carries,
+    with every interaction present}
+  \note{One practical step that matters more than it looks. The transverse
+  column is a SINGLE tensor repeated, so the tensor we extract must be
+  one that a site deep in the bulk would carry, with every interaction it
+  participates in present. For a next-nearest-neighbour model that means
+  exponentiating on five sites --- so the centre site has both of its NNN
+  partners inside the build --- and taking the centre tensor; repeated,
+  that tensor is the transfer matrix. The trap: building on three sites,
+  which is enough for a nearest-neighbour model and is the natural
+  default, silently drops one memory channel of the centre tensor --- the
+  temporal physical dimension comes out seven instead of thirteen, and
+  the boundary spectrum is wrong. Every result in the thesis uses the
+  five-site extraction.}
+\end{frame}
+
+% ============================================================================
+% 16 · POWER METHOD
+% ============================================================================
+\begin{frame}{Extracting the Dominant Pair: the Power Method}
+  \[
+    \E\ket{r_i}=\mu_i\ket{r_i},
+    \qquad
+    \bra{\ell_i}\E=\mu_i\bra{\ell_i}
+  \]
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+        apply, truncate back to $\chi$, repeat\\
+        (left state propagated with $\E^{\mathsf T}$)
+      \end{center}
+      \[
+        \mu_0 = \frac{\bra{L}\,\E\,\ket{R}}{\braket{L}{R}}
+      \]
+      \idea{output: the dominant pair\\ $\bra{L}$, $\ket{R}$ and $\mu_0$}
+      \begin{center}\footnotesize\color{ink!70}
+        random complex seeds; a point is accepted only if independent\\
+        seeds agree and the phase continues smoothly in $T$
+      \end{center}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \centering
+      \includegraphics[width=0.95\textwidth,height=0.62\textheight,keepaspectratio]{apply_pair.pdf}
+    \end{column}
+  \end{columns}
+  \note{First iteration: the single-vector power method, for the dominant
+  pair. The eigenproblem at the top is two-sided --- the operator is
+  non-normal, so the right and left eigenvectors are different objects and
+  each gets its own iteration. Panel (a): apply the column operator to a
+  right temporal MPS; the bond dimension grows by the tMPO factor D,
+  thirteen, and we truncate back to chi; repeating converges the state to
+  the dominant right eigenvector. Panel (b) is the same iteration for the
+  left state, implemented by propagating with the transpose of the
+  operator. Once both have converged, the leading eigenvalue is read off
+  from the biorthogonal Rayleigh quotient: L, E, R over the overlap of L
+  and R. So the method outputs exactly the three objects everything else
+  is built from: the dominant left and right vectors and mu-nought. The
+  practical safeguards --- random complex seeds, agreement between
+  independent seeds, smooth phase continuation in T --- are what make the
+  branch trustworthy; the failure statistics are in the backup.}
+\end{frame}
+
+% ============================================================================
+% 18 · BLOCK POWER METHOD
+% ============================================================================
+\begin{frame}{Resolving the Tower: the Block Power Method}
+  \vfill
+  \begin{center}
+    propagate $k$ right and $k$ left states; approximate an eigenvector
+    inside the block:
+  \end{center}
+  \[
+    \ket{\psi} = \sum_{j=1}^{k} v_j \ket{R_j}
+  \]
+  \vfill
+  \[
+    \sum_j M_{ij}\, v_j = \theta \sum_j S_{ij}\, v_j,
+    \qquad
+    S_{ij}=\braket{L_i}{R_j},
+    \quad
+    M_{ij}=\bra{L_i}\E\ket{R_j}
+  \]
+  \vfill
+  \begin{center}
+    solving the $k\times k$ problem gives the Ritz values
+    \[
+      \theta_0,\,\theta_1,\,\dots,\,\theta_{k-1}
+      \;\;\approx\;\;
+      \mu_0,\,\mu_1,\,\dots,\,\mu_{k-1}
+    \]
+    --- the $k$ leading eigenvalues of $\E$, and from their phases the gaps
+    $\Delta\theta_\alpha$
+  \end{center}
+  \vfill
+  \begin{center}\footnotesize\color{ink!70}
+    physical branch: modulus window around the previous $\mu_0$ $+$ phase
+    continuity --- never largest modulus
+  \end{center}
+  \vfill
+  \note{For the subleading spectrum --- the boundary tower --- one vector is
+  not enough: we propagate a block of k right and k left states. Repeated
+  application of the operator drives the block towards the subspace of the
+  k leading eigenvectors, though its individual members do not converge to
+  particular eigenvectors --- they must be separated afterwards. That
+  separation is a two-sided Rayleigh--Ritz projection: approximate an
+  eigenvector as a combination of the block states, demand the residual be
+  orthogonal to every left state, and the full eigenproblem collapses to a
+  k-by-k generalised problem built from the biorthogonal overlap matrix S
+  and the projected operator M. Its solutions --- the Ritz values --- are
+  the approximations to the k leading eigenvalues of the transfer matrix,
+  and their phases give the gaps that carry the boundary dimensions. Two
+  properties worth stating: the convergence rate is set by the gap between
+  the retained subspace and the rest of the spectrum, not by the tiny gaps
+  inside the tower --- which is why the block converges even as the moduli
+  coalesce; and the pencil is solved with a pseudoinverse, because near
+  degeneracies the overlap matrix is singular. How the physical branch is
+  tracked among the Ritz values --- modulus window, phase continuity ---
+  follows the same rules as the single-vector method; details in the
+  backup.}
+\end{frame}
+
+% ============================================================================
+% 19 · RESULTS — opener with the full table
+% ============================================================================
+\begin{frame}{Results}
+  \vfill
+  \begin{center}
+    {\large the four predictions, measured at every coupling}
+  \end{center}
+  \vfill
+  {\centering\small
+  \setlength{\tabcolsep}{6pt}\renewcommand{\arraystretch}{1.25}%
+  \begin{tabular}{@{}ccccccc@{}}
+  \toprule
+  $p$ & $v_\infty$ & entropy window & $c$ (entropy) & spectral window & $c$ (spectral) & $x_1$\\
+  \midrule
+  $0$   & $2.00$ & $4\le T\le 22$ & $0.49\pm0.01$ & $2\le T\le 22$ & $0.45$ & $0.498$\\
+  $0.1$ & $2.67$ & $4\le T\le 13$ & $0.50\pm0.04$ & $2\le T\le 17$ & $0.47$ & $0.497$\\
+  $0.3$ & $3.97$ & $2\le T\le 9$  & $0.53\pm0.04$ & $2\le T\le 10$ & $0.49$ & $0.493$\\
+  $0.5$ & $5.21$ & $2\le T\le 5$  & $0.58\pm0.04$ & $2\le T\le 6$  & $0.53$ & $0.487$\\
+  \bottomrule
+  \end{tabular}\par}
+  \vfill
+  \note{Everything so far was setup; here is what came out. This table is
+  the summary of the whole thesis: at each coupling, the sound velocity
+  from equilibrium, and then the two independent routes to the central
+  charge with their fitting windows, plus the leading boundary dimension.
+  The next slides walk through each column: the entropy route, the
+  emergent dual unitarity, the central charge from the phase, and the
+  boundary tower. Each slide repeats the piece of this table it is
+  responsible for, and we will come back to the full table at the end.}
+\end{frame}
+
+% ============================================================================
+% 20 · RESULTS — entropy route at p = 0
+% ============================================================================
+\begin{frame}{Results I --- the Entropy Route at $p=0$}
+  \begin{center}
+    \includegraphics[width=0.73\textwidth]{res_domes_p0.pdf}
+  \end{center}
+  \begin{columns}[c]
+    \begin{column}{0.55\textwidth}
+      finite-$T$ correction and extrapolation:
+      \[
+        \mathrm{plateau}(T) = a + b\,T^{-1/2}
+        \;\Rightarrow\; c = \frac{16\,a}{\pi}
+      \]
+      \begin{center}\footnotesize\color{accent!80!black}
+        uncertainty: seed scatter of the plateau alone\\
+        (resample the runs, refit; $0.01$ here, $0.04$ at $p>0$)
+      \end{center}
+    \end{column}
+    \begin{column}{0.40\textwidth}
+      {\centering\small
+      \setlength{\tabcolsep}{5pt}\renewcommand{\arraystretch}{1.1}%
+      \begin{tabular}{@{}ccc@{}}
+      \toprule
+      $p$ & window & $c$ (entropy)\\
+      \midrule
+      $0$ & $4\le T\le 22$ & $0.49\pm0.01$\\
+      \bottomrule
+      \end{tabular}\par}
+    \end{column}
+  \end{columns}
+  \note{The entropy route, first at the integrable point where the sequence
+  is longest. Left panel: the real part of the generalised entropy along
+  the cut, one colour per evolution time --- the conformal chord dome,
+  dashed curves at c fixed to one half. Right panel: the imaginary part,
+  an interior plateau sitting above the asymptote pi c over sixteen and
+  drifting towards it as T grows --- from zero point one two five at T
+  equals eight to zero point one zero eight at T twenty-two. The
+  extraction: for each run we read the interior plateau; independent
+  random seeds give an ensemble and the median gives one plateau per
+  time; then we fit the predicted square-root-of-T finite-time correction
+  and extrapolate --- sixteen a over pi is the central charge: zero point
+  four nine, within one hundredth. Where the uncertainty comes from: it
+  is purely the seed scatter. Resample the independent runs at each time,
+  refit the whole extrapolation, take the spread --- about zero point zero
+  one here, zero point zero four at the other couplings. Note it measures
+  precision, not accuracy: the remaining distance to one half is a
+  finite-time systematic, and I quantify that separately.}
+\end{frame}
+
+% ============================================================================
+% 21 · RESULTS — entropy route, the other couplings
+% ============================================================================
+\begin{frame}{Results I --- the Entropy Route at Every Coupling}
+  \begin{center}
+    \domecell{res_domes_p0.pdf}{0.49\pm0.01}{$4\le T\le 22$}\hfill
+    \domecell{res_domes_p01.pdf}{0.50\pm0.04}{$4\le T\le 13$}\\[0.9ex]
+    \domecell{res_domes_p03.pdf}{0.53\pm0.04}{$2\le T\le 9$}\hfill
+    \domecell{res_domes_p05.pdf}{0.58\pm0.04}{$2\le T\le 5$}
+  \end{center}
+  \note{The same measurement at all four couplings, side by side and to the
+  same scale: p zero and zero point one on top, zero point three and zero
+  point five below. The structure survives everywhere --- the conformal
+  chord dome in the real part, the interior plateau in the imaginary part
+  drifting towards pi c over sixteen --- while the usable window in T
+  shrinks across the panels, which is the growing velocity compressing the
+  dynamics. The long sequences on the top row recover the Ising value;
+  the short windows on the bottom row extrapolate high --- consistent
+  with the direction of the finite-time correction but not yet converged,
+  which is why those two table entries carry the larger uncertainties and
+  reappear among the open points in the conclusions.}
+\end{frame}
+
+% ============================================================================
+% 21 · RESULTS — emergent dual unitarity
+% ============================================================================
+\begin{frame}{Results II --- Emergent Dual Unitarity}
+  \begin{columns}[c]
+    \begin{column}{0.4\textwidth}
+      \idea{$|\mu_0|$ constant\\ while the phase winds}
+      \begin{center}
+        exactly the predicted coalescence\\
+        $\dfrac{|\mu_i|}{|\mu_0|} = 1 - \dfrac{b_i}{T^2} \to 1$
+      \end{center}
+    \end{column}
+    \begin{column}{0.58\textwidth}
+      \centering
+      \includegraphics[width=0.95\textwidth]{res_circle.pdf}
+    \end{column}
+  \end{columns}
+  \note{The spectral route, starting with the qualitative prediction. The
+  trajectory of the leading eigenvalue in the complex plane, one marker
+  set per coupling: as T increases the phase winds steadily while the
+  modulus freezes onto a circle --- the dashed circles are drawn at the
+  mean modulus of each sequence and labelled by its value; the variation
+  along a sequence is at the per-cent level or below. This is exactly the
+  coalescence predicted by the width expansion: modulus differences carry
+  beta-nought over T squared and die out, phases keep advancing at one
+  over T. The operator becomes effectively unitary at long times, and all
+  the physics moves into its phase --- which is where the next slide
+  goes.}
+\end{frame}
+
+% ============================================================================
+% 22 · RESULTS — central charge from the phase
+% ============================================================================
+\begin{frame}{Results III --- the Central Charge from the Phase}
+  \begin{columns}[c]
+    \begin{column}{0.60\textwidth}
+      \centering
+      \includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{res_eq3.pdf}
+    \end{column}
+    \begin{column}{0.38\textwidth}
+      the fit, as implemented:
+      \[
+        \frac{\operatorname{Im}\lambda_0}{T}
+        = a_0 + \frac{B}{T} + \frac{C}{T^{2}}
+      \]
+      {\small $a_0$, $C$ free; $B=-\pi$ fixed (branch);\\
+       $\lambda_0=\log(-\mu_0)$;\quad $c = 24\,v\,|C|/\pi$\par}
+      \medskip
+      \spectralminitable
+    \end{column}
+  \end{columns}
+  \note{The quantitative half of the spectral route: the fit of the phase.
+  What is actually fitted, exactly as in the analysis code: the imaginary
+  part of lambda-nought over T as a-nought plus B over T plus C over T
+  squared. Two constants are free --- a-nought, the non-universal linear
+  slope, and C, the Casimir curvature; B is not free: it is the branch
+  offset of the logarithm, pinned to minus pi (releasing it as a check
+  returns minus pi to four decimal places, backup). The central charge is
+  then twenty-four v times the magnitude of C over pi, with v the
+  independently measured velocity. The panels show the four couplings
+  with a-nought subtracted so the curvature is visible; the fitted
+  central charges are in the table: zero point four five to zero point
+  five three, bracketing the Ising value. Why the integrable point sits
+  below one half --- the truncated expansion and the finite regulator ---
+  is quantified in the backup.}
+\end{frame}
+
+% ============================================================================
+% 23 · RESULTS — the boundary tower
+% ============================================================================
+\begin{frame}{Results IV --- the Conformal Boundary Tower}
+  \begin{center}
+    Ising class, free boundaries:
+    $x_\alpha \in \big\{\tfrac12,\ \tfrac32,\ 2,\ \tfrac52,\ 3,\ \tfrac72,\ 4\big\}$
+  \end{center}
+  \begin{columns}[c]
+    \begin{column}{0.62\textwidth}
+      \centering
+      \includegraphics[width=\textwidth,height=0.66\textheight,keepaspectratio]{res_tower.pdf}
+    \end{column}
+    \begin{column}{0.36\textwidth}
+      \[
+        \Delta\theta_\alpha = \arg\mu_\alpha - \arg\mu_0
+        = \frac{\pi v\, x_\alpha}{T}
+      \]
+      \medskip
+      \towerminitable
+    \end{column}
+  \end{columns}
+  \note{The last prediction: the boundary operator content. The line at the
+  top is the target --- the dimensions the Ising class with free
+  boundaries must produce: one half, three halves, two, five halves,
+  three, seven halves, four. The block method gives the k leading Ritz
+  values, and the phase difference between each subleading eigenvalue and
+  the dominant one --- the same relation introduced in Predictions II ---
+  divided by pi v over T, is a boundary dimension. Each panel is one
+  coupling, the seven series are the seven leading dimensions in time,
+  dashed lines at the predicted levels. The table gives the leading
+  dimension at each coupling. The usable range shrinks across the panels
+  because the gaps scale as v over T and the velocity grows with the
+  coupling.}
+\end{frame}
+
+% ============================================================================
+% 24 · CONCLUSIONS
+% ============================================================================
+\begin{frame}{Conclusions}
+  \vfill
+  {\centering\small
+  \setlength{\tabcolsep}{6pt}\renewcommand{\arraystretch}{1.25}%
+  \begin{tabular}{@{}ccccccc@{}}
+  \toprule
+  $p$ & $v_\infty$ & entropy window & $c$ (entropy) & spectral window & $c$ (spectral) & $x_1$\\
+  \midrule
+  $0$   & $2.00$ & $4\le T\le 22$ & $0.49\pm0.01$ & $2\le T\le 22$ & $0.45$ & $0.498$\\
+  $0.1$ & $2.67$ & $4\le T\le 13$ & $0.50\pm0.04$ & $2\le T\le 17$ & $0.47$ & $0.497$\\
+  $0.3$ & $3.97$ & $2\le T\le 9$  & $0.53\pm0.04$ & $2\le T\le 10$ & $0.49$ & $0.493$\\
+  $0.5$ & $5.21$ & $2\le T\le 5$  & $0.58\pm0.04$ & $2\le T\le 6$  & $0.53$ & $0.487$\\
+  \bottomrule
+  \end{tabular}\par}
+  \vfill
+
+  \note{To conclude, the summary table once more, now with everything on
+  it read: the dynamics of a non-integrable chain reproduces the full
+  universal data of its critical point --- the central charge by two
+  independent routes, and the boundary operator content. What is still
+  open. First, the wall. What ends every run is the left and right
+  eigenvectors becoming ill-conditioned, and we cannot yet say why that
+  depends so strongly on the coupling. The velocity gives the scale but
+  not the mechanism: the windows differ by almost a factor of four in T,
+  yet in the product v times T, the length of the strip in conformal
+  units, they are nearly the same. Second, the entropy extrapolations at
+  the two strongest couplings are not yet converged --- they need longer
+  sequences, which is cluster time, not new ideas. And beyond this work:
+  taking the method to higher dimensions and to other universality
+  classes. Thank you --- I am happy to take questions.}
+\end{frame}
+
+% ============================================================================
+% BACKUP — unnumbered; grouped by question theme
+% ============================================================================
+% ============================================================================
+% 26 · THANK YOU
+% ============================================================================
+\begin{frame}{}
+  \vfill
+  \begin{center}
+    {\Huge\color{accent!80!black}\textbf{Thank you for your attention}}
+  \end{center}
+  \vfill
+  \note{Thank you for your attention --- I am happy to take questions.}
+\end{frame}
+
+\newcounter{finalframe}
+\setcounter{finalframe}{\value{framenumber}}
+\inappendixtrue
+
+\begin{frame}{Backup A1 --- the Entropy Predictions, Derived}
+  \[
+    \Tr\rho^n = \text{replica surface}
+    \;\Rightarrow\; \text{twist operators, }
+    x_n=\frac{c}{12}\Big(n-\frac1n\Big)
+  \]
+  \begin{center}\small
+    cut anchored at the edge $\Rightarrow$ ONE twist $+$ its mirror image
+    $\Rightarrow$ coefficient halved: $\frac{c}{12}\big(1+\frac1n\big)$
+  \end{center}
+  \[
+    S_n = \frac{c}{12}\Big(1+\frac1n\Big)
+      \log\!\Big[\frac{2\ell}{\pi}\sin\frac{\pi x}{\ell}\Big] + s_0
+    \qquad \text{(log map: separations $\to$ chords)}
+  \]
+  \begin{center}\small
+    continue $\ell \to i\,vT$: the ratio $x/\ell = t/T$ stays real,
+    only $\log i = i\pi/2$ is new
+  \end{center}
+  \[
+    \operatorname{Re}S_2 = s_0 + \frac{c}{8}\,W(t,T)
+    \quad\text{(dome)}\qquad
+    \operatorname{Im}S_2 = \frac{\pi c}{16}
+    \quad\text{(plateau)}
+  \]
+  \note{The entropy predictions in four moves. One: the replica trick ---
+  trace of rho to the n is a partition function on n sewn copies, with a
+  twist operator of dimension c over twelve times n minus one over n at
+  each interior endpoint of the cut. Two: our temporal cut is anchored at
+  the strip's edge, so there is only ONE interior endpoint, and by the
+  method of images its one-point function is a correlator with its mirror
+  image --- one insertion instead of two, which halves the coefficient.
+  Three: the log map turns plane separations into chord distances --- that
+  is the W variable. Four: continue to real time --- the length becomes i
+  v T, but the argument of the sine is the REAL ratio t over T, so the
+  dome shape survives; the only new piece is log of i, which is i pi over
+  two, a purely imaginary constant. Splitting real and imaginary parts:
+  the chord dome with slope c over eight at n equals two, and the flat
+  plateau at pi c over sixteen. Those are exactly the two shapes measured
+  in Results I.}
+\end{frame}
+
+\begin{frame}{Backup A2 --- the Spectrum, Derived I: from $T(z)$ to $\mu_i$}
+  \[
+    T(w) = \Big(\frac{dz}{dw}\Big)^2 T(z) + \frac{c}{12}\{z;w\},
+    \qquad
+    \{z;w\}_{\log} = -\frac12\Big(\frac{\pi}{\beta}\Big)^2
+  \]
+  \[
+    \Longrightarrow\quad
+    \hat H = \frac{\pi}{\beta}\Big(L_0 - \frac{c}{24}\Big)
+    \qquad\Longrightarrow\qquad
+    \mu_i = \exp\Big[-\frac{\pi}{\beta}\Big(x_i - \frac{c}{24}\Big)\Big]
+  \]
+  \begin{center}\small
+    on the lattice, two non-universal additions --- both the same for
+    every level:
+  \end{center}
+  \[
+    E_i \;=\; \underbrace{f\beta}_{\text{bulk}}
+    \;+\; \underbrace{f_s}_{\text{boundary}}
+    \;+\; \frac{\pi}{\beta}\Big(x_i - \frac{c}{24}\Big),
+    \qquad \log\mu_i = -E_i
+  \]
+  \idea{level-independent terms cancel in every difference ---
+    differences isolate $x_i - x_0$}
+  \note{The spectral predictions, first half: where the spectrum comes
+  from. The stress tensor is not primary: under the log map it picks up
+  the Schwarzian, minus one half pi over beta squared, and through c over
+  twelve that is the Casimir shift. The generator of translations along
+  the strip is therefore pi over beta times L-nought minus c over
+  twenty-four --- L-nought's eigenvalues are the boundary scaling
+  dimensions because the boundaries identify the two chiral sectors,
+  leaving a single Virasoro algebra. The transfer matrix advances one
+  column, so its eigenvalues are the exponentials shown. On the lattice
+  each level additionally carries a bulk free-energy term f beta and a
+  boundary term f s --- microscopic, non-universal, but identical for
+  every level. That is the key structural fact: anything level-independent
+  cancels in differences of log-eigenvalues, which is why the phase gaps
+  are clean universal numbers.}
+\end{frame}
+
+\begin{frame}{Backup A3 --- the Spectrum, Derived II: the Expansion We Fit}
+  \[
+    \beta = v(2\beta_0 + iT)
+    \qquad
+    \frac1\beta = -\frac{i}{vT}\sum_{k\ge0}\Big(\frac{2i\beta_0}{T}\Big)^{k}
+    \qquad
+    {\small
+    \begin{array}{c|cc}
+      k & \text{goes to} & \text{order}\\\hline
+      0 & \text{phase} & 1/T\\
+      1 & \text{modulus} & \beta_0/T^2\\
+      2 & \text{phase} & \beta_0^2/T^3
+    \end{array}}
+  \]
+  \[
+    \operatorname{Im}\lambda_0 = A\,T + B + \frac{C}{T} + \mathcal{O}(T^{-3}),
+    \qquad A=-fv,\quad B=-\pi,\quad C=-\frac{\pi c}{24 v}
+  \]
+  \begin{center}\small
+    no $1/T^2$ term (that order is real $\to$ modulus); $B$ is pure branch
+    (free fit: $B/\pi=-1.0000$)\\[0.3ex]
+    the fit \textbf{truncates this expansion} $\Rightarrow$ part of the
+    systematic on $c$
+  \end{center}
+  \[
+    \frac{|\mu_i|}{|\mu_0|} = 1 - \frac{2\pi\beta_0 (x_i-x_0)}{v\,T^{2}}
+    \;\longrightarrow\; 1
+    \qquad \text{(the circle)}
+  \]
+  \note{Second half: the expansion behind every fit. The width is complex,
+  v times two beta-nought plus i T; factor the large piece out and expand
+  as a geometric series. The prefactor is imaginary and each order adds a
+  factor of i, so the terms alternate: even k purely imaginary --- the
+  phases --- odd k real --- the moduli, each carrying at least one power
+  of beta-nought. Consequences, term by term, for the imaginary part of
+  lambda-nought: the bulk term gives A T with A minus f v; the branch of
+  the logarithm gives the constant, exactly minus pi --- releasing it in
+  the fit returns minus one point zero zero zero zero times pi; the k
+  equals zero universal term gives C over T with C minus pi c over
+  twenty-four v --- the central charge. There is NO one-over-T-squared
+  term: that order is real and lives in the modulus. The next phase term
+  is already one over T cubed --- and since the fit truncates there, the
+  truncation is a documented part of the systematic deficit on c. Finally
+  the moduli: the leading real term gives the ratio one minus b-i over T
+  squared --- all eigenvalues collapse onto one circle as T grows or the
+  regulator is removed: the emergent dual unitarity.}
+\end{frame}
+
+% ---- B·Model -----------------------------------------------------------------
+
+
+
+\begin{frame}{Backup B1 --- the Chain in Fermions: Where Integrability Breaks}
+  \[
+    H = -\sum_i\Big[\sigma^z_i\sigma^z_{i+1} + \lambda\,\sigma^x_i
+      + p\big(\sigma^z_i\sigma^z_{i+2} + \lambda\,\sigma^x_i\sigma^x_{i+1}\big)\Big]
+  \]
+  \begin{center}\small
+    Jordan--Wigner: \ $\sigma^x_j = 1-2n_j$, \quad
+    $\sigma^z_j = (c_j + c_j^\dagger)\,K_j$, \quad
+    $K_j = \prod_{k<j}(1-2n_k)$
+  \end{center}
+  \[
+    \resizebox{0.97\textwidth}{!}{$
+    H = -\sum_i\Big[
+      \textcolor{jwnn}{\underbrace{(c^\dagger_i - c_i)(c_{i+1}+c^\dagger_{i+1})}_{\text{NN: quadratic}}}
+      + \lambda\,\textcolor{jwfield}{\underbrace{(1-2n_i)}_{\text{field}}}
+      + p\,\textcolor{jwnnn}{\underbrace{(c^\dagger_i - c_i)(1-2n_{i+1})(c_{i+2}+c^\dagger_{i+2})}_{\text{NNN: contains a quartic piece}}}
+      + p\lambda\,\textcolor{jwxx}{\underbrace{\big(1-2n_i-2n_{i+1}+4\,n_i n_{i+1}\big)}_{\sigma^x\sigma^x\text{: density--density}}}
+    \Big]$}
+  \]
+  \idea{the $p$-terms carry four-fermion pieces $\Rightarrow$ Wick fails ---
+    no free-fermion solution for $p>0$}
+  \note{If asked to show where integrability breaks, in one picture. Top:
+  the spin chain. Middle: the Jordan--Wigner map --- the field becomes
+  the occupation, sigma-z carries the parity string. Bottom: the same
+  Hamiltonian in fermions, one colour per term. Blue: the
+  nearest-neighbour bond --- the strings cancel and it stays quadratic,
+  hopping plus pairing. Green: the field, quadratic. Purple: the
+  next-nearest-neighbour bond --- the string factor on the skipped site
+  has no spin operator to absorb it, so a one-minus-two-n survives in the
+  middle: occupation-conditional hopping, an explicit quartic piece.
+  Orange: the self-dual partner is a product of two parities, containing
+  the density--density term four n n. Both p-terms are quartic, Wick's
+  theorem fails, and no linear Bogoliubov transformation can reach a free
+  form --- the free-fermion route that solves p equals zero is closed.}
+\end{frame}
+
+\begin{frame}{Backup B2 --- Equilibrium $c$: Finite-Size Scaling}
+  \[
+    S_n(L/2) = \frac{c}{12}\Big(1+\frac1n\Big)\ln L + k_n + A_n\,L^{-x/n}
+    \qquad \text{(mid-chain cut, $x=1$ fixed)}
+  \]
+  \begin{center}\small
+    same correction, different decay: $L^{-x}$ for vN, only $L^{-x/2}$ for
+    R2 --- why raw R2 overshoots ($0.584$) \ $\Rightarrow$ corrected:
+    $c=0.500$ (vN), $0.508$ (R2)
+  \end{center}
+  \begin{center}
+    \includegraphics[width=0.86\textwidth,height=0.52\textheight,keepaspectratio]{cft_L.pdf}
+  \end{center}
+  \note{The independent equilibrium check, from the size dependence of the
+  mid-chain entropy. The equation is what we fit: the logarithmic slope
+  carries c, and the additional term is the finite-size correction from
+  the conical singularity of the replica geometry --- operators relevant
+  there contribute L to the minus x over n. The dimension of that
+  operator is fitted freely first --- values cluster around one, the
+  energy operator --- then fixed to one. The n-dependence explains the
+  raw fits: for the same x, the von Neumann correction dies as one over
+  L, the Renyi-2 one only as one over square root of L, so the raw R2
+  slope overshoots at zero point five eight four while vN is nearly
+  right. With the correction both land on the Ising value at both
+  couplings and the residuals drop by two orders of magnitude.}
+\end{frame}
+
+\begin{frame}{Backup B3 --- Sound Velocity: Extrapolation}
+  \[
+    v(N) = \frac{N}{2\pi}\big[E_1(2\pi/N)-E_1(0)\big]
+    \qquad\qquad
+    v(N) = v_\infty +
+    \tikz[baseline=(cn.base)]{\node[draw=hl, ellipse, inner sep=2pt,
+      line width=0.9pt] (cn) {$\dfrac{C}{N^{2}}$};}
+  \]
+  \begin{center}
+    {\footnotesize\color{hl} empirical term: exponent fixed so the
+      extrapolation reproduces $v=2$ exactly at $p=0$}
+  \end{center}
+  \begin{center}
+    \includegraphics[width=0.92\textwidth,height=0.52\textheight,keepaspectratio]{velocity_extrapolation.pdf}
+  \end{center}
+  \note{If asked how the velocities are extrapolated. Left equation: the
+  estimator --- the same-tower energy difference at the smallest non-zero
+  momentum on exact-diagonalisation rings of ten to eighteen sites. Right
+  equation: the extrapolation, and the circled term is empirical --- the
+  exponent two is not derived but fixed at the integrable point, where
+  the exact answer v equals two is known and the one-over-N-squared form
+  reproduces it to six times ten to the minus five, while one over N and
+  one over N cubed visibly drift. The same form is then applied at every
+  coupling; the figure shows the finite-size estimates against one over N
+  squared with their thermodynamic intercepts, which are the values used
+  in every conversion.}
+\end{frame}
+
+% ---- B·MPO -------------------------------------------------------------------
+
+
+
+\begin{frame}{Backup C1 --- Schr\"odinger-Picture Benchmark of the MPO}
+  \begin{columns}[c]
+    \begin{column}{0.40\textwidth}
+      the Loschmidt rate we compute:
+      \[
+        \ell(T) = -\lim_{N\to\infty}\frac{1}{N}\,\log\big|\mathcal{L}(T)\big|
+      \]
+      \begin{center}\small
+        finite chain, $N=40$, $p=0.1$:\\ repeated application of
+        $U(\delta t)$ vs a TDVP reference
+      \end{center}
+    \end{column}
+    \begin{column}{0.56\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{rate_benchmark.pdf}
+    \end{column}
+  \end{columns}
+  \note{If asked whether the evolution operator is actually correct. The
+  cleanest check runs in the ordinary Schroedinger picture, before any
+  transverse machinery: apply the MPO layer by layer to a forty-site
+  chain at p zero point one and compute the Loschmidt rate --- minus the
+  log of the echo per site --- against an independent TDVP reference at
+  the same times. VD2 lies on top of the reference across the whole
+  range, while the first-order W-two kernel visibly departs. This
+  isolates the construction error of the operator from everything the
+  transverse contraction adds later.}
+\end{frame}
+
+\begin{frame}{Backup C2 --- the Overlap Only the Pair Machine Can Host}
+  \begin{center}\small
+    the concrete case: $\sigma^z_3\sigma^z_4$ and $\sigma^z_4\sigma^z_5$
+    share site $4$
+  \end{center}
+  \begin{columns}[c]
+    \begin{column}{0.42\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{vd2_panel_a.pdf}\\[0.8ex]
+      {\footnotesize site 4 would need $B$ \emph{and} $C$ --- no such
+        move exists:\\ the overlap is absent at $\tau^2$}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \centering
+      \includegraphics[width=\textwidth,height=0.6\textheight,keepaspectratio]{vd2_panel_b.pdf}\\[0.4ex]
+      {\footnotesize
+        $(1,1)\xrightarrow{\,C\,}(2,1)
+         \xrightarrow{\,BC\,}(3,2)
+         \xrightarrow{\,B\,}(3,3)
+         \xrightarrow{\text{fold}}\tfrac{\tau^2}{2}$
+        \quad (swap the copies $=$ the other ordering)}
+    \end{column}
+  \end{columns}
+  \note{If asked to demonstrate why the cheaper machines are first order,
+  this is the cleanest case: two z-z bonds sharing site four. In the
+  single-interaction machine, left, the walk opens the first term at site
+  three with C; at site four it would have to close it with B AND open
+  the second with C, but every site applies exactly one move and the
+  machine carries one interaction at a time --- no such transition
+  exists. The earliest the second term can open is site five, so
+  successive completions only ever build disjoint pairs, and the
+  overlapping product is simply absent at order tau squared. The pair
+  machine, right, holds both: C opens the first at site three; the
+  composite entry BC closes the first WHILE opening the second at the
+  shared site four; B completes at site five, landing on the
+  double-completed level, whose fold supplies exactly tau squared over
+  two --- and exchanging which copy is which produces the opposite
+  operator ordering with the same weight, as the exponential requires.}
+\end{frame}
+
+\begin{frame}{Backup C3 --- Norm Drift Under Repeated Application}
+  \begin{center}\small
+    $\ket{X+}^{\otimes100}$, \ $p=0.1$, \ $\delta t=0.05$, \ cutoff $10^{-12}$
+    after every layer
+  \end{center}
+  \begin{center}
+    \setlength{\tabcolsep}{9pt}\renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lccc}
+      \toprule
+      & $W^{\mathrm{I}}$ & $W^{\mathrm{II}}$ & VD2\\
+      \midrule
+      virtual bond & $4$ & $4$ & $13$\\
+      \midrule
+      $\lVert\psi\rVert$, \ 1 layer   & $1.3514$   & $1.1341$  & $0.99995$\\
+      $\lVert\psi\rVert$, \ 8 layers  & $12.6146$  & $3.0181$  & $0.99923$\\
+      $\lVert\psi\rVert$, \ 16 layers & $307.3900$ & $10.8328$ & $0.99751$\\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vfill
+  \begin{center}\footnotesize\color{ink!70}
+    exact evolution is unitary, so any drift from $1$ is pure construction
+    error;\\ reaching $T=10$ at this step takes ${\approx}\,200$ layers
+  \end{center}
+  \note{The first of the two comparisons, and the one that rules the
+  cheaper operators out immediately. Setup: apply each operator to the
+  polarised product state on a hundred sites at p equals zero point one,
+  with a time step of zero point zero five, truncating at ten to the
+  minus twelve after every layer. The diagnostic is the norm: exact
+  evolution is unitary, so the state norm must stay at one, and any
+  deviation is accumulated error of the construction alone. After a
+  single layer W-one is already three tenths off; after sixteen layers it
+  has grown the norm by more than two orders of magnitude and W-two by
+  one, while VD2 is still within two and a half parts in a thousand of
+  unity. Put that against the production requirement: reaching T equals
+  ten at this time step needs about two hundred layers, so the
+  first-order constructions are simply not usable here. Note also the
+  price in the second row: VD2 buys this with bond dimension thirteen
+  against four.}
+\end{frame}
+
+\begin{frame}{Backup C4 --- Convergence Orders, Measured}
+  \begin{center}\small
+    distance to the exactly diagonalised state ($N=12$, $T=1$, $p=0.1$)
+  \end{center}
+  \begin{center}
+    \setlength{\tabcolsep}{5pt}\renewcommand{\arraystretch}{1.0}\small
+    \begin{tabular}{lcccccc}
+      \toprule
+      & \multicolumn{2}{c}{$W^{\mathrm{I}}$}
+      & \multicolumn{2}{c}{$W^{\mathrm{II}}$}
+      & \multicolumn{2}{c}{VD2}\\[-0.2ex]
+      $\delta t$ & error & order & error & order & error & order\\
+      \midrule
+      $0.2$     & $2.01{\times}10^{1}$  & --     & $2.54$                & --     & $1.09{\times}10^{-1}$ & --\\
+      $0.1$     & $4.43$                & $2.18$ & $9.29{\times}10^{-1}$ & $1.45$ & $2.44{\times}10^{-2}$ & $2.16$\\
+      $0.05$    & $1.36$                & $1.71$ & $3.93{\times}10^{-1}$ & $1.24$ & $5.93{\times}10^{-3}$ & $2.04$\\
+      $0.025$   & $5.31{\times}10^{-1}$ & $1.35$ & $1.80{\times}10^{-1}$ & $1.12$ & $1.47{\times}10^{-3}$ & $2.01$\\
+      $0.0125$  & $2.36{\times}10^{-1}$ & $1.17$ & $8.65{\times}10^{-2}$ & $1.06$ & $3.68{\times}10^{-4}$ & $2.00$\\
+      $0.00625$ & $1.12{\times}10^{-1}$ & $1.08$ & $4.24{\times}10^{-2}$ & $1.03$ & $9.24{\times}10^{-5}$ & $2.00$\\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{-0.3em}
+  \[
+    \underbrace{\delta t^{\,q+1}}_{\text{one layer}}
+    \times
+    \underbrace{\frac{T}{\delta t}}_{\text{layers}}
+    \;=\; T\,\delta t^{\,q}
+    \quad\Longrightarrow\quad
+    \frac{\mathrm{err}(2\delta t)}{\mathrm{err}(\delta t)} = 2^{\,q},
+    \quad
+    \log_2\!\Big[\tfrac{\mathrm{err}(2\delta t)}{\mathrm{err}(\delta t)}\Big] = q
+  \]
+  \vspace{-0.7em}
+  \begin{center}\footnotesize\color{ink!70}
+    (Paeckel et al.\ 2019); Schr\"odinger-picture layers, no transverse
+    machinery involved
+  \end{center}
+  \note{The full order table, if the measured claims are questioned. The
+  pipeline: build the twelve-site state, evolve to T equals one with T
+  over delta-t layers of each operator in the ordinary Schroedinger
+  picture, and measure the norm distance to the exactly diagonalised
+  state --- so nothing transverse is involved and the operator is
+  isolated. The line under the table is the whole argument: one layer
+  costs delta-t to the q plus one, reaching a fixed time T takes T over
+  delta-t layers, and those errors add, so the error at fixed time goes
+  as T times delta-t to the q. Halving the step therefore divides the
+  error by two to the q, and the base-two logarithm of the ratio between
+  successive errors hands back q itself, which is the order column. VD2 sits at
+  two point one six and settles on two point zero zero; the two cheaper
+  operators drift down towards one --- first order, as the missing
+  overlapping pairs predict.}
+\end{frame}
+
+% ---- B·Truncation ------------------------------------------------------------
+
+\begin{frame}{Backup D1 --- RDM vs RTM: the Gauge Argument}
+  \begin{columns}[c]
+    \begin{column}{0.34\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{rdm_rtm_a.pdf}\\[1.6ex]
+      \includegraphics[width=\textwidth]{rdm_rtm_b.pdf}
+    \end{column}
+    \begin{column}{0.64\textwidth}
+      \centering
+      \includegraphics[width=\textwidth,height=0.78\textheight,keepaspectratio]{gauge.pdf}
+    \end{column}
+  \end{columns}
+  \note{The two truncation objects at a temporal cut and the gauge
+  argument, told from the pictures alone. Top: the RDM pairs a state with
+  its conjugate --- Hermitian, positive; the RTM pairs the two distinct
+  fixed points R and L --- non-Hermitian, complex eigenvalues allowed.
+  Bottom: insert X X-inverse on a bond. For the RDM the factors combine
+  as X X-dagger, a congruence --- the spectrum moves with the gauge. For
+  the RTM they combine as X X-inverse, a similarity --- the spectrum is
+  invariant. Only the RTM spectrum is a property of the network rather
+  than of its representation, which is why it defines the generalised
+  entropies.}
+\end{frame}
+
+% ---- new: RDM truncation, step by step ----
+\begin{frame}{Backup D2 --- RDM Truncation: from the State to a $\chi\times\chi$ Problem}
+  \begin{center}
+    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{rdm_pipeline.pdf}
+  \end{center}
+  \begin{itemize}\setlength{\itemsep}{0.3em}
+    \item mixed canonical form $\Rightarrow$ the cut tensor $M$; its SVD
+      $M=USV^{\dagger}$ is the Schmidt decomposition
+    \item the surrounding isometries contract to $\mathbb{1}$:
+      $\;\rho_B = U_B\, M_A\, U_B^{\dagger}$ --- the full RDM's spectrum
+      lives in a $\chi\times\chi$ environment
+    \item eigenvalues $=$ squared singular values, one-to-one $\Rightarrow$
+      keep the $\chi'$ largest (optimal; error $=$ discarded weight)
+  \end{itemize}
+  \note{The standard scheme first, as the baseline. Put the chain in mixed
+  canonical form: the whole state collapses onto one tensor M at the cut,
+  and the SVD of M is the Schmidt decomposition. The point of canonical
+  form is the middle bullet: every tensor away from the cut is an
+  isometry and contracts to the identity, so the exponentially large
+  reduced density matrix is similar to a chi-by-chi local environment ---
+  same spectrum, computed locally. And for this Hermitian positive object
+  the eigenvalues are exactly the squared singular values, one-to-one:
+  keeping the largest chi-prime of them is the Eckart--Young-optimal
+  truncation, with the discarded weight as the exact error.}
+\end{frame}
+
+\begin{frame}{Backup D3 --- RTM Truncation: the Same Reduction, Different Isometries}
+  \begin{center}
+    \includegraphics[width=0.96\textwidth]{rtm_trunc_row.pdf}
+  \end{center}
+  {\small
+  \begin{itemize}\setlength{\itemsep}{0.25em}
+    \item generalised canonical form: each $\bra{L}$ tensor is paired with
+      the corresponding $\ket{R}$ tensor --- the isometries on the two
+      sides differ
+    \item local reduction: $\;\tau_B = U_B\, M_A\, V_B$ with
+      $U_B\neq V_B^{\dagger}$ $\Rightarrow$ eigenvalues NOT preserved, but
+      $\mathrm{sv}(\tau_B)=\mathrm{sv}(M_A)$
+    \item so we truncate the $\chi\times\chi$ environment on its
+      \textbf{singular values}; for the RTM these are no longer one-to-one
+      with the eigenvalues (non-Hermitian) --- no variational bound
+  \end{itemize}}
+  \note{Now the transverse analogue, and the one difference that matters.
+  The canonical condition is imposed on the pair --- each left tensor
+  against the corresponding right tensor, not against its own conjugate
+  --- so the isometries on the two sides of the cut are different
+  objects. The local reduction then reads tau-B equals U-B M-A V-B with U
+  not the dagger of V: that is not a similarity, so the eigenvalues of
+  the local environment are NOT those of the full RTM. What survives is
+  the singular values --- isometries preserve them --- so the practical
+  scheme truncates the chi-by-chi environment on its singular values. And
+  here is the honest caveat: for the Hermitian RDM, singular values and
+  eigenvalues coincided one-to-one; for the non-Hermitian RTM they do
+  not, the trace is a signed sum the singular values do not control, and
+  the Eckart--Young bound is gone. The empirical justification --- same
+  answers as RDM at ten times smaller chi --- is on the next slide.}
+\end{frame}
+
+\begin{frame}{Backup D4 --- How the Iteration Stops}
+  \begin{columns}[c]
+    \begin{column}{0.42\textwidth}
+      {\small
+      \begin{enumerate}\setlength{\itemsep}{0.4em}
+        \item $\mathrm{d}s$ $=$ change in the singular values of the
+          temporal state between successive iterations --- the convergence
+          criterion in the code
+        \item stop when $\mathrm{d}s$ falls below tolerance, or after
+          $150$ iterations without improvement
+        \item RTM hits a noise floor (no-improvement stop) while RDM
+          converges --- yet both return the same leading eigenvalue to
+          better than 1 part in $10^{4}$
+      \end{enumerate}}
+    \end{column}
+    \begin{column}{0.56\textwidth}
+      \centering
+      \includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{res_conv.pdf}
+    \end{column}
+  \end{columns}
+  \note{How a run actually ends. The monitor, d-s, is the change in the
+  singular values of the temporal state between successive applications
+  of the transfer matrix --- that is the convergence criterion
+  implemented in the code. A run stops either when d-s crosses the
+  tolerance, or by the no-improvement rule: one hundred fifty iterations
+  without a new best value. The figure shows the two truncation schemes
+  from the same random seed at the same point: under RTM truncation d-s
+  drops three orders of magnitude and then flattens at a noise floor
+  above tolerance --- the run ends on the no-improvement rule --- while
+  under RDM it crosses tolerance and terminates normally. The control is
+  the last point: both runs return the same leading eigenvalue to better
+  than one part in ten to the four, so the floor is a property of the
+  monitor under the generalised truncation, not a bias in the answer.}
+\end{frame}
+
+% ---- B·Spectrum extraction ---------------------------------------------------
+
+\begin{frame}{Backup E1 --- the Block Iteration, Step by Step}
+  \small
+  \textbf{Algorithm (App.~F, Alg.~1):} the $k$ dominant eigenpairs of $\E$
+  \begin{enumerate}\setlength{\itemsep}{0.35em}
+    \item $\ket{R_j},\,\bra{L_j} \gets$ random complex tMPS, \ $j=1,\dots,k$
+    \item \textbf{apply:}\quad
+      $\ket{\tilde R_j} \gets \mathrm{truncate}_\chi(\E\ket{R_j})$,\qquad
+      $\bra{\tilde L_j} \gets \mathrm{truncate}_\chi(\bra{L_j}\E)$
+    \item \textbf{project:}\quad
+      $S_{ij}=\braket{L_i}{R_j}$,\qquad
+      $M_{ij}=\bra{L_i}\E\ket{R_j}$
+    \item solve $Mv=\theta Sv$ (via $\operatorname{pinv}(S)M$) for Ritz
+      values $\theta_1,\dots,\theta_k$ and coefficients $V$, $U$
+    \item \textbf{separate:}\quad
+      $\ket{R_j} \gets \mathrm{truncate}_\chi\big(\textstyle\sum_i
+      V_{ij}\ket{\tilde R_i}\big)$, \ analogously $\bra{L_j}$ with $U$
+    \item normalise; repeat 2--5 until the leading Ritz values stop
+      changing within tolerance
+  \end{enumerate}
+  \note{If asked to walk through the block method. Six steps. Start from k
+  random complex temporal states on each side. Apply: one transfer-matrix
+  application per member, truncated back to chi --- the left states with
+  the transpose. Project: build the k-by-k overlap matrix S and projected
+  operator M from the biorthogonal contractions. Solve the small pencil
+  --- with a pseudoinverse of S, because near degeneracies S is singular
+  --- to get the Ritz values, which approximate the k leading
+  eigenvalues, and the coefficient matrices. Separate: rebuild each block
+  member as the coefficient combination of the propagated states,
+  truncate, normalise, and iterate until the leading Ritz values stop
+  changing. In the production runs we mostly use the eigenvalue-only
+  variant, where step five keeps orthonormal bases from a QR instead of
+  separated eigenvectors --- the separation is the unstable part and the
+  spectrum does not need it.}
+\end{frame}
+
+
+
+% ---- B·Results systematics ---------------------------------------------------
+
+\begin{frame}{Backup F1 --- Why the Spectral $c$ Sits Below $\tfrac12$ at $p=0$}
+  \begin{columns}[t]
+    \begin{column}{0.46\textwidth}
+      {\centering \textbf{1. the fit truncates the expansion}\par}
+      \[
+        \frac{\operatorname{Im}\lambda_0}{T}
+          = a_0 - \frac{\pi}{T}
+            \underbrace{-\,\frac{\pi c}{24\,v\,T^{2}}}_{\text{$c$ from here}}
+            \;\underbrace{+\;\frac{D}{T^{4}}}_{\text{dropped}}
+            +\;\ldots
+      \]
+      {\centering\small dropped term $=\;D/T^{3}$ in $\operatorname{Im}\lambda_0$\par}
+      \idea{restoring it: $90\%\to97\%$ of the predicted coefficient}
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      {\centering \textbf{2. the regulator $\beta_0$ is finite}\par}
+      \centering
+      \includegraphics[width=\textwidth]{res_beta0.pdf}\\[0.3ex]
+      {\small linear in $\beta_0$; $\;\to 1.013\times$ CFT at $\beta_0\to0$}
+    \end{column}
+  \end{columns}
+  \note{The deficit of the spectral central charge at the integrable point,
+  quantified. Two separate points, and I want to keep them separate.
+  First, the fitted form truncates the expansion. On the left you see what
+  we actually fit: a constant, the branch term minus pi over T, and the
+  one-over-T-squared term that carries the central charge. The next term
+  is one over T to the fourth in this quantity --- that is one over T
+  cubed in the imaginary part of lambda-nought --- and we drop it. Restore
+  it and the fitted coefficient goes from ninety to ninety-seven per cent
+  of the prediction. So most of the deficit is simply the order we
+  stopped at. Second, and separately, the
+  cooling regulator is finite: each point in the figure is the same fit
+  at a different beta-nought, the dependence is linear, and the
+  extrapolation to zero regulator lands at one point zero one three
+  times the CFT value --- a limit that cannot be simulated, because the
+  cooling is what produces the conformal boundary state. Both point to
+  the truncation of the same expansion the fitted equation comes from.}
+\end{frame}
+
+\begin{frame}{Backup F2 --- Why the Real Part Cannot Measure $c$}
+  \begin{columns}[c]
+    \begin{column}{0.40\textwidth}
+      \[
+        \operatorname{Re}S_2 = s_0 + \frac{c}{8}\,W
+              + a\,w^{-1/2}
+      \]
+    \end{column}
+    \begin{column}{0.58\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{res_re_c.pdf}
+    \end{column}
+  \end{columns}
+  \note{If asked why we do not fit c from the real-part dome, which looks so
+  clean. We tried, and the failure is instructive. The corrected chord form
+  describes the profiles well --- but it cannot measure c, because on the
+  mid-strip the correction term and the logarithm are nearly the same shape:
+  their regressor correlation is minus zero point nine nine nine seven. Any
+  change in c can be almost perfectly compensated by the correction
+  amplitude, so the fit has a flat direction. The demonstration: fixing c to
+  one half reproduces the free fit's residuals from T of about twelve
+  onwards. That is the demonstrated reason the imaginary-part plateau ---
+  which needs no such correction --- is the quoted entropy estimator.}
+\end{frame}
+
+\begin{frame}{Backup F3 --- Four Boundary Condition Pairs}
+  \begin{columns}[c]
+    \begin{column}{0.28\textwidth}
+      \begin{center}
+        a \textbf{tower} $=$ the set of boundary operators a given pair of
+        boundary conditions allows, and their descendants
+      \end{center}
+    \end{column}
+    \begin{column}{0.70\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{res_bc_pairs.pdf}
+    \end{column}
+  \end{columns}
+  \note{The most stringent check the boundary theory offers. A tower is
+  simply the set of boundary operators that a given pair of boundary
+  conditions admits, together with their descendants: change the
+  boundary condition and the allowed set changes, in a way the theory
+  predicts. Since the initial state IS the boundary condition, we can
+  test that directly. We realised all four pairings of free and fixed
+  Ising boundaries --- free--free, fixed--fixed, fixed--antifixed,
+  free--fixed --- and each panel returns exactly its predicted tower,
+  with the dashed lines marking the predicted spacings. One subtlety
+  worth stressing: two of the pairs have identical gap structures, so
+  gaps alone cannot distinguish them. But the leading phase also fixes
+  the absolute position of the tower, x-nought itself, by running the
+  phase relation backwards with c and v known. Measured: essentially
+  zero for the two aligned pairs, zero point four seven four against one
+  half for fixed--antifixed, and zero point zero six against one
+  sixteenth for free--fixed. The dynamics does not just know the central
+  charge; it knows which operators each boundary admits.}
+\end{frame}
+
+
+
+
+% restore the counter so \inserttotalframenumber = number of MAIN frames
+\setcounter{framenumber}{\value{finalframe}}
+
+\end{document}

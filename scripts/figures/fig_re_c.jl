@@ -1,7 +1,7 @@
 # Figure res_re_c (thesis fig:re_c) — the central charge from the real part of the temporal
-# entropy: the pure logarithm overestimates it, the Bou-Comas correction describes the profile,
-# but freeing c on top of the correction is ill conditioned. Panel (a) is one profile with the
-# three fits; panel (b) is c(T).
+# entropy: one profile with the two fits it admits. The corrected c=1/2 form of Eq. (G2) describes
+# the data, while a plain logarithm with c free follows the middle of the strip and leaves it in
+# the wings, returning a c far above 1/2.
 # Reads: data/local/controls/seedens_p0.0_T*.jld2 (the single-vector seed ensembles)
 # Run:   julia --project=. scripts/figures/fig_re_c.jl
 # From a notebook: include this file, then call make_re_c() to get the plot object.
@@ -35,12 +35,9 @@ function make_re_c()
     Tshow = 14.0
     f = fits(d[Tshow].s2, Tshow)
     xs = f.ts ./ Tshow
-    pa = plot(xlabel="\$t/T\$", ylabel="\$\\mathrm{Re}\\,S_2\$", title="(a) \$T=$(Int(Tshow))\$",
-              titlelocation=:left, titlefontsize=11, legend=:bottom, legendfontsize=7,
+    pa = plot(xlabel="\$t/T\$", ylabel="\$\\mathrm{Re}\\,S_2\$", title="\$T=$(Int(Tshow))\$", titlefontsize=11, legend=:bottom, legendfontsize=8,
               ylims=(0.05, 0.42))
-    plot!(pa, xs, f.re, seriestype=:scatter, ms=2, msw=0, color=:grey40, label="data")
-    plot!(pa, xs[f.c90], f.s_pin .+ f.W[f.c90] ./ 16, color=:seagreen, lw=1.6, ls=:dot,
-          label="\$c=1/2\$, no correction")
+    plot!(pa, xs, f.re, seriestype=:scatter, ms=2.5, msw=0, color=:grey40, label="data")
     plot!(pa, xs[f.c90], f.s_pin .+ f.W[f.c90] ./ 16 .+ f.a_pin .* f.cv[f.c90], color=:dodgerblue, lw=1.8,
           label="\$c=1/2\$ with correction")
     # fitted on the middle half, drawn across the wider window: it tracks the data where it was
@@ -50,17 +47,14 @@ function make_re_c()
 
     cu = [fits(d[T].s2, T).c_unc for T in Ts]
     cc = [fits(d[T].s2, T).c_corr for T in Ts]
-    pb = plot(xlabel="\$T\$", ylabel="\$c\$", title="(b)", titlelocation=:left, titlefontsize=11,
-              legend=:topright, legendfontsize=7, ylims=(0.0, 1.6))
-    hline!(pb, [0.5], color=:black, lw=0.8, ls=:dash, label="")
-    plot!(pb, Ts, cu, color=:crimson, marker=:circle, ms=3, msw=0, lw=1.2, label="logarithm only")
-    plot!(pb, Ts, cc, color=:dodgerblue, marker=:square, ms=3, msw=0, lw=1.2, label="with correction")
-
     @printf("T=%g: c_unc=%.3f  c_corr=%.3f  a_pin=%.4f\n", Tshow, f.c_unc, f.c_corr, f.a_pin)
     @printf("c_unc range %.3f..%.3f ; c_corr range %.3f..%.3f\n",
             minimum(cu), maximum(cu), minimum(cc), maximum(cc))
 
-    return plot(pa, pb, layout=(1, 2), size=thesis_size(0.95; aspect=0.42), margin=2Plots.mm)
+    # thesis_plot_theme! sets bottom_margin = 10mm globally, which a generic `margin` does not
+    # override; unset here it leaves a blank band between the axis label and the caption
+    plot!(pa, size=thesis_size(0.55; aspect=0.62), margin=2Plots.mm, bottom_margin=2Plots.mm)
+    return pa
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__

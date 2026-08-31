@@ -53,7 +53,7 @@ function make_spectral()
     # the different scales stay visible instead of being normalised away
     # the centre of the ring is empty, so the legend sits there rather than stealing width
     pc = plot(xlabel="Re μ₀", ylabel="Im μ₀", legend=:outerright,
-              aspect_ratio=:equal, size=thesis_size(0.70; aspect=0.58),
+              aspect_ratio=:equal, size=thesis_size(0.58; aspect=0.52),
               xlims=(-2.15, 2.15), ylims=(-2.15, 2.15),
               xticks=[-2, -1, 0, 1, 2], yticks=[-2, -1, 0, 1, 2])
     th = range(0, 2pi, length=400)
@@ -61,7 +61,9 @@ function make_spectral()
         z = SEL[p].mus                      # the same rungs the Eq.(3) fits use
         r = mean(abs.(z))
         plot!(pc, r .* cos.(th), r .* sin.(th), color=P_COLOR[p], ls=:dash, lw=1, alpha=0.6, label="")
-        scatter!(pc, real.(z), imag.(z), ms=3, msw=0, color=P_COLOR[p], marker=P_MARKER[p],
+        # ms tracks the plot area: the canvas was shortened for the page budget, so the markers
+        # are scaled with it to keep the same size relative to the circle as before
+        scatter!(pc, real.(z), imag.(z), ms=2.2, msw=0, color=P_COLOR[p], marker=P_MARKER[p],
                  label=@sprintf("p=%.1f,  |μ₀|=%.3f", p, r))
         @printf("p=%.1f  |mu0| = %.4f  (spread %.2e)\n", p, r, maximum(abs.(z)) - minimum(abs.(z)))
     end
@@ -74,8 +76,10 @@ function make_spectral()
         y = phi ./ Ts
         f = curve_fit(eq3, Ts, y, [0.1, -0.01])
         c = 24 * V[p] * abs(f.param[2]) / pi
+        # the panels are short, so fix a sparse tick set common to all four rather than let each
+        # panel choose its own and crowd the labels
         pl = plot(xlabel=(n >= 3 ? "T" : ""), ylabel=(n in (1, 3) ? "Im λ₀/T − a₀" : ""),
-                  legend=:bottomright, title="p = $p")
+                  legend=:bottomright, title="p = $p", yticks=[-1.5, -1.0, -0.5])
         scatter!(pl, Ts, y .- f.param[1], ms=3, msw=0, color=P_COLOR[p], label="")
         tt = range(minimum(Ts), maximum(Ts), length=200)
         plot!(pl, tt, eq3(tt, f.param) .- f.param[1], color=:black, lw=1.2,
@@ -83,7 +87,7 @@ function make_spectral()
         push!(panels, pl)
         @printf("p=%.1f  %2d rungs T=%g..%g  c = %.4f\n", p, length(Ts), first(Ts), last(Ts), c)
     end
-    fig = plot(panels..., layout=(2, 2), size=thesis_size(0.95; aspect=0.6), margin=2Plots.mm)
+    fig = plot(panels..., layout=(2, 2), size=thesis_size(0.95; aspect=0.48), margin=2Plots.mm)
 
     return (circle=pc, eq3=fig)
 end

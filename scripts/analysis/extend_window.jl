@@ -24,6 +24,7 @@ const V   = Dict(0.0 => 2.000, 0.1 => 2.670, 0.3 => 3.967, 0.5 => 5.212)  # v_in
 
 # the block-iteration windows of Table tab:cp, where the phase increment leaves its constant rate
 const BLOCK_WINDOW = Dict(0.0 => 20.0, 0.1 => 9.5, 0.3 => 7.0, 0.5 => 6.0)
+const MAX_WINDOW   = Dict(0.0 => 22.0, 0.1 => 17.0, 0.3 => 10.0, 0.5 => 6.0)
 
 # ── loading ──────────────────────────────────────────────────────────────────
 arm(file, label) = Dict(k[2] => v for (k, v) in load(joinpath(CL, file), "done")
@@ -117,7 +118,9 @@ function extend(p; rms_tolerance=3.0, nback=2, verbose=true)
             BLOCK_WINDOW[p], length(Ts), c_block, rms_block)
 
     ens = seed_ensembles(p)
-    candidates = sort([T for T in keys(ens) if T > BLOCK_WINDOW[p]])
+    # T = 24 at p = 0 is excluded from the thesis: its ensemble loses 4 of 20 runs and its median
+    # plateau turns back upwards, so the p = 0 sequences end at T = 22 (see MAX_WINDOW).
+    candidates = sort([T for T in keys(ens) if T > BLOCK_WINDOW[p] && T <= MAX_WINDOW[p]])
     isempty(candidates) && return (; p, Ts, phis, mus, c=c_block, rms=rms_block, window=BLOCK_WINDOW[p])
 
     accepted_window = BLOCK_WINDOW[p]

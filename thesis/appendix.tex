@@ -15,20 +15,20 @@ In two dimensions, we write the Euclidean coordinates as $z=x+i\tau$ and $\bar z
   x = h + \bar h
   \label{eq:cft:dim}
 \end{equation}
-is the scaling dimension used in the main text, and their difference $s=h-\bar h$ is the spin, which measures the response to a rotation about the operator. The twist operators used below sit at branch points of the replica surface, which are invariant under such a rotation, so $h=\bar h$ and $s=0$. On the plane, the two-point function has the power-law form
+is the scaling dimension used in the main text, and their difference $s=h-\bar h$ is the spin, which measures the response to a rotation about the operator. The twist operators used below sit at branch points of the replicated surface, which are invariant under such a rotation, so $h=\bar h$ and $s=0$. On the plane, the two-point function has the power-law form
 \begin{equation}
   \langle \phi(z_1)\phi(z_2)\rangle
   = \frac{1}{(z_1-z_2)^{2h}\,(\bar z_1-\bar z_2)^{2\bar h}}.
   \label{eq:cft:plane2pt}
 \end{equation}
-Under a conformal map $z\to w$, a primary field transforms with the corresponding Jacobian. Equation~\eqref{eq:cft:plane2pt} therefore determines its correlator on any geometry conformally related to the plane~\cite{difrancesco1997}. The logarithmic map $w=(\beta/\pi)\log z$ maps the plane to a cylinder of circumference $\beta$ and the upper half-plane to a strip of width $\beta$. Here $\beta$ is a length, so on the lattice it carries the sound velocity through $\beta=v(2\beta_0+iT)$, and $v$ does not appear separately in the map. The transformed correlator is~\cite{calabrese_cardy2004,carignano_tagliacozzo2025}
+Under a conformal map $z\to w$, a primary field transforms with the corresponding Jacobian. Equation~\eqref{eq:cft:plane2pt} therefore determines its correlator on any geometry conformally related to the plane~\cite{difrancesco1997}. The logarithmic map $w=(\beta/\pi)\log z$ maps the upper half-plane to a strip of width $\beta$ and the full plane to a cylinder of circumference $2\beta$. Here $\beta$ is a length, so on the lattice it carries the sound velocity through $\beta=v(2\beta_0+iT)$, and $v$ does not appear separately in the map. The transformed correlator is~\cite{calabrese_cardy2004,carignano_tagliacozzo2025}
 \begin{equation}
   \langle\phi(\omega_1)\phi(\omega_2)\rangle \;\propto\;
-  \Big[\sinh\tfrac{\pi(\omega_1-\omega_2)}{\beta}\Big]^{-2h}
-  \Big[\sinh\tfrac{\pi(\bar\omega_1-\bar\omega_2)}{\beta}\Big]^{-2\bar h}.
+  \Big[\sinh\tfrac{\pi(\omega_1-\omega_2)}{2\beta}\Big]^{-2h}
+  \Big[\sinh\tfrac{\pi(\bar\omega_1-\bar\omega_2)}{2\beta}\Big]^{-2\bar h}.
   \label{eq:cft:cyl2pt}
 \end{equation}
-The separation on the plane is replaced by the chord distance $(\beta/\pi)\sinh[\pi(\omega_1-\omega_2)/\beta]$ on the cylinder or strip. Analytic continuation of the width to real time replaces the hyperbolic sine by a sine. This continued chord distance gives the variable $W$ in Eq.~\eqref{eq:chord}.
+The separation on the plane is replaced by the chord distance $(2\beta/\pi)\sinh[\pi(\omega_1-\omega_2)/2\beta]$ on the cylinder or strip. Analytic continuation of the width to real time replaces the hyperbolic sine by a sine. This continued chord distance gives the variable $W$ in Eq.~\eqref{eq:chord}.
 
 The entropy coefficients follow from the same correlation function. The R\'enyi entropy of a region $\mathcal A$ is
 \begin{equation}
@@ -258,9 +258,11 @@ This local reduction requires a canonical form adapted to the left--right pair. 
   \label{fig:rtm_truncation}
 \end{figure}
 
-The potential reduction in bond dimension arises because the \ac{RTM} measures relevance through the left--right overlap. The method uses a biorthogonal decomposition of $\ket R\bra L$ and retains the components with largest-magnitude eigenvalues~\cite{carignano_marimon_tagliacozzo2024}. For the transfer matrices considered here, this can reach a given accuracy with a smaller bond dimension than the \ac{RDM} scheme. The required \ac{RTM} rank is bounded above by the operator entanglement of the bipartition~\cite{carignano_marimon_tagliacozzo2024}.
+The potential reduction in bond dimension arises because the \ac{RTM} measures relevance through the left--right overlap. The method uses a biorthogonal decomposition of $\ket R\bra L$ and retains the components with largest-magnitude eigenvalues~\cite{carignano_marimon_tagliacozzo2024}. For the transfer matrices considered here, this can reach a given accuracy with a smaller bond dimension than the \ac{RDM} scheme. It is the rank of the \ac{RTM} itself, rather than the temporal entropy of either boundary state alone, that dictates the bond dimension the calculation requires~\cite{carignano_marimon_tagliacozzo2024}.
 
-The local truncation criterion is expressed through singular values, whereas the physical overlap is determined by the trace of $\mathcal{T}_t$. The two coincide only for a Hermitian positive \ac{RDM}: for a non-Hermitian \ac{RTM} the trace is a signed sum of eigenvalues that singular-value magnitudes do not control, as eigenvalues $+1$ and $-1$ cancel in the trace while both carry unit magnitude. The \ac{RTM} truncation therefore lacks the variational bound available for an \ac{RDM}, and the eigenvalues of a nearly defective matrix can respond singularly to perturbations~\cite{moro1997}. The error in the overlap can still be bounded: if the truncation changes the left and right temporal states by at most $\epsilon_L$ and $\epsilon_R$ in norm, the error in $\braket{L}{R}$ is at most $\epsilon_L+\epsilon_R+\epsilon_L\epsilon_R$~\cite{hastings_mahajan2015}, although the discarded singular values do not evaluate this bound directly. Such cancellations would require retained and discarded components of comparable size, which the quickly decaying spectra of the model at the critical point do not provide. The difference in guarantees shows in the convergence: the \ac{RDM} scheme generally converges smoothly, whereas the \ac{RTM} result can vary irregularly.
+The local truncation criterion is expressed through singular values, whereas the physical overlap is determined by the trace of $\mathcal{T}_t$. These quantities are not equivalent. Singular values satisfy $\mathrm{sv}(M)=\sqrt{\mathrm{eig}(MM^{\dagger})}$ and coincide with the eigenvalues for a Hermitian positive \ac{RDM}, but not for a non-Hermitian \ac{RTM}. The trace $\operatorname{Tr}\mathcal{T}_t=\sum_i\lambda_i$ is a signed sum and is not controlled directly by singular-value magnitudes. For example, eigenvalues $+1$ and $-1$ both have unit magnitude but cancel in the trace.
+
+The \ac{RTM} truncation therefore lacks the variational bound available for an \ac{RDM}, and the same criterion need not be reliable for a generic non-Hermitian matrix, whose eigenvalues can respond singularly to perturbations when the matrix is close to defective~\cite{moro1997}. The error in the overlap can nevertheless be bounded: if the truncation changes the left and right temporal states by at most $\epsilon_L$ and $\epsilon_R$ in norm, then the error in $\braket{L}{R}$ is at most $\epsilon_L+\epsilon_R+\epsilon_L\epsilon_R$~\cite{hastings_mahajan2015}. The \ac{RTM} truncation targets contributions to the overlap rather than minimising these norm errors, so the discarded singular values cannot be used directly to evaluate this bound. Cancellation of eigenvalues in the trace would require retained and discarded components of comparable size, which the quickly decaying spectra of the model studied here at the critical point do not provide. The different guarantees are reflected in the convergence: the \ac{RDM} scheme generally converges smoothly, whereas the \ac{RTM} result can vary irregularly; Figure~\ref{fig:conv} in Appendix~\ref{app:failures} shows the two behaviours at a single production point.
 
 Both schemes make one further approximation. At each stage of the sweep, the truncation uses the current local environment without including the uncontracted remainder of the network. Translation invariance reduces the resulting error because every subsequent bulk column applies the same operator and can regenerate discarded components of the leading subspace.
 
@@ -348,7 +350,7 @@ This discrepancy is caused by finite-size corrections associated with the conica
   + k_n + A_n L^{-x/n}.
   \label{eq:cft_mid_corr}
 \end{equation}
-with $A_n$ a non-universal amplitude. Which operator appears at the singularity is not known in advance, so we determine its dimension from the data: fits with $x$ free return values close to $1$ at both $n$, although a three-parameter fit to nine sizes does not determine it sharply. We therefore fix $x=1$. The corrected estimates are $c=0.500$ at both couplings for the von Neumann entropy and $c=0.508$ and $0.505$ for the R\'enyi-2 entropy, and the largest residual falls by two orders of magnitude in every case. Figure~\ref{fig:cft_L}(b) shows the corrections that the fits absorb.
+with $A_n$ a non-universal amplitude. Which operator appears at the singularity is not known in advance, so we determine its dimension from the data: fits with $x$ free return values close to $1$ at both $n$, although a three-parameter fit to nine sizes does not determine it sharply. We therefore fix $x=1$. The corrected estimates are $c=0.500$ at both couplings for the von Neumann entropy and $c=0.508$ and $0.505$ for the R\'enyi-2 entropy, and the largest residual falls by roughly two orders of magnitude in every case. Figure~\ref{fig:cft_L}(b) shows the corrections that the fits absorb.
 
 The factor $x/n$ explains why the uncorrected estimates behave differently. For the same $x$, the correction to the von Neumann entropy decays as $L^{-x}$, whereas that of the R\'enyi-2 entropy decays as $L^{-x/2}$. The former is therefore already within $3\%$ of $\tfrac12$, while the latter requires the correction term. The analogous temporal correction scales as $\Delta S_n\propto T^{-1/n}$~\cite{boucomas2026} and is included in Section~\ref{sec:results:wall}.
 
@@ -357,7 +359,7 @@ The finite-size calculations use fifteen \ac{DMRG} sweeps, a bond-dimension ramp
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{imgs/cft_L.pdf}
-  \caption{\textbf{Finite-size scaling of the mid-chain entropy.} (a) The von Neumann entropy $S_1$ and R\'enyi-2 entropy $S_2$ against $\ln L$ at $p=0.1$ and $p=0.5$, with the fits of Eq.~\eqref{eq:cft_mid_corr}. The corrected estimates are $c=0.500$ at both couplings from $S_1$, and $c=0.508$ and $0.505$ from $S_2$. The correction changes the curves by less than $10^{-3}$ and is not visible on this scale. (b) The same data after subtracting the fitted logarithmic contribution, which isolates the finite-size correction.}
+  \caption{\textbf{Finite-size scaling of the mid-chain entropy.} (a) The von Neumann entropy $S_1$ and R\'enyi-2 entropy $S_2$ against $\ln L$ at $p=0.1$ and $p=0.5$, with the fits of Eq.~\eqref{eq:cft_mid_corr}. The corrected estimates are $c=0.500$ at both couplings from $S_1$, and $c=0.508$ and $0.505$ from $S_2$. The correction changes the curves at the $10^{-3}$ level and is not visible on this scale. (b) The same data after subtracting the fitted logarithmic contribution, which isolates the finite-size correction.}
   \label{fig:cft_L}
 \end{figure}
 
@@ -386,7 +388,7 @@ This is the discrete form of the low-momentum slope $\mathrm{d}\omega/\mathrm{d}
 
 The parity $P=\prod_i\sigma^x_i$ also commutes with the Hamiltonian, and the energy difference in Eq.~\eqref{eq:app:velocity} mixes two branches unless the lowest states at $m=0$ and $m=1$ share a parity. We verified directly that they do, at $N=10$ and $N=12$ and for every coupling up to $p=0.5$, so no parity projection is needed.
 
-We validate the conversion from a spectral gap to a scaling dimension using the anisotropic XY chain,
+As a control before the extrapolation, we validate the conversion from a spectral gap to a scaling dimension using the anisotropic XY chain,
 \begin{equation}
   H_{\mathrm{XY}} = -\sum_j\Big[\frac{1+\gamma}{2}\,\sigma^x_j\sigma^x_{j+1}
     + \frac{1-\gamma}{2}\,\sigma^y_j\sigma^y_{j+1}\Big] - \lambda\sum_j\sigma^z_j,
@@ -419,21 +421,14 @@ whose leading coefficient is $a_1=\pi x_1/v$. Both quantities on the right are k
   \label{tab:xy}
 \end{table}
 
-Two independent checks validate the finite-ring calculation. The Hamiltonian used here is constructed directly through bit operations, independently of the \ac{MPO}, and their full spectra at $N=8$ agree to within $7\times10^{-14}$. The second check turns our velocity into a central charge. For a periodic chain the ground-state energy per site is $f(L)=f_\infty-\pi c\,v/(6L^2)$~\cite{blote_cardy_nightingale1986}, and a finite difference between $L$ and $L-1$ removes the unknown $f_\infty$,
-\begin{equation}
-  c = -\frac{6\,[\,f(L)-f(L-1)\,]}{\pi v\,\big(L^{-2}-(L-1)^{-2}\big)}.
-  \label{eq:app:casimir}
-\end{equation}
-Evaluated on our own ground-state energies and velocities at $N=16$, this gives $c=0.504$ at $p=0$ and $c=0.525$ at $p=0.5$, consistent with previously reported values for this model~\cite{alcaraz2016}.
-
-The accessible ring sizes are far from the thermodynamic limit: at $p=0$ the $N=18$ estimate is $1.9899$ against the exact value $2$, and reaching three-digit accuracy directly would need about $N=57$. We therefore extrapolate, and fix the form of the correction at the integrable point, where the answer is known. Writing the error as $2-v(N)\propto N^{-\alpha}$, the rescaled quantity $[2-v(N)]\,N^{\alpha}$ is constant to within half a per cent for $\alpha=2$ alone, drifting downwards for $\alpha=1$ and upwards for $\alpha=3$. Extrapolating with those two powers misses the exact velocity by $2\times10^{-2}$ and $6\times10^{-3}$, against $6\times10^{-5}$ for $1/N^{2}$. A further $D/N^{4}$ term is not constrained by five sizes and does not improve the extrapolation.
+Returning to the \ac{ANNNI}-type chain, the accessible ring sizes are far from the thermodynamic limit: at $p=0$ the $N=18$ estimate is $1.9899$ against the exact value $2$, and reaching three-digit accuracy directly would need about $N=57$. We therefore extrapolate, and fix the form of the correction at the integrable point, where the answer is known. Writing the error as $2-v(N)\propto N^{-\alpha}$, the rescaled quantity $[2-v(N)]\,N^{\alpha}$ is constant for $\alpha=2$ alone, drifting downwards for $\alpha=1$ and upwards for $\alpha=3$.
 
 We therefore fit
 \begin{equation}
   v(N)=v_\infty+\frac{C}{N^2}
   \label{eq:app:velocity_fit}
 \end{equation}
-at every coupling and use $v_\infty$ throughout; Table~\ref{tab:velocity} lists the data and fit parameters, and Figure~\ref{fig:velocity_extrap} shows the extrapolations. What this buys is clearest where it can be checked: at $p=0$ the extrapolated value lies within $6\times10^{-5}$ of the exact result, against $1.0\times10^{-2}$ for the raw $N=18$ estimate. It also matters more as the coupling grows, since $|C|$ rises from $3.27$ at $p=0$ to $140.7$ at $p=1.5$.
+at every coupling and use $v_\infty$ throughout; Table~\ref{tab:velocity} lists the data and fit parameters, and Figure~\ref{fig:velocity_extrap} shows the extrapolations. At $p=0$ the extrapolated value lies within $6\times10^{-5}$ of the exact result. As the coupling grows, this extrapolation is more important since $|C|$ rises from $3.27$ at $p=0$ to $140.7$ at $p=1.5$.
 
 \begin{table}[htbp]
   \centering
@@ -451,7 +446,7 @@ at every coupling and use $v_\infty$ throughout; Table~\ref{tab:velocity} lists 
     $1.5$ & $9.4140$ & $9.7946$ & $10.0594$ & $10.2504$ & $10.3921$ & $10.79924$ & $-140.69$ \\
     \hline
   \end{tabular}
-  \caption{\textbf{Finite-size velocities and thermodynamic extrapolations.} Values of $v(p)$ at $\lambda=1$ for periodic chains of $N=10$--$18$, with the parameters of the fit $v(N)=v_\infty+C/N^2$. The largest residual increases from $1.1\times10^{-5}$ at $p=0$ to $2.8\times10^{-2}$ at $p=1.5$. The conformal analysis uses the extrapolated values $v_\infty$.}
+  \caption{\textbf{Finite-size velocities and thermodynamic extrapolations.} Values of $v(p)$ at $\lambda=1$ for periodic chains of $N=10$--$18$, with the parameters of the fit $v(N)=v_\infty+C/N^2$. The conformal analysis uses the extrapolated values $v_\infty$.}
   \label{tab:velocity}
 \end{table}
 
@@ -475,53 +470,79 @@ This appendix describes the time-evolution \ac{MPO} used in Section~\ref{sec:mpo
 
 The construction begins from the Hamiltonian represented as an \ac{MPO}. We supply the Hamiltonian as a symbolic sum of operator strings, from which the library assembles the \ac{FSM} of Section~\ref{sec:mporep:fsm}. At each bond, it collects the terms that cross the bond, arranges their coefficients into a matrix, and compresses this matrix with an \ac{SVD}. The retained components form the minimal set of memory channels required to carry the interactions across the bond. We denote their number by $\chi_H$ to distinguish it from the bond dimension $\chi$ used to truncate the temporal states. For the \ac{ANNNI}-type Hamiltonian, the compression gives $\chi_H=3$, corresponding to the three intermediate states in Eq.~\eqref{eq:Wannni}, and hence $D_W=\chi_H+2=5$. It also determines the four blocks in that equation: $D$ contains the on-site term, $C$ initiates an interaction, $B$ terminates it, and $A$ propagates it across a site.
 
-We construct the local evolution tensor with \texttt{ITensorExpMPO.jl}~\cite{pokart2024expmpo}, which is built on \texttt{ITensors.jl}~\cite{itensor2022} and implements the operators $W^{\mathrm{I}}$ and $W^{\mathrm{II}}$ of Zaletel et al.~\cite{zaletel2015}. Under the single-layer application considered here, neither operator is second-order accurate, as shown below. We therefore added the second-order cluster construction of Van Damme et al.~\cite{vandamme2024}. The implementation is available in a fork of the package~\cite{marquezolguin2026expmpo}, together with its documentation.
+We construct the local evolution tensor with \texttt{ITensorExpMPO.jl}~\cite{pokart2024expmpo}, which is built on \texttt{ITensors.jl}~\cite{itensor2022} and implements the operators $W^{\mathrm{I}}$ and $W^{\mathrm{II}}$ of Zaletel et al.~\cite{zaletel2015}. Under the single-layer application considered here, neither operator is second-order accurate, as shown below. We therefore added the second-order cluster construction of Van Damme et al.~\cite{vandamme2024}. The implementation is available in the thesis repository~\cite{marquezolguin2026code}, together with its documentation.
 
 \subsection{The second-order \textit{VD2} construction}
 \label{app:mpo:vd2}
 
-We seek a local tensor $W(\tau)$, with $\tau=-i\delta t$, whose product along the chain approximates $e^{\tau H}$. Writing the Hamiltonian as $H=\sum_x H_x$, the expansion is
+We seek a local tensor $W(\tau)$, with $\tau=-i\delta t$, whose product along the chain approximates $e^{\tau H}$. For a Hamiltonian $H=\sum_x H_x$, the expansion is
 \begin{equation}
   e^{\tau H} = \mathbb{1} + \tau\sum_x H_x
   + \frac{\tau^2}{2}\sum_{x,y} H_xH_y + \dots
   \label{eq:app:mpo:expansion}
 \end{equation}
-Products of terms with disjoint support commute and factorise. A repeated local tensor therefore generates them without additional memory channels. The non-trivial contributions are products of overlapping terms. Since the corresponding blocks act on a common site, they need not commute, and both $H_xH_y$ and $H_yH_x$ must appear with the weights prescribed by Eq.~\eqref{eq:app:mpo:expansion}. The accuracy of an evolution \ac{MPO} is determined by which of these overlapping products it retains.
+Products with disjoint support commute and factorise, so a repeated local tensor generates them without additional memory channels. Products of overlapping terms, on the other hand, require a more explicit treatment. Because the corresponding operators act on a common site, they need not commute, and both $H_xH_y$ and $H_yH_x$ must appear with the weights prescribed by Eq.~\eqref{eq:app:mpo:expansion}. The order of the evolution \ac{MPO} is therefore determined by the overlapping products retained in its local tensor.
 
-The constructions $W^{\mathrm{I}}$ and $W^{\mathrm{II}}$ encode the products through the virtual index~\cite{zaletel2015}. Each memory channel is represented by an auxiliary hard-core boson whose occupation records whether a Hamiltonian term crosses the bond. Restricting the bond to at most one boson retains products in which no two terms cross the same bond. The more restrictive operator $W^{\mathrm{I}}$ keeps only disjoint-support products. The operator $W^{\mathrm{II}}$ also retains products that overlap on one site and consequently reproduces the on-site field to all orders. Both have virtual bond dimension $1+\chi_H$, which is four for the present Hamiltonian.
+The constructions $W^{\mathrm{I}}$ and $W^{\mathrm{II}}$ carry at most one interaction across each bond and have virtual bond dimension $1+\chi_H=4$ for the present Hamiltonian~\cite{zaletel2015}. The operator $W^{\mathrm{I}}$ retains only products with disjoint support. The operator $W^{\mathrm{II}}$ additionally includes products that overlap on one site and reproduces the on-site field to all orders. Neither construction retains products in which two interactions cross the same bond. Since these terms first appear at order $\delta t^2$, a single application of either operator is only first-order accurate for the \ac{NNN} model we study in this work. Appendix~\ref{app:mpo:comparison} verifies this scaling numerically.
 
-Neither operator retains products in which two terms cross the same bond. This omission enters at order $\delta t^2$, making a single application first-order accurate for both the \ac{NNN} model and the strictly \ac{NN} Ising chain, as verified in Appendix~\ref{app:mpo:comparison}. Their errors nevertheless differ substantially. The operator $W^{\mathrm{I}}$ also omits products involving the on-site field, which occur throughout the chain, whereas $W^{\mathrm{II}}$ retains them. At $\delta t=0.1$, this reduces the error by approximately a factor of five.
+Second-order accuracy can be obtained either by composing several stages~\cite{zaletel2015} or by retaining the missing overlapping pairs in one application. A staged composition is efficient in conventional time evolution because its sub-steps together advance a single interval $\delta t$. In the transverse contraction, however, all stages must be blocked into one repeated column. After rotation, two stages produce a local physical dimension $4^2=16$, compared with $13$ for the single-stage second-order construction used here.
 
-Second-order accuracy can be restored either by composing several stages~\cite{zaletel2015} or by retaining the missing overlapping pairs in a single application. A staged composition is efficient in conventional time evolution because the sub-steps together advance one interval $\delta t$. In the transverse contraction, however, the stages must be blocked into a single repeated column. Two stages give a local physical dimension $4^2=16$ after rotation, compared with $13$ for the second-order construction used here.
+The three constructions can be understood as modifications of the \ac{FSM} in Section~\ref{sec:mporep:fsm}. Rather than terminating at the completed level, the machine returns to its starting level with a factor $\tau$, after which the completed level is removed. What is removed is the level itself, not the transitions that reached it: those now reach the starting level instead, so each completed interaction along a walk contributes its own factor of $\tau$. The resulting operator is a sum over walks through the machine, with one transition applied at each lattice site. A valid walk begins and ends at the first level, may remain there through the identity loop, and acquires one factor of $\tau$ for each completed interaction. Expanding the local tensor therefore produces the identity, the Hamiltonian, and all disjoint products with the coefficients of Eq.~\eqref{eq:app:mpo:expansion}. Overlapping pairs remain absent because the machine carries only one interaction at a time.
 
-The two operators just described, and the one we use, all follow from a single move on the \ac{FSM} of Section~\ref{sec:mporep:fsm}. In that machine the first level means that no interaction has started, the middle level that one is being carried across the bond, and the last level that one has been completed. To turn it into an evolution operator, the machine is made to return to the first level instead of stopping at the last one, picking up a factor $\tau$ on the way, so that the completed level can be dropped. Expanding the resulting tensor in powers of $\tau$ gives the identity, the full Hamiltonian, and then every disjoint product at every order with the weights of Eq.~\eqref{eq:app:mpo:expansion}. This is how the first-order operators above are obtained. Two overlapping terms remain beyond them, since the machine carries only one interaction at a time.
+The missing pairs are recovered by applying the same modification to the machine representing $H^2$, whose levels are pairs of levels from the original machine. Figure~\ref{fig:vd2fold} illustrates this construction. The levels $(1,3)$ and $(3,1)$ describe configurations in which one term is complete and the other has not started. They contain disjoint products and fold back to the initial level with a factor $\tau/2$. After these sectors are removed, the level $(3,3)$ can be reached only by overlapping terms. Folding it back with $\tau^2/2$ supplies the connected pairs omitted by $W^{\mathrm{I}}$ and $W^{\mathrm{II}}$. The general construction at arbitrary order, including the exact compressions used below, is given by Van Damme et al.~\cite{vandamme2024}.
 
-The second-order operator follows from applying the same step to $H^2$ instead of $H$, as Figure~\ref{fig:vd2fold} shows. Its machine has one level for every pair of levels of the original, which lets it tell apart the case where one term has acted and the other has not from the case where both act together. The first of these is a disjoint product, so those levels are returned to the starting level with a factor $\tau/2$. Once they are gone, the level recording two completed terms can only have been reached through terms that overlap, and returning it as well, now with $\tau^2/2$, supplies exactly the connected pairs that $W^{\mathrm{I}}$ and $W^{\mathrm{II}}$ omit. Van Damme et al.~\cite{vandamme2024} give the general algorithm, its extension to any order, and the exact compressions that bring the result to the form written below.
+Table~\ref{tab:vd2_transitions} lists the transitions of the pair machine in terms of the blocks in Eq.~\eqref{eq:Wannni}, while Figure~\ref{fig:vd2fold}(b) shows the corresponding level structure and folds. At each site, either one index advances, both indices advance through a composite transition, or the pair remains on a self-loop.
 
-\begin{figure}[htb]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.78\linewidth]{imgs/vd2_folding.pdf}%
-  \caption{\textbf{Building the evolution operator from the Hamiltonian machine.} (a) The machine of Figure~\ref{fig:fsm}, reduced to its three levels. Making it return to level $1$ instead of stopping at level $3$, with a factor $\tau$ (teal), gives a first-order approximation of $e^{\tau H}$ and removes level $3$ (grey). (b) The same move applied to $H^2$, whose levels are pairs, one index per Hamiltonian term. Grey arrows show the moves available, either index advancing on its own or both at the same site, while the jumps straight to level $3$ made by the on-site term are left out to keep the picture readable. The disjoint pairs $(1,3)$ and $(3,1)$ fold back to the start with $\tau/2$ (blue), after which $(3,3)$ holds only overlapping terms and folds back with $\tau^2/2$ (purple).}
+  \caption{\textbf{Construction of the evolution operator from the Hamiltonian machine.} (a) The machine of Figure~\ref{fig:fsm}, reduced to three levels. Returning to level $1$ with a factor $\tau$ (teal), rather than terminating at level $3$, gives a first-order approximation to $e^{\tau H}$; the completed level is then removed (grey). (b) The pair machine for $H^2$, with one level index for each Hamiltonian term. Grey arrows advance either one index or both indices at the same site. Each level also has a self-loop formed from the identity at level $1$, the memory operator $A$ at level $2$, or their pair products. Densely dashed arrows denote the on-site term, which advances an index directly to level $3$. The disjoint sectors $(1,3)$ and $(3,1)$ return to the initial level with $\tau/2$ (blue). The remaining sector $(3,3)$ contains the overlapping pairs and returns with $\tau^2/2$ (purple).}
   \label{fig:vd2fold}
 \end{figure}
 
-Retaining clusters of up to $n$ overlapping terms gives a one-step error of order $\delta t^{\,n+1}$. The first-order member is $W^{\mathrm{II}}$, while the second-order member used here reproduces every connected pair. Representing two interactions that cross the same bond requires a doubled-memory sector of dimension $\chi_H^2$, in addition to the scalar and single-memory sectors. The resulting virtual bond dimension is
+\begin{table}[!htb]
+  \centering
+  \footnotesize
+  \begin{tabular}{c|ccccccccc}
+    \hline
+    from $\backslash$ to & $(1,1)$      & $(1,2)$ & $(1,3)$      & $(2,1)$ & $(2,2)$ & $(2,3)$ & $(3,1)$      & $(3,2)$ & $(3,3)$      \\
+    \hline
+    $(1,1)$              & $\mathbb{1}$ & $C$     & $D$          & $C$     & $CC$    & $CD$    & $D$          & $DC$    & $DD$         \\
+    $(1,2)$              &              & $A$     & $B$          &         & $CA$    & $CB$    &              & $DA$    & $DB$         \\
+    $(1,3)$              &              &         & $\mathbb{1}$ &         &         & $C$     &              &         & $D$          \\
+    $(2,1)$              &              &         &              & $A$     & $AC$    & $AD$    & $B$          & $BC$    & $BD$         \\
+    $(2,2)$              &              &         &              &         & $AA$    & $AB$    &              & $BA$    & $BB$         \\
+    $(2,3)$              &              &         &              &         &         & $A$     &              &         & $B$          \\
+    $(3,1)$              &              &         &              &         &         &         & $\mathbb{1}$ & $C$     & $D$          \\
+    $(3,2)$              &              &         &              &         &         &         &              & $A$     & $B$          \\
+    $(3,3)$              &              &         &              &         &         &         &              &         & $\mathbb{1}$ \\
+    \hline
+  \end{tabular}
+  \caption{\textbf{Transitions of the $H^2$ pair machine.} Rows specify the current pair of levels and columns the next pair. The row and the column fix one move for each copy, and the entry is the product of the two corresponding blocks of Eq.~\eqref{eq:Wannni} applied at a single site, with the first copy written first. The blocks multiply as operators on the physical index and form a direct product on the memory indices. Empty entries denote forbidden transitions, while diagonal entries are the self-loops shown in Figure~\ref{fig:vd2fold}(b). Folding adds the $(1,3)$ and $(3,1)$ columns to the $(1,1)$ column with weight $\tau/2$, and the $(3,3)$ column with weight $\tau^2/2$, before the corresponding rows and columns are removed.}
+  \label{tab:vd2_transitions}
+\end{table}
+
+The overlapping interactions $\sigma^z_3\sigma^z_4$ and $\sigma^z_4\sigma^z_5$ provide a concrete example of the difference between the two machines. In the single-interaction machine of Figure~\ref{fig:vd2fold}(a), site $3$ applies $C$ to open the first term. At site $4$, the walk would then need to apply both $B$, which closes the first term, and $C$, which opens the second. No such transition exists because each site applies one move and the machine carries only one interaction. After returning to the first level, the earliest site at which the second term can open is site $5$. Products generated by successive completions are therefore disjoint, with one factor of $\tau$ for each completed term. The overlapping product is absent at order $\tau^2$, producing the leading error of $W^{\mathrm{I}}$ and $W^{\mathrm{II}}$.
+
+The pair machine in Figure~\ref{fig:vd2fold}(b) carries both interactions simultaneously. The corresponding walk uses $(1,1)\to(2,1)$ through $C$ at site $3$, followed by $(2,1)\to(3,2)$ through the composite entry $BC$ at site $4$. This transition closes the first interaction while opening the second at the shared site. The move $(3,2)\to(3,3)$ through $B$ at site $5$ then completes the pair. Folding $(3,3)$ back to the initial level supplies the factor $\tau^2/2$, while exchanging the two copies generates the opposite operator ordering with the same weight. Thus, disjoint products acquire one factor of $\tau$ per completion, whereas each overlapping pair receives the required second-order weight from a single fold.
+
+Retaining clusters of up to $n$ overlapping terms gives a one-step error of order $\delta t^{\,n+1}$. The first-order member is $W^{\mathrm{II}}$, while the second-order construction used here reproduces every connected pair. Representing two interactions that cross the same bond requires a doubled-memory sector of dimension $\chi_H^2$, in addition to the scalar and single-memory sectors. The resulting virtual bond dimension is
 \begin{equation}
   1+\chi_H+\chi_H^2.
   \label{eq:app:mpo:vd2_bond}
 \end{equation}
-For the \ac{ANNNI}-type model, this gives $13$, compared with $4$ for $W^{\mathrm{I}}$ and $W^{\mathrm{II}}$. At $p=0$, only the \ac{NN} interaction remains and $\chi_H=1$, giving bond dimensions $3$ and $2$, respectively.
+For the ANNNI-type model, this gives $13$, compared with $4$ for $W^{\mathrm{I}}$ and $W^{\mathrm{II}}$. At $p=0$, only the \ac{NN} interaction remains and $\chi_H=1$, giving bond dimensions $3$ and $2$, respectively.
 
-Before combining the blocks, we distribute the time step asymmetrically between the interaction endpoints. The initiating block carries $t_C=\sqrt{\delta t}$ and the terminating block carries $t_B=\tau/t_C$, so a completed interaction acquires one factor of $\tau$:
+Before combining the blocks, we distribute the time-step factor asymmetrically between the interaction endpoints. The initiating block carries $t_C=\sqrt{\delta t}$, while the terminating block carries $t_B=\tau/t_C$, so every completed interaction acquires one factor of $\tau$:
 \begin{equation}
   \tilde D = \tau D, \qquad \tilde C = t_C\, C, \qquad \tilde B = t_B\, B, \qquad \tilde A = A .
   \label{eq:app:mpo:scaling}
 \end{equation}
-This split is a rescaling of the virtual index. The two factors cancel when an interaction begins and ends within the chain, so physical matrix elements are unchanged. The rescaling instead balances the tensor entries at small $\delta t$, avoiding a representation in which one endpoint carries the complete time-step factor.
+This division amounts to a rescaling of the virtual index. The two endpoint factors combine to give the required factor $\tau$ for every completed interaction, leaving the physical matrix elements unchanged while keeping the tensor entries balanced at small $\delta t$.
 
-The local representation of $e^{\tau H}$ is written in terms of symmetrised products of the scaled blocks. We denote by $\{X_1\dots X_m\}$ the sum over their distinct orderings, with $\{XY\}=X\otimes Y+Y\otimes X$, $\{XX\}=X\otimes X$, and $\{XXY\}=XXY+XYX+YXX$. Here $\otimes$ denotes the Kronecker product on the virtual memory index and ordinary operator multiplication on the physical index. The numerical prefactors below are the factorial weights from the exponential series. The expressions follow the second-order cluster operator of Van Damme et al.~\cite{vandamme2024}, specialised to the blocks of Eq.~\eqref{eq:Wannni}.
+We express the local representation of $e^{\tau H}$ through symmetrised products of the scaled blocks. The notation $\{X_1\dots X_m\}$ denotes the sum over their distinct orderings; for example, $\{XY\}=X\otimes Y+Y\otimes X$, $\{XX\}=X\otimes X$, and $\{XXY\}=XXY+XYX+YXX$. Here $\otimes$ is the Kronecker product on the virtual memory index, combined with ordinary operator multiplication on the physical index. The numerical prefactors are the factorial weights of the exponential expansion. The expressions below specialise the second-order cluster operator of Van Damme et al.~\cite{vandamme2024} to the blocks in Eq.~\eqref{eq:Wannni}.
 
-The local tensor has a $3\times3$ block structure of its own, not to be confused with the grid of Figure~\ref{fig:vd2fold}(b). There the two indices were the levels of the two Hamiltonian copies, whereas here the indices $1$, $2$, and $3$ label the scalar, single-memory, and doubled-memory sectors that those levels reduce to once the equivalent ones are merged:
+The local tensor has a $3\times3$ block structure, distinct from the grid in Figure~\ref{fig:vd2fold}(b). In that grid, the two indices label the levels of the two Hamiltonian copies. Here the indices $1$, $2$, and $3$ label the scalar, single-memory, and doubled-memory sectors obtained after equivalent levels are merged:
 \begin{equation}
   W^{\textit{VD2}} =
   \begin{pmatrix}
@@ -543,16 +564,18 @@ with
   W_{32} = \tfrac12\{\tilde A\tilde B\} + \tfrac16\big(\{\tilde A\tilde B\tilde D\}+\{\tilde B\tilde B\tilde C\}\big),  \\
   W_{33} & = \{\tilde A\tilde A\} + \tfrac13\big(\{\tilde A\tilde B\tilde C\}+\{\tilde A\tilde A\tilde D\}\big).
 \end{align}
-The block $W_{11}$ contains the on-site evolution through third order in the Taylor expansion. The blocks $W_{12}$ and $W_{13}$ open the single- and doubled-memory sectors, while $W_{21}$ and $W_{31}$ close them. The remaining blocks propagate interactions across the bond and combine $\tilde A$ with the required symmetrised products. The doubled-memory sector permits two interactions to cross the same bond simultaneously and contains nine of the thirteen virtual states. It therefore represents the overlapping pairs generated by the \ac{NNN} coupling that are absent from $W^{\mathrm{II}}$.
+The first row and column open and close the memory sectors, while $W_{11}$ contains the on-site evolution through third order. Nine of the thirteen virtual states belong to the doubled-memory sector. This sector allows two interactions to cross the same bond simultaneously and therefore represents the overlapping pairs omitted by $W^{\mathrm{II}}$.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Comparing the two constructions in practice}
 \label{app:mpo:comparison}
 
-We first examine how well each construction preserves the norm under repeated application. We apply each operator to $\ket{X+}^{\otimes N}$ on a chain of $N=100$ sites at $p=0.1$, using $\delta t=0.05$ and truncating the state at $10^{-12}$ after every layer:
+We first assess numerical stability by measuring norm preservation under repeated application of each \ac{MPO}. We apply the operators to $\ket{X+}^{\otimes N}$ on a chain of $N=100$ sites at $p=0.1$, using $\delta t=0.05$ and a truncation cutoff of $10^{-12}$ after each layer. Table~\ref{tab:mpo_norm} reports the resulting norms.
 
-\begin{center}
+\begin{table}[!htbp]
+  \centering
   \begin{tabular}{lccc}
     \hline
                                        & $W^{\mathrm{I}}$ & $W^{\mathrm{II}}$ & \textit{VD2} \\
@@ -563,17 +586,20 @@ We first examine how well each construction preserves the norm under repeated ap
     $\lVert\psi\rVert$ after 16 layers & $307.3900$       & $10.8328$         & $0.99751$    \\
     \hline
   \end{tabular}
-\end{center}
+  \caption{\textbf{Norm drift under repeated application.} Norm of the evolved state $\ket{X+}^{\otimes 100}$ after the stated number of layers at $p=0.1$ and $\delta t=0.05$, using a truncation cutoff of $10^{-12}$ after each layer. Exact time evolution preserves the norm, so deviations from unity measure the error accumulated by the approximate operator.}
+  \label{tab:mpo_norm}
+\end{table}
 
-The norm error accumulates rapidly under the two first-order constructions. After sixteen layers, $W^{\mathrm{I}}$ increases the norm by more than two orders of magnitude and $W^{\mathrm{II}}$ by approximately one order of magnitude. By contrast, the \textit{VD2} norm remains within $2.5\times10^{-3}$ of unity. A calculation at $T=10$ contains approximately one hundred temporal layers, so the first-order operators are unsuitable at this step size.
+The two first-order constructions accumulate substantial norm errors. After sixteen layers, $W^{\mathrm{I}}$ increases the norm by more than two orders of magnitude, while $W^{\mathrm{II}}$ increases it by approximately one order of magnitude. By contrast, the \textit{VD2} result remains within $2.5\times10^{-3}$ of unity. An evolution to $T=10$ at $\delta t=0.05$ requires approximately two hundred layers, making the first-order constructions unsuitable at this time step.
 
-Norm drift compares the accumulated stability but does not determine the largest usable time step at a fixed accuracy. We therefore compare the state error at a fixed physical time. For $N=12$, the Hamiltonian can be diagonalised exactly. We evolve $\ket{X+}^{\otimes N}$ to $T=1$ using $T/\delta t$ layers and compare the result with the exact state at $p=0.1$:
+Norm preservation measures accumulated stability but does not determine the largest time step compatible with a given accuracy. We therefore evaluate the state error at fixed physical time. For $N=12$, the Hamiltonian can be diagonalised exactly. We evolve $\ket{X+}^{\otimes N}$ to $T=1$ using $T/\delta t$ layers in the Schr\"odinger picture and measure the distance from the exact state at $p=0.1$. This comparison isolates the evolution operator from the transverse-contraction procedure. Table~\ref{tab:mpo_order} reports the errors and effective convergence orders.
 
-\begin{center}
+\begin{table}[!htbp]
+  \centering
   \begin{tabular}{lcccccc}
     \hline
                & \multicolumn{2}{c}{$W^{\mathrm{I}}$} & \multicolumn{2}{c}{$W^{\mathrm{II}}$} & \multicolumn{2}{c}{\textit{VD2}}                                         \\
-    $\delta t$ & error                                & slope                                 & error                            & slope  & error               & slope  \\
+    $\delta t$ & error                                & order                                 & error                            & order  & error               & order  \\
     \hline
     $0.2$      & $2.01\times10^{1}$                   & --                                    & $2.54$                           & --     & $1.09\times10^{-1}$ & --     \\
     $0.1$      & $4.43$                               & $2.18$                                & $9.29\times10^{-1}$              & $1.45$ & $2.44\times10^{-2}$ & $2.16$ \\
@@ -583,39 +609,42 @@ Norm drift compares the accumulated stability but does not determine the largest
     $0.00625$  & $1.12\times10^{-1}$                  & $1.08$                                & $4.24\times10^{-2}$              & $1.03$ & $9.24\times10^{-5}$ & $2.00$ \\
     \hline
   \end{tabular}
-\end{center}
+  \caption{\textbf{Convergence towards the exact state.} Distance from the exactly evolved state of an $N=12$ chain at fixed physical time $T=1$ and $p=0.1$, as a function of the time step. The effective order is the base-two logarithm of the ratio between successive errors and approaches the asymptotic convergence order as $\delta t$ decreases.}
+  \label{tab:mpo_order}
+\end{table}
 
-The slope is the effective convergence order obtained from each error and the result at the preceding step size. Because the error contains higher-order terms, this estimate approaches the asymptotic order as $\delta t$ decreases. The \textit{VD2} slope is $2.04$ at $\delta t=0.05$ and remains $2.00$ at smaller steps. The corresponding slopes for $W^{\mathrm{I}}$ and $W^{\mathrm{II}}$ are $1.71$ and $1.24$ at $\delta t=0.05$, approaching $1.08$ and $1.03$ only at the smallest step. These results confirm second-order convergence for \textit{VD2} and first-order convergence for the other two constructions.
+A construction of order $q$ has a one-layer error of order $\delta t^{\,q+1}$. Reaching a fixed physical time $T$ requires $T/\delta t$ layers, so accumulation gives a total error of order $T\,\delta t^{\,q}$~\cite{paeckel2019}. Halving the time step should therefore reduce the error by $2^q$, and the base-two logarithm of the ratio between successive errors estimates $q$. Higher-order contributions affect this estimate at larger time steps, but their influence decreases with $\delta t$.
 
-At $p=0.5$, $W^{\mathrm{II}}$ approaches the asymptotic regime more slowly, with its measured slope decreasing from $1.85$ to $1.07$ over the sampled steps. The stronger interaction therefore requires a smaller $\delta t$ before the first-order term dominates. The \textit{VD2} slope remains close to $2.00$ throughout. At the next halved step, its error is $2.7\times10^{-5}$ and the measured slope decreases to $1.77$ because state truncation and the finite accuracy of the exact reference become comparable to the evolution error.
+For \textit{VD2}, the effective order is $2.04$ at $\delta t=0.05$ and remains $2.00$ at smaller steps. The orders of $W^{\mathrm{I}}$ and $W^{\mathrm{II}}$ instead decrease from $1.71$ and $1.24$ to $1.08$ and $1.03$, respectively. These results confirm second-order convergence for \textit{VD2} and first-order convergence for the other two constructions.
 
-The larger virtual bond of \textit{VD2} is compensated by the larger time step allowed at fixed accuracy. A first-order construction requires a smaller $\delta t$, which lengthens the temporal chain in inverse proportion and introduces an additional truncation at every new site. At $T=10$, the temporal chain contains $104$ sites for $\delta t=0.1$ and $204$ sites for $\delta t=0.05$. The production calculations therefore use \textit{VD2} with $\delta t=0.1$.
+The larger virtual bond dimension of \textit{VD2} is offset by the larger time step permitted at fixed accuracy. A first-order construction requires a smaller $\delta t$, increasing the temporal-chain length in inverse proportion and introducing an additional truncation at every new site. At fixed $\beta_0$ and $T=10$, the temporal chain contains $104$ sites for $\delta t=0.1$ and $208$ sites for $\delta t=0.05$. We therefore use \textit{VD2} with $\delta t=0.1$ in the production calculations.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 \FloatBarrier
-\section{Implementation details of the block power method}
+\section{The power-method solvers: implementation and reliability}
 \label{app:blockpm}
 
-Section~\ref{sec:blockpm} introduces the block power method, in which $k$ left and $k$ right temporal states are propagated through the transfer matrix and the eigenproblem is projected onto their span. This appendix gives the implementation of that procedure, the numerical controls used in production, and the tests performed to assess its reliability. The routine \texttt{block\_transfer\_eigs} is built on \texttt{ITransverse.jl}~\cite{carignano2025itransverse}; the source code, analysis notebooks, and cluster drivers are available in the thesis repository~\cite{marquezolguin2026code}.
+Section~\ref{sec:blockpm} introduces the block power method, which propagates $k$ left and $k$ right temporal states and projects the transfer-matrix eigenproblem onto their span. In the production calculations, we use this method to resolve the subleading eigenvalues required for the boundary operator content. The dominant pair and the temporal entropies are instead obtained with the less expensive single-vector iteration. This appendix describes the implementation of the block method, the numerical settings of both solvers, the validation of the implementation against exact diagonalisation, and the reliability analysis underlying the entropy data. The routine \texttt{block\_transfer\_eigs} is built on \texttt{ITransverse.jl}~\cite{carignano2025itransverse}. The source code and analysis notebooks are available in the thesis repository~\cite{marquezolguin2026code}.
 
 \subsection{The iteration as implemented}
 \label{app:blockpm:pairing}
 
 Each iteration updates the blocks $\{\ket{R_j}\}$ and $\{\bra{L_j}\}$ through four operations: application, projection, solution of the reduced problem, and separation of the resulting states.
 
-We first apply the transfer matrix to each right state and its transpose to each left state, requiring $2k$ operator--state products. Each application increases the temporal bond dimension, so the resulting state is immediately truncated to the bond cap used in that iteration. We then construct the overlap and projected-transfer matrices of Eq.~\eqref{eq:blockpm_pencil},
+We first apply the transfer matrix to each right state and its transpose to each left state, requiring $2k$ operator--state products. Each application increases the temporal bond dimension, so we immediately truncate the propagated state back to the bond cap of the iteration, using either of the two schemes of Section~\ref{sec:transverse:truncation}. We then construct the overlap and projected-transfer matrices of Eq.~\eqref{eq:blockpm_pencil},
 \begin{equation}
   S_{ij}=\braket{L_i}{R_j},
   \qquad
   M_{ij}=\bra{L_i}\mathcal{E}\ket{R_j}.
 \end{equation}
-Both use the same bilinear contraction without complex conjugation, since the left states are already represented as bras. Figure~\ref{fig:projection} shows the two contractions, and Algorithm~\ref{alg:blockpm} summarises one complete iteration.
+Both matrices use the same bilinear contraction without complex conjugation because the left states are already represented as bras. Figure~\ref{fig:projection} shows these contractions, and Algorithm~\ref{alg:blockpm} summarises one iteration.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.52\textwidth]{imgs/projection.pdf}%
-  \caption{\textbf{The two projected matrices.} Contractions defining the $k\times k$ matrices of Eq.~\eqref{eq:blockpm_pencil}. Each \ac{tMPS} forms a column, while $\mathcal{E}$ is the corresponding column of the space--time network closed at both ends by the product state (small open circles). The left chain enters directly as a bra, without complex conjugation.}
+  \includegraphics[width=0.40\textwidth]{imgs/projection.pdf}%
+  \caption{\textbf{Projected matrices.} Contractions defining the $k\times k$ matrices in Eq.~\eqref{eq:blockpm_pencil}. Each \ac{tMPS} forms a column, while $\mathcal{E}$ is the corresponding column of the space--time network closed at both ends by the product state (small open circles). The left state enters directly as a bra, without complex conjugation.}
   \label{fig:projection}
 \end{figure}
 
@@ -634,14 +663,14 @@ Both use the same bilinear contraction without complex conjugation, since the le
   \end{algorithmic}
 \end{algorithm}
 
-The reduced problem $Mv=\theta Sv$ becomes ill conditioned when the block states approach linear dependence. Direct inversion of $S$ would then amplify its smallest singular values, which are dominated by numerical noise. We instead form the Moore--Penrose pseudoinverse $S^{+}$, retaining only singular values larger than $10^{-12}$ times the largest one. The discarded directions are mapped to zero, giving
+The reduced problem $Mv=\theta Sv$ becomes ill-conditioned when the block states approach linear dependence. Direct inversion of $S$ would then amplify its smallest singular values, which are dominated by numerical noise. We instead form the Moore--Penrose pseudoinverse $S^{+}$ and retain only singular values larger than $10^{-12}$ times the largest. The discarded directions are mapped to zero, giving
 \begin{equation}
   W = S^{+}M, \qquad W\,v_j = \theta_j\,v_j .
   \label{eq:app:blockpm:W}
 \end{equation}
-The eigenvalues $\theta_j$ are the Ritz approximations to $\mu_0,\dots,\mu_{k-1}$ and are ordered by decreasing modulus. Writing the right coefficient vectors as the columns of $V$ and the Ritz values as the diagonal matrix $\Theta$ gives $W=V\Theta V^{-1}$.
+The eigenvalues $\theta_j$, ordered by decreasing modulus, approximate $\mu_0,\dots,\mu_{k-1}$. Writing the right coefficient vectors as the columns of $V$ and the Ritz values as the diagonal matrix $\Theta$ gives $W=V\Theta V^{-1}$.
 
-The left coefficients must be paired with the same Ritz values as the corresponding right coefficients. Solving a separate transposed problem would require matching two independently ordered spectra, which becomes ambiguous inside a near-degenerate cluster. We instead derive the left coefficients from the decomposition of $W$. For $u^{\mathsf T}M=\theta u^{\mathsf T}S$, define $y^{\mathsf T}=u^{\mathsf T}S$. On the retained subspace, $S^{+}S=\mathbb{1}$, and hence
+The left and right coefficients must correspond to the same Ritz values. Solving a separate transposed problem would produce two independently ordered spectra, whose matching becomes ambiguous within a near-degenerate cluster. We therefore derive the left coefficients from the decomposition of $W$. After discarding the smallest singular values, $S^{+}S$ and $SS^{+}$ act as the identity on the retained right and left subspaces, respectively. For $u^{\mathsf T}M=\theta u^{\mathsf T}S$, define $y^{\mathsf T}=u^{\mathsf T}S$. Since $u^{\mathsf T}SS^{+}=u^{\mathsf T}$,
 \begin{equation}
   u^{\mathsf T}M
   =y^{\mathsf T}S^{+}M
@@ -652,77 +681,39 @@ Thus $y^{\mathsf T}$ is a left eigenvector of $W$. Since the left eigenvectors a
   u_j = \big(S^{+}\big)^{\mathsf T}\big(V^{-1}\big)^{\mathsf T} e_j ,
   \label{eq:app:blockpm:left}
 \end{equation}
-where $e_j$ is the $j$-th unit vector. The common index $j$ fixes the left--right pairing directly. It also gives biorthogonality in the $S$ metric, $u_i^{\mathsf T}Sv_j=\delta_{ij}$.
+where $e_j$ is the $j$-th unit vector. The common index $j$ fixes the left--right pairing and gives biorthogonality in the $S$ metric, $u_i^{\mathsf T}Sv_j=\delta_{ij}$.
 
-The final operation reconstructs the states from these coefficients. Each right state is formed as $\sum_j(v_i)_j\ket{AR_j}$ from the propagated block, with the analogous construction on the left. We sum the tensors exactly and compress the result afterwards. Density-matrix addition of the \acp{MPS} is cheaper but becomes unstable when the states are nearly parallel, precisely where separation is most difficult. Each reconstructed state is renormalised. If its norm underflows or overflows, the state is replaced by a new random vector so that the lost direction is not propagated as numerical noise.
+Finally, we reconstruct the states from these coefficients,
+\begin{equation}
+  \ket{R_j} \;\gets\; \operatorname{truncate}_\chi\Big(\sum_i V_{ij}\,\ket{\tilde R_i}\Big),
+  \qquad
+  \bra{L_j} \;\gets\; \operatorname{truncate}_\chi\Big(\sum_i U_{ij}\,\bra{\tilde L_i}\Big),
+  \label{eq:app:blockpm:recon}
+\end{equation}
+where $\ket{\tilde R_i}$ and $\bra{\tilde L_i}$ are the propagated block states. We sum the tensors exactly and compress the result afterwards. Density-matrix addition of the \acp{MPS} is less expensive but becomes unstable when the states are nearly parallel, which is also where eigenvector separation is most difficult. Each reconstructed state is renormalised. If its norm underflows or overflows, we replace it with a new random vector rather than propagate the lost direction as numerical noise.
 
 \subsection{The eigenvalue-only mode}
 \label{app:blockpm:schur}
 
-Separating the invariant subspace into individual eigenvectors is the least stable part of the iteration. As two eigenvalues approach, the coefficient matrix $V$ becomes ill conditioned and amplifies the truncation noise in the reconstructed states. The Ritz values are less sensitive because they depend on the projected operator over the complete subspace rather than on a particular basis within it.
+Separating the invariant subspace into individual eigenvectors is the least stable part of the iteration. As two eigenvalues approach, the coefficient matrix $V$ becomes ill-conditioned and amplifies truncation noise in the reconstructed states. The Ritz values are less sensitive because they depend on the projected operator over the complete subspace rather than on a particular basis within it.
 
-When only the spectrum is required, we therefore propagate orthonormal bases instead of separated eigenvectors. After ordering the Ritz values by modulus, the coefficient matrices are replaced by the orthonormal factors from their QR decompositions,
+All spectra obtained with the block method therefore use a mode that avoids this separation. We propagate orthonormal bases of the same invariant subspaces rather than individual eigenvectors, which is sufficient to determine the Ritz values and their phase gaps. The two modes share all preceding operations and differ only in the basis update, so their comparison isolates the effect of eigenvector separation. We choose the eigenvalue-only mode for stability rather than speed: for identical seeds at $p=0.1$, the runtimes of the two modes agree within a few per cent. After ordering the Ritz values by modulus, we replace the coefficient matrices by the orthonormal factors from their QR decompositions,
 \begin{equation}
   V \to Q_V, \qquad U \to Q_U, \qquad Q^{\dagger}Q = \mathbb{1}.
   \label{eq:app:blockpm:qr}
 \end{equation}
 The first $j$ columns of each $Q$ span the same subspace as the corresponding first $j$ coefficient vectors. The ordering of the leading subspaces is therefore retained without assigning an individual eigenvector to each block member.
 
-This basis change leaves the Ritz values invariant. Under invertible recombinations
+This basis change leaves the Ritz values invariant. Consider invertible basis transformations $\ket{R_j}\to\sum_i G_{ij}\ket{R_i}$ and $\bra{L_i}\to\sum_m H_{mi}\bra{L_m}$. They transform the projected matrices as
 \begin{equation}
-  \ket{R_j}\to\sum_iB_{ij}\ket{R_i},
+  S \;\to\; H^{\mathsf T} S G,
   \qquad
-  \bra{L_j}\to\sum_iC_{ij}\bra{L_i},
+  M \;\to\; H^{\mathsf T} M G .
+  \label{eq:app:blockpm:congruence}
 \end{equation}
-the projected matrices transform as $S\to C^{\mathsf T}SB$ and $M\to C^{\mathsf T}MB$. The reduced problem becomes
-\begin{equation}
-  C^{\mathsf T}MB\,\tilde v
-  =\theta\,C^{\mathsf T}SB\,\tilde v,
-  \qquad
-  \tilde v=B^{-1}v,
-\end{equation}
-and therefore has the same $\theta$. The QR rotation changes only the basis within the subspace. Its benefit is numerical: $Q_V$ and $Q_U$ are unitary, so the states passed to the next truncation are not amplified by the ill-conditioned eigenvector transformation.
+Because both matrices acquire the same factors, the generalised eigenproblem retains the same Ritz values. Moreover, $Q_V$ and $Q_U$ are unitary, so the states passed to the next truncation are not amplified by an ill-conditioned eigenvector transformation.
 
-We compared both modes at $p=0.1$ using the same initial random states and otherwise identical settings. Over $T=2$--$8$, the relative difference in the leading modulus ranges from $6\times10^{-7}$ to $2\times10^{-5}$, while the ratio of the first subleading modulus to the leading one agrees within $10^{-8}$--$10^{-4}$. The less-converged members further down the block differ by $10^{-4}$--$10^{-2}$. The two production arms at the same coupling, which also differ in other settings, show comparable ranges. The leading eigenvalue used to extract the central charge is therefore insensitive to the basis choice within the tested window, whereas the lower block members are not.
-
-Both modes include safeguards against loss of rank. Every reconstructed state is renormalised, and a state with an underflowed or overflowed norm is replaced by a random vector. We also monitor the condition number of $S$. When it exceeds $10^{10}$, the final block member is replaced by a random state made biorthogonal to the retained members using the bilinear form of Eq.~\eqref{eq:blockpm_pencil}. This restores an independent direction without modifying the converged part of the block.
-
-Convergence is assessed from the two leading Ritz values. Before measuring their change, each value is matched to its nearest predecessor in the complex plane rather than compared at the same position in a list sorted by modulus. This matching is required because the leading moduli approach one another under emergent dual unitarity. At $p=0$ and $T=20$, the three largest moduli differ by only three parts in a thousand, while their phases remain distinct. Truncation noise can therefore exchange their order between iterations even when the individual Ritz values have stabilised. Position-by-position comparison would interpret such an exchange as a failure to converge. The iteration stops when the matched change falls below $10^{-6}$ or after $150$ iterations without further improvement.
-
-\subsection{Validation against exact diagonalisation}
-\label{app:blockpm:validation}
-
-The block method introduces two approximations: only $k$ directions of the transfer matrix are retained, and every propagated state is truncated to finite bond dimension. Since neither approximation provides an accessible error bound, we validate the implementation against dense diagonalisation at short evolution times.
-
-At short evolution times, the rotated transfer matrix is small enough to construct as a dense array and diagonalise exactly. This calculation involves neither state truncation nor subspace projection and gives the exact spectrum of the operator supplied to the block method.
-
-Table~\ref{tab:blockpm_validation} compares the two leading eigenvalues in three cases. The first uses the production construction at $p=0.1$. The second uses a reduced three-site operator built from the first-order \ac{MPO} of Section~\ref{sec:mporep}; its temporal sites have dimension three, and the block does not reach its bond cap, isolating the reduced solver from truncation effects. The third is the critical Ising chain, whose transfer matrix is independently known. The largest discrepancy in either modulus is $3.6\times10^{-7}$ and occurs for the largest operator, consistent with truncation rather than the reduced eigensolver setting the accuracy.
-
-This comparison validates the complete short-time pipeline: construction of the evolution operator, extraction of the rotated column, projection onto the block, and solution of the reduced problem. It does not test the late-time regime, where the leading eigenvalues become nearly degenerate, because the dense matrix grows exponentially with evolution time.
-
-\begin{table}[htbp]
-  \centering
-  \begin{tabular}{lccc}
-    \hline
-    operator                                   & dimension & exact $|\mu_0|,\,|\mu_1|$ & error               \\
-    \hline
-    ANNNI-type, $p=0.1$                        & $2197$    & $0.9405,\;0.9082$         & $3.6\times10^{-7}$  \\
-    ANNNI-type, $p=0.1$, reduced test operator & $27$      & $0.9758,\;0.3292$         & $4.6\times10^{-13}$ \\
-    critical Ising                             & $256$     & $1.5488,\;0.0611$         & $4.2\times10^{-10}$ \\
-    \hline
-  \end{tabular}
-  \caption{\textbf{Validation against exact diagonalisation.} Comparison between the block method and dense diagonalisation of the same rotated transfer operator at short evolution times. The reported error is the largest absolute deviation in the moduli of the two leading Ritz values.}
-  \label{tab:blockpm_validation}
-\end{table}
-
-\subsection{Computational cost}
-\label{app:blockpm:cost}
-
-The computational cost of one iteration has three contributions. Applying the transfer matrix requires $2k$ operator--state products, each of which multiplies the temporal bond dimension by the physical dimension of the column before truncation. Constructing $S$ and $M$ requires $k^2$ scalar contractions. The reduced $k\times k$ eigenproblem is negligible at the block sizes used here. Reconstructing the left and right blocks requires $2k$ linear combinations of $k$ states. This last operation dominates the peak memory and runtime because an exact sum temporarily carries the combined bond dimensions of its terms before compression. The single-vector iteration of Section~\ref{sec:svpm} forms no such combination, which is the main reason it is the cheaper route to the dominant pair, and why we use it wherever the eigenvectors themselves are needed.
-
-We limit this temporary growth by truncating partial sums to the production bond dimension, leaving only the final addition exact. In the parameter range studied, the temporal bond dimensions remain below this cap, and calculations with and without the safeguard give the same leading eigenvalue and runtime. Its role is therefore protective rather than performance-critical.
-
-A separate stopping rule limits iterations that no longer improve the Ritz values. With \ac{RTM} truncation, the change in the leading eigenvalues can reach a noise floor above the formal tolerance. Without this rule, the iteration would continue after the values had stabilised. We therefore stop after $150$ iterations without further improvement.
+We compare the two modes using identical random initial states at $p=0.1$ over $T=2$--$8$. Their leading moduli and first gaps agree. Visible differences occur only among the final members of the block, whose Ritz values are furthest from the dominant value and converge most slowly. We do not use these levels as precision estimates.
 
 \subsection{Numerical parameters and controls}
 \label{app:library:build}
@@ -730,90 +721,114 @@ A separate stopping rule limits iterations that no longer improve the Ritz value
 \label{app:library:adaptive}
 \label{app:selector}
 
-The following settings affect the numerical path and attainable accuracy but not the target fixed point. Unless stated otherwise, the tests use the production parameters of Section~\ref{sec:results}.
+The following settings affect the numerical trajectory and attainable accuracy, but not the target fixed point. Unless stated otherwise, the tests use the production parameters of Section~\ref{sec:results}.
 
-\paragraph{Temporal bond dimension $\chi$.} The two iterations depend on the cap differently. In the block iteration, the temporal states stay well below even the smallest cap tested, so increasing it from $32$ to $64$ and $128$ at a fixed random start leaves the iteration count, stopping condition, eigenvalues, and entropy unchanged: the singular-value cutoff, not $\chi$, controls that truncation. The converged blocks are indeed small: at the far ends of the production windows the four-state blocks reach $\chi=15$ at $p=0$, $T=14$ and $\chi=12$ at $p=0.1$, $T=9$, while the eight-state tower blocks are the largest, at $\chi=33$ against their cap of $48$. The single-vector states do reach the production cap, although only through the intermediate states of the iteration: at $p=0.1$, $T=9$ these touch $\chi=64$ while the converged pair ends at $\chi=12$. Doubling $\chi$ from $64$ to $128$ moves the plateau---the constant value reached by the imaginary part of the temporal entropy in the middle of the strip---by a small fraction of the Ising central charge, while the real-part slope moves by several times more. This difference supports using the plateau as the entropy estimator.
+\textit{Temporal bond dimension.} The converged temporal states have modest bond dimensions. At the ends of the production windows, the four-state blocks reach $\chi=15$ at $p=0$, $T=14$ and $\chi=12$ at $p=0.1$, $T=9$. The larger eight-state tower blocks reach $\chi=33$, below the cap of $48$ used for those runs. We nevertheless impose a cap to prevent transient growth from exhausting the available memory. At $p=0.1$ and $T=9$, for example, intermediate single-vector states reach the production cap of $64$, while the converged pair has $\chi=12$. Repeating these runs with a cap of $128$ from the same initial states gives the same converged pair. The cap therefore affects the numerical trajectory but not the fixed point in the tested regime.
 
-\paragraph{Singular-value cutoff.} The block iteration truncates at $10^{-8}$ over its first forty iterations and at $10^{-10}$ thereafter, while the single-vector runs use $10^{-12}$ throughout. We compare cutoffs of $10^{-8}$, $10^{-10}$, and $10^{-12}$ across independent initial states. The eigenvalues agree to the precision reported in this thesis. The cutoff primarily changes the stopping condition: at the looser block values, the leading-eigenvalue change often reaches a floor above the tolerance, whereas tighter cutoffs more frequently satisfy it. The random initialisation also affects which outcome occurs. Within the tested range, the cutoff changes the convergence path but not the reported values.
+\textit{Singular-value cutoff.} The block iteration uses a cutoff of $10^{-8}$ for its first forty iterations and $10^{-10}$ thereafter, while the single-vector runs use $10^{-12}$ throughout. Comparisons across cutoffs of $10^{-8}$, $10^{-10}$, and $10^{-12}$ give consistent eigenvalues for independent initial states. The cutoff therefore affects the stopping condition more strongly than the result. A looser cutoff keeps the states smaller and reduces the cost per iteration, but raises the truncation noise floor and causes more runs to end through the no-improvement rule. A tighter cutoff retains more singular values and is more expensive, but reaches the formal tolerance more often.
 
-\paragraph{Truncation scheme.} The \ac{RTM} and \ac{RDM} schemes of Section~\ref{sec:transverse:truncation} reproduce the same entropy plateau and leading eigenvalue wherever both were tested. The \ac{RDM} scheme reaches the convergence tolerance at every tested time, whereas the \ac{RTM} scheme can stop improving above it. The \ac{RDM} calculations are approximately an order of magnitude more expensive, so we use \ac{RTM} in production and retain \ac{RDM} as a control.
+\textit{Stopping rule.} We assess convergence from the two leading Ritz values, matching each to its nearest predecessor in the complex plane. Under emergent dual unitarity, the leading moduli approach one another. At $p=0$ and $T=20$, the three largest moduli barely differ, so truncation noise can change their ordering even after the individual values have stabilised. The iteration stops when the matched change falls below $10^{-6}$ or when no further improvement occurs within $150$ iterations. With \ac{RTM} truncation, the change can reach a noise floor above the formal tolerance; the second condition terminates these runs.
 
-\paragraph{Block size $k$.} The required block size is determined by the number of states rather than the number of distinct scaling dimensions, since conformal descendants produce degeneracies within a tower. The fixed-boundary Ising tower begins $2,3,4,4,5,5,\dots$ (Appendix~\ref{app:x1}). A four-state block cuts through the degenerate pair at $4$: independent sequences then agree on the leading eigenvalue but disagree on the first gap at approximately half of the evolution times. With $k=8$, the retained block ends in a genuine spectral gap and this disagreement disappears. We therefore use $k=8$ for the boundary-spectrum and production-tower calculations, while the leading-eigenvalue sequences of Table~\ref{tab:cp}, which need only $\mu_0$, use $k=4$. The implementation can enlarge a block in stages if a near-degenerate cluster occupies the retained subspace, although this fallback was not required for the reported data.
+\textit{Block size.} The required block size is determined by the number of states rather than by the number of distinct scaling dimensions because conformal descendants produce degeneracies within a tower. The fixed-boundary Ising tower begins $2,3,4,4,5,5,\dots$ (Appendix~\ref{app:x1}). A four-state block cuts through the degenerate pair at $4$. Independent sequences then disagree on the first gap at approximately half of the evolution times, despite agreeing on the leading eigenvalue. With $k=8$, the retained subspace ends at a genuine spectral gap and this disagreement disappears. We therefore use $k=8$ for the boundary-spectrum calculations and $k=4$ for the leading-eigenvalue sequences in Table~\ref{tab:cp}.
 
-\paragraph{Warm and cold starts.} Each evolution time can be initialised from random states or from the converged block at the preceding time, re-indexed onto the longer temporal lattice. Both procedures give the same values at matched times. Warm starting did not reduce the iteration count in a test with unit time increments. Production sequences use half-unit increments, for which the preceding block provides a closer initial subspace.
+\textit{Trotter step.} The second-order evolution operator keeps the discretisation error small at the production value $\delta t=0.1$. Halving the time step while doubling $N_\beta$, and hence keeping $\beta_0$ fixed, leaves the entropy plateau unchanged within the reliable window. It also does not change the physical time at which runs begin to be rejected. The smaller step doubles the temporal-chain length at fixed physical time, increasing both the computational cost and the number of truncations in each sweep.
 
-\paragraph{Random initialisation and repetition.} Independent random starts of the single-vector iteration can converge to different eigenvectors at long evolution times. Entropy calculations are therefore repeated until independent runs agree, as discussed in Section~\ref{app:failures}. The leading eigenvalues are substantially less sensitive to this effect.
-\paragraph{Selection of the physical branch.} At each time we take the eigenvalue of largest modulus, using continuity with the preceding accepted point only to resolve differences below $1\%$, as in Section~\ref{sec:reach}. Largest modulus is not always the right choice, because the transfer matrix is not normal: values computed from an incompletely converged subspace can lie outside the spectrum altogether, and a larger block contains more of them. Continuity is what detects this. If the selected modulus jumps away from the previous accepted value, we take that as a sign that the largest candidate is not physical, and reselect from the stored spectrum among the candidates lying within a few per cent of the previous value. In the eight-state boundary sequences of Appendix~\ref{app:x1} this happened at three times, and in each of them the physical eigenvalue was the next candidate down. Where an independent repetition exists for comparison, the reselected point agrees with it to within the reproducibility of the method.
+\textit{Cost.} Two operations dominate each block iteration: the $2k$ operator--state products required to apply the transfer matrix and the $2k$ linear combinations of $k$ states used to rebuild the blocks. Before compression, each combination carries the sum of the bond dimensions of its terms. The single-vector iteration avoids these combinations and is therefore substantially less expensive. We use it for the dominant pair and all temporal entropies. In production, each block is warm-started from the converged result at the preceding half-unit time increment.
 
-\paragraph{Cooling regulator $\beta_0$.} The imaginary-time intervals at the ends of the temporal chain add $N_\beta$ sites and regularise the initial state. Changing $\beta_0$ rescales the leading eigenvalue through a non-universal normalisation, which cancels in phase differences. It also produces a substantial shift in the entropy plateau through $\epsilon_2=2\beta_0/T$. Dividing by the leading correction reduces the variation across the eight tested values of $N_\beta$ by a factor of four to six, and the remaining difference decreases with $T$, as expected for an effect of order $\beta_0/T$. We therefore keep $\beta_0$ fixed within each sequence.
+\subsection{Validation against exact diagonalisation}
+\label{app:blockpm:validation}
 
-\paragraph{Trotter step $\delta t$.} Halving $\delta t$ while doubling $N_\beta$ keeps $\beta_0$ fixed and leaves the entropy plateau unchanged within the reliable window. The point at which runs start to fail also remains at the same physical time. The accessible range is therefore not limited by the time discretisation at the tested steps.
-\paragraph{Part of the eigensystem.} Entropy calculations require separated left and right eigenvectors, whereas the spectral measurements require only an orthonormal basis for the leading invariant subspace. This difference, described in Section~\ref{app:blockpm:schur}, determines the distinct time ranges of the two routes in Section~\ref{sec:results}. The routine exposes this as a setting rather than as two separate codes: with it enabled, the iteration skips the separation into individual eigenvectors and the biorthogonal normalisation that only the entropy needs, and propagates orthonormal bases instead. Everything upstream is identical, which is what makes the comparison between the two modes a test of the basis alone.
+The block method introduces two approximations: it retains only $k$ directions of the transfer matrix, and it truncates every propagated state to finite bond dimension. Neither approximation provides a directly accessible error bound. We therefore validate the implementation at short evolution times, where the rotated transfer matrix can be constructed as a dense array and diagonalised without state truncation or subspace projection.
 
+Table~\ref{tab:blockpm_validation} compares the two leading eigenvalues in three cases with the same numerical settings but different couplings and numbers of temporal sites. Without cooling sites, each temporal site represents one Trotter step. At $\delta t=0.5$, three sites therefore correspond to $T=1.5$, while four sites correspond to $T=2$. The local physical dimension equals the bond dimension of the evolution \ac{MPO}: $13$ at $p=0.1$ and $3$ at $p=0$. A dense transfer operator on $n$ temporal sites consequently has dimension $d^n$. This exponential growth restricts the validation to short times.
+
+The cases differ mainly in their stopping condition. The $27$-dimensional calculation reaches the required tolerance, and its two leading moduli agree with the dense result to $2.5\times10^{-12}$, showing that the reduced eigenproblem introduces no measurable error. The two larger calculations reach the noise floor described in Section~\ref{app:library:build} and terminate through the no-improvement rule. Their leading moduli agree with the dense results to within $10^{-7}$ for dimensions $81$ and $2197$. The attainable accuracy is therefore controlled by convergence of the iteration rather than by the projection onto the block.
+
+This comparison validates the complete short-time pipeline: construction of the evolution operator, extraction of the rotated column, projection onto the block, and solution of the reduced problem. It does not validate the late-time regime, where the leading eigenvalues become nearly degenerate and the dense matrix is no longer computationally accessible.
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{lcccc}
+    \hline
+    operator                    & dim.\  & exact $|\mu_0|,\,|\mu_1|$ & error               & stopped on     \\
+    \hline
+    critical Ising, $T=1.5$     & $27$   & $0.9048,\;0.8373$         & $2.5\times10^{-12}$ & tolerance      \\
+    critical Ising, $T=2$       & $81$   & $0.9129,\;0.8702$         & $2.3\times10^{-7}$  & no improvement \\
+    ANNNI-type $p=0.1$, $T=1.5$ & $2197$ & $0.9405,\;0.9082$         & $1.2\times10^{-7}$  & no improvement \\
+    \hline
+  \end{tabular}
+  \caption{\textbf{Validation against exact diagonalisation.} Comparison of the block method with dense diagonalisation of the same rotated transfer operator at $\delta t=0.5$, without cooling sites. The error is the largest absolute deviation in the moduli of the two leading Ritz values. None of the three cases reaches the bond cap. The final column records the stopping condition for each run.}
+  \label{tab:blockpm_validation}
+\end{table}
 \subsection{The limits of the entropy route}
 \label{app:conditioning}
 \label{app:failures}
-The entropy and spectral routes require different information from the transfer matrix. The spectral analysis uses the Ritz values of the leading invariant subspace. The entropy requires the corresponding individual left and right eigenvectors. Eigenvalues obtained by subspace projection are second-order accurate in the error of the spanning vectors, whereas resolving individual eigenvectors becomes sensitive to the separation between neighbouring eigenvalues~\cite{wilkinson1965}. Emergent dual unitarity reduces these separations as the evolution time grows, so the entropy calculation loses reliability earlier.
+The entropy and spectral routes require different information from the transfer matrix. The spectral analysis uses the Ritz values of the leading invariant subspace, whereas the entropy requires the corresponding individual left and right eigenvectors. Eigenvalues obtained by subspace projection are second-order accurate in the error of the spanning vectors. Individual eigenvectors, however, become increasingly sensitive to the separation between neighbouring eigenvalues~\cite{wilkinson1965}. Emergent dual unitarity reduces these separations as the evolution time grows, causing the entropy calculation to lose reliability earlier.
 
-We quantify this loss through independent random initialisations of the single-vector iteration, which produces every ensemble reported in this appendix. At each accessible time we perform up to twenty runs, using the production settings of Section~\ref{app:library:build}; the ensembles are smaller at the longest times, where a single run is expensive. A run is classified as failed when its imaginary plateau lies outside a physically admissible band around $\pi c/16$. The band enters only here, as a way of counting failures. It plays no part in deciding which times enter the fits of Table~\ref{tab:cp}, which is settled by the criteria of Section~\ref{app:errors}. Table~\ref{tab:failrate} reports both a loose and a tight band to show the sensitivity to this criterion. The tight band lies inside the loose one and can only reject more runs, so what carries information is by how much. Inside the quoted windows the two counts differ by at most a few runs, and only near the upper margin. Beyond them they diverge: at $p=0.5$ and $T=7$ the loose band rejects two runs of ten while the tight band rejects all ten.
+We quantify this loss using independent random initialisations of the single-vector iteration. At each accessible time, we perform up to twenty runs with the production settings above; the ensembles are smaller at the longest times because each run is considerably more expensive. For the present analysis, a run is rejected when its imaginary plateau falls outside the band $(0.05,0.20)$ around $\pi c/16=0.098$. This band is used only to count rejections and does not determine which times enter the fits in Table~\ref{tab:cp}; those are selected by the criteria described in Section~\ref{app:errors}. Table~\ref{tab:failrate} reports the rejection counts, the median plateau of the surviving runs, and their span, defined as the ratio of the largest surviving plateau to the smallest.
 
-Two different failure modes lie behind that divergence. In the first the ensemble scatters, as at $p=0.3$ for $T\ge11$, where the returned plateaux differ in sign and the few admissible values are not a measurement. In the second the ensemble converges on a value that is not the physical plateau: at $p=0.5$ and $T=7$ six of the ten runs agree with one another to within three per cent, at close to half of $\pi c/16$, and $T=8$ returns the same value. The second mode is the more dangerous, since agreement between independent seeds is otherwise the signal that a rung has converged. What distinguishes it is continuity along the sequence, the surviving plateau falling from $0.131$ at $T=5$ to $0.053$ at $T=7$.
-
-Failures occur at the level of individual runs. At a given time, failed runs return unphysical plateaux while the surviving runs remain consistent with neighbouring times. The failure probability grows with $T$ at every coupling, and the first failure moves from $T=18$ at $p=0$ to $T=11$, $T=7$ and $T=3.5$ as $p$ increases. The single exception is the loose-band count at $p=0.5$, which falls between $T=6$ and $T=7$ because the ensemble there agrees on a value the loose band admits; the tight-band count follows the trend. The spread of the surviving runs widens well before the ensemble is lost: at $p=0.3$ the surviving plateaux span less than a tenth at $T=7$ and a factor of three one rung later. Once failures begin, an ensemble is therefore needed both to reject failed runs and to estimate the spread of the remaining values.
-
-The same ensembles measure the difference between the two routes directly. At $p=0.1$ and $T=13$, where no run fails, the largest and smallest leading eigenvalues in the ensemble differ by less than one part in a thousand, while the plateaux differ by forty per cent of their median. At $p=0.3$ and $T=9$, where more than half the ensemble fails, the eigenvalues still differ by five per cent against seventy per cent for the plateaux. Across the rungs tested the separation is between one and three orders of magnitude, which is why the spectral route reaches times at which the entropy route has already been lost, and why the two routes stop at different times in Table~\ref{tab:cp}.
-
-\begin{table}[!htbp]
+\begin{table}[!htb]
   \centering
-  \begin{tabular}{lccccc}
+  \begin{tabular}{lcccc}
     \hline
-    $p$   & $T$       & failed (loose) & failed (tight) & plateau of surviving runs & span         \\
+    $p$   & $T$       & rejected & plateau of surviving runs & span         \\
     \hline
-    $0$   & $8$--$17$ & $0/20$         & $0/20$         & $0.1252$--$0.1137$        & $1.0$--$1.1$ \\
-    $0$   & $18$      & $1/20$         & $1/20$         & $0.1144$                  & $1.2$        \\
-    $0$   & $20$      & $0/20$         & $1/20$         & $0.1146$                  & $1.8$        \\
-    $0$   & $22$      & $2/20$         & $2/20$         & $0.1080$                  & $1.7$        \\
-    $0$   & $24$      & $4/20$         & $6/20$         & $0.1205$                  & $2.3$        \\
-    $0.1$ & $4$--$10$ & $0/10$         & $0/10$         & $0.1322$--$0.1204$        & $1.0$--$1.2$ \\
-    $0.1$ & $11$      & $2/10$         & $2/10$         & $0.1199$                  & $1.2$        \\
-    $0.1$ & $12$      & $0/10$         & $2/10$         & $0.1172$                  & $1.7$        \\
-    $0.1$ & $13$      & $0/10$         & $0/10$         & $0.1158$                  & $1.5$        \\
-    $0.1$ & $14$      & $1/6$          & $2/6$          & $0.1063$                  & $2.1$        \\
-    $0.1$ & $15$      & $0/6$          & $3/6$          & $0.1485$                  & $2.4$        \\
-    $0.1$ & $16$      & $1/6$          & $4/6$          & $0.1337$                  & $2.4$        \\
-    $0.1$ & $17$      & $0/4$          & $2/4$          & $0.0699$                  & $1.4$        \\
-    $0.3$ & $2$--$6$  & $0/10$         & $0/10$         & $0.1422$--$0.1264$        & $1.0$        \\
-    $0.3$ & $7$       & $2/10$         & $2/10$         & $0.1270$                  & $1.1$        \\
-    $0.3$ & $8$       & $6/20$         & $9/20$         & $0.1212$                  & $3.4$        \\
-    $0.3$ & $9$       & $11/20$        & $12/20$        & $0.1183$                  & $2.3$        \\
-    $0.3$ & $10$      & $6/10$         & $7/10$         & $0.1007$                  & $2.5$        \\
-    $0.3$ & $11$      & $8/10$         & $8/10$         & $0.1137$                  & $1.2$        \\
-    $0.3$ & $12$      & $8/10$         & $9/10$         & $0.1569$                  & $1.7$        \\
-    $0.5$ & $2$--$3$  & $0/10$         & $0/10$         & $0.1449$--$0.1354$        & $1.0$        \\
-    $0.5$ & $3.5$     & $2/10$         & $2/10$         & $0.1352$                  & $1.0$        \\
-    $0.5$ & $4$       & $3/10$         & $3/10$         & $0.1351$                  & $1.1$        \\
-    $0.5$ & $4.5$     & $6/10$         & $6/10$         & $0.1341$                  & $1.0$        \\
-    $0.5$ & $5$       & $7/10$         & $7/10$         & $0.1310$                  & $1.1$        \\
-    $0.5$ & $6$       & $10/10$        & $10/10$        & --                        & --           \\
-    $0.5$ & $7$       & $2/10$         & $10/10$        & $0.0530$                  & $3.0$        \\
-    $0.5$ & $8$       & $1/8$          & $7/8$          & $0.0557$                  & $2.4$        \\
+    $0$   & $2$--$7$  & $0/20$   & $0.1284$--$0.1274$        & $1.0$        \\
+    $0$   & $8$--$17$ & $0/20$   & $0.1252$--$0.1137$        & $1.0$--$1.1$ \\
+    $0$   & $18$      & $1/20$   & $0.1144$                  & $1.2$        \\
+    $0$   & $20$      & $0/20$   & $0.1146$                  & $1.8$        \\
+    $0$   & $22$      & $2/20$   & $0.1080$                  & $1.7$        \\
+    $0.1$ & $4$--$10$ & $0/10$   & $0.1322$--$0.1204$        & $1.0$--$1.2$ \\
+    $0.1$ & $11$      & $2/10$   & $0.1199$                  & $1.2$        \\
+    $0.1$ & $12$      & $0/10$   & $0.1172$                  & $1.7$        \\
+    $0.1$ & $13$      & $0/10$   & $0.1158$                  & $1.5$        \\
+    $0.1$ & $14$      & $1/6$    & $0.1063$                  & $2.1$        \\
+    $0.1$ & $15$      & $0/6$    & $0.1485$                  & $2.4$        \\
+    $0.1$ & $16$      & $1/6$    & $0.1337$                  & $2.4$        \\
+    $0.1$ & $17$      & $0/4$    & $0.0699$                  & $1.4$        \\
+    $0.3$ & $2$--$6$  & $0/10$   & $0.1422$--$0.1264$        & $1.0$        \\
+    $0.3$ & $7$       & $2/10$   & $0.1270$                  & $1.1$        \\
+    $0.3$ & $8$       & $6/20$   & $0.1212$                  & $3.4$        \\
+    $0.3$ & $9$       & $11/20$  & $0.1183$                  & $2.3$        \\
+    $0.3$ & $10$      & $6/10$   & $0.1007$                  & $2.5$        \\
+    $0.3$ & $11$      & $8/10$   & $0.1137$                  & $1.2$        \\
+    $0.3$ & $12$      & $8/10$   & $0.1569$                  & $1.7$        \\
+    $0.5$ & $2$--$3$  & $0/10$   & $0.1449$--$0.1354$        & $1.0$        \\
+    $0.5$ & $3.5$     & $2/10$   & $0.1352$                  & $1.0$        \\
+    $0.5$ & $4$       & $3/10$   & $0.1351$                  & $1.1$        \\
+    $0.5$ & $4.5$     & $6/10$   & $0.1341$                  & $1.0$        \\
+    $0.5$ & $5$       & $7/10$   & $0.1310$                  & $1.1$        \\
+    $0.5$ & $6$       & $10/10$  & --                        & --           \\
+    $0.5$ & $7$       & $2/10$   & $0.0530$                  & $3.0$        \\
+    $0.5$ & $8$       & $1/8$    & $0.0557$                  & $2.4$        \\
     \hline
   \end{tabular}
-  \caption{\textbf{Failure rate of the single-vector iteration.} Results from independent random initialisations at each evolution time; the denominators give the ensemble size, which is smallest at the longest times. A run is classified as failed when its imaginary plateau lies outside a band around $\pi c/16=0.098$. The loose band is $(0.05,0.20)$ and the tight band is $(0.07,0.15)$. Consecutive times without failures are grouped. The last two columns give the median plateau of the runs surviving the loose band and the ratio of the largest of those to the smallest; where more than half the ensemble fails they rest on a handful of runs and do not estimate the plateau.}
+  \caption{\textbf{Rejection rate of the single-vector iteration.} Independent random initialisations at each evolution time, with the ensemble size as the denominator. A run is rejected when its imaginary plateau falls outside $(0.05,0.20)$. The last two columns give the median plateau of the surviving runs and their span. Where more than half the ensemble is rejected, too few runs remain to estimate the plateau.}
   \label{tab:failrate}
 \end{table}
-The stopping condition does not distinguish these failures. With \ac{RTM} truncation, the change in the leading eigenvalues decreases initially but then levels off above the convergence tolerance at nearly every time beyond $T\approx10$, for both correct and failed runs. The truncation continually introduces errors set by its cutoff, so reaching this floor does not show that the physical result is unreliable. Figure~\ref{fig:conv} shows this at a single point. The change in the leading Ritz values falls by five orders of magnitude, then stops falling and stays above the tolerance until the no-improvement rule ends the run. Repeating the same point with \ac{RDM} truncation, from the same random states, the same quantity continues past the tolerance and the iteration terminates normally. The two runs return the same leading eigenvalue to six decimal places, so the floor belongs to the truncation scheme and not to the transfer matrix, and a run that ends on the no-improvement rule has not necessarily failed to find the answer.
 
-\begin{figure}[htbp]
+Rejections occur at the level of individual runs. At a fixed time, some runs return an unphysical plateau while others remain consistent with neighbouring times. The rejection rate increases with $T$ at every coupling, and the first rejection moves from $T=18$ at $p=0$ to $T=11$, $T=7$, and $T=3.5$ as $p$ increases.
+
+The rejected runs exhibit two distinct behaviours. In the first, the ensemble scatters broadly. At $p=0.3$ for $T\ge11$, the returned plateaux can differ in sign, and the few values inside the band do not constitute a reliable measurement. In the second, the ensemble agrees on an unphysical value. At $p=0.5$ and $T=7$, six of ten runs agree within $3\%$ but return approximately half of $\pi c/16$; the runs at $T=8$ return the same branch. Agreement across seeds is therefore insufficient on its own. Continuity in time reveals the failure because the surviving plateau decreases from $0.131$ at $T=5$ to $0.053$ at $T=7$.
+
+The scatter increases before an ensemble becomes unusable. At $p=0.3$, the surviving plateaux span $10\%$ at $T=7$ but a factor of three at the next time point. An ensemble is therefore required both to reject unphysical runs and to estimate the variability of the remaining values.
+
+These ensembles also explain why the spectral route reaches longer evolution times than the entropy route. Even where no runs are rejected, the leading eigenvalues agree within $0.1\%$ across different seeds, whereas the entropy plateaux can vary by up to $30\%$. Across all tested cases, the spread in eigenvalues is between ten and a thousand times smaller than that of the plateaux. The eigenvalue-only block iteration exhibits similarly weak seed dependence: six independent initialisations at $p=0.3$ and $T=6$--$7$ agree in both modulus and phase to within $0.01\%$. Consequently, the spectral route remains reliable well after the entropy route breaks down, accounting for the wider time windows in Table~\ref{tab:cp}.
+
+The stopping condition does not distinguish physical from unphysical runs. The single-vector iteration monitors $\mathrm{d}s$, the change in the singular values of the temporal state between successive iterations, and compares it with the convergence tolerance. With \ac{RTM} truncation, $\mathrm{d}s$ initially decreases and then reaches a floor above the tolerance at nearly every time beyond $T\approx10$, for accepted and rejected runs alike. Since each truncation introduces an error set by its cutoff, reaching this floor does not by itself imply that the result is unreliable.
+
+Figure~\ref{fig:conv} illustrates this behaviour at one time point. With \ac{RTM} truncation, $\mathrm{d}s$ decreases by a factor of $10^3$ and then remains above the tolerance until the no-improvement rule terminates the run. Repeating the calculation from the same random state with \ac{RDM} truncation allows $\mathrm{d}s$ to cross the tolerance and the iteration to terminate normally. The two runs return leading eigenvalues that agree within $0.01\%$. The noise floor therefore originates from the truncation scheme rather than from the transfer matrix, and termination by the no-improvement rule is not by itself a reason to reject a run.
+
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.66\textwidth]{imgs/res_conv.pdf}
-  \caption{\textbf{How the iteration stops.} The change $\Delta\theta$ in the two leading Ritz values between successive iterations, at $p=0.1$ and $T=4$, for the two truncation schemes started from the same random states. Under \ac{RTM} truncation the change levels off above the convergence tolerance and the run ends after $150$ iterations without improvement; under \ac{RDM} truncation it crosses the tolerance and the run stops there. The two return the same leading eigenvalue to six decimal places.}
+  \caption{\textbf{Termination of the single-vector iteration.} The change $\mathrm{d}s$ as a function of iteration number at $p=0$ and $T=12$, for both truncation schemes started from the same random state. With \ac{RTM} truncation, $\mathrm{d}s$ reaches a floor above the tolerance and the no-improvement rule terminates the run. With \ac{RDM} truncation, it crosses the tolerance. The two calculations return leading eigenvalues that agree within $0.01\%$.}
   \label{fig:conv}
 \end{figure}
 
-Table~\ref{tab:rdm} compares a subset of points with \ac{RDM} truncation. The \ac{RDM} iteration reaches the same tolerance at every tested time, including $T=24$ at the integrable point, and reproduces the \ac{RTM} plateau within the observed spread. The noise floor is therefore associated with the \ac{RTM} truncation rather than the transfer matrix. The \ac{RDM} calculations are approximately an order of magnitude more expensive, which motivates using \ac{RTM} for production and \ac{RDM} as a control.
+Table~\ref{tab:rdm} compares selected time points under the two truncation schemes of Section~\ref{sec:transverse:truncation}. The \ac{RDM} iteration reaches the tolerance at every tested time and reproduces the \ac{RTM} plateau within the observed ensemble spread. Its computational cost is approximately an order of magnitude larger. We therefore use \ac{RTM} in production and retain \ac{RDM} as a control.
 
-\begin{table}[!htbp]
+\begin{table}[!htb]
   \centering
   \begin{tabular}{lccccccc}
     \hline
@@ -826,19 +841,16 @@ Table~\ref{tab:rdm} compares a subset of points with \ac{RDM} truncation. The \a
     $0$   & $17$ & $0.1137$                    & $0.1162$                     & no improvement               & converged & $177$    & $2627$   \\
     $0$   & $20$ & $0.1146$                    & $0.1145$                     & no improvement               & converged & $283$    & $5177$   \\
     $0$   & $22$ & $0.1080$                    & $0.1134$                     & no improvement               & converged & $402$    & $5125$   \\
-    $0$   & $24$ & $0.1205$                    & $0.1126$                     & no improvement               & converged & $460$    & $7300$   \\
     $0.1$ & $11$ & $0.1199$                    & $0.1207$                     & no improvement               & converged & $1316$   & $43692$  \\
     \hline
   \end{tabular}
-  \caption{\textbf{Comparison of the two truncation schemes.} The \ac{RTM} entries are medians over the surviving seed ensembles in Table~\ref{tab:failrate}. The \ac{RDM} entries are single runs, except at $T=17$, where three seeds give $0.1153$--$0.1165$. The stopping columns record whether the run reached the $10^{-6}$ tolerance or stopped after $150$ iterations without improvement. Times are median runtimes per run at identical settings.}
+  \caption{\textbf{Comparison of the two truncation schemes.} The \ac{RTM} entries are medians over the surviving ensembles in Table~\ref{tab:failrate}. The stopping columns identify the termination condition, and the final two columns give the median runtime.}
   \label{tab:rdm}
 \end{table}
 
-The eigenvalue-only block iteration shows no comparable seed dependence in the tests performed at $p=0.3$. Six independent starts at $T=6$ and $6.5$, the end of the fitting window in Table~\ref{tab:cp}, give leading moduli agreeing within $3\times10^{-5}$ and $10^{-4}$, respectively. Their phases agree within $8\times10^{-5}$ and $1.3\times10^{-4}$, and both points agree with the corresponding cluster calculation within $10^{-4}$. At $T=7$, where two of ten entropy runs fail, all six block runs again return consistent leading eigenvalues, with phase differences below $3\times10^{-4}$. Within this test, the eigenvalue-only mode remains reproducible after the entropy route begins to fail.
+The strong coupling dependence of the eigenvector conditioning persists without tensor-network truncation. At short times, we construct the rotated transfer operator as a dense matrix and diagonalise it exactly, following Section~\ref{app:blockpm:validation}. Table~\ref{tab:dense_cond} compares the condition number of the complete eigenvector matrix at matched dense dimension, without cooling sites and with $\delta t=0.5$. Between $p=0$ and the interacting cases, the condition number increases by seven to nine orders of magnitude, while the separation between the two leading eigenvalues remains comparable. The poor conditioning at $p\neq0$ therefore cannot be explained solely by an approaching leading degeneracy. The two columns measure different things: the separation controls how strongly a perturbation mixes that particular pair of eigenvectors, whereas $\mathrm{cond}(V)$ measures how far the complete eigenvector basis is from linear independence, which for a non-normal operator can be large even when no two eigenvalues are close. Its microscopic dependence on the interaction remains unclear.
 
-The strong coupling dependence of the eigenvector conditioning is already present without tensor-network truncation. At short times, we construct the rotated transfer operator as a dense matrix and diagonalise it exactly, following Section~\ref{app:blockpm:validation}. Table~\ref{tab:dense_cond} compares the condition number of the full eigenvector matrix at matched dense dimension, without cooling sites and with $\delta t=0.5$. From $p=0$ to the interacting couplings, the condition number increases by seven to nine orders of magnitude, while the distance between the two leading eigenvalues remains comparable. The poor conditioning at $p\neq0$ therefore cannot be attributed solely to an approaching leading degeneracy. We have not been able to identify the microscopic origin of its dependence on the interaction.
-
-\begin{table}[!htbp]
+\begin{table}[!htb]
   \centering
   \begin{tabular}{lcccc}
     \hline
@@ -850,121 +862,115 @@ The strong coupling dependence of the eigenvector conditioning is already presen
     $0.5$ & $1.5$ & $2197$    & $0.14$          & $9.6\times10^{9}$  \\
     \hline
   \end{tabular}
-  \caption{\textbf{Conditioning of the exact eigenvector basis.} Exact diagonalisation of the rotated transfer operator at matched dense dimension, without cooling sites and with $\delta t=0.5$. The fourth column gives the distance between the two leading eigenvalues, while $\mathrm{cond}(V)$ is the condition number of the complete eigenvector matrix. The strong coupling dependence is not explained by the leading spectral gap.}
+  \caption{\textbf{Conditioning of the exact eigenvector basis.} Exact diagonalisation of the rotated transfer operator at matched dense dimension, without cooling sites and with $\delta t=0.5$. Here $\mathrm{cond}(V)$ is the condition number of the eigenvector matrix. The gap $|\mu_0-\mu_1|$ remains comparable across the couplings, whereas the conditioning changes by several orders of magnitude.}
   \label{tab:dense_cond}
 \end{table}
 
-Three limitations remain. First, the mechanism by which the coupling controls the eigenvector conditioning is unknown. Second, no diagnostic from a single run reliably distinguishes a degraded surviving entropy result near the point at which the method starts to fail; independent repetitions remain necessary. Third, the block-method seed ensembles cover only one coupling at three evolution times. They establish reproducibility there but do not determine how the failure probability varies across the full parameter range. The spectral windows in Table~\ref{tab:cp} therefore continue to use the phase-increment criterion of Section~\ref{sec:reach}.
+The entropy route fails when the individual eigenvectors can no longer be resolved reliably. This occurs earlier than the loss of the spectral Ritz values because eigenvectors are sensitive to the separation between neighbouring eigenvalues, which emergent dual unitarity reduces with time. The coupling controls the onset: the first rejection moves from $T=18$ at $p=0$ to $T=3.5$ at $p=0.5$, following the increase in eigenvector conditioning rather than the closing of the leading gap. Since a single run provides no reliable warning near this boundary, ensembles are required to detect failures and determine the entropy uncertainties in Table~\ref{tab:cp}.
 
-\section{Supporting measurements and fitting conventions}
+Some questions remain. First, the mechanism by which the coupling controls the eigenvector conditioning is unknown. Second, no diagnostic from a single run identifies a degraded entropy result near the failure boundary, so the spectral windows in Table~\ref{tab:cp} still require independent repetitions and the phase-increment criterion of Section~\ref{sec:reach}.
+
+
+
+\section{Supporting measurements, corrections and uncertainties}
 \label{app:extraction}
 
-This section collects the measurements and fitting conventions that support Section~\ref{sec:results}: the spectra for different boundary conditions, entropy profiles at the remaining couplings, the central-charge analysis from the real part of the entropy, and the fitting windows used for the quoted universal quantities.
+This section provides the supporting analysis for Section~\ref{sec:results}. It presents the entropy profiles at each coupling, the finite-time corrections and uncertainties in both routes, and the transfer-matrix spectra for different pairs of boundary conditions.
+
+\subsection{Corrections and uncertainties}
+\label{app:errors}
+\label{app:re}
+
+Neither route determines the central charge directly. The measured quantities approach their universal values only as $T\to\infty$, so both estimates require a finite-time correction and an extrapolation. Their reliability is controlled primarily by the length of the available time window, rather than by the precision of an individual data point. This subsection describes the extraction procedure, motivates the correction forms, and explains the uncertainties reported in Table~\ref{tab:cp}.
+
+\textit{The imaginary plateau.} For each run, we average the imaginary part of the entropy over the four temporal bonds at the centre of the strip. Residual lattice effects produce small oscillations across the interior, particularly at longer times, as shown in Figure~\ref{fig:domes_hi}. Using a single central bond would retain these oscillations, whereas a wider average would include the boundary regions where Eq.~\eqref{eq:cft:chord} no longer applies. Thus, the four-bond average correctly balances these effects. We then take the median over the physical runs at each evolution time to obtain the plateau value per time reported in Table~\ref{tab:cp}.
+
+\textit{Extrapolating the plateau.} The plateau approaches $\pi c/16$ from above as the finite-time correction decays. We fit
+$\mathrm{plateau}(T)=a+b\,T^{-1/2}$, where the second term is the R\'enyi-2 correction predicted for this universality class~\cite{boucomas2026}, and obtain the central charge from $c=16a/\pi$. We test the dependence on this form using a constant fit, a $1/T$ correction, and a two-term refinement of the predicted correction. For the long integrable sequence, the constant fit has the largest residual and gives an asymptote furthest from $\tfrac12$, whereas the predicted form and its refinement give consistent results. The data therefore resolve the finite-time decay. For the shorter interacting windows, all four forms describe the data comparably well but extrapolate to different limits. This inability to distinguish the correction forms limits the interacting estimates, which arises from the accessible time windows alone.
+
+\textit{Fitting windows.} The upper boundary of each fitting window is the last time for which the sequence remains physical. For the spectral route, it is set by the phase-increment criterion of Section~\ref{sec:reach}. For the entropy route, it is set by the ensembles described in Section~\ref{app:failures}, which cease to produce physical profiles at a coupling-dependent time. The lower boundary determines when the asymptotic form becomes reliable. The relevant scale is the strip width in conformal units, $v_\infty T$, rather than $T$ alone, and we require $v_\infty T\gtrsim8$ for every point included in a fit. This condition excludes data only at the integrable point. There, $v_\infty=2$, so $T=2$ and $T=3$ correspond to widths of only $4$ and $6$ lattice units. At the interacting couplings, the larger velocities place the first available widths between $8$ and $11$. Consistently, the $p=0$ plateau continues to rise from $T=2$ to $T=4$ and begins the monotonic decay described by the fit only afterwards. We apply this criterion uniformly, without reference to the predicted conformal value.
+
+\textit{The branch constant.} We fix the constant in Eq.~\eqref{eq:cft:eq3} to $B=-\pi$, as required by $\lambda_0=\log(-\mu_0)$. The integrable sequence is long enough to test this constraint: when $B$ is allowed to vary in a fit that includes the next order in $1/T$, the result is $B/\pi=-1.0000$, with no additional phase constant at the level of $10^{-4}$. By contrast, in the shorter two-term fits, a free $B$ absorbs curvature associated with the central-charge term because the constant, $1/T$, and $1/T^2$ contributions cannot be separated over the available window. We therefore unwrap the phase over the complete sequence before selecting the fitting window, which preserves the absolute branch, and keep $B$ fixed.
+
+\textit{The real part of the entropy.} Both parts of the generalised entropy depend on $c$, but they do not provide equally reliable estimates. The real part has slope $c/8$ in the chord variable and includes a non-universal offset $s_0$. For the R\'enyi-2 entropy in the Ising universality class, it also receives a finite-time correction governed by the energy operator, which decays as $w^{-1/2}$~\cite{boucomas2026}. Omitting this contribution gives an apparent central charge well above $\tfrac12$, including at the integrable point where the exact value is known; for the profile in Figure~\ref{fig:re_c} it returns $0.60$. The complete fitting form is
+\begin{equation}
+  \mathrm{Re}\,S_2(t)=s_0+\frac{c}{8}W(t,T)+a\,w(t,T)^{-1/2},
+  \label{eq:app:re:fit}
+\end{equation}
+Here $w=e^{W}$ is the chord distance itself, the argument of the logarithm in Eq.~\eqref{eq:chord}. This form describes the profiles well, as shown by the dashed curves in Figure~\ref{fig:domes_hi}. However, it does not provide an independent estimate of $c$ within the accessible range. The logarithmic term and the correction have nearly the same shape over this part of the strip, making $c$ and $a$ strongly degenerate in a simultaneous fit. Figure~\ref{fig:re_c} illustrates this degeneracy: the corrected form with $c=\tfrac12$ and an uncorrected logarithmic fit with $c=0.60$ both describe the same data. The real part therefore serves as a consistency test. For $T\gtrsim12$, fixing $c=\tfrac12$ and fitting only $s_0$ and $a$ describes the profiles as well as a fit with $c$ free, and gives a correction amplitude consistent with the imaginary part. We therefore use the imaginary plateau for the central-charge estimate.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.55\textwidth]{imgs/res_re_c.pdf}
+  \caption{\textbf{Central charge from the real part of the entropy.} Integrable-point profile at $T=14$, shown with the corrected form of Eq.~\eqref{eq:app:re:fit} for $c=\tfrac12$ and an uncorrected logarithmic fit with $c$ free, which gives $c=0.60$. Both curves describe the interior data, demonstrating that $c$ and the correction amplitude cannot be separated over this range.}
+  \label{fig:re_c}
+\end{figure}
+
+\textit{The profiles.} Figure~\ref{fig:domes_hi} presents the generalised temporal entropy at all four couplings. After including the finite-time correction in Eq.~\eqref{eq:app:re:fit}, the real part is consistent with the profile for $c=\tfrac12$. The imaginary part forms an interior plateau above $\pi c/16$. Each row covers the corresponding entropy window in Table~\ref{tab:cp}. These windows decrease rapidly with $p$, from $T=22$ at the integrable point to $T=5$ at $p=0.5$. The $p=0.5$ estimate therefore lies furthest above $\tfrac12$, because its sequence ends before the finite-time correction has decayed appreciably.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{imgs/res_domes_hi.pdf}
+  \caption{\textbf{Generalised temporal entropy at the four couplings.} Each row spans the entropy window for one coupling in Table~\ref{tab:cp}. The left panels show $\mathrm{Re}\,S_2$ as a function of $t/T$. The dashed curves show Eq.~\eqref{eq:app:re:fit} for $c=\tfrac12$, with the offset and correction amplitude fitted separately to each profile. The right panels show $\mathrm{Im}\,S_2$; the dashed line marks $\pi c/16=0.098$, and the displacement from this value is the finite-time correction.}
+  \label{fig:domes_hi}
+\end{figure}
+
+Near each end of the strip, the imaginary part rises above the interior plateau before decreasing towards the boundary. This behaviour lies outside the regime of Eq.~\eqref{eq:cft:chord}, which assumes that both endpoints of the cut are in the bulk. The deviation is confined mainly to the cooling region. Because $\beta_0$ remains fixed as $T$ increases, this region occupies a fixed interval and hence a decreasing fraction of the strip. The boundary features therefore remain outside the interior window used to extract the plateau and become relatively less important at longer times.
+
+
+\textit{The phase coefficient and its deficit.} At every coupling and for every boundary pair, the $1/T$ coefficient obtained from the spectral fits is systematically $5$--$10\%$ smaller in magnitude than the asymptotic prediction. Both the central charge and the tower positions are extracted from this coefficient. The deficit therefore accounts for the downward bias in the spectral estimates of Table~\ref{tab:cp} and the offsets in the fitted positions of Table~\ref{tab:bc_pairs}. Two controls identify its sources. First, including the next order in $1/T$ increases the coefficient from $90\%$ to $97\%$ of the predicted value and reduces its dependence on the lower fitting boundary, showing that truncation of the expansion contributes to the deficit. Second, at a fixed fitting window, the coefficient decreases approximately linearly with $\beta_0$, from $95\%$ of the prediction at the smallest regulator to $49\%$ at the largest. Extrapolation to $\beta_0\to0$ recovers the predicted value (Figure~\ref{fig:beta0}), while the production value $\beta_0=0.2$ suppresses the coefficient by approximately $12\%$. The limit $\beta_0=0$ cannot be used because the cooling interval produces the regularised conformal boundary state required by the strip construction (Section~\ref{sec:cft:boundary}). Both effects reduce the fitted coefficient, explaining why the estimates lie systematically below their targets. We retain the same two-term fit at every coupling because the shorter interacting windows cannot support an additional parameter, and treat the residual deficit as a systematic bias rather than applying a pointwise correction.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.62\textwidth]{imgs/res_beta0.pdf}
+  \caption{\textbf{Fitted phase coefficient as a function of the cooling regulator.} Integrable-point results, expressed as a fraction of the value predicted by Eq.~\eqref{eq:cft:eq3}. All points use the same fitting window and differ only in $N_\beta$. The dependence is approximately linear and extrapolates to within a few per cent of the prediction as $\beta_0\to0$. At the production value $\beta_0=0.2$, the coefficient lies approximately $12\%$ below the prediction, showing the contribution of the finite regulator to the deficit.}
+  \label{fig:beta0}
+\end{figure}
+
+\textit{Interpretation of the uncertainties.} The entropy estimates in Table~\ref{tab:cp} include uncertainties because they show measurable variation under resampling. At each time the ensemble provides one plateau value per physical run. We draw a new ensemble of the same size from those values, allowing repeats, take its median, and refit the whole extrapolation; the quoted uncertainty is the standard deviation of the central charge over several hundred such replicas. It is approximately $0.04$ at the three interacting couplings and decreases to $0.01$ at the integrable point, where the longer sequence prevents any single time point from dominating the fit. The precision is therefore controlled by the number of independent times supporting the extrapolation, rather than by the precision of one plateau value.
+
+The spectral estimates do not have a comparable sampling uncertainty. Independent seeds reproduce the leading eigenvalue to better than $0.1\%$ (Section~\ref{app:failures}), and applying the same resampling procedure changes the fitted central charge by less than $10^{-3}$, below the final reported digit. Their dominant limitation is instead the systematic bias described above. We therefore report the spectral values without statistical uncertainties and use the two controls to account for their deviation from $\tfrac12$.
 
 \subsection{The boundary spectrum and the choice of boundary conditions}
 \label{app:x1}
 
-The boundary dimensions in Section~\ref{sec:results} are extracted for the initial state $\ket{X+}$. More generally, the states at the two ends of the temporal chain define conformal boundary conditions, and their pair determines the operator content allowed on the strip. We test this correspondence by changing the boundary states and verifying the predicted change in the transfer-matrix spectrum, following the analysis of the Ising chain by Bou-Comas et al.~\cite{boucomas2026}.
+The boundary dimensions in Section~\ref{sec:results} are extracted using the initial state $\ket{X+}$. More generally, the states at the two ends of the temporal chain define the pair of conformal boundary conditions and thereby determine the operator content allowed on the strip. We test this correspondence by varying the boundary states and comparing the resulting transfer-matrix spectra with the predicted conformal towers, following the same analysis that Bou-Comas et al.\ carried out at the integrable point~\cite{boucomas2026}.
 
-Which operators a pair admits follows from the geometry of the strip. When both ends carry the same condition, the strip may contain nothing at all, so the identity is allowed and the spectrum begins at $x_0=0$. When the two ends carry different conditions, something must change the boundary condition along the edge, and in a \ac{CFT} that change is an operator in its own right, sitting where the two conditions meet; the identity cannot do it, since it would leave the boundary condition unchanged. The spectrum then begins at the dimension of the lightest operator that converts one condition into the other. The three Ising operators supply these values: the identity at $0$, the energy at $\tfrac12$ and the spin at $\tfrac1{16}$. Each brings its own descendants, spaced by integers, so the spectrum is a set of towers rather than a list of isolated values~\cite{cardy1989,cardy2004bcft}.
+The two boundary conditions determine which operators can appear. If both ends carry the same condition, the identity operator is allowed and the spectrum begins at $x_0=0$. Different conditions require a boundary-condition-changing operator, so the lowest level is instead the dimension of the lightest operator connecting them. In the Ising \ac{CFT}, the relevant primary dimensions are $0$ for the identity, $\tfrac12$ for the energy operator, and $\tfrac1{16}$ for the spin operator. Each primary generates descendants at integer level spacings, forming a conformal tower~\cite{cardy1989,cardy2004bcft}.
 
-The three Ising boundary conditions are represented by the product states $\ket{X+}$, $\ket{Up}$, and $\ket{Dn}$. The state $\ket{X+}$ realises the free condition because $\langle\sigma^z\rangle=0$, while $\ket{Up}$ and $\ket{Dn}$ realise the two fixed conditions. Choosing the states independently at the two temporal boundaries produces four distinct pairs. When the two states differ, the network evaluates the transition amplitude $\bra{b_2}U(T)\ket{b_1}$ rather than a return amplitude, but the contraction is otherwise unchanged.
+We represent the three Ising boundary conditions by the product states $\ket{X+}$, $\ket{Up}$, and $\ket{Dn}$. Since $\langle\sigma^z\rangle=0$, $\ket{X+}$ realises the free condition, whereas $\ket{Up}$ and $\ket{Dn}$ realise the two fixed conditions. Independent choices at the two temporal boundaries give four inequivalent pairs. When the states differ, the network evaluates the transition amplitude $\bra{b_2}U(T)\ket{b_1}$ rather than a return amplitude, but the contraction procedure is unchanged.
 
-Phase gaps determine the tower spacings $x_i-x_0$. Table~\ref{tab:bc_pairs} reports the leading spacings at the longest time reached for each boundary pair, and all four agree with their predicted towers. The two mixed-boundary cases have the same integer spacings because each tower is generated from a single primary operator.
+The phase gaps determine the tower spacings $x_i-x_0$. Table~\ref{tab:bc_pairs} reports the leading spacings at the longest time reached for each pair: $T=9$ for the free--free and fixed--fixed cases, and $T=8$ for the more expensive mixed-boundary calculations. Figure~\ref{fig:bc_pairs} shows their evolution with time. All four spectra approach the predicted towers. The two mixed-boundary spectra have the same integer spacings because each contains a single conformal tower generated by its corresponding primary operator.
 
-The spacings alone do not determine the starting dimension $x_0$. The common non-universal factor $e^{-f\beta-f_s}$ in Eq.~\eqref{eq:cft:levels} cancels from $\mu_i/\mu_0$, together with $x_0$. The tower position is instead encoded in the $1/T$ coefficient of the leading phase. The bulk term $f\beta$ contributes linearly in $T$, while the real boundary term $f_s$ changes only the modulus (Appendix~\ref{app:cft:spectrum}). The remaining coefficient is
-\begin{equation}
-  \frac{\pi}{v}\left(x_0-\frac{c}{24}\right).
-\end{equation}
-At the integrable point, $c=\tfrac12$ and $v=2$ are known, so fitting Eq.~\eqref{eq:cft:eq3} determines $x_0$. The two towers predicted to begin at zero give values within $0.002$ of zero, while the mixed pairs are separated into the expected $\tfrac12$ and $\tfrac1{16}$ sectors.
-The fitted phase coefficient is systematically $5$--$10\%$ smaller in magnitude than its asymptotic prediction. The same deficit produces the spectral estimate $c\approx0.45$ rather than $0.50$ in Table~\ref{tab:cp}, since both quantities are obtained from this coefficient. Two controls identify the leading sources. Adding the next order in $1/T$ raises the coefficient from $90\%$ to $97\%$ of the prediction and removes most of its dependence on the lower fit boundary. Varying the regulator at fixed fitting window gives a coefficient that decreases approximately linearly with $\beta_0$, from $95\%$ of the prediction at the smallest regulator to $49\%$ at the largest, and extrapolates to the expected value as $\beta_0\to0$.
-
-The production regulator $\beta_0=0.2$ therefore introduces an approximately $10\%$ downward bias in this coefficient. Figure~\ref{fig:beta0} shows that dependence directly: the coefficient falls linearly with the amount of cooling and extrapolates to the conformal value as $\beta_0\to0$.
-
-\begin{figure}[htbp]
+\begin{table}[!htb]
   \centering
-  \includegraphics[width=0.62\textwidth]{imgs/res_beta0.pdf}
-  \caption{\textbf{The fitted phase coefficient against the cooling regulator}, at the integrable point, as a fraction of the value predicted by Eq.~\eqref{eq:cft:eq3}. Each point is a separate fit over the same window, differing only in $N_\beta$. The dependence is linear and extrapolates to within a few per cent of the prediction at $\beta_0\to0$, while the production choice $\beta_0=0.2$ sits about $10\%$ below it. The deficit is therefore a finite-regulator effect and not a failure of the relation.}
-  \label{fig:beta0}
-\end{figure} Both finite-time and regulator corrections act in the same direction, explaining why all fitted tower positions lie below their targets. We retain the same two-term fitting convention at every coupling because the shorter interacting windows cannot constrain an additional parameter. The remaining deficit is treated as a systematic bias rather than corrected point by point.
-
-The eight-state calculations also resolve degeneracies among conformal descendants. For fixed boundaries, the predicted sequence is $2,3,4,4,5,5$, and the numerical spectrum contains pairs at $4$ and $5$ within the accuracy of the individual estimates. The free--fixed spectrum shows the corresponding doubling one level earlier. These higher levels provide evidence for the tower structure but are not used as precision estimates of individual dimensions.
-
-\begin{table}[htbp]
-  \centering
-  \begin{tabular}{lcccc}
+  \begin{tabular}{lccccc}
     \hline
-    boundary pair    & tower $x_i-x_0$           & measured                & $x_0$         & measured \\
+    boundary pair    & final $T$ & tower $x_i-x_0$           & measured                & $x_0$         & measured \\
     \hline
-    free--free       & $\tfrac12,\ \tfrac32,\ 2$ & $0.503,\ 1.488,\ 2.016$ & $0$           & $0.002$  \\
-    fixed--fixed     & $2,\ 3,\ 4$               & $1.974,\ 2.982,\ 3.961$ & $0$           & $0.002$  \\
-    fixed--antifixed & $1,\ 2,\ 3$               & $0.994,\ 2.001,\ 3.045$ & $\tfrac12$    & $0.474$  \\
-    free--fixed      & $1,\ 2,\ 3$               & $0.988,\ 1.969,\ 2.980$ & $\tfrac1{16}$ & $0.060$  \\
+    free--free       & $9$       & $\tfrac12,\ \tfrac32,\ 2$ & $0.503,\ 1.488,\ 2.016$ & $0$           & $0.002$  \\
+    fixed--fixed     & $9$       & $2,\ 3,\ 4$               & $1.974,\ 2.982,\ 3.961$ & $0$           & $0.002$  \\
+    fixed--antifixed & $8$       & $1,\ 2,\ 3$               & $0.994,\ 2.001,\ 3.045$ & $\tfrac12$    & $0.474$  \\
+    free--fixed      & $8$       & $1,\ 2,\ 3$               & $0.988,\ 1.969,\ 2.980$ & $\tfrac1{16}$ & $0.060$  \\
     \hline
   \end{tabular}
-  \caption{\textbf{Boundary spectra for the four pairs of boundary conditions.} Results at the integrable point. The spacings are obtained from the phase gaps at the longest time reached by each sequence, while the tower position follows from fitting Eq.~\eqref{eq:cft:eq3} to the leading phase over the complete sequence. The mixed pairs have identical spacings and are distinguished by $x_0$.}
+  \caption{\textbf{Boundary spectra for four pairs of boundary conditions.} Integrable-point results. The spacings are obtained from the phase gaps at the final time listed, while the tower position is obtained by fitting Eq.~\eqref{eq:cft:eq3} to the leading phase over the complete sequence. The mixed pairs have identical spacings and are distinguished by $x_0$.}
   \label{tab:bc_pairs}
 \end{table}
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.95\textwidth]{imgs/res_bc_pairs.pdf}
   \caption{\textbf{Boundary towers at the integrable point.} The three leading spacings $x_i-x_0$ are obtained from Eq.~\eqref{eq:cft:eq4}; dashed lines mark the predicted values. (a) Free--free. (b) Fixed--fixed. (c) Fixed--antifixed. (d) Free--fixed. The two mixed cases have the same spacings and are distinguished by the tower positions in Table~\ref{tab:bc_pairs}.}
   \label{fig:bc_pairs}
 \end{figure}
 
-\subsection{The entropy profiles at stronger coupling}
-\label{app:highp}
-
-Figure~\ref{fig:domes_hi} extends the comparison of Section~\ref{sec:results:wall} to the remaining couplings. The real part follows the chord profile with $c=\tfrac12$ and the imaginary part forms an interior plateau above $\pi c/16$. The number of accessible evolution times decreases with $p$, leaving the $p=0.5$ sequence too short to constrain the asymptotic extrapolation. Near the two ends of the strip the imaginary part also rises above the interior plateau before falling away. Equation~\eqref{eq:cft:chord} applies to a cut with both endpoints in the bulk, and that condition fails as one endpoint approaches the boundary. The deviation comes mainly from the cooling region: since $\beta_0$ is held fixed while $T$ grows, it occupies a fixed interval at each end rather than a fixed fraction of the strip, so these features stay confined to the edges, take up a smaller part of the profile at longer times, and lie outside the interior window from which we read the plateau.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\textwidth]{imgs/res_domes_hi.pdf}
-  \caption{\textbf{Generalised temporal entropy at the remaining couplings.} Results for $p=0$, $0.3$, and $0.5$, arranged by row. The left panels show $\mathrm{Re}\,S_2$ against $t/T$, with dashed curves from Eq.~\eqref{eq:cft:chord} at $c=\tfrac12$ and a fitted non-universal constant. The right panels show $\mathrm{Im}\,S_2$, with the dashed line at $\pi c/16=0.098$. The offset from this line is the finite-time correction.}
-  \label{fig:domes_hi}
-\end{figure}
-
-\subsection{The central charge from the real part}
-\label{app:re}
-
-Both parts of the generalised entropy contain the central charge, but they do not provide equally stable estimators. The imaginary part approaches the single plateau value $\pi c/16$. The real part has slope $c/8$ in the chord variable and also contains the non-universal offset $s_0$.
-
-The main limitation is the leading finite-time correction. For the R\'enyi-2 entropy in the Ising class, it decays as $w^{-1/2}$ in the chord variable~\cite{boucomas2026}. Omitting this term gives apparent central charges of approximately $0.65$--$0.70$, including at the integrable point where $c=\tfrac12$ is known. We therefore fit
+The spacings alone do not determine the starting dimension $x_0$. The common non-universal factor $e^{-f\beta-f_s}$ in Eq.~\eqref{eq:cft:levels} cancels from $\mu_i/\mu_0$, as does the contribution from $x_0$. The tower position is instead encoded in the $1/T$ coefficient of the leading phase. The bulk term $f\beta$ is linear in $T$, while the real boundary term $f_s$ affects only the modulus (Appendix~\ref{app:cft:spectrum}). The remaining coefficient is
 \begin{equation}
-  \mathrm{Re}\,S_2(t)
-  =s_0+\frac{c}{8}W(t,T)+a\,w(t,T)^{-1/2}.
-  \label{eq:app:re:fit}
+  \frac{\pi}{v}\left(x_0-\frac{c}{24}\right).
 \end{equation}
+At the integrable point, the known values $c=\tfrac12$ and $v=2$ allow $x_0$ to be determined by fitting Eq.~\eqref{eq:cft:eq3}. The two towers predicted to begin at zero give values within $0.002$ of zero, while the mixed pairs are assigned to the expected $\tfrac12$ and $\tfrac1{16}$ sectors. The fitted $x_0$ values therefore distinguish the mixed towers, which have identical spacings.
 
-Although this form describes the profiles, it does not determine $c$ reliably. Over the accessible part of the strip, the logarithmic term and the correction have similar shapes. A fit with both $c$ and $a$ free is therefore poorly conditioned and cannot separate their contributions. Figure~\ref{fig:re_c}(a) illustrates this degeneracy: both the corrected form with $c=\tfrac12$ and an uncorrected fit with $c\approx0.6$ describe the same profile. With $c$ free, the estimate drifts with evolution time and crosses $\tfrac12$ without approaching a plateau [Figure~\ref{fig:re_c}(b)].
+The small offsets are consistent with the phase-coefficient deficit described in Section~\ref{app:errors}. A coefficient that is slightly too small in magnitude displaces every measured position a little, and the displacements seen here are of the size that deficit predicts. They therefore reflect the fitting bias rather than a disagreement with the tower assignments.
 
-The real part can instead test consistency with the expected value. For $T\gtrsim12$, fixing $c=\tfrac12$ and fitting only $s_0$ and $a$ describes the profiles as well as the unrestricted fit. The fitted correction amplitude also agrees with that required by the imaginary part. The real and imaginary components are therefore consistent with the same finite-time correction.
-
-We quote the imaginary plateau because it avoids the ill-conditioned separation of three contributions. After extrapolating its finite-time correction, the remaining value is $\pi c/16$. The real part must distinguish the logarithmic term, a similar-shaped correction, and the non-universal offset, which the accessible data do not constrain independently.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.95\textwidth]{imgs/res_re_c.pdf}
-  \caption{\textbf{Central charge from the real part of the entropy.} (a) An integrable-point profile fitted by the leading logarithm at $c=\tfrac12$ (dotted), the corrected form of Eq.~\eqref{eq:app:re:fit} at $c=\tfrac12$ (solid), and the uncorrected form with $c$ free (dashed). (b) Values of $c$ obtained with and without the correction as a function of evolution time. Neither series converges within the accessible range.}
-  \label{fig:re_c}
-\end{figure}
-
-\subsection{Fit windows and conventions}
-\label{app:errors}
-
-The universal quantities in Table~\ref{tab:cp} are obtained from least-squares fits. This subsection specifies the fitting windows, fixed parameters, and finite-time correction used in those fits. Numerical controls on the underlying calculation are given in Section~\ref{app:library:build}.
-
-The upper fitting boundary is determined from the physical branch. The phase increment of $\mu_0$ is approximately constant while the branch remains resolved; a persistent departure from that behaviour sets the end of the window. The branch itself is tracked as described in Section~\ref{sec:reach}. The lower boundary is a convention. Removing early times reduces the error of the $1/T$ expansion in Eq.~\eqref{eq:cft:eq3} but also reduces the number of data points and raises the fitted central charge. We use the widest window permitted by the upper-bound criterion at every coupling. This common convention retains the most data and makes the dependence on the lower boundary explicit rather than selecting it separately for each coupling.
-
-The sequences entering Eq.~\eqref{eq:cft:eq3} are extended beyond the times covered by the block iteration using the leading eigenvalue of the single-vector method, whose modulus agrees with the block result to better than $10^{-5}$ wherever both are available. At those times the branch is selected by continuity of the phase advance rather than by modulus, and a rung is retained only if the root-mean-square residual of the fit does not increase when it is added. Neither step consults the conformal prediction. Continuity and the residual are properties of the sequence alone, and a rung failing them is dropped whatever value it would have produced. Forcing the rejected rungs into the fit shows what that costs. At $p=0.3$ the next rung returns $c=0.4975$, closer to $\tfrac12$ than the accepted $0.4921$, while the residual rises by a factor of four and the seeds no longer agree on the eigenvalue; at $p=0.5$ the corresponding rung returns $0.77$ with a residual twenty times larger. We quote the value the criterion selects rather than the one nearest the prediction.
-
-The branch constant in Eq.~\eqref{eq:cft:eq3} is fixed to $B=-\pi$, as required by $\lambda_0=\log(-\mu_0)$. At the integrable point, a fit that includes the next order in $1/T$ and leaves $B$ free gives $B/\pi=-1.0000$, with no detectable additional phase constant at the level of $10^{-4}$. In a shorter two-term fit, allowing $B$ to vary absorbs curvature associated with the central-charge term. This effect becomes severe over short windows, where the constant, $1/T$, and $1/T^2$ contributions cannot be separated. Fixing $B$ removes this unconstrained degree of freedom. The phase is unwrapped over the full time series before the fitting window is selected so that the absolute branch is retained.
-
-The sound velocity enters the inferred central charge and dimensions linearly. It is determined independently in Section~\ref{sec:annni:velocity}; at the integrable point, the extrapolated value agrees with the exact result to five decimal places. Its uncertainty is therefore smaller than the other fit uncertainties considered here.
-
-For the entropy plateau we fit $\mathrm{plateau}(T)=a+b\,T^{-1/2}$, with the $T^{-1/2}$ term the predicted R\'enyi-2 correction~\cite{boucomas2026}, and obtain the central charge from the asymptote alone through $c=16a/\pi$. We compare this form with three alternatives: a constant, a $1/T$ decay, and a two-term form. Over the long integrable sequence, the constant gives the largest residual and the extrapolated value furthest from $\tfrac12$. The predicted form and the two-term refinement give consistent asymptotes, showing that the resolved decay is not imposed solely by the chosen ansatz. Over short windows, all four forms describe the data similarly but extrapolate to widely different limits. Such windows do not constrain the asymptotic plateau.
-
-The accessible range therefore determines how well an entropy extrapolation is constrained. We measure this at the integrable point by truncating its sequence to successively shorter windows. Ending at $T\le13$, $14$, $18$ and $24$ returns $0.465$, $0.495$, $0.470$ and $0.498$, so a short window moves the answer by up to $0.04$ and does so without a clear trend with the window length. The interacting sequences are shorter still, which is why the entropy-route values of Table~\ref{tab:cp} carry the larger uncertainties. The spectral route remains the more reliable of the two across the reported coupling range.
-
-The uncertainties quoted in Table~\ref{tab:cp} combine two contributions in quadrature. The statistical part is the spread of the extrapolated value when the ensemble entering each rung is resampled with repetition, which propagates the run-to-run scatter of the surviving profiles through the fit. The systematic part is the spread of the value when the fitting window is varied by removing rungs at either end. For the entropy route the resampling dominates, contributing approximately $0.04$ at every coupling; for the spectral route the resampling moves the selected rungs by less than $10^{-3}$ and the window variation dominates, contributing between $0.001$ and $0.013$.
+The eight-state calculations also resolve degeneracies among conformal descendants. For fixed boundaries, for example, the predicted sequence is $2,3,4,4,5,5$, and the numerical spectrum contains pairs near $4$ and $5$ within the accuracy of the individual estimates. These higher levels support the tower assignments but are not used for precise estimates of individual dimensions.

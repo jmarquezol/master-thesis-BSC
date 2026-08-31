@@ -27,6 +27,7 @@
     hdr/.style={font=\scriptsize\itshape, text=black!70},
     plain/.style={draw=black!65, ->, thick},
     advance/.style={draw=black!30, ->, thin},
+    jump/.style={draw=black!30, ->, thin, densely dashed},
     fold/.style={draw=teal!70!black, ->, thick, dashed},
     disc/.style={draw=blue!65!black, ->, thick, dashed},
     conn/.style={draw=purple!75!black, ->, thick, dashed},
@@ -70,8 +71,32 @@
 
     % which index is which
     \node[hdr] at (2.6,2.75) {second term acts $\longrightarrow$};
-    \node[hdr, rotate=90] at (-3.05,-1.9) {first term acts $\longrightarrow$};
+    \node[hdr, rotate=-90] at (-3.05,-1.9) {first term acts $\longrightarrow$};
     
+
+    % Self-loops: every level can stay put (identity on 1, memory A on 2, pair combinations).
+    \path (q11) edge[advance, out=205, in=245, looseness=7] (q11);
+    \path (q12) edge[advance, out=205, in=245, looseness=7] (q12);
+    \path (q13) edge[advance, out=-20, in=20,  looseness=7] (q13);
+    \path (q21) edge[advance, out=25,  in=65,  looseness=7] (q21);
+    \path (q22) edge[advance, out=25,  in=65,  looseness=7] (q22);
+    \path (q23) edge[advance, out=-20, in=20,  looseness=7] (q23);
+    \path (q31) edge[advance, out=250, in=290, looseness=7] (q31);
+    \path (q32) edge[advance, out=250, in=290, looseness=7] (q32);
+    \path (q33) edge[advance, out=250, in=290, looseness=7] (q33);
+
+    % On-site D-jumps: a term opening and closing at a single site (densely dashed).
+    \path (q11) edge[jump, bend left=22]  (q13);
+    \path (q11) edge[jump, bend right=20] (q31);
+    \path (q11) edge[jump, bend right=15] (q33);
+    \path (q11) edge[jump, bend left=8]   (q23);
+    \path (q11) edge[jump, bend right=8]  (q32);
+    \path (q12) edge[jump, bend left=20]  (q32);
+    \path (q12) edge[jump, bend right=8]  (q33);
+    \path (q21) edge[jump, bend left=20]  (q23);
+    \path (q21) edge[jump, bend left=8]   (q33);
+    \path (q13) edge[jump, bend right=20] (q33);
+    \path (q31) edge[jump, bend left=22]  (q33);
 
     % Either index may advance on its own (right, down) or both at the same site (diagonal).
     \foreach \r in {1,2,3}{

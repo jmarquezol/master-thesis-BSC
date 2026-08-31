@@ -125,12 +125,10 @@
 
   \node[tag] at (10.85,0) {$=\;SV$};
   \node at (11.60,0) {\bigpar{(}};
-  \begin{scope}[xshift=12.20cm]
-    \draw[bond] (0,\HA) .. controls (-0.36,\HA) and (-0.36,-\HA) .. (0,-\HA);
-    \draw[bond] (\LO,\HA)  -- (\LO,{\HA+\ST});
-    \draw[bond] (\LO,-\HA) -- (\LO,{-\HA-\ST});
-    \draw[bond] (0,\HA)  -- (0.46,\HA);
-    \draw[bond] (0,-\HA) -- (0.46,-\HA);
+  \begin{scope}[xshift=12.30cm]
+    \draw[bond] (0,\HA) .. controls (0.42,\HA) and (0.42,-\HA) .. (0,-\HA);
+    \draw[bond] (0,\HA)  -- (-0.46,\HA);
+    \draw[bond] (0,-\HA) -- (-0.46,-\HA);
     \dR{0}{\HA}{tnL}
     \dR{0}{-\HA}{tnR}
   \end{scope}

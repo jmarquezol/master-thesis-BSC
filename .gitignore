@@ -30,3 +30,8 @@ AGENTS.md
 .agents/
 defense_prep.ipynb
 SESSION_HANDOFF.md
+DEFENSE_HANDOFF.md
+# latexindent temp files (LaTeX Workshop writes these on save)
+__latexindent_temp*
+*.bak
+indent.log

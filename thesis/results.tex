@@ -6,83 +6,85 @@ We test the \ac{CFT} predictions of Section~\ref{sec:cft:temporal} using simulat
 
 We follow the two routes introduced in Section~\ref{sec:numerics}: the entropy route, which requires the dominant eigenvectors, and the spectral route, which uses the leading eigenvalues. Both analyses include the integrable Ising point and the non-integrable cases, allowing us to determine whether the conformal signatures persist after introducing the \ac{NNN} interaction. Table~\ref{tab:cp} summarises the resulting universal data.
 
-Unless stated otherwise, the simulations use the second-order \textit{VD2} \ac{MPO} of Section~\ref{sec:mporep}, with time step $\delta t=0.1$, cooling regulator $\beta_0=0.2$ ($N_\beta=4$), and maximum temporal bond dimension $\chi=64$; the bond dimensions the two iterations actually reach are reported in Appendix~\ref{app:library:build}. We convert the spectral measurements into universal quantities using the independently determined sound velocities $v_\infty(p)$ from Section~\ref{sec:annni:velocity}. Appendix~\ref{app:errors} gives the fitting conventions, numerical controls and origin of the uncertainties.
+Unless stated otherwise, the simulations use the second-order \textit{VD2} \ac{MPO} of Section~\ref{sec:mporep}, with time step $\delta t=0.1$, cooling regulator $\beta_0=0.2$ ($N_\beta=4$), and maximum temporal bond dimension $\chi=64$; the bond dimensions the two iterations actually reach, together with the remaining numerical controls, are reported in Appendix~\ref{app:library:build}. We convert the spectral measurements into universal quantities using the independently determined sound velocities $v_\infty(p)$ from Section~\ref{sec:annni:velocity}. Appendix~\ref{app:errors} gives the fitting conventions and the origin of the uncertainties.
 
 \begin{table}[!htbp]
-  \centering
-  \begin{tabular}{lc|ccc|cc}
-    \hline
-          &            & \multicolumn{3}{c|}{spectral route} & \multicolumn{2}{c}{entropy route}                                           \\
-    $p$   & $v_\infty$ & window                              & $c$                               & $x_1$   & window        & $c$           \\
-    \hline
-    $0$   & $2.000$    & $T\le24$                            & $0.451\pm0.008$                   & $0.498$ & $8\le T\le24$ & $0.50\pm0.05$ \\
-    $0.1$ & $2.670$    & $T\le17$                            & $0.469\pm0.006$                   & $0.497$ & $4\le T\le13$ & $0.50\pm0.04$ \\
-    $0.3$ & $3.967$    & $T\le10$                            & $0.492\pm0.001$                   & $0.493$ & $2\le T\le9$  & $0.53\pm0.04$ \\
-    $0.5$ & $5.212$    & $T\le6$                             & $0.533\pm0.013$                   & $0.487$ & $2\le T\le5$  & $0.58\pm0.06$ \\
-    \hline
-  \end{tabular}
-  \caption{\textbf{Universal data as a function of the \ac{NNN} coupling.} The spectral central charge is obtained from the phase curvature of $\mu_0$ through Eq.~\eqref{eq:cft:eq3}, while $x_1$ follows from the first phase gap through Eq.~\eqref{eq:cft:eq4}. The entropy-route central charge is extracted from the extrapolated plateau of Section~\ref{sec:results:wall}, using seed ensembles of independent single-vector runs. Each route has its own fitting window, listed beside its result. Uncertainties combine the spread of each fit under resampling of the independent runs with its variation under changes of the fitting window.}
-  \label{tab:cp}
+    \centering
+    \begin{tabular}{lc|cc|ccc}
+        \hline
+              &            & \multicolumn{2}{c|}{entropy route} & \multicolumn{3}{c}{spectral route}                                    \\
+        $p$   & $v_\infty$ & window                             & $c$                                & window        & $c$    & $x_1$   \\
+        \hline
+        $0$   & $2.00$     & $4\le T\le22$                      & $0.49\pm0.01$                      & $2\le T\le22$ & $0.45$ & $0.498$ \\
+        $0.1$ & $2.67$     & $4\le T\le13$                      & $0.50\pm0.04$                      & $2\le T\le17$ & $0.47$ & $0.497$ \\
+        $0.3$ & $3.97$     & $2\le T\le9$                       & $0.53\pm0.04$                      & $2\le T\le10$ & $0.49$ & $0.493$ \\
+        $0.5$ & $5.21$     & $2\le T\le5$                       & $0.58\pm0.04$                      & $2\le T\le6$  & $0.53$ & $0.487$ \\
+        \hline
+    \end{tabular}
+    \caption{\textbf{Universal data as a function of the \ac{NNN} coupling.} The entropy-route central charge comes from the extrapolated imaginary plateau of Section~\ref{sec:results:wall}, measured on seed ensembles of independent single-vector runs; its uncertainty is the spread of that extrapolation under resampling of those runs. The spectral central charge comes from the phase curvature of $\mu_0$ through Eq.~\eqref{eq:cft:eq3} and $x_1$ from the first phase gap through Eq.~\eqref{eq:cft:eq4}, which carry no uncertainty because independent seeds return the same eigenvalues. Each route has its own fitting window, listed beside its result.}
+    \label{tab:cp}
 \end{table}
 
 \subsection{The entropy route}
 \label{sec:results:validation}
 \label{sec:results:wall}
 
-At the integrable point, the generalised temporal entropy of Eq.~\eqref{eq:s2gen} follows the conformal prediction previously established for the critical Ising chain~\cite{carignano_tagliacozzo2025}. This behaviour persists after introducing the \ac{NNN} interaction, as Figure~\ref{fig:domes} shows for the R\'enyi-2 profiles at $p=0.1$: the real part follows the chord dependence of Eq.~\eqref{eq:cft:chord}, while the imaginary part develops a plateau across the interior of the strip. Appendix~\ref{app:highp} presents the corresponding profiles at the other couplings.
+At the integrable point, the generalised temporal entropy of Eq.~\eqref{eq:s2gen} follows the conformal prediction previously established for the critical Ising chain~\cite{carignano_tagliacozzo2025}. This behaviour persists after introducing the \ac{NNN} interaction, as Figure~\ref{fig:domes} shows for the R\'enyi-2 profiles at $p=0.1$: once the finite-time corrections have been taken into account~\cite{boucomas2026}, the real part follows the chord profile of Eq.~\eqref{eq:cft:chord} and the imaginary part develops a plateau across the interior of the strip. Appendix~\ref{app:errors} gathers the profiles at all four couplings and the finite-time corrections that each of the two routes requires.
 
 \begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\textwidth]{imgs/res_domes.pdf}
-  \caption{\textbf{Generalised temporal entropy at $p=0.1$.} Each colour denotes one evolution time. (a) Real part as a function of $t/T$. The dashed curves show the conformal profile of Eq.~\eqref{eq:cft:chord}, with $c=\tfrac12$ fixed and the non-universal constant $s_0$ fitted. (b) Imaginary part, which forms an approximately constant plateau in the interior of the strip. The plateau lies above the asymptotic value $\pi c/16$ (dotted line) and approaches it as $T$ increases.}
-  \label{fig:domes}
+    \centering
+    \includegraphics[width=0.76\textwidth]{imgs/res_domes.pdf}
+    \caption{\textbf{Generalised temporal entropy at $p=0.1$.} Each colour denotes one evolution time. (a) Real part as a function of $t/T$. The dashed curves show the conformal profile at $c=\tfrac12$ with its finite-time correction, the two non-universal constants being fitted to each profile (Appendix~\ref{app:errors}). (b) Imaginary part, which forms an approximately constant plateau in the interior of the strip. The plateau lies above the asymptotic value $\pi c/16$ (dotted line) and approaches it as $T$ increases.}
+    \label{fig:domes}
 \end{figure}
 
-We extract the entropy-route central charge as follows. For each run at fixed evolution time, we evaluate the imaginary part of the entropy at every temporal bond. Short-distance lattice effects are concentrated near the strip boundaries, while the interior becomes approximately constant; this interior value defines the plateau for that run. We then repeat the calculation from independent random initialisations and take the median over the physical runs, obtaining one plateau value for each evolution time.
+To extract the entropy-based central charge, we first average the imaginary part of the entropy over the four temporal bonds at the centre of the strip for each run. Residual lattice effects produce small oscillations across the otherwise approximately constant interior. This short average suppresses those oscillations while excluding the ends of the strip, where boundary effects dominate. We define the resulting average as the plateau value for that run. Repeating the calculation from independent random initialisations and taking the median over the physical runs gives one plateau value at each evolution time.
 
-As the finite-time correction of Section~\ref{sec:cft:temporal} decays, these values approach the asymptote $\pi c/16$. At the integrable point, for example, the plateau decreases from $0.125$ at $T=8$ to $0.108$ at $T=22$. We determine the central charge by fitting the predicted $T^{-1/2}$ correction~\cite{boucomas2026} and extrapolating to infinite time.
+As the finite-time correction described in Section~\ref{sec:cft:temporal} decays, the plateau approaches the asymptotic value $\pi c/16$. At the integrable point, for example, it decreases from $0.132$ at $T=4$ to $0.108$ at $T=22$. We determine the central charge by fitting the predicted $T^{-1/2}$ correction~\cite{boucomas2026} and extrapolating to $T\to\infty$. Appendix~\ref{app:errors} gives the fitting form and compares it with alternative corrections.
 
-The reliability of the extrapolation is controlled by the length of the available time sequence. Over a short window, the predicted decay and a constant-in-time model can describe the data comparably well while approaching different asymptotic values. This limitation is reflected in the entropy-route estimates of Table~\ref{tab:cp}, which are fitted from the plateau data. The longer sequences at $p=0$ and $p=0.1$ recover the Ising value, while the shorter ones at $p=0.3$ and $p=0.5$ yield larger estimates, consistent with the direction of the finite-time correction but not yet converged. Each window ends where the ensembles of Section~\ref{sec:reach} cease to return physical profiles, which occurs at earlier times as $p$ increases (Appendix~\ref{app:failures}). Appendix~\ref{app:errors} defines the extrapolation procedure and its alternatives, and quantifies the bias produced by a short window at the integrable point, where the exact value is known.
+The reliability of this extrapolation is controlled by the length of the available time sequence. Over a short window, the predicted decay and a constant model can describe the data comparably well while giving different asymptotic values. The longer sequences at $p=0$ and $p=0.1$ therefore yield estimates consistent with the Ising value within their uncertainties. By contrast, the shorter sequences at $p=0.3$ and $p=0.5$ remain above it. The values and fitting windows are reported in Table~\ref{tab:cp}. Each window ends when the ensembles of Section~\ref{sec:reach} cease to produce physical profiles, which occurs earlier as $p$ increases (Appendix~\ref{app:failures}). The quoted uncertainties measure the run-to-run variation of the plateau extrapolation, but do not quantify the remaining finite-time bias.
 
 
 \subsection{The spectral route}
 \label{sec:results:spectral}
 
-We compute the leading spectrum over the time windows listed in Table~\ref{tab:cp}. Figure~\ref{fig:circle} shows that the trajectory of $\mu_0$ remains close to a circle whose radius depends on the coupling: its phase winds with $T$, while its modulus varies by approximately $1\%$ or less over each sequence, which is the signature of emergent dual unitarity described in Section~\ref{sec:cft:temporal}~\cite{bertini2019,carignano_tagliacozzo2025}. The phase increment between successive times also remains nearly constant along the physical branch, so a persistent departure from this progression indicates that the branch is no longer resolved and determines the end of the fitting window (Appendix~\ref{app:errors}).
+We compute the leading spectrum over the time windows listed in Table~\ref{tab:cp}. Figure~\ref{fig:circle} shows that the trajectory of $\mu_0$ remains close to a circle whose radius depends on the coupling: its phase winds with $T$, while its modulus varies by approximately $1\%$ or less over each sequence, which is the signature of emergent dual unitarity described in Section~\ref{sec:cft:temporal}~\cite{bertini2019,carignano_tagliacozzo2025}. The phase increment between successive times also remains nearly constant along the physical branch, so a persistent departure from this progression indicates that the branch is no longer resolved and determines the end of the fitting window.
 
 \begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.65\textwidth]{imgs/res_circle.pdf}
-  \caption{\textbf{Trajectory of the leading eigenvalue.} For each coupling, the dashed circle has the mean modulus of the corresponding sequence and is labelled by this value. As $T$ increases, the phase winds while the modulus remains approximately constant.}
-  \label{fig:circle}
+    \centering
+    \includegraphics[width=0.75\textwidth]{imgs/res_circle.pdf}
+    \caption{\textbf{Trajectory of the leading eigenvalue.} For each coupling, the dashed circle has the mean modulus of the corresponding sequence and is labelled by this value. As $T$ increases, the phase winds while the modulus remains approximately constant.}
+    \label{fig:circle}
 \end{figure}
 
-We extract the central charge from the phase curvature using Eq.~\eqref{eq:cft:eq3} and the fitting conventions of Appendix~\ref{app:errors}. Figure~\ref{fig:eq3} shows the resulting fits.
+We extract the central charge from the phase curvature using Eq.~\eqref{eq:cft:eq3}. Figure~\ref{fig:eq3} shows the resulting fits.
 
 \begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.8\textwidth]{imgs/res_eq3.pdf}
-  \caption{\textbf{Central charge from the phase of the leading eigenvalue.} Fits of Eq.~\eqref{eq:cft:eq3} to $\mathrm{Im}\,\lambda_0/T$ at each coupling. The fitted constant $a_0$ is subtracted to isolate the time-dependent contribution, whose curvature determines the central charge reported in each legend.}
-  \label{fig:eq3}
+    \centering
+    \includegraphics[width=0.8\textwidth]{imgs/res_eq3.pdf}
+    \caption{\textbf{Central charge from the phase of the leading eigenvalue.} Fits of Eq.~\eqref{eq:cft:eq3} to $\mathrm{Im}\,\lambda_0/T$ at each coupling. The fitted constant $a_0$ is subtracted to isolate the time-dependent contribution, whose curvature determines the central charge reported in each legend.}
+    \label{fig:eq3}
 \end{figure}
 
-The spectral estimates in Table~\ref{tab:cp} lie within approximately $10\%$ of the Ising value at every coupling. In contrast to the entropy route, which approaches the conformal value from above (Section~\ref{sec:results:wall}), the spectral estimate at the integrable point is biased downwards to approximately $0.45$, which exceeds the fitted uncertainty. The controls in Appendix~\ref{app:x1} identify and quantify its two leading sources.
+The spectral estimates in Table~\ref{tab:cp} lie within approximately $10\%$ of the Ising value at every coupling. At the integrable point, where the answer is known, the estimate is biased downwards to approximately $0.45$. Two effects account for it, and both act in the same direction, which is why the estimates sit below $\tfrac12$ rather than scattering around it.
 
-The production fit truncates the expansion in Eq.~\eqref{eq:cft:eq3} after the $C/T^2$ term. At the integrable point, including the next contribution raises the fitted coefficient $C$ from $90\%$ to $97\%$ of its predicted value. The shorter interacting windows cannot constrain this additional parameter, so we use the same two-term form at every coupling and treat the remaining difference as a systematic bias.
+The first is the fit itself. The production form truncates the expansion in Eq.~\eqref{eq:cft:eq3} after the $C/T^2$ term, and the leading contribution it discards enters $\mathrm{Im}\,\lambda_0$ at order $T^{-3}$. At the integrable point, including that contribution raises the fitted coefficient $C$ from $90\%$ to $97\%$ of its predicted value. The shorter interacting windows cannot constrain this additional parameter, so we use the same two-term form at every coupling and treat the remaining difference as a systematic bias.
 
-The regulator enters in the analysis through the complex strip width $\beta=v(2\beta_0+iT)$ in Eq.~\eqref{eq:cft:transfer}. Its effect can be measured directly: the fitted coefficient decreases approximately linearly with $\beta_0$, lies about $10\%$ below the prediction at the production value $\beta_0=0.2$, and extrapolates to the predicted value as $\beta_0\to0$. That limit is not an accessible setting, because the cooling interval is required to produce the regularised conformal boundary state of the strip construction (Section~\ref{sec:cft:boundary}). The observed deficit is therefore consistent with controlled finite-time and finite-regulator effects.
+The second is the regulator, which enters the analysis through the complex strip width $\beta=v(2\beta_0+iT)$ in Eq.~\eqref{eq:cft:transfer}. Its effect can be measured directly: the fitted coefficient decreases approximately linearly with $\beta_0$, lies about $12\%$ below the prediction at the production value $\beta_0=0.2$, and extrapolates to the predicted value as $\beta_0\to0$. That limit is not an accessible setting, because the cooling interval is required to produce the regularised conformal boundary state of the strip construction. The observed deficit is therefore consistent with the finite-time and finite-regulator effects described in Appendix~\ref{app:errors}.
 
 The equilibrium analysis of Section~\ref{sec:annni:equilibrium} gives comparable estimates of the central charge over the same coupling range, which provides an independent comparison between universal data obtained from the ground state and from real-time dynamics.
 
 The sound velocity affects the spectral analysis in two ways. First, Eq.~\eqref{eq:cft:eq4} gives phase gaps proportional to $1/(vT)$, so a larger velocity compresses the tower at fixed evolution time and requires finer phase resolution. Second, the conversion from the fitted curvature to the central charge also contains a factor of $v$, since $c=24\,v\,|C|/\pi$. A fixed uncertainty in $C$ therefore produces an uncertainty in $c$ that increases with the velocity. Both effects reduce the spectral resolution at stronger coupling. Together with the worsening conditioning of the left and right eigenvectors (Appendix~\ref{app:conditioning}), they may explain why the available windows shorten as $p$ increases.
 
+The velocity works the other way as well, however. Since it sets the length of the strip in conformal units, a larger $v$ means the asymptotic regime is reached at a smaller lattice time: measured in the product $v_\infty T$, the four windows are far more alike than they appear, spanning $44$, $45$, $40$ and $31$ from $p=0$ to $p=0.5$. That is why a sequence ending at $T=6$ still returns a sensible central charge at the strongest coupling.
+
 On the other hand, the resolved boundary spectrum remains consistent with the Ising prediction after introducing the \ac{NNN} interaction. Figure~\ref{fig:tower} shows the seven leading dimensions obtained with $k=8$. The leading dimension, reported in Table~\ref{tab:cp}, remains within $3\%$ of the predicted value $\tfrac12$ at every coupling.
 
 \begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.8\textwidth]{imgs/res_tower.pdf}
-  \caption{\textbf{Boundary dimensions as a function of evolution time.} The seven leading dimensions at each coupling are obtained from the phase gaps through Eq.~\eqref{eq:cft:eq4}, ordered by increasing phase distance from $\mu_0$, and resolved with $k=8$. The dashed lines mark the predicted values $\tfrac12$, $\tfrac32$, $2$, $\tfrac52$, $3$, $\tfrac72$, and $4$. The free boundary condition selects two towers: the identity tower contains the integer values, while the energy tower contains the half-integer values (Appendix~\ref{app:x1}).}
-  \label{fig:tower}
+    \centering
+    \includegraphics[width=0.8\textwidth]{imgs/res_tower.pdf}
+    \caption{\textbf{Boundary dimensions as a function of evolution time.} The seven leading dimensions at each coupling are obtained from the phase gaps through Eq.~\eqref{eq:cft:eq4}, ordered by increasing phase distance from $\mu_0$, and resolved with $k=8$. The dashed lines mark the predicted values $\tfrac12$, $\tfrac32$, $2$, $\tfrac52$, $3$, $\tfrac72$, and $4$. The free boundary condition selects two towers: the identity tower contains the integer values, while the energy tower contains the half-integer values (Appendix~\ref{app:x1}).}
+    \label{fig:tower}
 \end{figure}
 
 The first five dimensions remain close to their predicted values throughout the coupling range. The sixth and seventh dimensions, which seem to drift slightly upwards compared with the predictions, are extracted from the highest states retained by the block and are therefore the least converged, as quantified in Appendix~\ref{app:blockpm:schur}. Their phase gaps are also the most difficult to resolve as the spectrum becomes more compressed, and at the stronger couplings the accessible window in $T$ ends before these estimates can settle, so the conformal prediction cannot yet emerge clearly there.
