@@ -734,7 +734,8 @@ function thesis_plot_theme!()
         size           = (800, 480),
         dpi            = 200,
         margin         = 5Plots.mm,
-        bottom_margin  = 10Plots.mm,   # 14pt axis labels need the room; 5mm clips them
+        bottom_margin  = 6Plots.mm,    # just clear of the axis label; 10mm left a blank band
+                                       # between the label and the caption in every figure
         left_margin    = 10Plots.mm,
     )
     return nothing

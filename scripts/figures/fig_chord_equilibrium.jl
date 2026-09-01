@@ -21,7 +21,7 @@ function make_chord_equilibrium()
     chord_data = load(cache, "data")
 
     figX = plot(xlabel="W(l, L)", ylabel="S_vN(x)", legend=:outerright,
-                framestyle=:box, size=thesis_size(0.92; aspect=0.45))
+                framestyle=:box, size=thesis_size(1.0; aspect=0.413))
     palette_chord = cgrad(:viridis, length(p_chord), categorical=true)
 
     for (i, p) in enumerate(p_chord)

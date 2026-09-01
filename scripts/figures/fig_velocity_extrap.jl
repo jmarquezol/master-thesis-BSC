@@ -56,7 +56,7 @@ function make_velocity_extrap()
     annotate!(figB, 0.35, 1.9955, text("N → ∞", 9, :left))
 
     return plot(figA, figB, figLeg; layout=@layout([a b c{0.16w}]),
-                size=thesis_size(1.0; aspect=0.40))
+                size=thesis_size(1.0; aspect=0.370))
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__

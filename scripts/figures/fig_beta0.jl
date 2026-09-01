@@ -36,7 +36,7 @@ function make_beta0()
 
     xs = range(0, maximum(b0s) * 1.05, length=50)
     pl = plot(xlabel="\$\\beta_0\$", ylabel="\$C_{\\mathrm{fit}}\\,/\\,C_{\\mathrm{CFT}}\$",
-              legend=:topright, legendfontsize=7, size=thesis_size(0.62; aspect=0.72),
+              legend=:topright, legendfontsize=7, size=thesis_size(0.70; aspect=0.634),
               margin=2Plots.mm, ylims=(0.4, 1.12), xlims=(-0.02, 0.86))
     hline!(pl, [1.0], color=:black, ls=:dash, lw=0.9, label="")
     plot!(pl, xs, lin(collect(xs), fit.param), color=:grey45, lw=1.4, label="linear fit")

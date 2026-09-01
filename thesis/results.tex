@@ -33,7 +33,7 @@ At the integrable point, the generalised temporal entropy of Eq.~\eqref{eq:s2gen
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.76\textwidth]{imgs/res_domes.pdf}
+    \includegraphics[width=0.87\textwidth]{imgs/res_domes.pdf}
     \caption{\textbf{Generalised temporal entropy at $p=0.1$.} Each colour denotes one evolution time. (a) Real part as a function of $t/T$. The dashed curves show the conformal profile at $c=\tfrac12$ with its finite-time correction, the two non-universal constants being fitted to each profile (Appendix~\ref{app:errors}). (b) Imaginary part, which forms an approximately constant plateau in the interior of the strip. The plateau lies above the asymptotic value $\pi c/16$ (dotted line) and approaches it as $T$ increases.}
     \label{fig:domes}
 \end{figure}
@@ -52,7 +52,7 @@ We compute the leading spectrum over the time windows listed in Table~\ref{tab:c
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.75\textwidth]{imgs/res_circle.pdf}
+    \includegraphics[width=0.80\textwidth]{imgs/res_circle.pdf}
     \caption{\textbf{Trajectory of the leading eigenvalue.} For each coupling, the dashed circle has the mean modulus of the corresponding sequence and is labelled by this value. As $T$ increases, the phase winds while the modulus remains approximately constant.}
     \label{fig:circle}
 \end{figure}
@@ -61,12 +61,12 @@ We extract the central charge from the phase curvature using Eq.~\eqref{eq:cft:e
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.8\textwidth]{imgs/res_eq3.pdf}
+    \includegraphics[width=0.87\textwidth]{imgs/res_eq3.pdf}
     \caption{\textbf{Central charge from the phase of the leading eigenvalue.} Fits of Eq.~\eqref{eq:cft:eq3} to $\mathrm{Im}\,\lambda_0/T$ at each coupling. The fitted constant $a_0$ is subtracted to isolate the time-dependent contribution, whose curvature determines the central charge reported in each legend.}
     \label{fig:eq3}
 \end{figure}
 
-The spectral estimates in Table~\ref{tab:cp} lie within approximately $10\%$ of the Ising value at every coupling. At the integrable point, where the answer is known, the estimate is biased downwards to approximately $0.45$. Two effects account for it, and both act in the same direction, which is why the estimates sit below $\tfrac12$ rather than scattering around it.
+The spectral estimates in Table~\ref{tab:cp} lie within approximately $10\%$ of the Ising value at every coupling. At the integrable point, where the answer is known, the estimate is biased downwards to approximately $0.45$. We identified two effects that account for it.
 
 The first is the fit itself. The production form truncates the expansion in Eq.~\eqref{eq:cft:eq3} after the $C/T^2$ term, and the leading contribution it discards enters $\mathrm{Im}\,\lambda_0$ at order $T^{-3}$. At the integrable point, including that contribution raises the fitted coefficient $C$ from $90\%$ to $97\%$ of its predicted value. The shorter interacting windows cannot constrain this additional parameter, so we use the same two-term form at every coupling and treat the remaining difference as a systematic bias.
 
@@ -76,13 +76,13 @@ The equilibrium analysis of Section~\ref{sec:annni:equilibrium} gives comparable
 
 The sound velocity affects the spectral analysis in two ways. First, Eq.~\eqref{eq:cft:eq4} gives phase gaps proportional to $1/(vT)$, so a larger velocity compresses the tower at fixed evolution time and requires finer phase resolution. Second, the conversion from the fitted curvature to the central charge also contains a factor of $v$, since $c=24\,v\,|C|/\pi$. A fixed uncertainty in $C$ therefore produces an uncertainty in $c$ that increases with the velocity. Both effects reduce the spectral resolution at stronger coupling. Together with the worsening conditioning of the left and right eigenvectors (Appendix~\ref{app:conditioning}), they may explain why the available windows shorten as $p$ increases.
 
-The velocity works the other way as well, however. Since it sets the length of the strip in conformal units, a larger $v$ means the asymptotic regime is reached at a smaller lattice time: measured in the product $v_\infty T$, the four windows are far more alike than they appear, spanning $44$, $45$, $40$ and $31$ from $p=0$ to $p=0.5$. That is why a sequence ending at $T=6$ still returns a sensible central charge at the strongest coupling.
+The velocity works the other way as well, however. Since it sets the length of the strip in conformal units, a larger $v$ means the asymptotic regime is reached at a smaller lattice time: measured in the product $v_\infty T$, the four windows behave very similarly, spanning $44$, $45$, $40$ and $31$ from $p=0$ to $p=0.5$. That is why a sequence ending at $T=6$ still returns a sensible central charge at the strongest coupling.
 
 On the other hand, the resolved boundary spectrum remains consistent with the Ising prediction after introducing the \ac{NNN} interaction. Figure~\ref{fig:tower} shows the seven leading dimensions obtained with $k=8$. The leading dimension, reported in Table~\ref{tab:cp}, remains within $3\%$ of the predicted value $\tfrac12$ at every coupling.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.8\textwidth]{imgs/res_tower.pdf}
+    \includegraphics[width=0.87\textwidth]{imgs/res_tower.pdf}
     \caption{\textbf{Boundary dimensions as a function of evolution time.} The seven leading dimensions at each coupling are obtained from the phase gaps through Eq.~\eqref{eq:cft:eq4}, ordered by increasing phase distance from $\mu_0$, and resolved with $k=8$. The dashed lines mark the predicted values $\tfrac12$, $\tfrac32$, $2$, $\tfrac52$, $3$, $\tfrac72$, and $4$. The free boundary condition selects two towers: the identity tower contains the integer values, while the energy tower contains the half-integer values (Appendix~\ref{app:x1}).}
     \label{fig:tower}
 \end{figure}

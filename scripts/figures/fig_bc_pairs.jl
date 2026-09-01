@@ -64,7 +64,7 @@ function make_bc_pairs()
                 join([@sprintf("%.3f", x) for x in tower_dims(d[last(Ts)].theta, last(Ts), V0; i0=d[last(Ts)].i0)[1:3]], ", "))
     end
 
-    return plot(panels..., layout=(2, 2), size=thesis_size(0.95; aspect=0.62), margin=2Plots.mm)
+    return plot(panels..., layout=(2, 2), size=thesis_size(1.0; aspect=0.570), margin=2Plots.mm)
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__

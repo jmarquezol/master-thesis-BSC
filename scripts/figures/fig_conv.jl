@@ -14,7 +14,7 @@ function make_conv()
     res = load(joinpath(ROOT, "data", "local", "conv_history_sv.jld2"), "res")
     pl = plot(xlabel="iteration", ylabel="\$\\mathrm{d}s\$",
               yscale=:log10, legend=:topright, legendfontsize=8,
-              size=thesis_size(0.66; aspect=0.66), margin=2Plots.mm, left_margin=4Plots.mm)
+              size=thesis_size(0.75; aspect=0.580), margin=2Plots.mm, left_margin=4Plots.mm)
     hline!(pl, [1e-6], color=:black, ls=:dash, lw=0.9, label="tolerance")
     lab(r) = r.reason == "converged" ? "converged at $(r.niters)" : "no improvement, stopped at $(r.niters)"
     for (mode, col, name) in ((:rtm, :crimson, "RTM"), (:rdm, :dodgerblue, "RDM"))

@@ -52,8 +52,11 @@ function make_spectral()
     # ── figure 1: each coupling on its own circle, drawn at the mean modulus of its ladder, so
     # the different scales stay visible instead of being normalised away
     # the centre of the ring is empty, so the legend sits there rather than stealing width
-    pc = plot(xlabel="Re μ₀", ylabel="Im μ₀", legend=:outerright,
-              aspect_ratio=:equal, size=thesis_size(0.58; aspect=0.52),
+    # a larger canvas at the same include width shrinks the labels to the ~12pt the multi-panel
+    # figures render at; bottom_margin is set explicitly because the theme's global 10mm leaves a
+    # blank band between the axis label and the caption
+    pc = plot(xlabel="Re μ₀", ylabel="Im μ₀", legend=:outerright, bottom_margin=6Plots.mm,
+              aspect_ratio=:equal, size=thesis_size(0.95; aspect=0.47),
               xlims=(-2.15, 2.15), ylims=(-2.15, 2.15),
               xticks=[-2, -1, 0, 1, 2], yticks=[-2, -1, 0, 1, 2])
     th = range(0, 2pi, length=400)
@@ -63,7 +66,7 @@ function make_spectral()
         plot!(pc, r .* cos.(th), r .* sin.(th), color=P_COLOR[p], ls=:dash, lw=1, alpha=0.6, label="")
         # ms tracks the plot area: the canvas was shortened for the page budget, so the markers
         # are scaled with it to keep the same size relative to the circle as before
-        scatter!(pc, real.(z), imag.(z), ms=2.2, msw=0, color=P_COLOR[p], marker=P_MARKER[p],
+        scatter!(pc, real.(z), imag.(z), ms=3.6, msw=0, color=P_COLOR[p], marker=P_MARKER[p],
                  label=@sprintf("p=%.1f,  |μ₀|=%.3f", p, r))
         @printf("p=%.1f  |mu0| = %.4f  (spread %.2e)\n", p, r, maximum(abs.(z)) - minimum(abs.(z)))
     end
@@ -87,7 +90,7 @@ function make_spectral()
         push!(panels, pl)
         @printf("p=%.1f  %2d rungs T=%g..%g  c = %.4f\n", p, length(Ts), first(Ts), last(Ts), c)
     end
-    fig = plot(panels..., layout=(2, 2), size=thesis_size(0.95; aspect=0.48), margin=2Plots.mm)
+    fig = plot(panels..., layout=(2, 2), size=thesis_size(1.04; aspect=0.439), margin=2Plots.mm)
 
     return (circle=pc, eq3=fig)
 end

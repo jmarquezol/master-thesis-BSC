@@ -17,7 +17,7 @@ function make_velocity_vs_p()
     vN = load(joinpath(ROOT, "data", "local", "nb4_velocity_sizes.jld2"), "v")
     v_infinity = load(joinpath(ROOT, "data", "local", "alcaraz_velocity.jld2"), "v")
 
-    figv = plot(size=thesis_size(0.92; aspect=0.45), xlabel="p", ylabel="v(p)",
+    figv = plot(size=thesis_size(1.0; aspect=0.415), xlabel="p", ylabel="v(p)",
                 legend=:outerright, framestyle=:box)
     palette_sizes = cgrad(:viridis, length(N_ladder), categorical=true)
 

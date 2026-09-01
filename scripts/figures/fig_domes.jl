@@ -46,7 +46,7 @@ function make_domes()
     @printf("target πc/16 at c=1/2 = %.4f\n", pi / 32)
 
     return plot(pa, pb, layout=@layout([a b{0.589w}]),
-                size=thesis_size(0.95; aspect=0.36), margin=2Plots.mm)
+                size=thesis_size(1.04; aspect=0.330), margin=2Plots.mm)
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__

@@ -49,7 +49,7 @@ function make_tower()
                 join([@sprintf("%.3f", x) for x in dims(a[Ts[end]], V[p])[1:min(7, end)]], "  "))
     end
 
-    return plot(panels..., layout=(2, 2), size=thesis_size(0.95; aspect=0.6), margin=2Plots.mm)
+    return plot(panels..., layout=(2, 2), size=thesis_size(1.03; aspect=0.551), margin=2Plots.mm)
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__

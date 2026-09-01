@@ -54,7 +54,7 @@ function make_cft_L()
     end
 
     return plot(figA, figB, figLeg; layout=@layout([a b c{0.20w}]),
-                size=thesis_size(1.0; aspect=0.44))
+                size=thesis_size(1.0; aspect=0.407))
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__
