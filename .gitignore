@@ -25,13 +25,35 @@ cluster/logs/
 # assistant process files and personal notes
 CLAUDE.md
 GEMINI.md
-PRODUCTION_NUMBERS.md
 AGENTS.md
 .agents/
 defense_prep.ipynb
-SESSION_HANDOFF.md
-DEFENSE_HANDOFF.md
+slide_notes.ipynb
 # latexindent temp files (LaTeX Workshop writes these on save)
 __latexindent_temp*
 *.bak
 indent.log
+
+# Keynote export scaffolding (generated from defense/main.tex — not source)
+defense/keynote_pages/
+defense/keynote_layers/
+defense/figures_for_keynote/
+defense/build_keynote.applescript
+defense/build_keynote_layered.applescript
+defense/main_nofig.tex
+defense/main_nofig.pdf
+defense/main_nofig.aux
+defense/main_nofig.log
+defense/main_nofig.nav
+defense/main_nofig.out
+defense/main_nofig.snm
+defense/main_nofig.toc
+defense/main.aux
+defense/main.nav
+defense/main.out
+defense/main.snm
+defense/main.toc
+defense/main.log
+defense/gif_frames/
+defense/.notes_build/
+defense/main.synctex.gz

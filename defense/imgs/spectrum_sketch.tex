@@ -26,14 +26,13 @@
   \draw[black!45, dashed, line width=0.8pt] (0,0) circle (\R);
   % subleading eigenvalues sit slightly INSIDE the circle at finite T
   \node[tag, black!55, anchor=north, align=center] at (0,-2.62)
-    {$\dfrac{|\mu_i|}{|\mu_0|} = 1 - \dfrac{b_i}{T^2} \;\longrightarrow\; 1$\\[3pt]
-     {\footnotesize at finite $T$: $|\mu_i| < |\mu_0|$ by $O(\beta_0/T^2)$}};
+    {$\dfrac{|\mu_i|}{|\mu_0|} = 1 - \dfrac{b_i}{T^2} \;\longrightarrow\; 1$};
 
   % eigenvalues: same modulus (nearly), phases separated
   \node[pt] (m0) at (32:{\R}) {};
-  \node[pt] (m1) at (58:{\R-0.06}) {};
-  \node[pt] (m2) at (84:{\R-0.10}) {};
-  \node[pt] (m3) at (110:{\R-0.13}) {};
+  \node[pt] (m1) at (58:{\R-0.018}) {};
+  \node[pt] (m2) at (84:{\R-0.028}) {};
+  \node[pt] (m3) at (110:{\R-0.038}) {};
   \node[tag, anchor=west] at ($(m0)+(0.12,0.02)$) {$\mu_0$};
   \node[tag, anchor=north east] at ($(m1)+(-0.06,-0.10)$) {$\mu_1$};
   \node[tag, anchor=south] at ($(m2)+(0,0.10)$) {$\mu_2$};
