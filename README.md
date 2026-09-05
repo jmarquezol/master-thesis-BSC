@@ -12,7 +12,7 @@ This programme was established for integrable chains (Carignano & Tagliacozzo; B
 H = -Σ_i [ σᶻ_i σᶻ_{i+1} + λ σˣ_i + p (σᶻ_i σᶻ_{i+2} + λ σˣ_i σˣ_{i+1}) ]
 ```
 
-which is genuinely interacting for any `p > 0` but remains critical and in the Ising universality class up to `p ≲ 1.5`. The answer is yes: the equilibrium checks place the model in the Ising class across the whole range, and the dynamical measurements — on a corrected construction of the transfer-matrix column (`column=:bulk5`), from the cluster sweeps in `cluster/` — return the central charge through two independent routes and seven members of the boundary operator spectrum at every coupling studied.
+which is genuinely interacting for any `p > 0` but remains critical and in the Ising universality class up to `p ≲ 1.5`. The answer is yes: the equilibrium checks place the model in the Ising class across the whole range, and the dynamical measurements — on a corrected construction of the transfer-matrix column (`column=:bulk5`), from the cluster sweeps — return the central charge through two independent routes and seven members of the boundary operator spectrum at every coupling studied.
 
 ## What is in the repository
 
@@ -23,8 +23,7 @@ which is genuinely interacting for any `p > 0` but remains critical and in the I
 - `scripts/analysis/` — the numbers behind the thesis tables, split in two kinds. **Readers** take the shipped caches and print a result: `cluster_audit.jl` recomputes every value in the results table and shows where each one comes from, and `entropy_c.jl`, `eq3_windows.jl`, `chi_check.jl`, `deficit_tests.jl`, `mixedbc_analysis.jl`, `battery_report.jl` and `dtreport.jl` do the same for the individual controls. **Producers** are the runs that made those caches — the equilibrium ED and DMRG, the entropy and boundary ladders, the exponential-MPO benchmark, and the robustness controls (seed ensembles, cutoff scan, Trotter step, bond dimension, block size, warm starts). Every cache under `data/local/` has one, named in its header.
 - `data/cluster/` — the production caches from the MareNostrum sweeps; `data/local/` — the local caches (equilibrium DMRG/ED, validation runs, controls).
 - `figures/` — the generated figures (SVG is the Inkscape-editable version).
-- `cluster/` — the SLURM jobs, with their own README.
-- `presentation/` — the beamer draft for the defense.
+- `defense/` — the presentation slides for the defense.
 - `ITensorExpMPOv2.jl/` — a fork of [tipfom/ITensorExpMPO.jl](https://github.com/tipfom/ITensorExpMPO.jl); all upstream work is @tipfom's, and this thesis adds the second-order VD2 kernel (Van Damme et al.) so the NNN model evolves at genuine second order.
 
 ## Reproducing the results
@@ -49,7 +48,7 @@ julia --project=. scripts/analysis/mixedbc_ladder.jl upup       # one boundary p
 julia --project=. scripts/analysis/cutrerun.jl                  # the cutoff control, whole grid
 ```
 
-The production sweeps behind the main text are not local runs at all: they are the SLURM jobs in `cluster/`, which write to `data/cluster/`.
+The production sweeps behind the main text are not local runs at all: they are the MareNostrum production sweeps, which write to `data/cluster/`.
 
 One convention matters everywhere: for an NNN model the transfer-matrix column must be built from a five-site patch (`build_alcaraz_tmpo(...; column=:bulk5)`). The legacy three-site extraction silently drops a memory channel — notebook 2 demonstrates the difference.
 

@@ -18,9 +18,8 @@ thesis/main.synctex.gz
 literature/
 # local copy of the pinned ITransverse package, for reading only
 ITransverse_source/
-# warm-restart state for cluster jobs (large, machine-local)
-cluster/checkpoints/
-cluster/logs/
+# cluster submission scripts and state
+cluster/
 
 # assistant process files and personal notes
 CLAUDE.md
