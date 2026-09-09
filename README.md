@@ -14,7 +14,7 @@ eigenvalues and eigenvectors of a single transfer matrix. Since the quench is cr
 entanglement grows only logarithmically, so the contraction remains efficient at times where
 conventional evolution is already limited by the entanglement barrier.
 
-This was established for integrable chains by Carignano and Tagliacozzo and by Bou-Comas et al. The
+This was established for integrable chains by Carignano and Tagliacozzo (2025). The
 thesis asks whether it survives the loss of integrability. The model is a self-dual ANNNI-type
 chain, the transverse-field Ising model with a next-nearest-neighbour coupling of strength `p`,
 
@@ -84,11 +84,6 @@ julia --project=. scripts/analysis/cutrerun.jl               # the cutoff contro
 
 The production sweeps behind the main text were not run locally. They were submitted on MareNostrum
 from `cluster/` and write into `data/cluster/`.
-
-One convention applies everywhere. For a model with next-nearest-neighbour terms the
-transfer-matrix column must be built from a five-site patch, `build_alcaraz_tmpo(...;
-column=:bulk5)`. The three-site extraction is exact only for nearest-neighbour models and otherwise
-drops a memory channel without any error being raised. Notebook 2 shows the difference.
 
 ## Credits and references
 
