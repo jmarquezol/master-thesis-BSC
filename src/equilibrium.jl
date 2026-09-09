@@ -1,11 +1,10 @@
-# ──────────────────────────────────────────────────────────────────────────────
+# --------------------------------------------------------------------------
 # Equilibrium exact diagonalisation on a periodic ring
 #
 # Used for the sound velocity of Section 4.2. The ring Hamiltonian is built
 # directly from bit manipulation rather than through ITensors, so the
 # construction is short and easy to check on its own terms.
-# ──────────────────────────────────────────────────────────────────────────────
-
+# --------------------------------------------------------------------------
 using SparseArrays
 
 # A basis state is an integer 1..2^N. `bits_of` turns it into a length-N vector
@@ -173,8 +172,7 @@ function ground_and_gap(N, lambda, p; howmany=10)
             converged = info.converged)
 end
 
-# ── ground-state helpers (open chains, used by the DMRG calculations) ─────────
-
+# ---- ground-state helpers (open chains, used by the DMRG calculations) -----
 """
     alcaraz_H(sites, lambda, p) → MPO
 
@@ -205,8 +203,7 @@ function compute_vn_entropy(psi::MPS)
     return S
 end
 
-# ── open chain, exact in time (used to validate the transfer-matrix column) ───
-
+# ---- open chain, exact in time (used to validate the transfer-matrix column) 
 """
     sparse_open_hamiltonian(N, lambda, p) → SparseMatrixCSC
 

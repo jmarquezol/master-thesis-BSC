@@ -8,7 +8,6 @@
 #   towerscan   k=8 block for the boundary dimensions
 #   preflight   build one tMPO and exit
 #
-# Also implemented, not in current use: psweep, ksector, betascan, betawall, rtm, rdm, cutoff.
 # Env: WALL_COLUMN (legacy3|bulk5), WALL_DT, WALL_BLAS_THREADS, WALL_RETRIES, WALL_MU_JUMP.
 
 ENV["GKSwstype"] = "100"   # headless GR backend (src/thesislib.jl unconditionally `using Plots`)
@@ -62,7 +61,6 @@ function run_wall_scan(; chi::Int, label::String,
         eigvals_only::Bool=false,
         itermax=8000, stuck_after=150, eps_conv=1e-6, itermin_floor=20,
         k=4, k_retry=6,
-        ksector::Union{Nothing,Tuple{Vector{Float64},Int}}=nothing,
         cachefile=CLUSTER_CACHE,
         checkpointfile=nothing)
 
@@ -137,28 +135,14 @@ function run_wall_scan(; chi::Int, label::String,
             # |theta_0| from the previous rung means this rung, so redo it from a fresh seed
             local theta, L, R, info
             for attempt in 1:(1 + RETRIES)
-                if ksector === nothing
-                    theta, L, R, info = block_transfer_eigs_adaptive(mpo, scaffold;
-                        k=k, k_retry=k_retry, anchor=previous_phys,
-                        maxdim=chi, maxdims=collect(2:2:chi),
-                        cutoff=cutoff, cutoffs=cutoffs,
-                        itermax=itermax, eps_conv=eps_conv, itermin=itermin_floor, trunc_mode=trunc_mode, basis=basis,
-                        eigvals_only=eigvals_only,
-                        n_track=2, stuck_after=stuck_after,
-                        seedL=seedL, seedR=seedR)
-                else
-                    # truncation leaks sectors, so project every iteration, not just the seeds
-                    Rd, sector_sign = ksector
-                    theta, L, R, info = block_transfer_eigs(mpo, scaffold;
-                        k=k, maxdim=chi, maxdims=collect(2:2:chi),
-                        cutoff=cutoff, cutoffs=cutoffs,
-                        itermax=itermax, eps_conv=eps_conv, itermin=itermin_floor, trunc_mode=trunc_mode, basis=basis,
-                        eigvals_only=eigvals_only,
-                        n_track=2, stuck_after=stuck_after,
-                        seedL=seedL, seedR=seedR,
-                        project=psi -> project_ksector(psi, Rd, sector_sign))
-                    info = merge(info, Dict(:k_used => k, :escalated => false))
-                end
+                theta, L, R, info = block_transfer_eigs_adaptive(mpo, scaffold;
+                    k=k, k_retry=k_retry, anchor=previous_phys,
+                    maxdim=chi, maxdims=collect(2:2:chi),
+                    cutoff=cutoff, cutoffs=cutoffs,
+                    itermax=itermax, eps_conv=eps_conv, itermin=itermin_floor, trunc_mode=trunc_mode, basis=basis,
+                    eigvals_only=eigvals_only,
+                    n_track=2, stuck_after=stuck_after,
+                    seedL=seedL, seedR=seedR)
                 jumped = previous_phys !== nothing &&
                     abs(abs(theta[pick_phys_robust(theta, previous_phys)[1]]) - abs(previous_phys)) >
                         MU_JUMP * abs(previous_phys)
@@ -197,14 +181,11 @@ function run_wall_scan(; chi::Int, label::String,
             end # @elapsed
 
             peak = isempty(s2_base) ? NaN : maximum(real.(s2_base))   # no entropy in eigvals-only mode
-            kcharge = ksector === nothing ? Float64[] :
-                [real(overlap_noconj(L[j], apply_ksign(R[j], ksector[1])) /
-                      overlap_noconj(L[j], R[j])) for j in 1:k_actual]
             done[(label, T)] = (label=label, T=T, chi=chi, theta=collect(theta),
                 i0=i0, theta_phys=theta[i0],
                 dphi=dphi, cls=string.(cls), tower_gap=gap,
                 k_used=info[:k_used], escalated=info[:escalated],
-                s2_base=s2_base, s2_all=s2_all, peak=peak, rigidity=rigidity, kcharge=kcharge,
+                s2_base=s2_base, s2_all=s2_all, peak=peak, rigidity=rigidity,
                 reason=string(info[:reason]), niters=info[:niters], elapsed=elapsed)
 
             recovered && (previous_phys = theta[i0])
@@ -258,33 +239,13 @@ function run_wall_scan(; chi::Int, label::String,
 end
 
 # entry point
-mode = length(ARGS) >= 1 ? ARGS[1] : error("usage: julia wall_scan_cluster.jl <preflight|rtm|rdm|cutoff|psweep|eigsweep|betascan|betawall> [p] [nbeta] [Tmax]")
-
-const FULL_LADDER    = collect(2.0:1.0:14.0)
-const RTM_FULL_LADDER = collect(2.0:1.0:20.0)  # rtm alone now matches the psweep arms' T=20 reach
-const RDM_LADDER     = collect(2.0:1.0:12.0)   # cold T=9 alone took 20.6h; two points past the warm
-                                                # wall suffice — extend Ts + resubmit if ever needed.
+mode = length(ARGS) >= 1 ? ARGS[1] : error("usage: julia wall_scan_cluster.jl <preflight|eigsweep|entsweep|towerscan|fork|betascan> [p] [nbeta] [Tmax]")
 
 if mode == "preflight"
     # same tMPO call the ladder makes on every rung
     mpo, scaffold = build_alcaraz_tmpo(2.0; p=0.1, lambda=LAMBDA, dt=DT, nbeta=NBETA, MPO_alg="VD2", column=COLUMN)
     println("preflight OK — column=$(COLUMN), tMPO built, $(length(scaffold)) sites, " *
             "temporal site dim $(dim(siteind(mpo, 2))), maxlinkdim $(maxlinkdim(mpo))")
-elseif mode == "rtm"
-    run_wall_scan(chi=64, label="rtm64_full", Ts=RTM_FULL_LADDER, p_nnn=P_NNN)
-elseif mode == "rdm"
-    run_wall_scan(chi=64, label="rdm_p0.1", trunc_mode=:rdm, Ts=RDM_LADDER, p_nnn=P_NNN,
-        cachefile=joinpath(CLUSTER_DIR, "sweep_rdm_p0.1.jld2"))
-elseif mode == "cutoff"
-    run_wall_scan(chi=64, label="cut_tight", cutoffs=[fill(1e-10, 40); 1e-12], Ts=FULL_LADDER, p_nnn=P_NNN)
-elseif mode == "psweep"
-    # usage: psweep <p> <Tmax> [dT]
-    length(ARGS) >= 3 || error("psweep needs two extra args: julia wall_scan_cluster.jl psweep <p> <Tmax> [dT]")
-    p_val = parse(Float64, ARGS[2])
-    Tmax  = parse(Float64, ARGS[3])
-    dT    = check_dT(length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : 1.0)
-    run_wall_scan(chi=64, label="rtm_p$(p_val)", Ts=collect(2.0:dT:Tmax), trunc_mode=:rtm, p_nnn=p_val,
-        cachefile=joinpath(CLUSTER_DIR, "sweep_rtm_p$(p_val).jld2"))
 elseif mode == "fork"
     # fork <src_label> <dst_label>: seed a second interleaved chain from an existing arm's
     # frontier, so it warm-starts from the same checkpoint without sharing cache or checkpoint.
@@ -353,20 +314,6 @@ elseif mode == "eigsweep"
     run_wall_scan(chi=64, label=lbl, Ts=collect(T0:dT:Tmax),
         trunc_mode=:rtm, p_nnn=p_val, eigvals_only=true,
         cachefile=joinpath(CLUSTER_DIR, "sweep_$(lbl).jld2"))
-elseif mode == "ksector"
-    # usage: ksector <p> <plus|minus> <Tmax> [dT] — one K sector, so the branch is the sector label
-    length(ARGS) >= 4 || error("ksector needs <p> <plus|minus> <Tmax> [dT]")
-    p_val = parse(Float64, ARGS[2])
-    sector_sign = ARGS[3] in ("plus", "+1", "+") ? 1 :
-                  ARGS[3] in ("minus", "-1", "-") ? -1 : error("sector must be plus or minus")
-    Tmax = parse(Float64, ARGS[4])
-    dT = length(ARGS) >= 5 ? parse(Float64, ARGS[5]) : 1.0
-    Rd = ksector_signs(p_val; dt=DT, nbeta=NBETA, column=COLUMN)
-    lbl = "ksec_p$(p_val)_" * (sector_sign == 1 ? "plus" : "minus")
-    run_wall_scan(chi=64, label=lbl, Ts=collect(2.0:dT:Tmax), p_nnn=p_val,
-        eigvals_only=true, k=2, ksector=(Rd, sector_sign),
-        cachefile=joinpath(CLUSTER_DIR, "sweep_$(lbl).jld2"))
-
 elseif mode == "betascan"
     # usage: betascan <p> <Tmax> — the same run repeated over nbeta, to see how the read depends
     # on the regulator: too small dirties the boundary, too large inflates the finite-time term
@@ -378,16 +325,6 @@ elseif mode == "betascan"
         run_wall_scan(chi=64, label="beta_p$(p_val)_nb$(nb)", Ts=collect(2.0:1.0:Tmax),
             trunc_mode=:rtm, p_nnn=p_val, nbeta=nb, cachefile=betacache)
     end
-elseif mode == "betawall"
-    # usage: betawall <p> <nbeta> <Tmax> — one regulator value on a long ladder. Full eigenvector
-    # run on purpose: eigvals_only would answer a different question.
-    length(ARGS) >= 4 || error("betawall needs three extra args: julia wall_scan_cluster.jl betawall <p> <nbeta> <Tmax>")
-    p_val = parse(Float64, ARGS[2])
-    nb    = parse(Int, ARGS[3])
-    Tmax  = parse(Float64, ARGS[4])
-    run_wall_scan(chi=64, label="betawall_p$(p_val)_nb$(nb)", Ts=collect(2.0:1.0:Tmax),
-        trunc_mode=:rtm, p_nnn=p_val, nbeta=nb,
-        cachefile=joinpath(CLUSTER_DIR, "sweep_betawall_p$(p_val).jld2"))
 else
-    error("unknown mode \"$mode\" — expected one of: preflight, rtm, rdm, cutoff, psweep, eigsweep, betascan, betawall")
+    error("unknown mode \"$mode\" — expected one of: preflight, eigsweep, entsweep, towerscan, fork, betascan")
 end

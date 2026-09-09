@@ -2,8 +2,8 @@ ROOT = normpath(joinpath(@__DIR__, "..", ".."))
 isdefined(Main, :thesis_plot_theme!) || include(joinpath(ROOT, "src", "thesislib.jl"))
 using JLD2, Printf, Random, LinearAlgebra
 
-# Warm versus cold start, the one option in the F.4 catalogue with no measurement behind it.
-# Same rungs, same settings, same seed; the only difference is whether the block is initialised
+# Does warm-starting bias the answer? Same rungs, same settings, same seed; the only
+# difference is whether the block is initialised
 # from the converged block of the previous evolution time or from fresh random states.
 BLAS.set_num_threads(2)
 const OUT = joinpath(ROOT, "data", "local", "warmcold.jld2")

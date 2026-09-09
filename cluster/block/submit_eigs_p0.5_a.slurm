@@ -18,6 +18,8 @@
 # Own cache: data/cluster/sweep_rtm_eigs_p0.5_bulk.jld2
 
 cd "${SLURM_SUBMIT_DIR:-.}" || exit 1
+# the scripts live one level down, so step back up if sbatch was run from there
+[ -f wall_scan_cluster.jl ] || cd .. || exit 1
 mkdir -p logs
 module load julia/1.12.0
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK

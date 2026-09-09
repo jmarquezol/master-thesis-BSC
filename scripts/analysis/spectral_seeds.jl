@@ -2,9 +2,9 @@ ROOT = normpath(joinpath(@__DIR__, "..", ".."))
 isdefined(Main, :thesis_plot_theme!) || include(joinpath(ROOT, "src", "thesislib.jl"))
 using JLD2, Printf, Random, LinearAlgebra
 
-# app:failures states that the failure statistics of the BLOCK iteration (the spectral route) have
-# never been measured, only those of the single-vector entropy route. This measures them: the same
-# rungs repeated from independent cold seeds, near and past the p=0.3 window edge of T=6.5.
+# Failure statistics of the block iteration, the spectral route (app:failures). The same rungs
+# repeated from independent cold seeds, near and past the p=0.3 window edge at T=6.5, so the
+# block route can be compared with the single-vector ensembles of seedens.jl.
 # Lanes write to separate caches so two processes never touch the same file.
 BLAS.set_num_threads(2)
 const LANE  = parse(Int, ARGS[1])

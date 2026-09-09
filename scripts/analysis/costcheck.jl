@@ -2,10 +2,10 @@ ROOT = normpath(joinpath(@__DIR__, "..", ".."))
 isdefined(Main, :thesis_plot_theme!) || include(joinpath(ROOT, "src", "thesislib.jl"))
 using JLD2, Printf, Random, LinearAlgebra
 
-# The cost subsection claims a speed-up from compressing the partial direct sums, with no
-# measurement behind it. `accdim` is the cap on the running sum inside lincomb_mps: at its
-# default it equals the production bond dimension, so the sum never grows past chi; setting it
-# to k*chi reproduces the plain direct sum, whose peak bond dimension is k times larger.
+# Does compressing the partial direct sums actually save anything? `accdim` caps the running
+# sum inside lincomb_mps: at its default it equals the production bond dimension, so the sum
+# never grows past chi, while accdim = k*chi reproduces the plain direct sum with a peak bond
+# dimension k times larger. Measures wall time and the effect on |mu0| for both.
 BLAS.set_num_threads(2)
 const OUT = joinpath(ROOT, "data", "local", "costcheck.jld2")
 res = isfile(OUT) ? load(OUT, "res") : Dict{Tuple{Symbol,Float64},Any}()

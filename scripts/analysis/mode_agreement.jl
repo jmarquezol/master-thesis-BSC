@@ -2,8 +2,8 @@ ROOT = normpath(joinpath(@__DIR__, "..", ".."))
 isdefined(Main, :thesis_plot_theme!) || include(joinpath(ROOT, "src", "thesislib.jl"))
 using JLD2, Printf, Random, LinearAlgebra
 
-# Replaces the unsourced app:blockpm:schur agreement claim: run two INDEPENDENT warm-started
-# ladders at p=0.1 (corrected column), one per basis, and compare the Ritz-value ratios.
+# Do the two eigensolver modes agree? Runs two independent warm-started ladders at p=0.1 on
+# the corrected column, one per basis, and compares the Ritz-value ratios (app:blockpm:schur).
 # :eig  = the de-mixing (eigenvector) mode;  :schur = the eigenvalue-only mode.
 BLAS.set_num_threads(2)
 const OUT = joinpath(ROOT, "data", "local", "mode_agreement.jld2")

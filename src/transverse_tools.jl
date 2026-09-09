@@ -1,34 +1,30 @@
-# ──────────────────────────────────────────────────────────────────────────────
+# --------------------------------------------------------------------------
 # Transverse-contraction toolkit
-# ──────────────────────────────────────────────────────────────────────────────
-
-
+# --------------------------------------------------------------------------
 # `overlap_noconj` is the bilinear overlap ⟨L|R⟩ we are interested in
 overlap_lr(L::MPS, R::MPS) = overlap_noconj(L, R)
 
 """
     bulk_fwtmpoblocks(tp; nsites=5) → FwtMPOBlocks
 
-Corrected column: ITransverse tiles the middle tensor of a 3-site U(dt), which is not a
-bulk tensor for a NNN model (dim 7 instead of 13). Build U on 5 sites and take the true
-middle tensor instead. Replaces only Wc/Wc_im, so fw_tMPS cannot run on these blocks.
+Build U on 5 sites and take the bulk tensor to construct the transfer matrix column.
 """
 function bulk_fwtmpoblocks(tp::tMPOParams; nsites::Int=5)
-    b3  = FwtMPOBlocks(tp)
-    ss  = [addtags(sim(tp.mp.phys_site), "Site") for _ in 1:nsites]
-    U   = ITransverse.expH(ss, tp.mp, tp.scheme; dt=tp.dt)
+    b3 = FwtMPOBlocks(tp)
+    ss = [addtags(sim(tp.mp.phys_site), "Site") for _ in 1:nsites]
+    U = ITransverse.expH(ss, tp.mp, tp.scheme; dt=tp.dt)
     Uim = ITransverse.expH(ss, tp.mp, tp.scheme; dt=tp.dbeta)
     mid = (nsites + 1) ÷ 2
     L, Lim = linkinds(U), linkinds(Uim)
     dim(L[mid-1]) == dim(L[mid]) ||
         error("middle tensor is still edge-affected (bond $(dim(L[mid-1]))≠$(dim(L[mid]))); increase nsites")
-    icP     = ss[mid]
-    time_P  = sim(L[mid-1], tags="Site,time")
-    time_vL = sim(icP,  tags="Link,time")
+    icP = ss[mid]
+    time_P = sim(L[mid-1], tags="Site,time")
+    time_vL = sim(icP, tags="Link,time")
     time_vR = sim(icP', tags="Link,time")
-    Wc   = replaceinds(U[mid], (L[mid-1], L[mid], icP, icP'), (time_P', time_P, time_vL, time_vR))
+    Wc = replaceinds(U[mid], (L[mid-1], L[mid], icP, icP'), (time_P', time_P, time_vL, time_vR))
     Wcim = ITensors.permute(replaceinds(Uim[mid], (Lim[mid-1], Lim[mid], icP, icP'),
-                                        (time_P', time_P, time_vL, time_vR)), inds(Wc)...)
+            (time_P', time_P, time_vL, time_vR)), inds(Wc)...)
     return FwtMPOBlocks(b3; Wc=Wc, Wc_im=Wcim, iL=time_vL, iR=time_vR, iP=time_P, iPs=time_P')
 end
 
@@ -38,26 +34,26 @@ end
 Model-agnostic tMPO builder: the rotated forward tMPO plus a seed tMPS on the same
 time sites (overwritten with random tensors before any power method). `column=:legacy3`
 is ITransverse's 3-site extraction (exact only for NN models); `:bulk5` is the corrected
-bulk tensor. Default stays :legacy3 until :bulk5 is validated end to end.
+bulk tensor for NNN models.
 """
 function build_tmpo(mp::ModelParams, scheme::ExpHRecipe, target_T::Float64;
-        dt::Float64=0.1, nbeta::Int=0, init_state::String="X+",
-        init_state_top::String=init_state, column::Symbol=:legacy3)
-    Nsteps      = round(Int, target_T / dt) + nbeta          # time-steps + nbeta cooling sites
-    s           = mp.phys_site
-    init        = complex(state(s, init_state))              # bottom (t=0) temporal boundary
-    init_top    = complex(state(s, init_state_top))          # top boundary; defaults to the same
-    tp          = tMPOParams(mp=mp, dt=dt, nbeta=nbeta, scheme=scheme, dbeta=-im*dt, bl=init)
+    dt::Float64=0.1, nbeta::Int=0, init_state::String="X+",
+    init_state_top::String=init_state, column::Symbol=:legacy3)
+    Nsteps = round(Int, target_T / dt) + nbeta          # time-steps + nbeta cooling sites
+    s = mp.phys_site
+    init = complex(state(s, init_state))              # bottom (t=0) temporal boundary
+    init_top = complex(state(s, init_state_top))          # top boundary; defaults to the same
+    tp = tMPOParams(mp=mp, dt=dt, nbeta=nbeta, scheme=scheme, dbeta=-im * dt, bl=init)
     column in (:legacy3, :bulk5) || error("unknown column mode $column")
-    b           = column === :bulk5 ? bulk_fwtmpoblocks(tp) : FwtMPOBlocks(tp)
+    b = column === :bulk5 ? bulk_fwtmpoblocks(tp) : FwtMPOBlocks(tp)
     # the spatial MPO's VIRTUAL bond => the temporal PHYSICAL dimension (read it dynamically)
     spatial_bond_dim = dim(inds(b.Wc, "Site,time")[1])
-    time_sites  = addtags(siteinds(spatial_bond_dim, Nsteps; conserve_qns=false), "time")
-    mpo         = fw_tMPO(b, time_sites, bl=init, tr=init_top)   # the transfer matrix (an MPO)
+    time_sites = addtags(siteinds(spatial_bond_dim, Nsteps; conserve_qns=false), "time")
+    mpo = fw_tMPO(b, time_sites, bl=init, tr=init_top)   # the transfer matrix (an MPO)
     # legacy: structured fw_tMPS seed; bulk5: random seed (fw_tMPS needs the legacy edge tensors)
-    scaffold    = column === :bulk5 ?
-        normalize(complex.(randomMPS(time_sites; linkdims=4))) :
-        fw_tMPS(b, time_sites; tr=init, LR=:right)
+    scaffold = column === :bulk5 ?
+               normalize(complex.(randomMPS(time_sites; linkdims=4))) :
+               fw_tMPS(b, time_sites; tr=init, LR=:right)
     return mpo, scaffold
 end
 
@@ -68,10 +64,10 @@ Alcaraz-specific thin wrapper around `build_tmpo` (boundary |X+⟩). Kept for th
 existing Alcaraz notebooks/sweeps.
 """
 function build_alcaraz_tmpo(target_T::Float64;
-        p::Float64=0.1, lambda::Float64=1.0, dt::Float64=0.1,
-        nbeta::Int=0, MPO_alg::String="VD2", column::Symbol=:legacy3,
-        init_state::String="X+", init_state_top::String=init_state)
-    recipe = Dict("WI"=>AlcarazWI(), "WII"=>AlcarazWII(), "VD2"=>AlcarazVD2())[MPO_alg]
+    p::Float64=0.1, lambda::Float64=1.0, dt::Float64=0.1,
+    nbeta::Int=0, MPO_alg::String="VD2", column::Symbol=:legacy3,
+    init_state::String="X+", init_state_top::String=init_state)
+    recipe = Dict("WI" => AlcarazWI(), "WII" => AlcarazWII(), "VD2" => AlcarazVD2())[MPO_alg]
     return build_tmpo(AlcarazParams(lambda=lambda, p=p), recipe, target_T;
         dt=dt, nbeta=nbeta, column=column, init_state=init_state, init_state_top=init_state_top)
 end
@@ -80,8 +76,8 @@ end
 # which is the memory and time peak of a block iteration. `accdim` caps the running sum; the last
 # addition stays exact so the caller still chooses the final compression.
 function lincomb_mps(coeffs::AbstractVector, vecs::AbstractVector{MPS};
-                     cutoff::Float64=1e-12, maxdim::Int=256, do_truncate::Bool=true,
-                     accdim::Int=maxdim)
+    cutoff::Float64=1e-12, maxdim::Int=256, do_truncate::Bool=true,
+    accdim::Int=maxdim)
     acc = coeffs[1] * vecs[1]
     last = lastindex(vecs)
     for i in 2:last
@@ -107,26 +103,26 @@ function pad_tmps(src::MPS, target_sites::Vector{<:Index}; tailχ::Int=4)
     Nt = length(target_sites)
 
     Nt >= Ns || error("pad_tmps: target ($Nt sites) shorter than source ($Ns sites)")
-    ssrc = siteinds(src)            
-    out  = Vector{ITensor}(undef, Nt)              # pre-allocate the Nt tensors of the new MPS
+    ssrc = siteinds(src)
+    out = Vector{ITensor}(undef, Nt)              # pre-allocate the Nt tensors of the new MPS
     for i in 1:Ns
         # Reuse each converged tensor verbatim, only RELABELLING its physical leg (`old => new`)
         # The learned bond structure is kept intact
         out[i] = replaceind(src[i], ssrc[i] => target_sites[i])
     end
     if Nt > Ns
-        jl       = Index(tailχ, "Link,l=$Ns")       # a fresh bond Index of small dimension tailχ
+        jl = Index(tailχ, "Link,l=$Ns")       # a fresh bond Index of small dimension tailχ
         out[Ns] *= randomITensor(ComplexF64, jl)    # attach it to the last shared site (`*` contracts)
-        prev     = jl
+        prev = jl
         for i in (Ns+1):Nt
             rl = i < Nt ? Index(tailχ, "Link,l=$i") : nothing   # last site has no right bond
             # each new tensor carries: left bond `prev`, its physical site, and (unless last) a right bond `rl`
             out[i] = isnothing(rl) ? randomITensor(ComplexF64, prev, target_sites[i]) :
-                                     randomITensor(ComplexF64, prev, target_sites[i], rl)
+                     randomITensor(ComplexF64, prev, target_sites[i], rl)
             prev = rl
         end
     end
-    return normalize(MPS(out))              
+    return normalize(MPS(out))
 end
 
 """
@@ -152,25 +148,20 @@ Stops at `eps_conv` (`reason="converged"`), or after `stuck_after` iterations wi
 (`reason="stuck"`). info keys: :niters, :reason, :condS, :condS_hist, :dtheta, :theta, :theta_eigen.
 """
 function block_transfer_eigs(mpo::MPO, scaffold::MPS;
-        k::Int=4, maxdim::Int=256, cutoff::Float64=1e-12,
-        itermax::Int=300, eps_conv::Float64=1e-8, n_track::Int=2,
-        cond_thresh::Float64=1e10,
-        maxdims::Union{Nothing,AbstractVector{<:Integer}}=nothing,
-        cutoffs::Union{Nothing,AbstractVector{<:Real}}=nothing,
-        trunc_mode::Symbol=:rtm, itermin::Int=20, stuck_after::Int=100,
-        accdim::Int=0,
-        seedL::Union{Nothing,AbstractVector{MPS}}=nothing,
-        seedR::Union{Nothing,AbstractVector{MPS}}=nothing,
-        basis::Symbol=:eig,
-        eigvals_only::Bool=false,
-        project::Union{Nothing,Function}=nothing)
+    k::Int=4, maxdim::Int=256, cutoff::Float64=1e-12,
+    itermax::Int=300, eps_conv::Float64=1e-8, n_track::Int=2,
+    cond_thresh::Float64=1e10,
+    maxdims::Union{Nothing,AbstractVector{<:Integer}}=nothing,
+    cutoffs::Union{Nothing,AbstractVector{<:Real}}=nothing,
+    trunc_mode::Symbol=:rtm, itermin::Int=20, stuck_after::Int=100,
+    accdim::Int=0,
+    seedL::Union{Nothing,AbstractVector{MPS}}=nothing,
+    seedR::Union{Nothing,AbstractVector{MPS}}=nothing,
+    basis::Symbol=:eig,
+    eigvals_only::Bool=false,
+    project::Union{Nothing,Function}=nothing)
 
-    # Spectrum-only mode. The eigenvalues survive the wall even when the eigenvectors do not: θ is a
-    # Rayleigh quotient, so its error is O(δ²) in the vector error δ. Callers who only want θ (the λ0
-    # circle, gap sweeps, the Eq.(3)/(4) reads) can therefore run much coarser. This flag is not a
-    # cheaper algorithm — it just de-mixes on the orthonormal Schur basis instead of the 1/gap-
-    # conditioned eigenvector one, and skips the bi-normalisation that only the entropy needs. Pass a
-    # smaller maxdim/cutoff yourself to actually get the speed-up.
+    # Spectrum-only mode: de-mix on the orthonormal Schur basis instead
     if eigvals_only
         basis = :schur
     end
@@ -179,13 +170,13 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
     accdim = accdim > 0 ? accdim : maxdim
 
     # SETUP
-    sit  = siteinds(scaffold)
+    sit = siteinds(scaffold)
 
     # mpo true TRANSPOSE: 
     mpoT = swapprime(mpo, 0, 1) # swaps the bra/ket legs w/o complex-conjugating, so ⟨L|mpoT|R⟩ = ⟨mpo·L | R⟩
 
     # helper functions giving the bond-cap / cutoff to use at iteration `it`
-    md_at(it)  = maxdims === nothing ? maxdim  : Int(maxdims[min(it, length(maxdims))])
+    md_at(it) = maxdims === nothing ? maxdim : Int(maxdims[min(it, length(maxdims))])
     cut_at(it) = cutoffs === nothing ? cutoff : Float64(cutoffs[min(it, length(cutoffs))])
 
     # A fresh random complex MPS on the right sites
@@ -194,18 +185,18 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
     # Build the initial block of k vectors: 
     # use warm-start seeds `s` if given (padding with random ones if fewer than k were supplied), otherwise all-random
     seed_block(s) = s === nothing ? MPS[rand_mps() for _ in 1:k] :
-        MPS[i <= length(s) ? normalize(complex.(s[i])) : rand_mps() for i in 1:k]   # if i <= length(s), there is a seed available
+                    MPS[i <= length(s) ? normalize(complex.(s[i])) : rand_mps() for i in 1:k]   # if i <= length(s), there is a seed available
     R = seed_block(seedR)         # k right vectors |R_1..R_k⟩
     L = seed_block(seedL)         # k left  vectors ⟨L_1..L_k|
 
-    # Bookkeeping for the iteration. NaN+0im = "not computed yet" (complex Not-a-Number).
-    theta       = fill(NaN + 0im, k)   # current eigenvalue estimates (the "Ritz values")
-    theta_prev  = fill(NaN + 0im, k)   # previous iteration's, to measure convergence Δθ
+    # Bookkeeping for the iteration
+    theta = fill(NaN + 0im, k)   # current eigenvalue estimates (the "Ritz values")
+    theta_prev = fill(NaN + 0im, k)   # previous iteration's, to measure convergence Δθ
     dtheta_hist = Float64[]            # history of Δθ
-    condS_hist  = Float64[]            # history of the overlap-matrix condition number
-    condS_last  = NaN
-    reason      = "maxiter"            # why we stopped (usually overwritten)
-    niters      = 0
+    condS_hist = Float64[]            # history of the overlap-matrix condition number
+    condS_last = NaN
+    reason = "maxiter"            # why we stopped (usually overwritten)
+    niters = 0
     best_dtheta = Inf                  # best Δθ seen so far (for the "stuck" early-stop)
     iters_noimp = 0                    # consecutive iterations with no improvement
 
@@ -214,12 +205,12 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
     # the eigenvalues and re-mix the block.
     for it in 1:itermax
         niters = it
-        md  = md_at(it)                                 # per-iteration bond-dim cap (ramp or fixed)
+        md = md_at(it)                                 # per-iteration bond-dim cap (ramp or fixed)
         cut = cut_at(it)                                # per-iteration cutoff (schedule or fixed)
 
         # Apply the transfer matrix (and its transpose) to every right (left) vector
         # `applyn` = apply an MPO to an MPS (then truncate)
-        AR  = MPS[applyn(mpo,  R[j]; cutoff=cut, maxdim=md) for j in 1:k]   # |AR_j⟩ = mpo |R_j⟩
+        AR = MPS[applyn(mpo, R[j]; cutoff=cut, maxdim=md) for j in 1:k]   # |AR_j⟩ = mpo |R_j⟩
         ATL = MPS[applyn(mpoT, L[j]; cutoff=cut, maxdim=md) for j in 1:k]   # ⟨ATL_j| = ⟨L_j| mpo
 
         # Build two small k×k matrices ("pencil") that represent the operator inside our subspace:
@@ -237,21 +228,17 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         # M v = θ S v, mapped to the ordinary problem (S⁻¹M) v = θ v. pinv, not inv: S goes
         # near-singular as the gap closes.
         pS = pinv(S; rtol=1e-12)
-        W  = pS * M
+        W = pS * M
         Fr = eigen(W)                                   # Fr.values = θ's, Fr.vectors = right coeffs
         permr = sortperm(abs.(Fr.values); rev=true)     # sort by |θ| descending (largest first)
         theta = Fr.values[permr]                        # the eigenvalue estimates this iteration
-        VR    = Fr.vectors[:, permr]                    # matching right mixing-coefficients (columns)
+        VR = Fr.vectors[:, permr]                    # matching right mixing-coefficients (columns)
 
-        # Left coefficients from the same decomposition: uᵀM = θ uᵀS means uᵀS is a row of VR⁻¹,
-        # so u_j = pinv(S)ᵀ(VR⁻¹)ᵀ[:,j] — exactly paired with theta[j] and bi-orthogonal by
-        # construction. A second eigen() with nearest-value matching mispairs inside a cluster.
+        # Left coefficients from the same decomposition
         VL = transpose(pS) * transpose(pinv(VR; rtol=1e-12))
 
         if basis === :schur
-            # cond(VR) ~ 1/gap near a degenerate cluster, so de-mixing onto the eigenvector basis
-            # amplifies noise. QR-orthonormalise the |θ|-sorted coefficients instead: unitary, and
-            # the leading columns still span the same subspaces.
+            # QR de-mixing to avoid noise amplification when eigenvectors are nearly parallel
             VR = Matrix(qr(VR).Q)
             VL = Matrix(qr(VL).Q)
         elseif basis !== :eig
@@ -259,14 +246,10 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         end
 
         # "De-mix": turn the abstract eigen-coefficients (VR, VL columns) back into actual MPS, by
-        # taking those linear combinations of the applied vectors AR / ATL. This replaces the old
-        # block with k cleanly-separated (approximate) eigenvectors, ready for the next iteration.
+        # taking those linear combinations of the applied vectors AR / ATL
         if trunc_mode === :rtm
-            # Truncate each (L_j,R_j) pair jointly on the transition matrix |R_j⟩⟨L_j| — no
-            # conjugation. Fewer, cleaner states, but the non-Hermitian SVD is ill-conditioned
-            # right at the gap closing. Directsum without truncating: truncate_sweep
-            # orthogonalises its own inputs.
-            Rnew = MPS[lincomb_mps(VR[:, j], AR;  do_truncate=false, accdim=accdim) for j in 1:k]
+            # Truncate each (L_j,R_j) pair jointly on the transition matrix |R_j⟩⟨L_j|, no conjugation, cheaper
+            Rnew = MPS[lincomb_mps(VR[:, j], AR; do_truncate=false, accdim=accdim) for j in 1:k]
             Lnew = MPS[lincomb_mps(VL[:, j], ATL; do_truncate=false, accdim=accdim) for j in 1:k]
             for j in 1:k
                 res = truncate_sweep(Lnew[j], Rnew[j]; cutoff=cut, maxdim=md)   # joint pair truncation
@@ -275,16 +258,18 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         elseif trunc_mode === :rdm || trunc_mode === :naive
             # Truncate every L_j and R_j independently on its own density matrix |v⟩⟨v*|. Throws
             # away the L–R coupling, but it is Hermitian and positive, so it stays well conditioned
-            # where the RTM SVD scatters. (:naive is the old alias for this route.)
-            Rnew = MPS[lincomb_mps(VR[:, j], AR;  cutoff=cut, maxdim=md, accdim=accdim) for j in 1:k]
+            # where the RTM SVD scatters
+            Rnew = MPS[lincomb_mps(VR[:, j], AR; cutoff=cut, maxdim=md, accdim=accdim) for j in 1:k]
             Lnew = MPS[lincomb_mps(VL[:, j], ATL; cutoff=cut, maxdim=md, accdim=accdim) for j in 1:k]
         else
             error("block_transfer_eigs: unknown trunc_mode=$(trunc_mode) (use :rtm, :rdm, or :naive)")
         end
         # Re-normalise each new vector (or replace it with a fresh random vector if norm -> 0, Inf)
         for j in 1:k
-            nr = norm(Rnew[j]); Rnew[j] = (isfinite(nr) && nr > 1e-300) ? normalize(Rnew[j]) : rand_mps()
-            nl = norm(Lnew[j]); Lnew[j] = (isfinite(nl) && nl > 1e-300) ? normalize(Lnew[j]) : rand_mps()
+            nr = norm(Rnew[j])
+            Rnew[j] = (isfinite(nr) && nr > 1e-300) ? normalize(Rnew[j]) : rand_mps()
+            nl = norm(Lnew[j])
+            Lnew[j] = (isfinite(nl) && nl > 1e-300) ? normalize(Lnew[j]) : rand_mps()
         end
         # symmetry projection: truncation does not preserve a global sector, so leaked components
         # of the other sector grow back under iteration unless removed every step
@@ -299,11 +284,9 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         # Convergence / stopping checks (only tracking the leading n_track eigenvalues)
         ntr = min(n_track, k)
         if it > 1 && all(isfinite, theta_prev[1:ntr])
-            # Match each previous θ to its nearest current one before differencing: near-degenerate
-            # values swap |θ|-sort order between iterations, and an index-wise difference would read
-            # that swap as a jump and call it stuck too early.
+            # Match each previous θ to its nearest current one before differencing
             dtheta = 0.0
-            usedc  = falses(k)
+            usedc = falses(k)
             for j in 1:ntr
                 best, bestd = 0, Inf
                 for m in 1:k
@@ -317,11 +300,11 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
                 dtheta = max(dtheta, bestd)
             end
             push!(dtheta_hist, dtheta)
-            if dtheta < eps_conv                      
+            if dtheta < eps_conv
                 reason = "converged"
-                break                                 
+                break
             end
-            if it >= itermin                    
+            if it >= itermin
                 if dtheta < best_dtheta
                     best_dtheta = dtheta
                     iters_noimp = 0    # new best, so we reset the "patience" counter
@@ -340,16 +323,18 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
         # => replace last eigenvector (index k) with a fresh random one that is orthogonal to all the others (Gram-Schmidt orthogonalization)
         if condS_last > cond_thresh && k >= 2
             jb = k
-            r = rand_mps(); l = rand_mps()
+            r = rand_mps()
+            l = rand_mps()
             for a in 1:(k-1)    # take random vector r (l) and subtract away any component it shared with R[1], ..., R[k-1] (L[1], ..., L[k-1])
                 # bi-orthogonal projection: the (L_a,R_a) pairs are not bi-normalized during the
                 # iteration, so the projection coefficient must be divided by ⟨L_a|R_a⟩
                 den = overlap_noconj(L[a], R[a])
                 abs(den) < 1e-14 && continue
-                r = lincomb_mps([1.0, -overlap_noconj(L[a], r)/den], MPS[r, R[a]]; cutoff=cutoff, maxdim=md)
-                l = lincomb_mps([1.0, -overlap_noconj(R[a], l)/den], MPS[l, L[a]]; cutoff=cutoff, maxdim=md)
+                r = lincomb_mps([1.0, -overlap_noconj(L[a], r) / den], MPS[r, R[a]]; cutoff=cutoff, maxdim=md)
+                l = lincomb_mps([1.0, -overlap_noconj(R[a], l) / den], MPS[l, L[a]]; cutoff=cutoff, maxdim=md)
             end
-            R[jb] = normalize(r); L[jb] = normalize(l)
+            R[jb] = normalize(r)
+            L[jb] = normalize(l)
             reason = (reason == "converged") ? reason : "refreshed"
         end
     end
@@ -357,8 +342,9 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
 
     theta_eigen = copy(theta)         # keep the raw eigenvalues
 
-    # Bi-orthonormalise each pair to ⟨L_j|R_j⟩ = 1. Only the vectors need this (it is what makes
-    # the phase rigidity read r_j = 1/‖L_j‖‖R_j‖), so the spectrum-only path skips it.
+    # Bi-orthonormalise each pair to ⟨L_j|R_j⟩ = 1. Only the vectors need this, so the
+    # spectrum-only path skips it. After normalising, `rigidity` = 1/‖L_j‖‖R_j‖ measures how far
+    # the pair is from biorthogonal: it is an internal diagnostic
     if !eigvals_only
         for j in 1:k
             ov = overlap_noconj(L[j], R[j])
@@ -370,9 +356,9 @@ function block_transfer_eigs(mpo::MPO, scaffold::MPS;
     end
 
     info = Dict(:niters => niters, :reason => reason,
-                :condS => condS_last, :condS_hist => condS_hist,
-                :dtheta => dtheta_hist, :theta => theta,
-                :theta_eigen => theta_eigen)
+        :condS => condS_last, :condS_hist => condS_hist,
+        :dtheta => dtheta_hist, :theta => theta,
+        :theta_eigen => theta_eigen)
     return theta, L, R, info        # eigenvalues, left block, right block, diagnostics
 end
 
@@ -386,17 +372,15 @@ leading Rayleigh-quotient eigenvalue λ₀, the tMPO (reuse it for block_transfe
 and convergence diagnostics. 
 """
 function run_pm_diagnosed(target_T::Float64;
-        p::Float64=0.1, lambda::Float64=1.0, dt::Float64=0.1,
-        maxdim::Int=256, cutoff::Float64=1e-14, eps_converged::Float64=1e-6,
-        nbeta::Int=0, MPO_alg::String="VD2", alg::String="RTM",
-        itermax::Int=5000, stuck_after::Int=200, column::Symbol=:legacy3,
-        seed::Union{Nothing,MPS}=nothing)
+    p::Float64=0.1, lambda::Float64=1.0, dt::Float64=0.1,
+    maxdim::Int=256, cutoff::Float64=1e-14, eps_converged::Float64=1e-6,
+    nbeta::Int=0, MPO_alg::String="VD2", alg::String="RTM",
+    itermax::Int=5000, stuck_after::Int=200, column::Symbol=:legacy3,
+    seed::Union{Nothing,MPS}=nothing)
 
     mpo, scaffold = build_alcaraz_tmpo(target_T; p=p, lambda=lambda, dt=dt,
-                                        nbeta=nbeta, MPO_alg=MPO_alg, column=column)
-    # warm start from a converged vector of the previous rung when given: it keeps the iteration in
-    # the same basin instead of re-rolling the dice. Otherwise a random seed, since the structured
-    # scaffold converges to a subdominant sector.
+        nbeta=nbeta, MPO_alg=MPO_alg, column=column)
+    # warm start from a converged vector of the previous rung when given
     if seed === nothing
         seed_mps = deepcopy(scaffold)
         for i in eachindex(seed_mps)
@@ -405,30 +389,30 @@ function run_pm_diagnosed(target_T::Float64;
     else
         seed_mps = pad_tmps(seed, siteinds(scaffold))
     end
-    normalize!(seed_mps)                    
+    normalize!(seed_mps)
 
     # Power Method params
     pm_params = PMParams(;
-        truncp        = (; cutoff=cutoff, maxdim=maxdim, alg=alg),
-        opt_method    = :nosym,        
-        cutoffs       = [cutoff],
-        maxdims       = 2:2:maxdim,
-        itermax       = itermax,
-        eps_converged = eps_converged,
-        normalization = "overlap",
-        stuck_after   = stuck_after,
-        compute_fidelity = false)
+        truncp=(; cutoff=cutoff, maxdim=maxdim, alg=alg),
+        opt_method=:nosym,
+        cutoffs=[cutoff],
+        maxdims=2:2:maxdim,
+        itermax=itermax,
+        eps_converged=eps_converged,
+        normalization="overlap",
+        stuck_after=stuck_after,
+        compute_fidelity=false)
 
     # Run PM
     psi_L, psi_R, pm_info = ITransverse.powermethod_lr(seed_mps, mpo, mpo, pm_params)
 
     # Convergence diagnostics
-    ds_hist  = pm_info[:ds]                   # ds = per-step change in singular values
+    ds_hist = pm_info[:ds]                   # ds = per-step change in singular values
     chi_hist = pm_info[:chi]                  # bond dimension used each step
-    niters   = length(ds_hist)
+    niters = length(ds_hist)
     final_ds = isempty(ds_hist) ? NaN : last(ds_hist)
-    stuck    = isempty(ds_hist) || final_ds > eps_converged
-    reason   = (!stuck) ? "converged" : (niters >= itermax) ? "maxiter" : "stuck"
+    stuck = isempty(ds_hist) || final_ds > eps_converged
+    reason = (!stuck) ? "converged" : (niters >= itermax) ? "maxiter" : "stuck"
 
     # Leading eigenvalue: λ₀ = ⟨L|mpo|R⟩ / ⟨L|R⟩
     lr_overlap_raw = overlap_lr(psi_L, psi_R)
@@ -436,35 +420,33 @@ function run_pm_diagnosed(target_T::Float64;
 
     # Bi-normalise so ⟨L|R⟩=1
     c = sqrt(lr_overlap_raw)
-    psi_L = (1/c) * psi_L
-    psi_R = (1/c) * psi_R
+    psi_L = (1 / c) * psi_L
+    psi_R = (1 / c) * psi_R
 
     return (L=psi_L, R=psi_R, mpo=mpo, scaffold=scaffold, lambda0=lambda0,
-            niters=niters, stuck=stuck, reason=reason, final_ds=final_ds,
-            ds_hist=ds_hist, chi_hist=chi_hist)
+        niters=niters, stuck=stuck, reason=reason, final_ds=final_ds,
+        ds_hist=ds_hist, chi_hist=chi_hist)
 end
 
 # imaginary plateau of a Renyi-2 profile, cooling bonds trimmed
 function plateau_im(s2, nbeta::Int=4)
-    prof = s2[nbeta ÷ 2 + 1:end - nbeta ÷ 2]
-    return mean(imag.(prof)[max(1, end ÷ 2 - 1):end ÷ 2 + 2])
+    prof = s2[nbeta÷2+1:end-nbeta÷2]
+    return mean(imag.(prof)[max(1, end ÷ 2 - 1):end÷2+2])
 end
 
 """
     ensemble_profile(p, T; nbeta=4) → NamedTuple or nothing
 
-Representative Renyi-2 profile for one rung of the single-vector seed ensembles in
-`data/local/controls/`. A seed counts as physical when its imaginary plateau falls inside the band
-used in Appendix app:failures, and among those we return the profile whose plateau is closest to
-their median, so a figure shows the same run the quoted number comes from. Local caches are stored
-untrimmed, so the nbeta/2 cooling bonds at each end are dropped here.
+Representative Renyi-2 profile for one rung of the single-vector seed ensembles. 
+A seed counts as physical when its imaginary plateau falls inside a certain band, and 
+among those we return the profile whose plateau is closest to their median.
 
 Returns `nothing` when the rung has no cache or when no seed is physical.
 """
 function ensemble_profile(p::Real, T::Real; nbeta::Int=4,
-                          root=normpath(joinpath(@__DIR__, "..")))
+    root=normpath(joinpath(@__DIR__, "..")))
     file = joinpath(root, "data", "local", "controls",
-                    "seedens_p$(float(p))_T$(float(T)).jld2")
+        "seedens_p$(float(p))_T$(float(T)).jld2")
     isfile(file) || return nothing
     res = load(file, "res")
     good = [r for r in values(res) if 0.05 < r.plateau < 0.20]
@@ -473,164 +455,14 @@ function ensemble_profile(p::Real, T::Real; nbeta::Int=4,
     plateaus = [r.plateau for r in good]
     pick = good[argmin(abs.(plateaus .- median(plateaus)))]
     trim = nbeta ÷ 2
-    return (s2=collect(pick.s2)[(trim + 1):(end - trim)], plateau=pick.plateau,
-            nseeds=length(res), ngood=length(good))
+    return (s2=collect(pick.s2)[(trim+1):(end-trim)], plateau=pick.plateau,
+        nseeds=length(res), ngood=length(good))
 end
 
 # two runs agree if both the plateau and the leading modulus match
 runs_agree(a, b; tol, mu_tol) =
     abs(a.plateau - b.plateau) <= tol * abs(a.plateau) &&
     abs(abs(a.lambda0) - abs(b.lambda0)) <= mu_tol * abs(a.lambda0)
-
-"""
-    run_pm_consensus(target_T; nseeds=4, tol=0.05, mu_tol=1e-3, kwargs...) → NamedTuple
-
-Repeat the power method with fresh random seeds until two runs agree. The fixed point is
-seed-dependent once the L/R pair is ill-conditioned: at p=0, T=17 one run gave a plateau of 0.72
-and five repeats gave 0.110-0.117. Runs are accepted for agreeing with each other, never for
-agreeing with a predicted value.
-"""
-function run_pm_consensus(target_T::Float64; nseeds::Int=4, tol=0.05, mu_tol=1e-3,
-                          nbeta::Int=4, kwargs...)
-    runs = []
-    for _ in 1:nseeds
-        r = run_pm_diagnosed(target_T; nbeta=nbeta, kwargs...)
-        s2 = collect(ITransverse.gen_renyi2(r.L, r.R))
-        push!(runs, (; plateau=plateau_im(s2, nbeta), lambda0=r.lambda0, s2=s2,
-                       rigidity=1 / (norm(r.L) * norm(r.R))))
-        for prev in runs[1:end - 1]
-            runs_agree(prev, runs[end]; tol=tol, mu_tol=mu_tol) || continue
-            return (; accepted=true, prev.plateau, prev.lambda0, prev.s2, prev.rigidity,
-                      spread=abs(prev.plateau - runs[end].plateau), nruns=length(runs))
-        end
-    end
-    spread = maximum(r.plateau for r in runs) - minimum(r.plateau for r in runs)
-    last = runs[end]
-    return (; accepted=false, last.plateau, last.lambda0, last.s2, last.rigidity,
-              spread, nruns=length(runs))
-end
-
-# generalized temporal entropies from a converged power method:
-"""
-    compute_entropies(mp::ModelParams, target_T; scheme, dt, cutoff, maxdim, alg,
-                      eps_converged, nbeta, use_block_pm, k_block)
-        → NamedTuple(bonds, re, im, L, R, mpo)
-
-Builds the forward tMPO for model `mp` with exponentiation `scheme` (e.g. AlcarazVD2()) and
-returns the Rényi-2 temporal-entropy profile S₂(t) = -log Tr(T_t²) per internal bond (Re and Im
-separately). Initial state |X+⟩ (free BC).
-
-The boundary tMPS (L,R) come from one of two power methods:
-  • `use_block_pm=false` (DEFAULT): single-vector `powermethod_lr` from a random seed. Cheap, but
-    STOPS CONVERGING once the transfer-matrix gap closes (the entanglement barrier), so the
-    profile is only trustworthy for short/intermediate T.
-  • `use_block_pm=true`: the oblique block (subspace) method `block_transfer_eigs` with `k_block`
-    Ritz vectors, taking the leading (already bi-orthonormal) pair. Stays well-behaved through the
-    degeneracy and recovers the conformal dome deeper into the barrier (at higher cost).
-"""
-function compute_entropies(mp::ModelParams, target_T::Float64;
-        scheme::ExpHRecipe, dt::Float64=0.1, cutoff::Float64=1e-12, maxdim::Int=64,
-        alg::String="RTM", eps_converged::Float64=1e-6, nbeta::Int=4,
-        use_block_pm::Bool=false, k_block::Int=2,
-        maxdims::Union{Nothing,AbstractVector{<:Integer}}=nothing,
-        cutoffs::Union{Nothing,AbstractVector{<:Real}}=nothing,
-        trunc_mode::Symbol=:rtm, init_state::String="X+", basis::Symbol=:eig,
-        itermax::Int=8000, stuck_after::Int=2000, seed::Union{Nothing,MPS}=nothing,
-        column::Symbol=:legacy3)
-
-    Ntime_steps = round(Int, target_T / dt)
-    Nsteps      = Ntime_steps + nbeta
-    s           = mp.phys_site
-    init        = complex(state(s, init_state))
-
-    tp = tMPOParams(mp=mp, dt=dt, nbeta=nbeta, scheme=scheme, dbeta=-im*dt, bl=init)
-    column in (:legacy3, :bulk5) || error("unknown column mode $column")
-    b  = column === :bulk5 ? bulk_fwtmpoblocks(tp) : FwtMPOBlocks(tp)
-    spatial_bond_dim = dim(inds(b.Wc, "Site,time")[1])
-    time_sites = addtags(siteinds(spatial_bond_dim, Nsteps; conserve_qns=false), "time")
-
-    mpo       = fw_tMPO(b, time_sites, tr=init)
-    start_mps = column === :bulk5 ?
-        normalize(complex.(randomMPS(time_sites; linkdims=4))) :
-        fw_tMPS(b, time_sites; tr=init, LR=:right)
-
-    if use_block_pm
-        # (A) robust block PM through gap closing
-        _, L_vecs, R_vecs, info = block_transfer_eigs(mpo, start_mps;
-            k=k_block, maxdim=maxdim, cutoff=cutoff, itermax=itermax, eps_conv=eps_converged,
-            maxdims=maxdims, cutoffs=cutoffs, trunc_mode=trunc_mode, basis=basis)
-        # Warm only if method is stuck or reached max iterations
-        info[:reason] in ("maxiter", "stuck") && @warn "block PM did not strictly converge at T=$target_T (reason=$(info[:reason]))"
-        psi_L, psi_R = L_vecs[1], R_vecs[1]            # take the leading (dominant) pair
-    else
-        # (B) cheap single-vector method
-        if seed === nothing
-            for i in eachindex(start_mps)              # random seed (avoids the subdominant-sector trap)
-                start_mps[i] = randomITensor(ComplexF64, inds(start_mps[i]))
-            end
-        else
-            start_mps = pad_tmps(seed, siteinds(start_mps))   # warm-start: prev-T fixed point onto these time-sites
-        end
-        normalize!(start_mps)
-
-        pm_params = PMParams(;
-            truncp = (; cutoff=cutoff, maxdim=maxdim, alg=alg),
-            opt_method = :nosym,
-            cutoffs = cutoffs === nothing ? [cutoff] : cutoffs,
-            maxdims = maxdims === nothing ? (2:2:maxdim) : maxdims,
-            itermax = itermax,
-            eps_converged = eps_converged,
-            normalization = "overlap",
-            stuck_after = stuck_after,
-            compute_fidelity = false)
-
-        psi_L, psi_R, _ = ITransverse.powermethod_lr(start_mps, mpo, mpo, pm_params)
-
-        nrm   = overlap_noconj(psi_L, psi_R)
-        psi_L = (1/sqrt(nrm)) * psi_L
-        psi_R = (1/sqrt(nrm)) * psi_R
-    end
-
-    # Rényi-2 temporal entropy
-    s2 = ITransverse.gen_renyi2(psi_L, psi_R)
-
-    return (; bonds = 1:length(s2), re = real.(s2), im = imag.(s2),
-            L = psi_L, R = psi_R, mpo = mpo)
-end
-
-"""
-    plot_entropy_profiles(mp, target_times; scheme, dt, ...) → Plots.Plot
-
-Plots Re(S₂) and Im(S₂) temporal-entropy profiles for a list of target times.
-"""
-function plot_entropy_profiles(mp::ModelParams, target_times::Vector{Float64};
-        scheme::ExpHRecipe, dt::Float64=0.1, cutoff::Float64=1e-12, maxdim::Int=64,
-        alg::String="RTM", eps_converged::Float64=1e-6, nbeta::Int=4,
-        use_block_pm::Bool=false, k_block::Int=2,
-        maxdims::Union{Nothing,AbstractVector{<:Integer}}=nothing,
-        cutoffs::Union{Nothing,AbstractVector{<:Real}}=nothing, trunc_mode::Symbol=:rtm)
-
-    # Two empty plot for real and imaginary parts
-    plt_real = plot(title="Re(S₂)", xlabel="temporal cut t/T", ylabel="Re(S₂)",
-                    legend=:outerright, grid=true, framestyle=:box)
-    plt_imag = plot(title="Im(S₂)", xlabel="temporal cut t/T", ylabel="Im(S₂)",
-                    legend=:outerright, grid=true, framestyle=:box)
-    n = length(target_times)
-    cr = cgrad(:viridis, n, categorical=true)          # n distinct colours along a gradient (real)
-    ci = cgrad(:plasma,  n, categorical=true)          # a second palette for the imaginary panel
-
-    @showprogress "entropy profiles ($(typeof(scheme)))..." for (i, T) in enumerate(target_times)
-        res = compute_entropies(mp, T; scheme=scheme, dt=dt, cutoff=cutoff, maxdim=maxdim,
-                                alg=alg, eps_converged=eps_converged, nbeta=nbeta,
-                                use_block_pm=use_block_pm, k_block=k_block,
-                                maxdims=maxdims, cutoffs=cutoffs, trunc_mode=trunc_mode)
-        x = range(0.0, 1.0, length=length(res.re))     # rescale the bond index to t/T ∈ [0,1]
-        lab = "T = $(round(T, digits=1))"
-        plot!(plt_real, x, res.re, label=lab, lw=2, color=cr[i])
-        plot!(plt_imag, x, res.im, label=lab, lw=2, color=ci[i])
-    end
-    return plot(plt_real, plt_imag, layout=(1, 2), size=(1200, 450), margin=5Plots.mm)
-end
 
 # TDVP Schrödinger Loschmidt amplitude L(T)=⟨ψ0|U(T)|ψ0⟩ (crash-safe)
 """
@@ -641,22 +473,22 @@ Evolves |X+⟩^N with TDVP on the Alcaraz Hamiltonian and records the complex Lo
 amplitude at each target time.
 """
 function tdvp_loschmidt_amplitude(N::Int, target_times::Vector{Float64};
-        p::Float64=0.1, lambda::Float64=1.0, dt::Float64=0.05,
-        cutoff::Float64=1e-12, maxdim::Int=256,
-        cachefile::Union{String,Nothing}=nothing)
+    p::Float64=0.1, lambda::Float64=1.0, dt::Float64=0.05,
+    cutoff::Float64=1e-12, maxdim::Int=256,
+    cachefile::Union{String,Nothing}=nothing)
 
     # Cache file path (build a default name from p and N if none was given)
-    cf   = isnothing(cachefile) ?
-           normpath(joinpath(@__DIR__, "..", "data", "local", "tdvp_loschmidt_p$(p)_N$(N).jld2")) : cachefile
+    cf = isnothing(cachefile) ?
+         normpath(joinpath(@__DIR__, "..", "data", "local", "tdvp_loschmidt_p$(p)_N$(N).jld2")) : cachefile
     done = isfile(cf) ? load(cf, "done") : Dict{Float64,Any}()   # resume from disk, or start fresh
 
     # Set up real-space problem
-    sites = siteinds("S=1/2", N) 
-    psi0  = complex(MPS(sites, "X+"))          
-    os    = alcaraz_opsum(N, lambda, p)           
-    H     = MPO(os, sites)                          
+    sites = siteinds("S=1/2", N)
+    psi0 = complex(MPS(sites, "X+"))
+    os = alcaraz_opsum(N, lambda, p)
+    H = MPO(os, sites)
 
-    sorted_Ts  = sort(target_times)
+    sorted_Ts = sort(target_times)
     missing_Ts = [T for T in sorted_Ts if !haskey(done, T)]   # which targets still need computing
     if isempty(missing_Ts)
         @info "All target T values already cached."
@@ -676,35 +508,12 @@ function tdvp_loschmidt_amplitude(N::Int, target_times::Vector{Float64};
         current_t = T
         haskey(done, T) && (@info "T=$T (cached, evolved through)"; continue)
         # Loschmidt amplitude G = ⟨ψ0|ψ(T)⟩
-        G    = inner(psi0, psi_t); absG = abs(G)
+        G = inner(psi0, psi_t)
+        absG = abs(G)
         # Store amplitude, its modulus, the "rate" -log|G|/N (intensive), and the bond dim reached
-        done[T] = (G=G, absG=absG, rate=-log(max(absG, 1e-50))/N, maxchi=maxlinkdim(psi_t))
+        done[T] = (G=G, absG=absG, rate=-log(max(absG, 1e-50)) / N, maxchi=maxlinkdim(psi_t))
         jldsave(cf; done)
         @info "T=$T (NEW)  |G|=$(round(absG,digits=5))  χ=$(maxlinkdim(psi_t))"
-        GC.gc()
-    end
-    return done
-end
-
-# generic crash-safe sweep: f(T) per T, checkpoint after each
-"""
-    crashsafe_sweep(f, Ts; cachefile) → done::Dict
-
-Calls `done[T] = f(T)` for each T (sorted), saving a JLD2 checkpoint after every T
-and skipping already-cached T. Use a data/local/ path for `cachefile`.
-"""
-function crashsafe_sweep(f::Function, Ts; cachefile::String)
-    done = isfile(cachefile) ? load(cachefile, "done") : Dict{Float64, Any}()
-    for T in sort(collect(Ts))
-        haskey(done, T) && continue                    # already computed => skip (the "resume")
-        try
-            done[T] = f(T)                             # the actual computation
-        catch err
-            # If f(T) throws, DON'T abort the whole sweep -> record the error and keep going
-            @warn "T=$T failed: $err"
-            done[T] = (error=string(err),)
-        end
-        jldsave(cachefile; done)
         GC.gc()
     end
     return done
@@ -722,21 +531,21 @@ function thesis_plot_theme!()
     Plots.default(
         # NOTE: no fontfamily override — GR's Computer Modern breaks the Unicode glyphs (λ₀, Δφ, π)
         # used throughout the axis labels; the default sans font renders them all correctly.
-        guidefontsize  = 14,   # axis labels
-        tickfontsize   = 12,
-        legendfontsize = 11,
-        linewidth      = 2.5,
-        markersize     = 6,
-        framestyle     = :box,
-        grid           = true,
-        foreground_color_legend = nothing,   # no box around the legend
-        background_color_legend = nothing,
-        size           = (800, 480),
-        dpi            = 200,
-        margin         = 5Plots.mm,
-        bottom_margin  = 6Plots.mm,    # just clear of the axis label; 10mm left a blank band
-                                       # between the label and the caption in every figure
-        left_margin    = 10Plots.mm,
+        guidefontsize=14,   # axis labels
+        tickfontsize=12,
+        legendfontsize=11,
+        linewidth=2.5,
+        markersize=6,
+        framestyle=:box,
+        grid=true,
+        foreground_color_legend=nothing,   # no box around the legend
+        background_color_legend=nothing,
+        size=(800, 480),
+        dpi=200,
+        margin=5Plots.mm,
+        bottom_margin=6Plots.mm,    # just clear of the axis label; 10mm left a blank band
+        # between the label and the caption in every figure
+        left_margin=10Plots.mm,
     )
     return nothing
 end
@@ -744,11 +553,7 @@ end
 """
     thesis_size(frac; aspect, panels)
 
-Canvas size for a figure included at `frac` of the text width. Everything in a Plots figure is
-given in pixels, so shrinking the canvas and letting LaTeX scale it back up enlarges fonts,
-markers, legend swatches and line widths together; raising the font sizes alone enlarges only the
-text and breaks the proportions. Sized so the theme's 14px labels land near 8.5pt on the page,
-against 10pt body text, whatever the panel layout.
+Canvas size for a figure included at `frac` of the text width.
 """
 function thesis_size(frac::Real; aspect::Real=0.62, textwidth::Real=468)
     target = 0.607
@@ -757,21 +562,10 @@ function thesis_size(frac::Real; aspect::Real=0.62, textwidth::Real=468)
 end
 
 # One colour and marker per coupling, shared by every thesis figure.
-const P_COLOR  = Dict(0.0 => :dodgerblue, 0.1 => :crimson, 0.3 => :seagreen,
-                      0.5 => :darkorange, 1.0 => :purple)
+const P_COLOR = Dict(0.0 => :dodgerblue, 0.1 => :crimson, 0.3 => :seagreen,
+    0.5 => :darkorange, 1.0 => :purple)
 const P_MARKER = Dict(0.0 => :circle, 0.1 => :square, 0.3 => :diamond,
-                      0.5 => :utriangle, 1.0 => :star5)
-
-# Save a row of subplots as one figure under figures/
-function plot_panels(panels...; filename::String, title::String="",
-                     fig_size::Tuple{Int,Int}=(500*length(panels), 480))
-    dir = normpath(joinpath(@__DIR__, "..", "figures"))
-    mkpath(dir)
-    plt = plot(panels...; layout=(1, length(panels)), size=fig_size,   # one row, N columns
-               plot_title=title, margin=5Plots.mm)
-    savefig(plt, joinpath(dir, filename))
-    return plt
-end
+    0.5 => :utriangle, 1.0 => :star5)
 
 """
     save_thesis_figure(plt, name)
@@ -789,20 +583,19 @@ function save_thesis_figure(plt, name::AbstractString)
     return plt
 end
 
-# ── towers, partners, and picking the physical λ0 ───────────────────────────────────────────────
+# ---- identifying the physical branch and the tower -------------------------
+# The block iteration returns k unlabelled Ritz values. Picking the largest modulus is not
+# reliable: the operator is non-normal, so an unconverged subspace can return values outside the
+# spectrum. We anchor on continuity in T instead. pick_phys_robust keeps the candidates whose
+# modulus lies within `tol` of the previously accepted λ0 and selects among those; if none
+# qualifies, the caller discards the time point. The remaining values are then ordered by phase
+# distance from λ0, which is the order the conformal tower predicts.
 #
-# The spectrum comes in ± pairs: λ0 and a partner at nearly the same modulus, about π away in phase.
-# So we classify by phase rather than by modulus rank — the tower is everything within π/2 of λ0
-# (its own descendants), the partners are the rest.
-#
-# Two things we got wrong first and fixed (NB5, NB9):
-#   - Pick λ0 by largest modulus. Tracking it by nearest complex value looks natural but cascades:
-#     the phase winds as ~a·v·T, so the rule latches onto a stationary partner and every later rung
-#     re-anchors on that mistake. Continuity is only used to break a sub-percent modulus tie.
-#   - The leading block can be λ0 plus nothing but partners, λ1 missing entirely (p≳0.3). Hence the
-#     k→6→8 escalation in block_transfer_eigs_adaptive.
+# classify_tower makes that split at a phase distance of π/2. Values beyond it are not tower
+# members and do not enter the gaps. If the block contains no tower member at all, tower_gap
+# returns NaN and block_transfer_eigs_adaptive raises k.
 
-# Phase convention used throughout this project: Im(λ) = arg(-τ), i.e. phase measured from -θ.
+# Phase convention used throughout: Im(λ) = arg(-θ), so phases are measured from -θ.
 phase_of(z) = angle(-z)
 
 # Phase difference φ(a) - φ(b), wrapped into (-π, π].
@@ -812,21 +605,22 @@ phase_difference(a, b) = mod(phase_of(a) - phase_of(b) + π, 2π) - π
     classify_tower(theta; i0=argmax(abs.(theta)))
 
 Classify every member of a transfer-matrix spectrum `theta` relative to the physical eigenvalue at
-index `i0`: `:tower` if within π/2 in phase (λ0's own descendants), `:partner` otherwise (the
-π-shifted -λ0-type copies). Returns `(dphi, cls)`, both vectors indexed like `theta`.
+index `i0`: `:tower` if within π/2 in phase, so λ0 and its descendants, `:partner` for anything
+further away, which does not belong to the tower and is excluded from the gaps.
+Returns `(dphi, cls)`, both vectors indexed like `theta`.
 """
 function classify_tower(theta; i0::Int=argmax(abs.(theta)))
     dphi = [phase_difference(theta[j], theta[i0]) for j in eachindex(theta)]
-    cls  = [abs(d) < pi / 2 ? :tower : :partner for d in dphi]
+    cls = [abs(d) < pi / 2 ? :tower : :partner for d in dphi]
     return dphi, cls
 end
 
 """
     tower_gap(theta; i0=argmax(abs.(theta)))
 
-The physical gap |λ1|/|λ0|, where λ1 is the largest-modulus TOWER member (excluding i0 itself) —
-never a -λ0 partner. Returns `NaN` if the block contains no tower member besides i0 (λ1 is missing
-from this block; the caller needs a bigger k — see `block_transfer_eigs_adaptive`).
+The physical gap |λ1|/|λ0|, where λ1 is the largest-modulus TOWER member (excluding i0 itself).
+Returns `NaN` when the block holds no tower member besides i0, meaning λ1 has not been captured
+and the caller needs a larger k.
 """
 function tower_gap(theta; i0::Int=argmax(abs.(theta)))
     _, cls = classify_tower(theta; i0=i0)
@@ -839,65 +633,46 @@ end
     tower_dims(theta, T, v; i0=argmax(abs.(theta)))
 
 Convert the phase gaps of a spectrum into boundary dimensions x_i - x_0 = v·T·|Δφ_i|/π,
-sorted ascending, with the i0 entry (zero gap) dropped. This is the conversion previously
-inlined in fig_x1.jl, cluster_audit.jl and NB10.
+sorted ascending, with the i0 entry (zero gap) dropped.
 """
 function tower_dims(theta, T::Real, v::Real; i0::Int=argmax(abs.(theta)))
     gaps = [abs(phase_difference(theta[j], theta[i0])) for j in eachindex(theta) if j != i0]
     return sort(v .* T .* gaps ./ pi)
 end
 
-# Finite-time model for a single phase gap, Δφ(T) = q1/T + q2/T³; x_i - x_0 = v·q1/π.
-@. tower_gap_model(T, q) = q[1] / T + q[2] / T^3
-
 """
     pick_phys_continuity(theta, previous_phys)
 
-Select the physical eigenvalue λ0 = the DOMINANT (largest-modulus) member of `theta`. The physical
-branch is the leading eigenvalue of the transfer matrix; its ±π partner sits at *slightly smaller*
-modulus for the resolvable frustration range (p≲1), so modulus-dominance is the robust discriminant.
-`previous_phys` is used ONLY to break a genuine modulus TIE (top two within 1%, the exact ±π
-near-degeneracy), where the physical branch is the closer of the pair in the complex plane.
+Low-level helper: returns the index of the largest-modulus member of `theta`, using
+`previous_phys` only to break a tie when the top two are within 1% of each other, in which case it
+takes the closer of the two in the complex plane.
 
-This deliberately does NOT anchor on the previous complex value in general: because Im(λ0)≈a·v·T the
-phase winds ~a·v per T-step, so a nearest-complex-value rule drifts onto a stationary partner and
-that slip CASCADES down the ladder (see section note (A) above; the p≥0.5 cluster failure). Pass
-`previous_phys=nothing` on the first rung. Returns the index `i0`.
+This is not the selection rule used in production. On its own, largest modulus is unreliable for a
+non-normal operator, because an unconverged subspace can return values above the true spectrum. The
+rule the results use is `pick_phys_robust`, which restricts the candidates by continuity in T before
+calling this. Pass `previous_phys=nothing` on the first rung. Returns the index `i0`.
 """
 function pick_phys_continuity(theta, previous_phys)
-    mags  = abs.(theta)
+    mags = abs.(theta)
     order = sortperm(mags, rev=true)
-    i1    = order[1]                                   # dominant eigenvalue = physical λ0
+    i1 = order[1]                                   # dominant eigenvalue = physical λ0
     (previous_phys === nothing || length(order) < 2) && return i1
     i2 = order[2]
-    if abs(mags[i1] - mags[i2]) / mags[i1] < 0.01     # genuine ±π near-degeneracy → continuity tiebreak
+    if abs(mags[i1] - mags[i2]) / mags[i1] < 0.01     # near-degenerate moduli: break the tie by continuity
         return abs(theta[i1] - previous_phys) <= abs(theta[i2] - previous_phys) ? i1 : i2
     end
     return i1
 end
 
 """
-    phys_lambda0_suspect(theta, i0, previous_phys; tol=0.30) -> Bool
-
-`true` if the selected |λ0| deviates by more than fractional `tol` from the previous rung's — a
-non-convergence / wrong-branch red flag (e.g. the p=0.8, T=4 blow-up to |θ0|≈8.5, or a collapse
-toward 0). Callers can use it to re-run that point with more iterations / a larger k rather than
-trust it. Returns `false` on the first rung (`previous_phys === nothing`).
-"""
-function phys_lambda0_suspect(theta, i0, previous_phys; tol::Float64=0.30)
-    previous_phys === nothing && return false
-    return abs(abs(theta[i0]) - abs(previous_phys)) / abs(previous_phys) > tol
-end
-
-"""
     pick_phys_robust(theta, reference; tol=0.05) -> (i0, recovered)
 
-`pick_phys_continuity` restricted to candidates within `tol` of `reference`, the last accepted |λ0|.
-A non-converged rung can carry a spurious Ritz value above the true λ0, and plain modulus-dominance
-then returns that artefact; the real λ0 is usually still in the block. `tol=0.05` separates the
-physical drift (<0.5% per rung) from the contamination (>13%).
+The selection rule used for every result: keep only the candidates whose modulus lies within `tol`
+of `reference`, the last accepted |λ0|, and choose among those. A rung that has not converged can
+carry a spurious Ritz value above the true λ0, which plain modulus-dominance would return; the real
+λ0 is usually still in the block.
 
-`recovered=false` means nothing in the block matches `reference` — drop the rung and keep chaining
+`recovered=false` means nothing in the block matches `reference` => drop the rung and keep chaining
 `reference` from the last accepted one.
 """
 function pick_phys_robust(theta, reference; tol::Float64=0.05)
@@ -913,18 +688,15 @@ end
 
 k-adaptive wrapper around `block_transfer_eigs`. Runs at `k` first (optionally warm-started between
 T-rungs via `seedL`/`seedR`); while the leading block has no tower member besides the physical λ0
-(`tower_gap` returns `NaN` — λ1 absent, only ±π partners present), it **escalates k in steps of 2**
-(k→6→8…) up to `k_retry`, warm-seeding each bump with the just-converged block (cheap: the extra
-slots are padded with random vectors). A single k=4→6 bump is not always enough at larger frustration
-(p≈0.8 needs k=8), which is why this loops rather than doing one retry. Escalation is decided fresh
-every call, so a better-conditioned rung drops back to the cheap `k` on its own. Returns
-`(theta, L, R, info)` like `block_transfer_eigs`, with `info[:k_used]` and `info[:escalated]` added.
+(`tower_gap` returns `NaN`, so λ1 was not captured), it escalates k in steps of 2
+(k→6→8…) up to `k_retry`, warm-seeding each bump with the just-converged block. 
+Returns `(theta, L, R, info)` like `block_transfer_eigs`, with `info[:k_used]` and `info[:escalated]` added.
 """
 function block_transfer_eigs_adaptive(mpo::MPO, scaffold::MPS;
-        k::Int=4, k_retry::Int=8, anchor=nothing,
-        seedL::Union{Nothing,AbstractVector{MPS}}=nothing,
-        seedR::Union{Nothing,AbstractVector{MPS}}=nothing,
-        kwargs...)
+    k::Int=4, k_retry::Int=8, anchor=nothing,
+    seedL::Union{Nothing,AbstractVector{MPS}}=nothing,
+    seedR::Union{Nothing,AbstractVector{MPS}}=nothing,
+    kwargs...)
     theta, L, R, info = block_transfer_eigs(mpo, scaffold; k=k, seedL=seedL, seedR=seedR, kwargs...)
     k_used = k
 
@@ -937,49 +709,4 @@ function block_transfer_eigs_adaptive(mpo::MPO, scaffold::MPS;
 
     info = merge(info, Dict(:k_used => k_used, :escalated => k_used > k))
     return theta, L, R, info
-end
-
-"""
-    ksector_signs(p; dt=0.1, nbeta=4, MPO_alg="VD2")
-
-The diagonal Z2 sector operator of the transfer matrix, per temporal site. Solves the intertwiner
-equation X W X = R W R^{-1} on a bulk tMPO tensor (X = spin flip on the links) and returns the
-sign vector of R. The nullspace must be one-dimensional; errors otherwise.
-"""
-function ksector_signs(p::Float64; dt::Float64=0.1, nbeta::Int=4, MPO_alg::String="VD2", column::Symbol=:legacy3)
-    mpo, _ = build_alcaraz_tmpo(3.0; p=p, lambda=1.0, dt=dt, nbeta=nbeta, MPO_alg=MPO_alg, column=column)
-    Tb = mpo[div(length(mpo), 2)]
-    phys = [noprime(s) for s in inds(Tb) if plev(s) == 0 && hastags(s, "Site")]
-    lnks = [s for s in inds(Tb) if hastags(s, "Link")]
-    d = dim(phys[1])
-    Warr = Array(Tb, lnks[1], lnks[2], prime(phys[1]), phys[1])
-    sx = [0.0 1.0; 1.0 0.0]
-    Wx = zeros(ComplexF64, size(Warr))
-    for a in 1:2, b in 1:2, a2 in 1:2, b2 in 1:2
-        Wx[a, b, :, :] .+= sx[a, a2] * sx[b, b2] * Warr[a2, b2, :, :]
-    end
-    rows = Matrix{ComplexF64}[]
-    for a in 1:2, b in 1:2
-        push!(rows, kron(Matrix(1.0I, d, d), Wx[a, b, :, :]) - kron(transpose(Warr[a, b, :, :]), Matrix(1.0I, d, d)))
-    end
-    ns = nullspace(vcat(rows...); rtol=1e-10)
-    size(ns, 2) == 1 || error("ksector_signs: intertwiner nullspace is $(size(ns, 2))-dimensional at p=$p")
-    return sign.(real.(diag(reshape(ns[:, 1], d, d))))
-end
-
-# K acts as one sign per temporal site; bond dimension unchanged
-function apply_ksign(psi::MPS, Rd)
-    out = copy(psi)
-    for i in 1:length(out)
-        s = siteind(out, i)
-        out[i] = noprime(out[i] * ITensor(collect(Diagonal(Rd)), s', s))
-    end
-    return out
-end
-
-# P± = (1 ± K)/2. Truncation leaks between sectors, so apply this every iteration
-# (the `project` kwarg of block_transfer_eigs), never only to the seeds.
-function project_ksector(psi::MPS, Rd, sgn::Int; maxdim::Int=128)
-    return normalize(lincomb_mps([0.5, 0.5 * sgn], [psi, apply_ksign(psi, Rd)];
-                                 cutoff=1e-12, maxdim=maxdim))
 end
