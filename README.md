@@ -1,62 +1,107 @@
 # Universal properties from quantum many-body dynamics
 
-Master's thesis — **Joaquín G. Márquez Olguín**, supervised by **Stefano Carignano** (Barcelona Supercomputing Center), 2026.
+Master's thesis by Joaquín G. Márquez Olguín, supervised by Stefano Carignano at the Barcelona
+Supercomputing Center, 2026.
 
-## What this is about
+## What the work is about
 
-At a critical point, the real-time dynamics of a simple initial state carries the universal data of the underlying conformal field theory: the central charge and the boundary operator content. The route is the Loschmidt echo. After a Wick rotation the echo becomes the partition function of a CFT on a strip, and transverse contraction reads it numerically: the space–time tensor network is contracted along the spatial direction, which reduces the whole evolution to the leading eigenvalues and eigenvectors of a single transfer matrix. Because the quench is critical, the temporal entanglement grows only logarithmically, so the contraction stays efficient at times where conventional evolution is limited by the entanglement barrier.
+At a critical point, the real-time dynamics of a simple initial state carries the universal data of
+the underlying conformal field theory: the central charge and the boundary operator content. We
+reach it through the Loschmidt echo. After a Wick rotation the echo becomes the partition function
+of a CFT on a strip, and transverse contraction evaluates it numerically: the space-time tensor
+network is contracted along the spatial direction, so the evolution reduces to the leading
+eigenvalues and eigenvectors of a single transfer matrix. Since the quench is critical, the temporal
+entanglement grows only logarithmically, so the contraction remains efficient at times where
+conventional evolution is already limited by the entanglement barrier.
 
-This programme was established for integrable chains (Carignano & Tagliacozzo; Bou-Comas et al.). The thesis asks whether it survives the loss of integrability, using a self-dual ANNNI-type chain: the transverse-field Ising model with a next-nearest-neighbour coupling of strength `p`,
+This was established for integrable chains by Carignano and Tagliacozzo and by Bou-Comas et al. The
+thesis asks whether it survives the loss of integrability. The model is a self-dual ANNNI-type
+chain, the transverse-field Ising model with a next-nearest-neighbour coupling of strength `p`,
 
 ```
 H = -Σ_i [ σᶻ_i σᶻ_{i+1} + λ σˣ_i + p (σᶻ_i σᶻ_{i+2} + λ σˣ_i σˣ_{i+1}) ]
 ```
 
-which is genuinely interacting for any `p > 0` but remains critical and in the Ising universality class up to `p ≲ 1.5`. The answer is yes: the equilibrium checks place the model in the Ising class across the whole range, and the dynamical measurements — on a corrected construction of the transfer-matrix column (`column=:bulk5`), from the cluster sweeps — return the central charge through two independent routes and seven members of the boundary operator spectrum at every coupling studied.
+which is interacting for any `p > 0` and stays critical and in the Ising universality class up to
+`p ≈ 1.5`. The answer is that the signatures survive. The equilibrium checks place the model in the
+Ising class over the whole range, and the dynamical measurements return the central charge through
+two independent routes, together with seven members of the boundary operator spectrum, at every
+coupling studied.
 
-## What is in the repository
+## How the repository is organised
 
-- `thesis/` — the LaTeX manuscript (compiled with tectonic; figures included as PDF).
-- `notebooks/` — the guided tour, six notebooks in reading order: the model and its equilibrium properties, the method and its validation, the temporal entropies and the wall, the spectral route to the central charge, the boundary operator spectrum, and the numerical controls. Every cell loads shipped caches and calls library or script code — nothing heavy runs in a notebook.
-- `src/` — the Julia library everything uses (`include("src/thesislib.jl")`): model Hamiltonians, the temporal-MPO construction including the corrected bulk-column extraction, the block power method, and the entropy routines.
-- `scripts/figures/` — one script per thesis figure; `make_all.jl` regenerates every plot as PNG + PDF + SVG under `figures/` and syncs the PDFs into `thesis/imgs/`.
-- `scripts/analysis/` — the numbers behind the thesis tables, split in two kinds. **Readers** take the shipped caches and print a result: `cluster_audit.jl` recomputes every value in the results table and shows where each one comes from, and `entropy_c.jl`, `eq3_windows.jl`, `chi_check.jl`, `deficit_tests.jl`, `mixedbc_analysis.jl`, `battery_report.jl` and `dtreport.jl` do the same for the individual controls. **Producers** are the runs that made those caches — the equilibrium ED and DMRG, the entropy and boundary ladders, the exponential-MPO benchmark, and the robustness controls (seed ensembles, cutoff scan, Trotter step, bond dimension, block size, warm starts). Every cache under `data/local/` has one, named in its header.
-- `data/cluster/` — the production caches from the MareNostrum sweeps; `data/local/` — the local caches (equilibrium DMRG/ED, validation runs, controls).
-- `figures/` — the generated figures (SVG is the Inkscape-editable version).
-- `defense/` — the presentation slides for the defense.
-- `ITensorExpMPOv2.jl/` — a fork of [tipfom/ITensorExpMPO.jl](https://github.com/tipfom/ITensorExpMPO.jl); all upstream work is @tipfom's, and this thesis adds the second-order VD2 kernel (Van Damme et al.) so the NNN model evolves at genuine second order.
+| folder | what it holds |
+|---|---|
+| `thesis/` | the LaTeX manuscript and its figures, compiled with tectonic |
+| `notebooks/` | six notebooks, in reading order, that walk through the whole project |
+| `src/` | the Julia library everything else uses |
+| `scripts/` | one script per figure, and the analysis that produced the numbers |
+| `data/` | the cached results, so nothing long has to be rerun |
+| `cluster/` | the submission scripts for the production runs |
+| `defense/` | the slides for the defence |
+| `figures/` | the generated plots, in PNG, PDF and SVG |
+
+The notebooks are the place to start. They follow the structure of the thesis: the model and its
+equilibrium properties, the method and its validation, the temporal entropies, the spectral route to
+the central charge, the boundary operator spectrum, and the numerical controls. Each one computes at
+least one result from scratch, at a small enough size to run in seconds, and then uses the cached
+production data for the full sweeps, so the reader can see how a number is made without waiting for
+it.
+
+`src/thesislib.jl` loads the library: the model Hamiltonians, the temporal-MPO construction with the
+corrected bulk-column extraction, the block power method, and the entropy routines.
+
+`scripts/` has its own README explaining what every script does and whether it reads a cache or
+produces one. `cluster/` likewise, for the runs that need more than a workstation.
+
+`data/local/` holds everything computed on a workstation, including the seed ensembles under
+`data/local/controls/`. `data/cluster/` holds the production sweeps.
 
 ## Reproducing the results
 
 ```bash
-julia --project=. -e 'using Pkg; Pkg.instantiate()'   # Manifest pins ITransverse to the tested commit
+julia --project=. -e 'using Pkg; Pkg.instantiate()'   # the Manifest pins ITransverse to the tested commit
 
 julia --project=. scripts/analysis/cluster_audit.jl   # every number in the results table, with its provenance
-julia --project=. scripts/analysis/extend_window.jl   # the fitting windows, and the rungs selected for them
-julia --project=. scripts/figures/make_all.jl         # every thesis plot, PNG + PDF + SVG
+julia --project=. scripts/analysis/extend_window.jl   # the fitting windows and the rungs chosen for them
+julia --project=. scripts/figures/make_all.jl         # every thesis plot, as PNG, PDF and SVG
 ```
 
-Then read the notebooks in order (Julia 1.12 kernel); they execute in minutes because everything they show is cached.
+Then read the notebooks in order, with a Julia 1.12 kernel. They take a few minutes, since the long
+calculations are cached.
 
-Regenerating a cache is a different matter — those are the long runs. Each producer says in its header what it writes and roughly what it costs, checkpoints as it goes, and skips whatever is already on disk, so an interrupted run resumes and a finished one costs nothing:
+Rebuilding a cache is a different matter, because those are the long runs. Each producer script says
+in its header what it writes and roughly what it costs, checkpoints as it goes, and skips whatever
+is already on disk, so an interrupted run resumes and a finished one costs nothing:
 
 ```bash
-julia --project=. scripts/analysis/equilibrium_velocity.jl      # sound velocity, exact diagonalisation
-julia --project=. scripts/analysis/bulk_column_mu0.jl           # the transfer-matrix column test
-julia --project=. scripts/analysis/svpm_ladder.jl p00           # one entropy arm (see the script for the list)
-julia --project=. scripts/analysis/mixedbc_ladder.jl upup       # one boundary pair
-julia --project=. scripts/analysis/cutrerun.jl                  # the cutoff control, whole grid
+julia --project=. scripts/analysis/equilibrium_velocity.jl   # sound velocity, by exact diagonalisation
+julia --project=. scripts/analysis/bulk_column_mu0.jl        # the transfer-matrix column test
+julia --project=. scripts/analysis/svpm_ladder.jl p00        # one entropy arm; run without arguments for the list
+julia --project=. scripts/analysis/mixedbc_ladder.jl upup    # one boundary pair
+julia --project=. scripts/analysis/cutrerun.jl               # the cutoff control, over the whole grid
 ```
 
-The production sweeps behind the main text are not local runs at all: they are the MareNostrum production sweeps, which write to `data/cluster/`.
+The production sweeps behind the main text were not run locally. They were submitted on MareNostrum
+from `cluster/` and write into `data/cluster/`.
 
-One convention matters everywhere: for an NNN model the transfer-matrix column must be built from a five-site patch (`build_alcaraz_tmpo(...; column=:bulk5)`). The legacy three-site extraction silently drops a memory channel — notebook 2 demonstrates the difference.
+One convention applies everywhere. For a model with next-nearest-neighbour terms the
+transfer-matrix column must be built from a five-site patch, `build_alcaraz_tmpo(...;
+column=:bulk5)`. The three-site extraction is exact only for nearest-neighbour models and otherwise
+drops a memory channel without any error being raised. Notebook 2 shows the difference.
 
 ## Credits and references
 
-- [ITransverse.jl](https://github.com/starsfordummies/ITransverse.jl) (Stefano Carignano, BSC) — the transverse-contraction library this work builds on.
-- [ITensors.jl](https://github.com/ITensor/ITensors.jl) — the tensor-network foundation.
-- Carignano & Tagliacozzo, arXiv:2405.14706 — the framework and the integrable benchmark.
-- Bou-Comas et al., arXiv:2607.08649 — conformal data from Loschmidt echoes, finite-time corrections.
-- Van Damme, Haegeman, McCulloch & Vanderstraeten, SciPost Phys. 17, 135 (2024) — the VD2 construction.
-- Alcaraz et al. — the ANNNI-type model and its Ising-class finite-size scaling.
+- [ITransverse.jl](https://github.com/starsfordummies/ITransverse.jl), by Stefano Carignano (BSC),
+  is the transverse-contraction library this work builds on.
+- [ITensors.jl](https://github.com/ITensor/ITensors.jl) is the tensor-network foundation.
+- `ITensorExpMPOv2.jl/` is a fork of
+  [tipfom/ITensorExpMPO.jl](https://github.com/tipfom/ITensorExpMPO.jl). All the upstream work is
+  @tipfom's; this thesis adds the second-order VD2 kernel so that the NNN model evolves at genuine
+  second order.
+- Carignano and Tagliacozzo, arXiv:2405.14706, for the framework and the integrable benchmark.
+- Bou-Comas et al., arXiv:2607.08649, for conformal data from Loschmidt echoes and the finite-time
+  corrections.
+- Van Damme, Haegeman, McCulloch and Vanderstraeten, SciPost Phys. 17, 135 (2024), for the VD2
+  construction.
+- Alcaraz et al., for the ANNNI-type model and its Ising-class finite-size scaling.
